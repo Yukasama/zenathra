@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-theme: black;
+}
+.dark {
+  --color-theme: white;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-moon-300;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-blue-500;
+}
+.hidden-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hidden-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus input:-webkit-autofill,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  @apply shadow-[inset_0_0_0_30px] shadow-gray-100 dark:shadow-moon-300;
+  -webkit-text-fill-color: var(--color-theme);
+}
+
+@layer base {
+  p,
+  i,
+  li,
+  label {
+    @apply text-moon-900 dark:text-white;
+  }
+  input,
+  select {
+    @apply outline-none;
+  }
+}
+
+@layer components {
+  .text {
+    @apply text-moon-900 dark:text-white;
+  }
+  .flex-box {
+    @apply flex items-center justify-center;
+  }
+  .f-col {
+    @apply flex flex-col;
+  }
+  .flex-res {
+    @apply f-col lg:flex-row;
+  }
+  .image {
+    @apply flex-box overflow-hidden rounded-md p-1;
+  }
+  .line {
+    @apply h-[1px] bg-gray-400/80 dark:bg-moon-200;
+  }
+  .icon {
+    @apply flex-box h-8 lg:h-9 rounded-md p-[7px] lg:p-[8px] transition-none hover:bg-gray-200 dark:hover:bg-moon-100;
+  }
+  .box {
+    @apply bg-gray-100 dark:bg-moon-700 border border-gray-200 dark:border-moon-100 rounded-md;
+  }
+  .borderless-box {
+    @apply bg-gray-100 dark:bg-moon-700 rounded-md;
+  }
+  .modal {
+    @apply flex-box top-0 left-0 fixed z-[5] h-full w-full bg-moon-400/80;
+  }
+}
+
+@layer utilities {
+  .animate-pulse-right,
+  .animate-pulse-right-bright {
+    background-image: linear-gradient(
+      270deg,
+      #e3e3e3 25%,
+      #d1d1d1 50%,
+      #e3e3e3 75%
+    );
+    background-size: 200% 100%;
+    animation: moving-gradient 1.7s ease-in infinite;
+  }
+  .dark .animate-pulse-right-bright {
+    background-image: linear-gradient(
+      270deg,
+      #222d49 25%,
+      #1e263f 50%,
+      #222d49 75%
+    );
+  }
+  .dark .animate-pulse-right {
+    background-image: linear-gradient(
+      270deg,
+      #141a29 25%,
+      #0c101b 50%,
+      #141a29 75%
+    );
+  }
+}
+
+@keyframes moving-gradient {
+  100% {
+    background-position: 0% 50%;
+  }
+  0% {
+    background-position: 200% 50%;
+  }
+}

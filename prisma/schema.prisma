@@ -1,0 +1,434 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String      @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String?
+  email                String?     @unique
+  emailVerified        DateTime?
+  image                String?
+  hashedPassword       String
+  role                 Role        @default(user)
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+  accounts             Account[]
+  recentlyViewedStocks String[]
+  Portfolio            Portfolio[]
+}
+
+enum Role {
+  user
+  admin
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Portfolio {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  title     String
+  imageSrc  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  symbols   String[]
+  public    Boolean  @default(false)
+
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Stock {
+  id                                        String       @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                                 DateTime     @default(now())
+  updatedAt                                 DateTime     @updatedAt
+  symbol                                    String       @unique
+  eye                                       Int?
+  price                                     Float
+  beta                                      Float
+  volAvg                                    Float
+  mktCap                                    Float
+  lastDiv                                   Float?
+  range                                     String
+  changes                                   Float?
+  companyName                               String
+  currency                                  String
+  cik                                       String?
+  isin                                      String?
+  cusip                                     String?
+  exchange                                  String
+  exchangeShortName                         String
+  industry                                  String
+  website                                   String
+  description                               String
+  ceo                                       String
+  sector                                    String
+  country                                   String
+  fullTimeEmployees                         String
+  phone                                     String
+  address                                   String
+  city                                      String
+  state                                     String
+  zip                                       String
+  dcfDiff                                   Float?
+  dcf                                       Float?
+  image                                     String
+  ipoDate                                   String?
+  defaultImage                              Boolean?
+  isEtf                                     Boolean?
+  isActivelyTrading                         Boolean?
+  isAdr                                     Boolean?
+  isFund                                    Boolean?
+  dividendYielTTM                           Float
+  dividendYielPercentageTTM                 Float
+  peRatioTTM                                Float
+  pegRatioTTM                               Float
+  payoutRatioTTM                            Float
+  currentRatioTTM                           Float
+  quickRatioTTM                             Float
+  cashRatioTTM                              Float
+  daysOfSalesOutstandingTTM                 Float
+  daysOfInventoryOutstandingTTM             Float
+  operatingCycleTTM                         Float
+  daysOfPayablesOutstandingTTM              Float
+  cashConversionCycleTTM                    Float
+  grossProfitMarginTTM                      Float
+  operatingProfitMarginTTM                  Float
+  pretaxProfitMarginTTM                     Float
+  netProfitMarginTTM                        Float
+  effectiveTaxRateTTM                       Float
+  returnOnAssetsTTM                         Float
+  returnOnEquityTTM                         Float
+  returnOnCapitalEmployedTTM                Float
+  netIncomePerEBTTTM                        Float
+  ebtPerEbitTTM                             Float
+  ebitPerRevenueTTM                         Float
+  debtRatioTTM                              Float
+  debtEquityRatioTTM                        Float
+  longTermDebtToCapitalizationTTM           Float
+  totalDebtToCapitalizationTTM              Float
+  interestCoverageTTM                       Float
+  cashFlowToDebtRatioTTM                    Float
+  companyEquityMultiplierTTM                Float
+  receivablesTurnoverTTM                    Float
+  payablesTurnoverTTM                       Float
+  inventoryTurnoverTTM                      Float
+  fixedAssetTurnoverTTM                     Float
+  assetTurnoverTTM                          Float
+  operatingCashFlowPerShareTTM              Float
+  freeCashFlowPerShareTTM                   Float
+  cashPerShareTTM                           Float
+  operatingCashFlowSalesRatioTTM            Float
+  freeCashFlowOperatingCashFlowRatioTTM     Float
+  cashFlowCoverageRatiosTTM                 Float
+  shortTermCoverageRatiosTTM                Float
+  capitalExpenditureCoverageRatioTTM        Float
+  dividendPaidAndCapexCoverageRatioTTM      Float
+  priceBookValueRatioTTM                    Float
+  priceToBookRatioTTM                       Float
+  priceEarningsRatioTTM                     Float
+  priceToFreeCashFlowsRatioTTM              Float
+  priceToOperatingCashFlowsRatioTTM         Float
+  priceCashFlowRatioTTM                     Float
+  priceEarningsToGrowthRatioTTM             Float
+  priceSalesRatioTTM                        Float
+  enterpriseValueMultipleTTM                Float
+  priceFairValueTTM                         Float
+  revenuePerShareTTM                        Float
+  netIncomePerShareTTM                      Float
+  bookValuePerShareTTM                      Float
+  tangibleBookValuePerShareTTM              Float
+  shareholdersEquityPerShareTTM             Float
+  interestDebtPerShareTTM                   Float
+  marketCapTTM                              Float
+  enterpriseValueTTM                        Float
+  priceToSalesRatioTTM                      Float
+  pocfratioTTM                              Float
+  pfcfRatioTTM                              Float
+  pbRatioTTM                                Float
+  ptbRatioTTM                               Float
+  evToSalesTTM                              Float
+  enterpriseValueOverEBITDATTM              Float
+  evToOperatingCashFlowTTM                  Float
+  evToFreeCashFlowTTM                       Float
+  earningsYieldTTM                          Float
+  freeCashFlowYieldTTM                      Float
+  debtToEquityTTM                           Float
+  debtToAssetsTTM                           Float
+  netDebtToEBITDATTM                        Float
+  incomeQualityTTM                          Float
+  dividendYieldTTM                          Float
+  dividendYieldPercentageTTM                Float
+  salesGeneralAndAdministrativeToRevenueTTM Float
+  researchAndDevelopementToRevenueTTM       Float
+  intangiblesToTotalAssetsTTM               Float
+  capexToOperatingCashFlowTTM               Float
+  capexToRevenueTTM                         Float
+  capexToDepreciationTTM                    Float
+  stockBasedCompensationToRevenueTTM        Float
+  grahamNumberTTM                           Float
+  roicTTM                                   Float
+  returnOnTangibleAssetsTTM                 Float
+  grahamNetNetTTM                           Float
+  workingCapitalTTM                         Float
+  tangibleAssetValueTTM                     Float
+  netCurrentAssetValueTTM                   Float
+  investedCapitalTTM                        Float
+  averageReceivablesTTM                     Float
+  averagePayablesTTM                        Float
+  averageInventoryTTM                       Float
+  daysSalesOutstandingTTM                   Float
+  daysPayablesOutstandingTTM                Float
+  daysOfInventoryOnHandTTM                  Float
+  roeTTM                                    Float
+  capexPerShareTTM                          Float
+  dividendPerShareTTM                       Float
+  debtToMarketCapTTM                        Float
+  peersList                                 String[]
+  targetHigh                                Float?
+  targetLow                                 Float?
+  targetConsensus                           Float?
+  targetMedian                              Float?
+  Financials                                Financials[]
+}
+
+model Financials {
+  id                                       String   @id @default(auto()) @map("_id") @db.ObjectId
+  stockId                                  String   @db.ObjectId
+  createdAt                                DateTime @default(now())
+  updatedAt                                DateTime @updatedAt
+  date                                     String
+  symbol                                   String
+  reportedCurrency                         String?
+  cik                                      String?
+  fillingDate                              String?
+  acceptedDate                             String?
+  calendarYear                             String
+  period                                   String?
+  link                                     String?
+  finalLink                                String?
+  revenue                                  Float?
+  costOfRevenue                            Float?
+  grossProfit                              Float?
+  grossProfitRatio                         Float?
+  researchAndDevelopmentExpenses           Float?
+  generalAndAdministrativeExpenses         Float?
+  sellingAndMarketingExpenses              Float?
+  sellingGeneralAndAdministrativeExpenses  Float?
+  otherExpenses                            Float?
+  operatingExpenses                        Float?
+  costAndExpenses                          Float?
+  interestIncome                           Float?
+  interestExpense                          Float?
+  depreciationAndAmortization              Float?
+  ebitda                                   Float?
+  ebitdaratio                              Float?
+  operatingIncome                          Float?
+  operatingIncomeRatio                     Float?
+  totalOtherIncomeExpensesNet              Float?
+  incomeBeforeTax                          Float?
+  incomeBeforeTaxRatio                     Float?
+  incomeTaxExpense                         Float?
+  netIncome                                Float?
+  netIncomeRatio                           Float?
+  eps                                      Float?
+  epsdiluted                               Float?
+  weightedAverageShsOut                    Float?
+  weightedAverageShsOutDil                 Float?
+  cashAndCashEquivalents                   Float?
+  shortTermInvestments                     Float?
+  cashAndShortTermInvestments              Float?
+  netReceivables                           Float?
+  inventory                                Float?
+  otherCurrentAssets                       Float?
+  totalCurrentAssets                       Float?
+  propertyPlantEquipmentNet                Float?
+  goodwill                                 Float?
+  intangibleAssets                         Float?
+  goodwillAndIntangibleAssets              Float?
+  longTermInvestments                      Float?
+  taxAssets                                Float?
+  otherNonCurrentAssets                    Float?
+  totalNonCurrentAssets                    Float?
+  otherAssets                              Float?
+  totalAssets                              Float?
+  accountPayables                          Float?
+  shortTermDebt                            Float?
+  taxPayables                              Float?
+  deferredRevenue                          Float?
+  otherCurrentLiabilities                  Float?
+  totalCurrentLiabilities                  Float?
+  longTermDebt                             Float?
+  deferredRevenueNonCurrent                Float?
+  deferredTaxLiabilitiesNonCurrent         Float?
+  otherNonCurrentLiabilities               Float?
+  totalNonCurrentLiabilities               Float?
+  otherLiabilities                         Float?
+  capitalLeaseObligations                  Float?
+  totalLiabilities                         Float?
+  preferredStock                           Float?
+  commonStock                              Float?
+  retainedEarnings                         Float?
+  accumulatedOtherComprehensiveIncomeLoss  Float?
+  othertotalStockholdersEquity             Float?
+  totalStockholdersEquity                  Float?
+  totalEquity                              Float?
+  totalLiabilitiesAndStockholdersEquity    Float?
+  minorityInterest                         Float?
+  totalLiabilitiesAndTotalEquity           Float?
+  totalInvestments                         Float?
+  totalDebt                                Float?
+  netDebt                                  Float?
+  deferredIncomeTax                        Float?
+  stockBasedCompensation                   Float?
+  changeInWorkingCapital                   Float?
+  accountsReceivables                      Float?
+  accountsPayables                         Float?
+  otherWorkingCapital                      Float?
+  otherNonCashItems                        Float?
+  netCashProvidedByOperatingActivities     Float?
+  investmentsInPropertyPlantAndEquipment   Float?
+  acquisitionsNet                          Float?
+  purchasesOfInvestments                   Float?
+  salesMaturitiesOfInvestments             Float?
+  otherInvestingActivites                  Float?
+  netCashUsedForInvestingActivites         Float?
+  debtRepayment                            Float?
+  commonStockIssued                        Float?
+  commonStockRepurchased                   Float?
+  dividendsPaid                            Float?
+  otherFinancingActivites                  Float?
+  netCashUsedProvidedByFinancingActivities Float?
+  effectOfForexChangesOnCash               Float?
+  netChangeInCash                          Float?
+  cashAtEndOfPeriod                        Float?
+  cashAtBeginningOfPeriod                  Float?
+  operatingCashFlow                        Float?
+  capitalExpenditure                       Float?
+  freeCashFlow                             Float?
+  currentRatio                             Float?
+  quickRatio                               Float?
+  cashRatio                                Float?
+  daysOfSalesOutstanding                   Float?
+  daysOfInventoryOutstanding               Float?
+  operatingCycle                           Float?
+  daysOfPayablesOutstanding                Float?
+  cashConversionCycle                      Float?
+  grossProfitMargin                        Float?
+  operatingProfitMargin                    Float?
+  pretaxProfitMargin                       Float?
+  netProfitMargin                          Float?
+  effectiveTaxRate                         Float?
+  returnOnAssets                           Float?
+  returnOnEquity                           Float?
+  returnOnCapitalEmployed                  Float?
+  netIncomePerEBT                          Float?
+  ebtPerEbit                               Float?
+  ebitPerRevenue                           Float?
+  debtRatio                                Float?
+  debtEquityRatio                          Float?
+  longTermDebtToCapitalization             Float?
+  totalDebtToCapitalization                Float?
+  interestCoverage                         Float?
+  cashFlowToDebtRatio                      Float?
+  companyEquityMultiplier                  Float?
+  receivablesTurnover                      Float?
+  payablesTurnover                         Float?
+  inventoryTurnover                        Float?
+  fixedAssetTurnover                       Float?
+  assetTurnover                            Float?
+  operatingCashFlowPerShare                Float?
+  freeCashFlowPerShare                     Float?
+  cashPerShare                             Float?
+  payoutRatio                              Float?
+  operatingCashFlowSalesRatio              Float?
+  freeCashFlowOperatingCashFlowRatio       Float?
+  cashFlowCoverageRatios                   Float?
+  shortTermCoverageRatios                  Float?
+  capitalExpenditureCoverageRatio          Float?
+  dividendPaidAndCapexCoverageRatio        Float?
+  dividendPayoutRatio                      Float?
+  priceBookValueRatio                      Float?
+  priceToBookRatio                         Float?
+  priceToSalesRatio                        Float?
+  priceEarningsRatio                       Float?
+  priceToFreeCashFlowsRatio                Float?
+  priceToOperatingCashFlowsRatio           Float?
+  priceCashFlowRatio                       Float?
+  priceEarningsToGrowthRatio               Float?
+  priceSalesRatio                          Float?
+  dividendYield                            Float?
+  enterpriseValueMultiple                  Float?
+  priceFairValue                           Float?
+  revenuePerShare                          Float?
+  netIncomePerShare                        Float?
+  bookValuePerShare                        Float?
+  tangibleBookValuePerShare                Float?
+  shareholdersEquityPerShare               Float?
+  interestDebtPerShare                     Float?
+  marketCap                                Float?
+  enterpriseValue                          Float?
+  peRatio                                  Float?
+  pocfratio                                Float?
+  pfcfRatio                                Float?
+  pbRatio                                  Float?
+  ptbRatio                                 Float?
+  evToSales                                Float?
+  enterpriseValueOverEBITDA                Float?
+  evToOperatingCashFlow                    Float?
+  evToFreeCashFlow                         Float?
+  earningsYield                            Float?
+  freeCashFlowYield                        Float?
+  debtToEquity                             Float?
+  debtToAssets                             Float?
+  netDebtToEBITDA                          Float?
+  incomeQuality                            Float?
+  salesGeneralAndAdministrativeToRevenue   Float?
+  researchAndDdevelopementToRevenue        Float?
+  intangiblesToTotalAssets                 Float?
+  capexToOperatingCashFlow                 Float?
+  capexToRevenue                           Float?
+  capexToDepreciation                      Float?
+  stockBasedCompensationToRevenue          Float?
+  grahamNumber                             Float?
+  roic                                     Float?
+  returnOnTangibleAssets                   Float?
+  grahamNetNet                             Float?
+  workingCapital                           Float?
+  tangibleAssetValue                       Float?
+  netCurrentAssetValue                     Float?
+  investedCapital                          Float?
+  averageReceivables                       Float?
+  averagePayables                          Float?
+  averageInventory                         Float?
+  daysSalesOutstanding                     Float?
+  daysPayablesOutstanding                  Float?
+  daysOfInventoryOnHand                    Float?
+  roe                                      Float?
+  capexPerShare                            Float?
+
+  stock Stock @relation(fields: [stockId], references: [id], onDelete: Cascade)
+
+  @@unique([symbol, calendarYear])
+}
