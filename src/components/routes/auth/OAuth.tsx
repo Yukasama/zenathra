@@ -25,7 +25,7 @@ export default function OAuth({ provider }: Props) {
   return (
     <button
       onClick={handleAuth}
-      className="flex-box cursor-pointer gap-3.5 rounded-md border border-gray-300/60 bg-gray-200/60 p-2.5 px-11 hover:bg-gray-300/80 dark:border-moon-100 dark:bg-moon-300 dark:hover:bg-moon-200">
+      className="f-box gap-3.5 rounded-md border border-gray-300/60 bg-gray-200/60 p-2.5 px-11 hover:bg-gray-300/80 dark:border-moon-100 dark:bg-moon-300 dark:hover:bg-moon-200">
       <Image
         className={`scale-90 duration-300 group-hover:scale-75 ${
           provider === "github" && "dark:invert"

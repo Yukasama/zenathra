@@ -12,21 +12,22 @@ export default function ThemeToggler() {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
+  if (!mounted)
     return (
-      <div className="theme-toggle h-10 w-10 rounded-md bg-gray-200 p-[8px] dark:bg-moon-100/70"></div>
+      <div className="essential icon animate-pulse-right">
+        <Sun className="essential text invisible h-5" />
+      </div>
     );
-  }
 
   return (
     <button
       aria-label="Toggle Website Appearance"
       onClick={() => (theme === "light" ? setTheme("dark") : setTheme("light"))}
-      className="theme-toggle icon">
+      className="essential icon">
       {theme === "dark" ? (
-        <Sun className="theme-toggle text h-5" />
+        <Sun className="essential text h-5" />
       ) : (
-        <Moon className="theme-toggle text h-5" />
+        <Moon className="essential text h-5" />
       )}
     </button>
   );

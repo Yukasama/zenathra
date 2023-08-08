@@ -19,23 +19,21 @@ export default function UserProfile({ session, status }: Props) {
   }, []);
 
   function handleClick(e: any) {
-    if (
-      !e.target.closest("#login-window") &&
-      !e.target.closest("#login-button") &&
-      !e.target.closest(".theme-toggle") &&
-      !e.target.closest("#sidebar-toggle")
-    ) {
-      setCollapsed(false);
-    }
+    if (!e.target.closest(".essential")) setCollapsed(false);
   }
 
   return (
     <>
-      <ProfileIcon
-        image={session ? session.user.image : null}
-        collapsed={collapsed}
-        setCollapsed={setCollapsed}
-      />
+      {status === "loading" ? (
+        <div className="essential icon animate-pulse-right"></div>
+      ) : (
+        <ProfileIcon
+          image={session ? session.user.image : null}
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+        />
+      )}
+
       <UserWindow session={session} status={status} collapsed={collapsed} />
     </>
   );

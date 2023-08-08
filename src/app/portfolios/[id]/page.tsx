@@ -12,8 +12,7 @@ import { getPortfolio } from "@/lib/portfolio/getPortfolio";
 import notFound from "@/app/not-found";
 import { ChartLoading } from "@/components/ui/charts/PriceChart";
 import PortfolioChart from "@/components/routes/portfolios/PortfolioChart";
-import { getAllPortfolios } from "@/lib/portfolio/managePortfolio";
-import { Portfolio } from "@prisma/client";
+import { Portfolio } from "@/types/portfolio";
 import { User } from "@/types/user";
 
 interface Params {
@@ -68,7 +67,7 @@ export default async function PortfolioPage({ params: { id } }: Params) {
               alt="No Stocks"
             />
           </div>
-          <AddToPortfolio portfolio={portfolio} x={false} />
+          <AddToPortfolio portfolio={portfolio} />
         </div>
       );
     else return <p>No Stocks in this portfolio.</p>;
@@ -81,21 +80,31 @@ export default async function PortfolioPage({ params: { id } }: Params) {
 
   return (
     <div className="p-5">
-      <h1 className="p-3 px-1 font-medium text-xl width-[300px] truncate">
-        {portfolio.title}
-      </h1>
+      <div className="p-2 pb-4 px-1">
+        <h1 className="font-medium text-xl width-[350px] truncate">
+          {portfolio.title}
+        </h1>
+        <p className="text-sm text-gray-400">
+          Created on{" "}
+          {portfolio.createdAt.toISOString().split("T")[0].replace(/-/g, "/")}
+        </p>
+      </div>
       {stocks ? (
         <div className="flex gap-4">
           <Suspense fallback={<ChartLoading />}>
             {/*// @ts-ignore*/}
             <PortfolioChart symbols={portfolio.symbols} />
           </Suspense>
-          <Suspense fallback={<ListLoading title="Portfolio Positions" />}>
+          <Suspense
+            fallback={
+              <ListLoading title="Portfolio Positions" className="wrapper" />
+            }>
             {/*// @ts-ignore*/}
             <List
               symbols={portfolio.symbols}
               title="Portfolio Positions"
               error="No Positions found"
+              className="wrapper"
             />
           </Suspense>
           {user && <AddButton portfolio={portfolio} />}

@@ -87,7 +87,7 @@ export default async function Statistics({ symbol }: Props) {
       0 ? (
         <div className="h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-gray-200 p-3 px-6 dark:bg-moon-400">
           <p className="mb-1 text-[19px] font-medium">Dividends</p>
-          <div className="flex-box ml-0.5 h-4/5 gap-4">
+          <div className="f-box ml-0.5 h-4/5 gap-4">
             <p className="text-xl font-medium text-gray-600">
               Never Payed Dividends
             </p>

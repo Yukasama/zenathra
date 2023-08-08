@@ -17,14 +17,17 @@ export default function Footer() {
           <p className="text-lg font-light">Elysium</p>
         </div>
         <div className="grid grid-cols-2 lg:flex gap-5 lg:gap-16">
-          {footerLinks.map((footerLink) => (
-            <div key={footerLink.title} className="w-20">
+          {footerLinks.map((footerLink, i) => (
+            <div key={`${footerLink.title}-${i}`} className="w-20">
               <h2 className="mb-2 uppercase tracking-widest text-gray-500">
                 {footerLink.title}
               </h2>
               <div className="f-col gap-1.5">
-                {footerLink.links.map((link) => (
-                  <Link key={link.name} href={link.link} className="text-sm">
+                {footerLink.links.map((link, i) => (
+                  <Link
+                    key={`${link.name}-${i}`}
+                    href={link.link}
+                    className="text-sm">
                     {link.name}
                   </Link>
                 ))}
@@ -36,7 +39,7 @@ export default function Footer() {
 
       <div className="f-col gap-3">
         <div className="h-[1px] bg-gray-300 dark:bg-moon-100"></div>
-        <div className="mx-2 flex-res flex-col-reverse lg:flex-row-reverse items-center justify-between">
+        <div className="mx-2 f-res flex-col-reverse lg:flex-row-reverse items-center justify-between">
           <div className="flex gap-5">
             <p className="hidden lg:flex text-[13px] text-gray-500">
               Please note that this website is in development stage.
@@ -58,7 +61,7 @@ export default function Footer() {
               <Link
                 key={social.name}
                 href="/"
-                className="flex-box h-10 w-10 rounded-md">
+                className="f-box h-10 w-10 rounded-md">
                 <Image
                   className={`${social.name === "github" && "dark:invert"}`}
                   src={`/images/oauth/${social.name}.png`}

@@ -10,6 +10,7 @@ interface Props {
   notext?: boolean;
   gap?: boolean;
   loading?: boolean;
+  onClick?: any;
 }
 
 export default function Sidelink({
@@ -19,6 +20,7 @@ export default function Sidelink({
   gap,
   notext,
   loading,
+  onClick,
 }: Props) {
   const pathname = usePathname();
   const isActive = (path: string) =>
@@ -28,13 +30,13 @@ export default function Sidelink({
     <>
       <Link
         href={to}
+        onClick={onClick}
         className={`${
           isActive(to.split("/").pop()!) &&
           "border-moon-700 bg-gray-300/80 dark:bg-moon-200"
-        } m-1 mx-4 flex cursor-pointer 
-            items-center rounded-lg hover:bg-gray-300/80 dark:hover:bg-moon-200 ${
-              loading && "animate-pulse-right h-12 w-12"
-            }`}>
+        } m-1 mx-4 flex items-center rounded-lg hover:bg-gray-300/80 dark:hover:bg-moon-200 ${
+          loading && "animate-pulse-right h-12 w-12"
+        }`}>
         {!loading && (
           <>
             <div className="p-3">{icon}</div>

@@ -57,8 +57,8 @@ export default function AddStocks() {
         onChange={setSelected}
       />
       <div className="my-1 f-col gap-2.5">
-        <Checkbox label="Skip Already Added Symbols" onChange={setSkip} />
-        <Checkbox label="Clean Database" onChange={setClean} />
+        <Checkbox heading="Skipping Stocks" label="Skips already added symbols" onChange={setSkip} />
+        <Checkbox heading="Clean Database" label="Cleans the database of empty records" onChange={setClean} />
       </div>
 
       <Button

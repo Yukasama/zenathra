@@ -8,3 +8,5 @@ export type User = Omit<
   updatedAt: string;
   emailVerified: string | null;
 };
+
+

@@ -67,7 +67,7 @@ function NoData({ size = "lg", className }: LoadingProps) {
           : size === "md"
           ? "h-[310px] w-[510px]"
           : "h-[190px] w-[300px]"
-      } flex-box animate-appear-up rounded-lg bg-gray-200 dark:bg-moon-400 ${className}`}>
+      } f-box animate-appear-up rounded-lg bg-gray-200 dark:bg-moon-400 ${className}`}>
       <p className="text-xl font-medium text-gray-600">
         Chart Could Not Be Loaded
       </p>
@@ -172,7 +172,7 @@ export default function PriceChart({
               <button
                 key={i}
                 onClick={() => setTime(frame)}
-                className={`flex-box h-full w-[34px] rounded-md 
+                className={`f-box h-full w-[34px] rounded-md 
                 text-[13px] ${
                   time === frame
                     ? "bg-blue-500 text-white"

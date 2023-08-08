@@ -1,6 +1,6 @@
 import db from "@/lib/db";
 import { User } from "@/types/user";
-import { Portfolio } from "@prisma/client";
+import { Portfolio } from "@/types/portfolio";
 
 export async function getPortfolio(portfolioId: Portfolio["id"]) {
   return await db.portfolio.findUnique({

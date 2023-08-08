@@ -1,6 +1,6 @@
 import AddButton from "./AddButton";
 import AddToPortfolio from "./AddToPortfolio";
-import CreateButton from "./CreateButton";
+import CreatePortfolioCard from "./CreatePortfolioCard";
 import CreatePortfolio from "./CreatePortfolio";
 import DeleteButton from "./DeleteButton";
 import PortfolioCard from "./PortfolioCard";
@@ -8,7 +8,7 @@ import PortfolioCard from "./PortfolioCard";
 export {
   AddButton,
   AddToPortfolio,
-  CreateButton,
+  CreatePortfolioCard,
   CreatePortfolio,
   DeleteButton,
   PortfolioCard,

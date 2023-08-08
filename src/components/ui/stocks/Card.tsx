@@ -11,7 +11,7 @@ interface Props {
 export default function Card({ quote, image }: Props) {
   if (!quote || !quote.symbol)
     return (
-      <div className="box flex-box h-[200px] w-[300px] min-w-[150px] rounded-xl shadow-md">
+      <div className="box f-box h-[200px] w-[300px] min-w-[150px] rounded-xl shadow-md">
         <p className="text-lg font-medium text-gray-600">
           Stock Could Not Be Loaded
         </p>
@@ -21,8 +21,8 @@ export default function Card({ quote, image }: Props) {
   return (
     <Link
       href={`/stocks/${quote.symbol}`}
-      className="group box relative flex h-[200px] w-[300px] min-w-[150px] cursor-pointer flex-col justify-between gap-1 p-3 transition-transform duration-[0.4s] hover:scale-[1.02]">
-      <div className="f-col items-center gap-1 xl:flex-row">
+      className="group box relative h-[200px] w-[300px] min-w-[150px] flex-col justify-between gap-1 p-3 transition-transform duration-[0.4s] hover:scale-[1.02]">
+      <div className="f-res items-center gap-1">
         <div className="image h-9 w-9 rounded-md">
           <Image
             className="rounded-lg"

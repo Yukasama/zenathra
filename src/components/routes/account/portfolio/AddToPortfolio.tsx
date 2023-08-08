@@ -8,23 +8,21 @@ import { toast } from "react-hot-toast";
 import { Input } from "@/components/ui/inputs";
 import { useEffect, useState } from "react";
 import { searchStocks } from "@/lib/stocks/client/getStocks";
-import { Portfolio, Stock } from "@prisma/client";
+import { Stock } from "@prisma/client";
+import { Portfolio } from "@/types/portfolio";
 import Image from "next/image";
+import useDebounce from "@/utils/useDebounce";
 
 interface Props {
   portfolio: Portfolio;
-  setOpen?: any;
-  x?: boolean;
+  onClose?: any;
 }
 
-export default function AddToPortfolio({
-  portfolio,
-  setOpen,
-  x = true,
-}: Props) {
+export default function AddToPortfolio({ portfolio, onClose }: Props) {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<Stock[] | null | undefined>([]);
   const [selected, setSelected] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -41,75 +39,108 @@ export default function AddToPortfolio({
       toast.success("Added stocks to portfolio.");
     }
 
-    x && setOpen(false);
+    onClose();
     router.refresh();
   };
 
+  const debouncedSearch = useDebounce(search, 200);
+
   useEffect(() => {
+    let isCancelled = false;
+
     const fetchResults = async () => {
-      const searchResults = await searchStocks(search);
+      const searchResults = await searchStocks(debouncedSearch);
+      if (isCancelled) return;
+
       const merged = portfolio?.symbols
         ? searchResults?.filter((r) => !portfolio.symbols.includes(r.symbol))
         : searchResults;
       setResults(merged);
+
+      setLoading(false);
     };
 
-    if (search.length > 0) fetchResults();
+    if (debouncedSearch.length > 0) {
+      setLoading(true);
+      fetchResults();
+    }
+
+    return () => {
+      isCancelled = true;
+    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, results]);
+  }, [debouncedSearch]);
 
   return (
-    <div className="input-window relative mb-20 f-col w-[400px] gap-4 rounded-lg bg-moon-200 p-5">
-      <div className={`f-col pl-1`}>
-        <h2 className="text-lg font-medium">Add Stocks to Portfolio</h2>
-        <h2 className="text-[12px] text-gray-500">
-          {selected.length} selected
-        </h2>
-      </div>
-      <Input id="search" onChange={setSearch} label="Search Stocks..." />
+    <>
+      <Input
+        id="search"
+        onChange={setSearch}
+        heading="Search Stocks"
+        subheading="Search companies by name or ticker"
+        label="Enter company name..."
+      />
       <div className="f-col gap-1">
         {search && (
           <>
-            {results?.slice(0, 5).map((result) => (
-              <div
-                className="flex items-center justify-between rounded-md bg-moon-400 p-1 px-2"
-                key={result.symbol}>
-                <div className="flex items-center gap-2">
-                  <div className="image h-[30px] w-[30px]">
-                    <Image
-                      src={result.image}
-                      height={30}
-                      width={30}
-                      alt={result.symbol}
-                    />
+            {!loading ? (
+              <>
+                {results?.slice(0, 4).map((result) => (
+                  <div
+                    className="flex items-center justify-between rounded-md bg-moon-400 p-1 px-2 h-12"
+                    key={result.symbol}>
+                    <div className="flex items-center gap-2">
+                      <div className="image h-[30px] w-[30px]">
+                        <Image
+                          src={result.image}
+                          height={30}
+                          width={30}
+                          alt={result.symbol}
+                        />
+                      </div>
+                      <div className="f-col">
+                        <p className="text-sm font-medium">{result.symbol}</p>
+                        <p className="w-[250px] text-[12px] text-gray-600">
+                          {result.companyName}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      {selected.includes(result.symbol) ? (
+                        <Button
+                          icon={<Trash className="h-4 w-4" />}
+                          color="red"
+                          onClick={() =>
+                            setSelected(
+                              selected.filter((s) => s !== result.symbol)
+                            )
+                          }
+                        />
+                      ) : (
+                        <Button
+                          icon={<Plus className="h-4 w-4" />}
+                          color="green"
+                          onClick={() =>
+                            setSelected([...selected, result.symbol])
+                          }
+                          outline
+                        />
+                      )}
+                    </div>
                   </div>
-                  <div className="f-col">
-                    <p className="text-sm font-medium">{result.symbol}</p>
-                    <p className="w-[250px] text-[12px] text-gray-600">
-                      {result.companyName}
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  {selected.includes(result.symbol) ? (
-                    <Button
-                      icon={<Trash className="h-4 w-4" />}
-                      color="red"
-                      onClick={() =>
-                        setSelected(selected.filter((s) => s !== result.symbol))
-                      }
-                    />
-                  ) : (
-                    <Button
-                      icon={<Plus className="h-4 w-4" />}
-                      color="green"
-                      onClick={() => setSelected([...selected, result.symbol])}
-                      outline
-                    />
-                  )}
-                </div>
-              </div>
-            ))}
+                ))}
+              </>
+            ) : (
+              <>
+                {[...Array(4)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="animate-pulse-right h-12 rounded-md
+                p-1 px-2"></div>
+                ))}
+              </>
+            )}
           </>
         )}
       </div>
@@ -120,13 +151,6 @@ export default function AddToPortfolio({
         onClick={handleClick}
         outline
       />
-      {x && (
-        <button
-          onClick={() => setOpen(false)}
-          className="absolute right-3 top-3">
-          <X />
-        </button>
-      )}
-    </div>
+    </>
   );
 }

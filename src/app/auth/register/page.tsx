@@ -51,11 +51,15 @@ export default function Register() {
 
     if (error) toast.error(error || "An error occurred during signup.");
     else {
-      await signIn("credentials", { ...data, redirect: false });
-      toast.success("Signed up successfully.");
-      router.refresh();
+      await signIn("credentials", { ...data, redirect: true }).then(
+        (callback) => {
+          setLoading(false);
+          
+          if (callback?.ok) router.refresh();
+          if (callback?.error) toast.error(callback.error);
+        }
+      );
     }
-    setLoading(false);
   };
 
   return (
@@ -91,7 +95,8 @@ export default function Register() {
 
         <Checkbox
           className="ml-1.5"
-          label="Keep me logged in"
+          heading="Remember Me"
+          label="Keep me logged in on this device."
           onChange={() => {}}
         />
 
@@ -104,7 +109,7 @@ export default function Register() {
 
       <div className="flex items-center">
         <div className="h-[1px] flex-1 bg-gray-400/60 dark:bg-moon-100"></div>
-        <div className="flex-box h-10 w-10 rounded-full border border-gray-400/60 text-[12px] text-gray-400 dark:border-moon-100">
+        <div className="f-box h-10 w-10 rounded-full border border-gray-400/60 text-[12px] text-gray-400 dark:border-moon-100">
           OR
         </div>
         <div className="h-[1px] flex-1 bg-gray-400/60 dark:bg-moon-100"></div>
@@ -116,7 +121,7 @@ export default function Register() {
         <OAuth provider="github" />
       </div>
 
-      <div className="flex-box mt-2 gap-1">
+      <div className="f-box mt-2 gap-1">
         <p className="text-sm">Already with us?</p>
         <Link
           href="/auth/signin"

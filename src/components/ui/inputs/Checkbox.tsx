@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check } from "react-feather";
 
 interface Props {
+  heading: string;
   label: string;
   onChange: Function;
   defaultChecked?: boolean;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function Checkbox({
+  heading,
   label,
   onChange,
   defaultChecked,
@@ -25,15 +27,18 @@ export default function Checkbox({
   };
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      <div
+    <div className={`flex gap-2.5 ${className}`}>
+      <button
         className={`${
           checked ? "bg-blue-500" : "border border-blue-500"
-        } flex-box h-5 w-5 cursor-pointer rounded-sm`}
+        } f-box h-5 w-5 rounded-sm mt-0.5`}
         onClick={handleChange}>
         <Check className={`${checked ? "flex" : "hidden"} h-4 w-4`} />
+      </button>
+      <div className="f-col gap-0.5">
+        <p className="text-md font-medium">{heading}</p>
+        <p className="text-sm text-gray-400">{label}</p>
       </div>
-      <p className="text-sm text-gray-800">{label}</p>
     </div>
   );
 }

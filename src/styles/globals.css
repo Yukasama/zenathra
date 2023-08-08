@@ -55,32 +55,41 @@ select:-webkit-autofill:focus {
   .text {
     @apply text-moon-900 dark:text-white;
   }
-  .flex-box {
+  .f-box {
     @apply flex items-center justify-center;
   }
   .f-col {
     @apply flex flex-col;
   }
-  .flex-res {
+  .f-between {
+    @apply flex justify-between items-center;
+  }
+  .f-res {
     @apply f-col lg:flex-row;
   }
   .image {
-    @apply flex-box overflow-hidden rounded-md p-1;
+    @apply f-box overflow-hidden rounded-md p-1;
   }
   .line {
     @apply h-[1px] bg-gray-400/80 dark:bg-moon-200;
   }
+  .line-bright {
+    @apply h-[1px] bg-gray-300/80 dark:bg-moon-100;
+  }
   .icon {
-    @apply flex-box h-8 lg:h-9 rounded-md p-[7px] lg:p-[8px] transition-none hover:bg-gray-200 dark:hover:bg-moon-100;
+    @apply f-box h-8 lg:h-9 w-8 lg:w-9 rounded-md p-[2px] lg:p-[3px] transition-none hover:bg-gray-200 dark:hover:bg-moon-100;
+  }
+  .wrapper {
+    @apply bg-gray-200 dark:bg-moon-400 rounded-md animate-appear-up;
+  }
+  .wrapper-bright {
+    @apply bg-gray-100 dark:bg-moon-300 rounded-md animate-appear-up;
   }
   .box {
     @apply bg-gray-100 dark:bg-moon-700 border border-gray-200 dark:border-moon-100 rounded-md;
   }
   .borderless-box {
     @apply bg-gray-100 dark:bg-moon-700 rounded-md;
-  }
-  .modal {
-    @apply flex-box top-0 left-0 fixed z-[5] h-full w-full bg-moon-400/80;
   }
 }
 
@@ -95,6 +104,7 @@ select:-webkit-autofill:focus {
     );
     background-size: 200% 100%;
     animation: moving-gradient 1.7s ease-in infinite;
+    border-radius: 0.375rem;
   }
   .dark .animate-pulse-right-bright {
     background-image: linear-gradient(

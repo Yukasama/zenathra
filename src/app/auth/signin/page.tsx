@@ -37,20 +37,11 @@ export default function Login() {
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setLoading(true);
 
-    signIn("credentials", {
-      ...data,
-      redirect: false,
-    }).then((callback) => {
+    signIn("credentials", { ...data, redirect: true }).then((callback) => {
       setLoading(false);
 
-      if (callback?.ok) {
-        toast.success("Successfully logged in.");
-        router.refresh();
-      }
-
-      if (callback?.error) {
-        toast.error(callback.error);
-      }
+      if (callback?.ok) router.refresh();
+      if (callback?.error) toast.error(callback.error);
     });
   };
 
@@ -80,7 +71,7 @@ export default function Login() {
         </div>
         <Link
           href="/auth/forgot-password"
-          className="ml-auto cursor-pointer rounded-md p-1 px-2 text-sm text-blue-500 hover:bg-blue-500/10">
+          className="ml-auto rounded-md p-1 px-2 text-sm text-blue-500 hover:bg-blue-500/10">
           Forgot Password?
         </Link>
         <Button
@@ -92,7 +83,7 @@ export default function Login() {
 
       <div className="flex items-center">
         <div className="h-[1px] flex-1 bg-gray-400/60 dark:bg-moon-100"></div>
-        <div className="flex-box h-10 w-10 rounded-full border border-gray-400/60 text-[12px] text-gray-400 dark:border-moon-100">
+        <div className="f-box h-10 w-10 rounded-full border border-gray-400/60 text-[12px] text-gray-400 dark:border-moon-100">
           OR
         </div>
         <div className="h-[1px] flex-1 bg-gray-400/60 dark:bg-moon-100"></div>
@@ -104,7 +95,7 @@ export default function Login() {
         <OAuth provider="github" />
       </div>
 
-      <div className="flex-box mt-2 gap-1">
+      <div className="f-box mt-2 gap-1">
         <p className="text-sm">New to our platform?</p>
         <Link
           href="/auth/register"

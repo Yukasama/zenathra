@@ -181,16 +181,16 @@ export default function ScreenerPage() {
         <div className="hidden-scrollbar f-col mt-[2px] h-full overflow-y-auto">
           <div className="sticky top-0 z-10 flex bg-moon-300">
             {Object.keys(ratings).map((rating) => (
-              <div
+              <button
                 key={rating}
                 onClick={() => setActive(rating)}
                 className={`${
                   active === rating &&
                   "border-b border-b-blue-500 bg-gray-200 dark:bg-moon-200"
-                } flex-box flex-1 cursor-pointer bg-gray-100 p-3 px-5 font-medium hover:bg-gray-200 dark:bg-moon-400/70 dark:hover:bg-moon-200`}>
+                } f-box flex-1 cursor-pointer bg-gray-100 p-3 px-5 font-medium hover:bg-gray-200 dark:bg-moon-400/70 dark:hover:bg-moon-200`}>
                 <p className="hidden font-light lg:flex">{rating}</p>
                 <div className="flex lg:hidden">{ratings[rating]}</div>
-              </div>
+              </button>
             ))}
           </div>
           <div
@@ -233,7 +233,7 @@ export default function ScreenerPage() {
                         reset={resetCounter}
                         relative
                       />
-                      <div className="flex-box mt-2 h-8 w-8 rounded-md border border-gray-200 p-2 text-lg font-semibold dark:border-moon-100">
+                      <div className="f-box mt-2 h-8 w-8 rounded-md border border-gray-200 p-2 text-lg font-semibold dark:border-moon-100">
                         <p className="mb-0.5">&gt;</p>
                       </div>
                       <SelectInput
@@ -271,7 +271,7 @@ export default function ScreenerPage() {
                         reset={resetCounter}
                         relative
                       />
-                      <div className="flex-box mt-2 h-8 w-8 rounded-md border border-gray-200 p-2 text-lg font-semibold dark:border-moon-100">
+                      <div className="f-box mt-2 h-8 w-8 rounded-md border border-gray-200 p-2 text-lg font-semibold dark:border-moon-100">
                         <p className="mb-0.5">&gt;</p>
                       </div>
                       <SelectInput
@@ -335,7 +335,7 @@ export default function ScreenerPage() {
                     className="grid min-h-[60px] grid-cols-10 items-center 
                     gap-4 rounded-md bg-gray-200 px-4 dark:bg-moon-200 dark:hover:bg-moon-400">
                     <div className="col-span-3 flex items-center gap-4">
-                      <div className="flex-box h-10 w-10 rounded-sm dark:bg-white">
+                      <div className="f-box h-10 w-10 rounded-sm dark:bg-white">
                         <Image
                           src={stock.image}
                           className="max-h-10 w-10 rounded-md p-1 dark:bg-white"

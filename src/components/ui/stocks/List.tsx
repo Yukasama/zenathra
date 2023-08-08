@@ -1,79 +1,79 @@
 import { getImages, getQuotes } from "@/lib/stocks/client/getStocks";
 import { Quote, StockImage } from "@/types/stock";
-import ListItem from "@/components/ui/stocks/ListItem";
+import ListItem, { ListItemLoading } from "@/components/ui/stocks/ListItem";
+import { StructureProps } from "@/types/layout";
 
-interface Props {
+interface ListStructureProps extends StructureProps {
+  title?: string;
+}
+
+interface SharedProps {
+  title?: string;
+  limit?: number;
+  className?: string;
+}
+
+interface Props extends SharedProps {
   symbols: string[];
-  title?: string;
   error?: string;
-  limit?: number;
 }
 
-interface LoadingProps {
-  title?: string;
-  limit?: number;
-}
-
-export const ListLoading = ({ title, limit = 5 }: LoadingProps) => {
+function Structure({
+  title,
+  children,
+  isLoading,
+  className,
+}: ListStructureProps) {
   return (
     <div
-      className={`flex min-w-[300px] animate-appear-up flex-col gap-2 borderless-box ${
-        title && "p-5 py-4"
-      }`}>
-      <p className="text-[19px] font-medium">{title}</p>
-      <div>
-        {[...Array(limit)].map((_, i) => (
-          <div
-            key={i}
-            className={`animate-pulse-right mb-1 flex h-[50px] w-full items-center justify-between gap-3 rounded-md p-3 pl-2`}></div>
-        ))}
-      </div>
+      className={`f-col min-w-[300px] gap-[3px] ${title && "p-5 py-4"} ${
+        isLoading && "animate-pulse-right"
+      } ${className}`}>
+      <p className="text-[19px] font-medium mb-1.5">{title}</p>
+      {children}
     </div>
   );
-};
+}
+
+export function ListLoading({ title, limit = 5, className }: SharedProps) {
+  return (
+    <Structure title={title} className={className}>
+      {[...Array(limit)].map((_, i) => (
+        <ListItemLoading key={i} />
+      ))}
+    </Structure>
+  );
+}
 
 export default async function List({
   symbols,
   title = "",
   error,
   limit = 5,
+  className,
 }: Props) {
-  if (!symbols) return <ListLoading />;
-
-  try {
-    symbols = symbols.slice(0, symbols.length > limit ? limit : symbols.length);
-  } catch {
+  if (!symbols?.length)
     return (
       <p className="text-xl text-center font-medium text-gray-600">{error}</p>
     );
-  }
 
-  if (!symbols.length)
-    return (
-      <p className="text-xl text-center font-medium text-gray-600">{error}</p>
-    );
+  const symbolsToFetch = symbols.slice(0, Math.min(symbols.length, limit));
 
   let [peerImages, quotes]: [StockImage[] | null, Quote[] | null] =
-    await Promise.all([getImages(symbols), getQuotes(symbols)]);
+    await Promise.all([getImages(symbolsToFetch), getQuotes(symbolsToFetch)]);
 
   if (!Array.isArray(peerImages) && peerImages) peerImages = [peerImages];
 
   return (
-    <div
-      className={`flex min-w-[300px] animate-appear-up flex-col gap-2 borderless-box ${
-        title && "p-5 py-4"
-      }`}>
-      <p className="text-[19px] font-medium">{title}</p>
-      <div className="f-col">
-        {symbols.map((symbol) => (
-          <ListItem
-            key={symbol}
-            symbol={symbol}
-            image={peerImages && peerImages.find((p) => p.symbol === symbol)}
-            quote={quotes?.find((q) => symbol === q.symbol) ?? null}
-          />
-        ))}
-      </div>
-    </div>
+    <Structure title={title} className={className}>
+      {symbols.map((symbol) => (
+        <ListItem
+          key={symbol}
+          symbol={symbol}
+          image={peerImages && peerImages.find((p) => p.symbol === symbol)}
+          quote={quotes?.find((q) => symbol === q.symbol) ?? null}
+        />
+      ))}
+    </Structure>
   );
 }

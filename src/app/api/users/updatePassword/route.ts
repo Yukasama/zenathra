@@ -6,6 +6,14 @@ import z from "zod";
 import bcrypt from "bcrypt";
 
 const Schema = z.object({
+  action: z.enum(["email", "username", "password"]),
+});
+
+const EmailSchema = z.object({
+  email: z.string().email("Please enter a valid email address."),
+});
+
+const PasswordSchema = z.object({
   oldPassword: z.string().min(1, "Please enter a valid password."),
   password: z.string().min(11, "Password must contain 11 or more characters."),
 });
@@ -17,18 +25,7 @@ export async function POST(req: NextRequest) {
 
     const parsed = Schema.safeParse(await req.json());
     if (!parsed.success) throw new ArgumentError(parsed.error.message);
-    const { oldPassword, password } = parsed.data;
-
-    const accounts = await db.account.findMany({
-      where: {
-        userId: user.id,
-      },
-    });
-
-    if (accounts.length > 0)
-      throw new PermissionError(
-        "Password change not possible since your auth provider determines the password."
-      );
+    const { action } = parsed.data;
 
     const databaseUser = await db.user.findUnique({
       where: {
@@ -38,22 +35,40 @@ export async function POST(req: NextRequest) {
 
     if (!databaseUser) throw new ServerError("User not found.");
 
-    if (!(await bcrypt.compare(oldPassword, databaseUser.hashedPassword)))
-      throw new ArgumentError("Invalid password.");
+    const accounts = await db.account.findMany({
+      where: {
+        userId: user.id,
+      },
+    });
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    if (accounts.length > 0)
+      throw new PermissionError(
+        "Change not possible since you have multiple linked accounts to your mail."
+      );
 
-    try {
-      await db.user.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          hashedPassword: hashedPassword,
-        },
-      });
-    } catch {
-      throw new ServerError("Password could not be changed.");
+    if (action === "password") {
+      const parsedPassword = PasswordSchema.safeParse(await req.json());
+      if (!parsedPassword.success)
+        throw new ArgumentError(parsedPassword.error.message);
+      const { oldPassword, password } = parsedPassword.data;
+
+      if (!(await bcrypt.compare(oldPassword, databaseUser.hashedPassword)))
+        throw new ArgumentError("Invalid password.");
+
+      const hashedPassword = await bcrypt.hash(password, 12);
+
+      try {
+        await db.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            hashedPassword: hashedPassword,
+          },
+        });
+      } catch {
+        throw new ServerError("Password could not be changed.");
+      }
     }
 
     return NextResponse.json({ message: "Password changed successfully." });

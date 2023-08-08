@@ -7,6 +7,8 @@ interface Props {
   onChange: Function;
   type?: string;
   id: string;
+  heading?: string;
+  subheading?: string;
   disabled?: boolean;
   required?: boolean;
   focus?: boolean;
@@ -17,6 +19,8 @@ export default function Input({
   type = "text",
   onChange,
   label,
+  heading,
+  subheading,
   disabled = false,
   required = true,
   focus = false,
@@ -37,31 +41,45 @@ export default function Input({
   };
 
   return (
-    <div className="relative">
-      <input
-        className={`text group w-full rounded-md border border-moon-100 bg-gray-100 p-3.5 pb-3
-        pt-4 outline-none transition-border duration-300 focus:border-blue-500 dark:bg-moon-300 ${
-          inputFocus && "border-blue-500"
+    <div>
+      <p
+        className={`text-md font-medium ml-0.5 ${!heading && "hidden"} ${
+          heading && !subheading && "mb-1"
+        }`}>
+        {heading}
+      </p>
+      <p
+        className={`text-sm text-gray-400 mb-1.5 ml-0.5 ${
+          !subheading && "hidden"
+        }`}>
+        {subheading}
+      </p>
+      <div className="relative">
+        <input
+          className={`text group w-full rounded-md border border-gray-300 dark:border-moon-100 bg-gray-100 p-3.5 pb-3
+        pt-4 outline-none transition-border focus:border-blue-500 dark:focus:border-blue-500 dark:bg-moon-300 ${
+          inputFocus && "border-blue-500 dark:border-blue-500"
         } text-sm`}
-        type={type}
-        id={id}
-        ref={ref}
-        onChange={handleChange}
-        disabled={disabled}
-        required={required}
-        autoComplete="password"
-        onFocus={() => setInputFocus(true)}
-        onBlur={() => setInputFocus(false)}
-      />
-      <label
-        htmlFor={id}
-        className={`absolute left-4 top-[13px] cursor-text text-gray-700 duration-200 
+          type={type}
+          id={id}
+          ref={ref}
+          onChange={handleChange}
+          disabled={disabled}
+          required={required}
+          autoComplete="password"
+          onFocus={() => setInputFocus(true)}
+          onBlur={() => setInputFocus(false)}
+        />
+        <label
+          htmlFor={id}
+          className={`absolute left-4 top-[13px] cursor-text text-gray-700 duration-200 
             ${
               (input || inputFocus) &&
               "translate-x-[-2px] translate-y-[-11px] text-[11px]"
             }`}>
-        {label}
-      </label>
+          {label}
+        </label>
+      </div>
     </div>
   );
 }

@@ -4,3 +4,9 @@ export interface Menu {
   icon: any;
   gap?: boolean;
 }
+
+export interface StructureProps {
+  className?: string;
+  children?: React.ReactNode;
+  isLoading?: boolean;
+}

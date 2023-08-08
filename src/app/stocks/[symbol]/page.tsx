@@ -57,12 +57,14 @@ export default async function Symbol({ params: { symbol } }: Props) {
               {/*// @ts-ignore*/}
               <StockChart symbol={symbol} />
             </Suspense>
-            <Suspense fallback={<ListLoading title="Peers" />}>
+            <Suspense
+              fallback={<ListLoading title="Peers" className="wrapper" />}>
               {/*// @ts-ignore*/}
               <List
                 symbols={stock.peersList.slice(0, 5)}
                 title="Peers"
                 error="No Peers found"
+                className="wrapper"
               />
             </Suspense>
           </div>

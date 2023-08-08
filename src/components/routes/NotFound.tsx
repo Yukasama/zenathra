@@ -4,7 +4,7 @@ import { ExternalLink } from "react-feather";
 
 export default function NotFound() {
   return (
-    <div className="flex-box h-[680px] flex-col">
+    <div className="f-box h-[680px] flex-col">
       <p className="text-[50px] font-bold">404</p>
       <p className="mb-5 text-[20px]">Page Not Found.</p>
       <Link href="/">

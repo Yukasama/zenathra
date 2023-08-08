@@ -1,6 +1,6 @@
 "use client";
 
-import { ClipLoader } from "react-spinners";
+import { ScaleLoader } from "react-spinners";
 
 interface Props {
   label?: string;
@@ -26,7 +26,7 @@ export default function Button({
   return (
     <button
       onClick={onClick ?? null}
-      className={`flex-box ${
+      className={`f-box ${
         icon && label ? "h-[45px] px-3 pr-4" : "h-[30px] px-2"
       } group rounded-md duration-300 ${
         outline
@@ -44,12 +44,12 @@ export default function Button({
                 ? "bg-red-500 hover:bg-red-600"
                 : "bg-green-500 hover:bg-green-600"
             } text-white`
-      } ${className}`}
+      } ${disabled && "bg-gray-400 hover:bg-gray-400"} ${className}`}
       disabled={disabled}>
       {loading ? (
-        <ClipLoader color="#fff" size={20} />
+        <ScaleLoader color="#fff" height={15} width={2} />
       ) : (
-        <div className={`flex-box ${icon && label && "gap-1.5"}`}>
+        <div className={`f-box ${icon && label && "gap-1.5"}`}>
           <div className={`group-hover:text-white ${!icon && "hidden"}`}>
             {icon}
           </div>

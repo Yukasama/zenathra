@@ -104,15 +104,23 @@ export default function PortableSidebar() {
             </div>
 
             <div className="f-col w-full">
-              {menusUp.map((menu, i) => (
-                <Sidelink key={i} {...menu} />
+              {menusUp.map((menu) => (
+                <Sidelink
+                  key={`${menu.title}-portable`}
+                  onClick={toggleSidebar}
+                  {...menu}
+                />
               ))}
             </div>
           </div>
 
           <div className="f-col w-full">
-            {menusDown.map((menu, i) => (
-              <Sidelink key={i} {...menu} />
+            {menusDown.map((menu) => (
+              <Sidelink
+                key={`${menu.title}-portable`}
+                onClick={toggleSidebar}
+                {...menu}
+              />
             ))}
           </div>
         </div>

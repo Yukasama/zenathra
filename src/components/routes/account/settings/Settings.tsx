@@ -92,10 +92,10 @@ export default function Settings({ user }: Props) {
 
         <div className="f-col gap-2">
           {tabs.map((tab) => (
-            <div
+            <button
               key={tab.id}
               onClick={() => setActive(tab.id)}
-              className={`cursor-pointer p-3 shadow-sm ${
+              className={`p-3 shadow-sm ${
                 active === tab.id
                   ? "bg-blue-500"
                   : "hover:bg-gray-300/50 hover:dark:bg-moon-200"
@@ -106,7 +106,7 @@ export default function Settings({ user }: Props) {
               <p className={`${active === tab.id && "text-white"}`}>
                 {tab.label}
               </p>
-            </div>
+            </button>
           ))}
         </div>
       </div>
@@ -135,12 +135,12 @@ export default function Settings({ user }: Props) {
                 <div className="f-col gap-2" key={info.title}>
                   <Link
                     href={info.link}
-                    className="flex w-full cursor-pointer items-center justify-between rounded-lg p-5 hover:bg-gray-200 dark:hover:bg-moon-200">
+                    className="f-between w-full rounded-lg p-5 hover:bg-gray-200 dark:hover:bg-moon-200">
                     <p className="w-[50px] font-light text-gray-600">
                       {info.title}
                     </p>
                     {info.value}
-                    <div className="flex-box h-9 w-9 rounded-md ">
+                    <div className="f-box h-9 w-9 rounded-md ">
                       <ChevronRight className="h-5 w-5" />
                     </div>
                   </Link>
@@ -192,12 +192,12 @@ export default function Settings({ user }: Props) {
                 <div className="f-col gap-2" key={info.title}>
                   <Link
                     href={info.link}
-                    className="flex w-full cursor-pointer items-center justify-between rounded-lg p-5 hover:bg-gray-200 dark:hover:bg-moon-200">
+                    className="f-between w-full rounded-lg p-5 hover:bg-gray-200 dark:hover:bg-moon-200">
                     <p className="w-[50px] font-light text-gray-600">
                       {info.title}
                     </p>
                     {info.value}
-                    <div className="flex-box h-9 w-9 rounded-md ">
+                    <div className="f-box h-9 w-9 rounded-md ">
                       <ChevronRight className="h-5 w-5" />
                     </div>
                   </Link>

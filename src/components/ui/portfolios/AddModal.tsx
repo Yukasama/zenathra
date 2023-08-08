@@ -1,6 +1,6 @@
 "use client";
 
-import { Portfolio } from "@prisma/client";
+import { Portfolio } from "@/types/portfolio";
 import toast from "react-hot-toast";
 import { Button } from "../buttons";
 import { Plus, Trash2, X } from "react-feather";

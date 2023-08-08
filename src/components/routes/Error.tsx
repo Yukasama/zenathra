@@ -22,7 +22,7 @@ export default function Error({
   const router = useRouter();
 
   return (
-    <div className="flex-box h-[680px] flex-col">
+    <div className="f-box h-[680px] flex-col">
       <p className="text-[50px] font-bold">{statusCode}</p>
       <p className="mb-5 text-[20px]">{error}</p>
       <Button

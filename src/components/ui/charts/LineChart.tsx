@@ -47,7 +47,7 @@ export default function LineChart({
       pointRadius: c.pointRadius,
       pointHitRadius: c.pointHitRadius,
       pointBorderWidth: c.pointBorderWidth,
-      pointBorderColor: `white`,
+      pointBorderColor: "white",
       pointBackgroundColor: `rgb(${c.color})`,
       pointHoverBorderWidth: c.pointHoverBorderWidth,
       pointHoverRadius: c.pointHoverRadius,

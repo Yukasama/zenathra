@@ -42,7 +42,7 @@ export default function Eye({ stock, user }: Props) {
           strokeLinecap="round"
         />
       </svg>
-      <div className="flex-box relative h-[90%] w-full flex-col">
+      <div className="f-box relative h-[90%] w-full flex-col">
         <p className="text-center text-[30px] font-medium">
           {user ? value : <Lock className="mb-1.5 h-6" />}
         </p>

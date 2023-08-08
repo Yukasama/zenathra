@@ -3,7 +3,7 @@
 import { Plus } from "react-feather";
 import toast from "react-hot-toast";
 import { User } from "@/types/user";
-import { Portfolio } from "@prisma/client";
+import { Portfolio } from "@/types/portfolio";
 import Button from "@/components/ui/buttons/Button";
 import { useState } from "react";
 import AddModal from "../portfolios/AddModal";

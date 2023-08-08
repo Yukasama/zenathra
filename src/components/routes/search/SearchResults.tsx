@@ -21,7 +21,7 @@ export default async function SearchResults({ search }: Props) {
           key={stock.symbol}
           className="grid h-[60px] grid-cols-3 items-center gap-4 bg-gray-200 px-4 dark:bg-moon-200 dark:hover:bg-moon-400">
           <div className="grid-col-span-1 flex items-center gap-4">
-            <div className="flex-box h-10 w-10 rounded-sm">
+            <div className="f-box h-10 w-10 rounded-sm">
               <Image
                 src={stock.image}
                 className="max-h-10 w-10 rounded-md p-1"

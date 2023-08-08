@@ -1,7 +1,7 @@
 "use client";
 
 import { deletePortfolio } from "@/lib/portfolio/managePortfolio";
-import { Portfolio } from "@prisma/client";
+import { Portfolio } from "@/types/portfolio";
 import { useRouter } from "next/navigation";
 import { Trash } from "react-feather";
 import { Button } from "@/components/ui/buttons";
@@ -13,17 +13,17 @@ type Props = {
 };
 
 export default function DeleteButton({ portfolio }: Props) {
-  const router = useRouter();
-
   const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
 
   const handleDelete = async () => {
     setLoading(true);
-    const loading = toast.loading(`Deleting Portfolio '${portfolio.title}'...`);
 
+    const loading = toast.loading(`Deleting Portfolio '${portfolio.title}'...`);
     try {
       await deletePortfolio(portfolio.id);
-      toast.success(`Portfolio '${portfolio.title}' Deleted`, { id: loading });
+      toast.success(`Portfolio '${portfolio.title}' deleted.`, { id: loading });
     } catch {
       toast.error("Failed to delete portfolio", { id: loading });
     }

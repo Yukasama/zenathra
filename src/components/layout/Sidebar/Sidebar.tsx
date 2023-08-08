@@ -63,23 +63,27 @@ export default function Sidebar() {
         <div className="f-col">
           <button
             onClick={() => toggleSidebar()}
-            className={`m-1 mx-4 mb-2.5 flex cursor-pointer 
-            items-center rounded-lg`}>
+            className="m-1 mx-4 mb-2.5 flex items-center rounded-lg">
             <div className="p-3">
               <MenuIcon className="h-[22px]" />
             </div>
           </button>
 
           <div className="f-col">
-            {menusUp.map((menu, i) => (
-              <Sidelink key={i} {...menu} notext />
+            {menusUp.map((menu) => (
+              <Sidelink key={menu.title} {...menu} notext />
             ))}
           </div>
         </div>
 
         <div className="f-col">
-          {menusDown.map((menu, i) => (
-            <Sidelink key={i} {...menu} loading={status === "loading"} notext />
+          {menusDown.map((menu) => (
+            <Sidelink
+              key={menu.title}
+              {...menu}
+              loading={status === "loading"}
+              notext
+            />
           ))}
         </div>
       </div>
