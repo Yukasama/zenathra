@@ -44,42 +44,40 @@ export default function ChangeEmail() {
 
     const { error } = await updateEmail(data.email);
     if (!error) {
-      router.push("/");
+      setLoading(false);
       toast.success("Email successfully reset.");
-      signOut();
+
+      router.refresh();
+      signOut({ redirect: true, callbackUrl: "/auth/signin" });
     } else {
       toast.error(error || "An error occurred during email reset.");
     }
-
-    setLoading(false);
   };
 
   return (
-    <Form title="Change Your E-Mail">
-      <form className="f-col gap-5" onSubmit={handleSubmit(onSubmit)}>
-        <AuthInput
-          id="email"
-          type="email"
-          label="E-Mail"
-          register={register}
-          errors={errors}
-        />
+    <Form title="Change Your E-Mail" onSubmit={handleSubmit(onSubmit)}>
+      <AuthInput
+        id="email"
+        type="email"
+        label="E-Mail"
+        register={register}
+        errors={errors}
+      />
 
-        <AuthInput
-          id="confEmail"
-          type="confEmail"
-          label="Confirm E-Mail"
-          register={register}
-          errors={errors}
-        />
+      <AuthInput
+        id="confEmail"
+        type="confEmail"
+        label="Confirm E-Mail"
+        register={register}
+        errors={errors}
+      />
 
-        <Button
-          loading={loading}
-          label="Change Email"
-          color="blue"
-          icon={<ArrowRightCircle className="h-4 w-4" />}
-        />
-      </form>
+      <Button
+        loading={loading}
+        label="Change Email"
+        color="blue"
+        icon={<ArrowRightCircle className="h-4 w-4" />}
+      />
     </Form>
   );
 }

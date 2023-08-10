@@ -3,6 +3,9 @@
 import toast from "react-hot-toast";
 import { signOut } from "next-auth/react";
 import { FormEvent } from "react";
+import { LogOut, SkipBack, X } from "react-feather";
+import { Button } from "@/components/ui/buttons";
+import { Checkbox } from "@/components/ui/inputs";
 
 interface Props {
   setShow: any;
@@ -17,31 +20,32 @@ export default function Logout({ setShow }: Props) {
 
     try {
       await signOut();
-      toast.success("Logged out successfully.", { id: loading });
     } catch {
       toast.error("An error occurred during logout.", { id: loading });
     }
   };
 
   return (
-    <div className="absolute left-[calc(50%-300px)] top-[200px] f-col h-[350px] w-[600px] justify-between rounded-lg bg-gray-200 p-8 dark:bg-moon-500">
-      <div>
-        <p className="text-[20px] font-medium">Sign Out?</p>
-        <p className="text-gray-500 dark:text-gray-500">
-          Are you sure you want to logout?
-        </p>
-      </div>
-      <div className="mr-10 flex w-full justify-end gap-5">
-        <button
+    <div className="fcol">
+      <Checkbox
+        className="ml-1.5"
+        heading="Remember Me"
+        label="Keep me logged in on this device."
+        onChange={() => {}}
+      />
+      <div className="pt-16 flex w-full justify-end gap-5">
+        <Button
           onClick={() => setShow(false)}
-          className="rounded-md bg-blue-500 p-2 px-5 font-medium text-white hover:bg-blue-600">
-          Cancel
-        </button>
-        <button
+          label="Cancel"
+          color="blue"
+          icon={<SkipBack className="h-4 w-4" />}
+        />
+        <Button
           onClick={handleLogout}
-          className="rounded-md bg-red-500 p-2 px-5 font-medium text-white hover:bg-red-600">
-          Logout
-        </button>
+          label="Logout"
+          color="red"
+          icon={<LogOut className="h-4 w-4" />}
+        />
       </div>
     </div>
   );

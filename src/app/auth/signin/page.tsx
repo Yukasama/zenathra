@@ -12,6 +12,7 @@ import AuthInput from "@/components/ui/inputs/AuthInput";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Checkbox } from "@/components/ui/inputs";
 
 const LoginSchema = z.object({
   email: z.string().email("Please enter a valid email."),
@@ -69,6 +70,12 @@ export default function Login() {
             errors={errors}
           />
         </div>
+        <Checkbox
+          className="ml-1.5"
+          heading="Remember Me"
+          label="Keep me logged in on this device."
+          onChange={() => {}}
+        />
         <Link
           href="/auth/forgot-password"
           className="ml-auto rounded-md p-1 px-2 text-sm text-blue-500 hover:bg-blue-500/10">

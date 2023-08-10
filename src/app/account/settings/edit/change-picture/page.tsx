@@ -45,12 +45,8 @@ export default function ChangePassword() {
   };
 
   return (
-    <Form title="Change Your Picture">
-      <form className="f-col gap-5" onSubmit={handleSubmit(onSubmit)}>
-        <div className="mt-40 text-center text-3xl font-thin">
-          Coming soon...
-        </div>
-      </form>
+    <Form title="Change Your Picture" onSubmit={handleSubmit(onSubmit)}>
+      <div className="mt-40 text-center text-3xl font-thin">Coming soon...</div>
     </Form>
   );
 }

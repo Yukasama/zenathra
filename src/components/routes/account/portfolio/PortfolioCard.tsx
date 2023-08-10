@@ -1,9 +1,7 @@
 import { Portfolio } from "@/types/portfolio";
 import Link from "next/link";
-import { BarChart2 } from "react-feather";
 import { List } from "@/components/ui/stocks";
 import DeleteButton from "@/components/routes/account/portfolio/DeleteButton";
-import { Button } from "@/components/ui/buttons";
 import { Suspense } from "react";
 import { ListLoading } from "@/components/ui/stocks/List";
 
@@ -18,7 +16,7 @@ export default function PortfolioCard({ portfolio }: Props) {
     <div className="relative">
       <Link
         href={`/portfolios/${portfolio.id}`}
-        className="f-col group min-h-[300px] gap-5 p-5 box hover:bg-gray-200 dark:hover:bg-moon-800">
+        className="f-col group min-h-[300px] p-5 box hover:bg-gray-200 dark:hover:bg-moon-800">
         <p className="text-lg font-medium">{portfolio.title}</p>
         <div>
           <Suspense fallback={<ListLoading limit={3} />}>
@@ -26,7 +24,7 @@ export default function PortfolioCard({ portfolio }: Props) {
             <List
               symbols={portfolio.symbols}
               error="No Stocks in Portfolio"
-              className="group-hover:scale-[1.015] duration-300"
+              className="group-hover:scale-[1.01] duration-300"
               limit={3}
             />
           </Suspense>

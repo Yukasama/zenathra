@@ -53,31 +53,29 @@ export default function ChangePassword() {
   };
 
   return (
-    <Form title="Change Your Username">
-      <form className="f-col gap-5" onSubmit={handleSubmit(onSubmit)}>
-        <AuthInput
-          id="username"
-          type="text"
-          label="Username"
-          register={register}
-          errors={errors}
-        />
+    <Form title="Change Your Username" onSubmit={handleSubmit(onSubmit)}>
+      <AuthInput
+        id="username"
+        type="text"
+        label="Username"
+        register={register}
+        errors={errors}
+      />
 
-        <AuthInput
-          id="confUsername"
-          type="text"
-          label="Confirm Username"
-          register={register}
-          errors={errors}
-        />
+      <AuthInput
+        id="confUsername"
+        type="text"
+        label="Confirm Username"
+        register={register}
+        errors={errors}
+      />
 
-        <Button
-          loading={loading}
-          label="Change Username"
-          color="blue"
-          icon={<ArrowRightCircle className="h-4 w-4" />}
-        />
-      </form>
+      <Button
+        loading={loading}
+        label="Change Username"
+        color="blue"
+        icon={<ArrowRightCircle className="h-4 w-4" />}
+      />
     </Form>
   );
 }

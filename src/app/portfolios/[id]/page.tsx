@@ -85,8 +85,7 @@ export default async function PortfolioPage({ params: { id } }: Params) {
           {portfolio.title}
         </h1>
         <p className="text-sm text-gray-400">
-          Created on{" "}
-          {portfolio.createdAt.toISOString().split("T")[0].replace(/-/g, "/")}
+          Created on {portfolio.createdAt.split("T")[0].replace(/-/g, "/")}
         </p>
       </div>
       {stocks ? (

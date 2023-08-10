@@ -23,7 +23,7 @@ export default function Navbar() {
         <Menu />
       </button>
 
-      <div className="box flex items-center justify-end gap-2 px-1 pl-3">
+      <div className="box flex items-center justify-end gap-2 px-3">
         {!session && status !== "loading" && (
           <div className="hidden items-center gap-3 lg:flex">
             <Link
@@ -33,7 +33,7 @@ export default function Navbar() {
             </Link>
             <Link
               href="/auth/register"
-              className="rounded-md bg-blue-500 p-1.5 px-4  font-semibold text-white hover:bg-blue-600">
+              className="rounded-md bg-blue-500 p-1.5 px-4 font-semibold text-white hover:bg-blue-600">
               Sign Up
             </Link>
           </div>

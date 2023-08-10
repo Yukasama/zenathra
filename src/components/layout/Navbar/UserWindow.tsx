@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Logout } from "@/components/routes/auth";
 import Link from "next/link";
 import { Session } from "next-auth";
+import Modal from "@/components/ui/Modal";
 
 interface Props {
   session: Session | null;
@@ -17,7 +18,7 @@ export default function UserWindow({ session, status, collapsed }: Props) {
   const [logoutShow, setLogoutShow] = useState(false);
 
   return (
-    <div>
+    <>
       <div
         className={`essential ${
           !collapsed && "hidden"
@@ -70,12 +71,12 @@ export default function UserWindow({ session, status, collapsed }: Props) {
                 </div>
               </div>
               <div className="line my-1 h-full w-full"></div>
-              <div className="z-5 f-col w-full items-center">
-                {!session ? (
-                  <>
+              <div className="z-5 f-col gap-2.5 w-full items-center">
+                {!session && (
+                  <div className="w-full f-col items-center">
                     <Link
                       href="/auth/signin"
-                      className="flex h-[40px] w-full items-center rounded-md bg-blue-500 hover:bg-blue-600">
+                      className="flex h-[40px] w-full items-center rounded-md bg-gray-300/50 hover:bg-gray-300 dark:bg-moon-200 dark:hover:bg-moon-300">
                       <LogIn className="mx-4 mr-3 h-4 text-white" />
                       <p className="text-[14px] font-medium text-white">
                         Sign In
@@ -90,44 +91,44 @@ export default function UserWindow({ session, status, collapsed }: Props) {
                     </div>
                     <Link
                       href="/auth/register"
-                      className="flex h-[40px] w-full items-center rounded-md bg-purple-600 hover:bg-purple-700">
-                      <Send className="mx-4 mr-3 h-4 text-white" />
+                      className="flex items-center w-full h-[40px] rounded-md bg-blue-500 hover:bg-blue-600">
+                      <Send className="mx-4 mr-3 h-4" />
                       <p className="text-[14px] font-medium text-white">
                         Sign Up
                       </p>
                     </Link>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      onClick={() => setLogoutShow(true)}
-                      className="flex h-[40px] items-center rounded-md bg-blue-500
-                  bg-gradient-to-br text-white hover:bg-blue-600">
-                      <LogOut className="mx-4 mr-3 h-4 font-medium text-white" />
-                      <p className="text-[14px] font-medium text-white">
-                        Sign Out
-                      </p>
-                    </button>
-                  </>
+                    <div className="line my-3 w-full"></div>
+                  </div>
                 )}
-                <div className="line my-3 w-full"></div>
                 <button
                   className="flex h-[40px] w-full items-center rounded-md 
                  bg-gray-300 hover:bg-gray-400/60 dark:bg-moon-200 hover:dark:bg-moon-200/90">
                   <Globe className="mx-4 mr-3 h-4" />
                   <p className="text-[14px] font-medium">Language</p>
                 </button>
+                {session && (
+                  <button
+                    onClick={() => setLogoutShow(true)}
+                    className="flex h-[40px] items-center rounded-md bg-blue-500
+                bg-gradient-to-br text-white hover:bg-blue-600 w-full">
+                    <LogOut className="mx-4 mr-3 h-4 font-medium text-white" />
+                    <p className="text-[14px] font-medium text-white">
+                      Sign Out
+                    </p>
+                  </button>
+                )}
               </div>
             </div>
           </div>
         )}
       </div>
-      <div
-        className={`${
-          logoutShow ? "left-[calc(50%)] z-10 flex" : "hidden"
-        } absolute`}>
+
+      <Modal
+        title="Sign Out?"
+        isOpen={logoutShow}
+        onClose={() => setLogoutShow(false)}>
         <Logout setShow={setLogoutShow} />
-      </div>
-    </div>
+      </Modal>
+    </>
   );
 }

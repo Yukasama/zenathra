@@ -59,39 +59,37 @@ export default function ChangePassword() {
   };
 
   return (
-    <Form title="Change Your Password">
-      <form className="f-col gap-5" onSubmit={handleSubmit(onSubmit)}>
-        <AuthInput
-          id="oldPassword"
-          type="password"
-          label="Old Password"
-          register={register}
-          errors={errors}
-        />
+    <Form title="Change Your Password" onSubmit={handleSubmit(onSubmit)}>
+      <AuthInput
+        id="oldPassword"
+        type="password"
+        label="Old Password"
+        register={register}
+        errors={errors}
+      />
 
-        <AuthInput
-          id="password"
-          type="password"
-          label="Password"
-          register={register}
-          errors={errors}
-        />
+      <AuthInput
+        id="password"
+        type="password"
+        label="Password"
+        register={register}
+        errors={errors}
+      />
 
-        <AuthInput
-          id="confPassword"
-          type="password"
-          label="Confirm Password"
-          register={register}
-          errors={errors}
-        />
+      <AuthInput
+        id="confPassword"
+        type="password"
+        label="Confirm Password"
+        register={register}
+        errors={errors}
+      />
 
-        <Button
-          loading={loading}
-          label="Change Password"
-          color="blue"
-          icon={<ArrowRightCircle className="h-4 w-4" />}
-        />
-      </form>
+      <Button
+        loading={loading}
+        label="Change Password"
+        color="blue"
+        icon={<ArrowRightCircle className="h-4 w-4" />}
+      />
     </Form>
   );
 }
