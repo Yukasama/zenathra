@@ -18,12 +18,12 @@
 ::-webkit-scrollbar-thumb {
   @apply bg-blue-500;
 }
-.hidden-scrollbar::-webkit-scrollbar {
-  display: none;
-}
 .hidden-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+.hidden-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 input:-webkit-autofill,
@@ -77,7 +77,7 @@ select:-webkit-autofill:focus {
     @apply h-[1px] bg-gray-300/80 dark:bg-moon-100;
   }
   .input {
-    @apply text group w-full rounded-md border border-gray-300 dark:border-moon-100 bg-gray-100 p-3.5 pb-3 pt-4 outline-none transition-border focus:border-blue-500 dark:focus:border-blue-500 dark:bg-moon-300;
+    @apply text w-full rounded-md border border-gray-300 dark:border-moon-100 bg-gray-100 p-3.5 pb-3 pt-4 outline-none transition-border focus:border-blue-500 dark:focus:border-blue-500 dark:bg-moon-300;
   }
   .icon {
     @apply f-box h-8 lg:h-9 w-8 lg:w-9 rounded-md p-[2px] lg:p-[3px] transition-none hover:bg-gray-200 dark:hover:bg-moon-100;

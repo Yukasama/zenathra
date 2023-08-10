@@ -10,7 +10,7 @@ import {
 } from "@/components/routes/account/portfolio";
 import { getPortfolio } from "@/lib/portfolio/getPortfolio";
 import notFound from "@/app/not-found";
-import { ChartLoading } from "@/components/ui/charts/PriceChart";
+import { ChartLoading } from "@/components/ui/charts/Chart";
 import PortfolioChart from "@/components/routes/portfolios/PortfolioChart";
 import { Portfolio } from "@/types/portfolio";
 import { User } from "@/types/user";

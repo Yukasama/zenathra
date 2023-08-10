@@ -2,7 +2,7 @@ import { getQuote, getImage } from "@/lib/stocks/client/getStocks";
 import { Quote, StockImage } from "@/types/stock";
 import Image from "next/image";
 import HighlightChart from "./HighlightChart";
-import { ChartLoading } from "@/components/ui/charts/PriceChart";
+import { ChartLoading } from "@/components/ui/charts/Chart";
 import { Suspense } from "react";
 import { Price } from "@/components/ui/stocks";
 
