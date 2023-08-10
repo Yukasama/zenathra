@@ -12,7 +12,7 @@ import { Suspense } from "react";
 import { getUser } from "@/lib/user";
 import notFound from "@/app/not-found";
 import { User } from "@/types/user";
-import { ChartLoading } from "@/components/ui/charts/PriceChart";
+import { ChartLoading } from "@/components/ui/charts/Chart";
 import { StatisticsLoading } from "@/components/routes/stocks/symbol/Statistics";
 import { InterfaceLoading } from "@/components/routes/stocks/symbol/Interface";
 

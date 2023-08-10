@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  Chart,
+  Chart as Chartjs,
   LinearScale,
   Filler,
   CategoryScale,
@@ -14,8 +14,9 @@ import {
 import { Bar } from "react-chartjs-2";
 import { chartOptions } from "./chartOptions";
 import { StockChart } from "@/types/stock";
+import Chart from "./Chart";
 
-Chart.register(
+Chartjs.register(
   LinearScale,
   CategoryScale,
   Filler,
@@ -30,6 +31,7 @@ export default function BarChart({
   labels,
   data,
   labelType,
+  size = "lg",
 }: StockChart) {
   const chartData = {
     labels: labels,
@@ -50,24 +52,15 @@ export default function BarChart({
   };
 
   return (
-    <div className="min-h-[340px] min-w-[500px] flex-1 animate-appear-up rounded-lg bg-gray-200 p-3 px-6 dark:bg-moon-400">
-      <p className="mb-1 text-[19px] font-medium">{title}</p>
-      <div className="ml-0.5 flex gap-4">
-        {data.map((c: any) => (
-          <div key={title + c.label} className="flex items-center gap-1">
-            <div
-              className={`h-[15px] w-[15px] rounded-full`}
-              style={{
-                backgroundColor: `rgb(${c.color.split(",")[0]}, ${
-                  c.color.split(",")[1]
-                }, ${c.color.split(",")[2]})`,
-              }}></div>
-            <p className="text-[14px] font-thin">{c.label}</p>
-          </div>
-        ))}
-      </div>
+    <Chart title={title} size={size} data={data} labels={labels}>
       <Bar
-        className="transition-transform duration-[0.35s] hover:scale-[1.01]"
+        className={`${
+          size === "lg"
+            ? "h-[410px] w-[700px]"
+            : size === "md"
+            ? "h-[310px] w-[510px]"
+            : "h-[190px] w-[270px]"
+        } max-w-full transition-transform duration-[0.35s] hover:scale-[1.01]`}
         data={chartData}
         options={
           labelType === "percent"
@@ -75,6 +68,6 @@ export default function BarChart({
             : (chartOptions("bar") as any)
         }
       />
-    </div>
+    </Chart>
   );
 }

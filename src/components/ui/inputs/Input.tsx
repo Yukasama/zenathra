@@ -56,10 +56,9 @@ export default function Input({
       </p>
       <div className="relative">
         <input
-          className={`text group w-full rounded-md border border-gray-300 dark:border-moon-100 bg-gray-100 p-3.5 pb-3
-        pt-4 outline-none transition-border focus:border-blue-500 dark:focus:border-blue-500 dark:bg-moon-300 ${
-          inputFocus && "border-blue-500 dark:border-blue-500"
-        } text-sm`}
+          className={`input ${
+            inputFocus && "border-blue-500 dark:border-blue-500"
+          } text-sm`}
           type={type}
           id={id}
           ref={ref}

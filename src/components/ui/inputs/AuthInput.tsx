@@ -25,9 +25,7 @@ export default function AuthInput({
         id={id}
         type={type}
         {...register(id)}
-        className={`text group w-full rounded-md border border-gray-300/60 bg-gray-100 p-3.5 pb-3 pt-4 text-sm outline-none transition-border duration-300 focus:border-blue-500 dark:border-moon-100 dark:bg-moon-300 ${
-          errors && errors[id] && "border-red-500"
-        }`}
+        className={`input ${errors && errors[id] && "border-red-500"}`}
       />
       <label
         htmlFor={id}

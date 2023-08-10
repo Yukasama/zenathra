@@ -53,13 +53,14 @@ export type Quote = {
 export type StockImage = {
   symbol: string;
   image: string;
-}
+};
 
 export type StockChart = {
   title?: string;
   labels: string[];
   data: {}[];
   labelType?: string;
+  size?: "lg" | "md" | "sm";
 };
 
 export type StockAction = "actives" | "winners" | "losers";

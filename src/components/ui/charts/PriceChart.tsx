@@ -17,6 +17,7 @@ import { corsairPlugin, chartOptions } from "./chartOptions";
 import { AllHistory, History, Quote, TimeFrame } from "@/types/stock";
 import Loader from "@/components/routes/Loader";
 import { TrendingDown, TrendingUp } from "react-feather";
+import { ChartStructure } from "./Chart";
 
 Chart.register(
   LinearScale,
@@ -45,36 +46,6 @@ const isAllHistory = (obj: AllHistory | History[]): obj is AllHistory => {
   return (obj as AllHistory)["1D"] !== undefined;
 };
 
-export function ChartLoading({ size = "lg", className }: LoadingProps) {
-  return (
-    <div
-      className={`${
-        size === "lg"
-          ? "h-[410px] w-[700px]"
-          : size === "md"
-          ? "h-[310px] w-[510px]"
-          : "h-[190px] w-[300px]"
-      } animate-pulse-right f-col animate-appear-up rounded-lg bg-gray-200 dark:bg-moon-400 ${className}`}></div>
-  );
-}
-
-function NoData({ size = "lg", className }: LoadingProps) {
-  return (
-    <div
-      className={`${
-        size === "lg"
-          ? "h-[410px] w-[700px]"
-          : size === "md"
-          ? "h-[310px] w-[510px]"
-          : "h-[190px] w-[300px]"
-      } f-box animate-appear-up rounded-lg bg-gray-200 dark:bg-moon-400 ${className}`}>
-      <p className="text-xl font-medium text-gray-600">
-        Chart Could Not Be Loaded
-      </p>
-    </div>
-  );
-}
-
 export default function PriceChart({
   history,
   quote,
@@ -93,7 +64,14 @@ export default function PriceChart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time]);
 
-  if (!history) return <NoData size={size} />;
+  if (!history)
+    return (
+      <ChartStructure size={size}>
+        <p className="text-xl font-medium text-gray-600">
+          Chart Could Not Be Loaded
+        </p>
+      </ChartStructure>
+    );
 
   let isAll: boolean = isAllHistory(history);
   const positive = quote ? quote.changesPercentage > 0 : false;
@@ -128,14 +106,7 @@ export default function PriceChart({
   };
 
   return (
-    <div
-      className={`${
-        size === "lg"
-          ? "h-[410px] w-[700px]"
-          : size === "md"
-          ? "h-[310px] w-[510px]"
-          : "h-[190px] w-[280px]"
-      } f-col animate-appear-up rounded-lg bg-gray-200 dark:bg-moon-400 ${className}`}>
+    <ChartStructure>
       <div
         className={`flex ${
           showPrice ? "justify-between" : "justify-end"
@@ -208,6 +179,6 @@ export default function PriceChart({
           plugins={[corsairPlugin]}
         />
       )}
-    </div>
+    </ChartStructure>
   );
 }

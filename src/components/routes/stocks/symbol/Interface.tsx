@@ -8,18 +8,36 @@ import { Portfolio } from "@/types/portfolio";
 import { User } from "@/types/user";
 import { getPortfolios } from "@/lib/portfolio/getPortfolio";
 import { getQuote } from "@/lib/stocks/client/getStocks";
+import { StructureProps } from "@/types/layout";
+
+interface InterfaceStructureProps extends StructureProps {
+  children2: React.ReactNode;
+}
 
 interface Props {
   user: User | null;
   stock: Stock;
 }
 
+function Structure({
+  className,
+  isLoading,
+  children,
+  children2,
+}: InterfaceStructureProps) {
+  <div className="relative f-col gap-2">
+    <div className="animate-pulse-right flex h-[90px] w-[350px] animate-appear-up items-center gap-3 rounded-lg bg-gray-200 p-2 px-4 dark:bg-moon-400">
+      {children}
+    </div>
+    <div className="animate-pulse-right flex h-[40px] w-[350px] items-center gap-1 rounded-lg bg-gray-200 p-2 px-4 dark:bg-moon-400">
+      {children2}
+    </div>
+  </div>;
+}
+
 export const InterfaceLoading = () => {
   return (
-    <div className="relative f-col gap-2">
-      <div className="animate-pulse-right flex h-[90px] w-[350px] animate-appear-up items-center gap-3 rounded-lg bg-gray-200 p-2 px-4 dark:bg-moon-400"></div>
-      <div className="animate-pulse-right flex h-[40px] w-[350px] items-center gap-1 rounded-lg bg-gray-200 p-2 px-4 dark:bg-moon-400"></div>
-    </div>
+<Structure className={className} />
   );
 };
 
