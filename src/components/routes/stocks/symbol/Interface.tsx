@@ -11,7 +11,11 @@ import { getQuote } from "@/lib/stocks/client/getStocks";
 import { StructureProps } from "@/types/layout";
 
 interface InterfaceStructureProps extends StructureProps {
-  children2: React.ReactNode;
+  children2?: React.ReactNode;
+}
+
+interface SharedProps {
+  className?: string;
 }
 
 interface Props {
@@ -25,21 +29,27 @@ function Structure({
   children,
   children2,
 }: InterfaceStructureProps) {
-  <div className="relative f-col gap-2">
-    <div className="animate-pulse-right flex h-[90px] w-[350px] animate-appear-up items-center gap-3 rounded-lg bg-gray-200 p-2 px-4 dark:bg-moon-400">
-      {children}
+  return (
+    <div className={`relative f-col gap-2 ${className}`}>
+      <div
+        className={`${
+          isLoading && "animate-pulse-right"
+        } flex h-[90px] w-[350px] animate-appear-up items-center gap-3 rounded-lg bg-gray-200 p-2 px-4 dark:bg-moon-400`}>
+        {children}
+      </div>
+      <div
+        className={`${
+          isLoading && "animate-pulse-right"
+        } flex h-[40px] w-[350px] items-center gap-1 rounded-lg bg-gray-200 p-2 px-4 dark:bg-moon-400`}>
+        {children2}
+      </div>
     </div>
-    <div className="animate-pulse-right flex h-[40px] w-[350px] items-center gap-1 rounded-lg bg-gray-200 p-2 px-4 dark:bg-moon-400">
-      {children2}
-    </div>
-  </div>;
+  );
 }
 
-export const InterfaceLoading = () => {
-  return (
-<Structure className={className} />
-  );
-};
+export function InterfaceLoading({ className }: SharedProps) {
+  return <Structure className={className} isLoading />;
+}
 
 export default async function Interface({ user, stock }: Props) {
   const [quote, portfolios]: [Quote | null, Portfolio[] | null] =
