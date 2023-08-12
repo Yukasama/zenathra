@@ -2,24 +2,34 @@ import { LineChart, BarChart } from "@/components/ui/charts";
 import { getFinancials } from "@/lib/stocks/client/getStocks";
 import { Financials } from "@prisma/client";
 import { Years } from "@/utils/helper";
+import { StructureProps } from "@/types/layout";
 
-interface Props {
+interface SharedProps {
+  className?: string;
+}
+
+interface Props extends SharedProps {
   symbol: string;
 }
 
-export const StatisticsLoading = () => {
+function Structure({ className, children }: StructureProps) {
   return (
-    <div className="f-col gap-4 lg:flex-row">
-      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-gray-200 p-3 px-6 dark:bg-moon-400"></div>
-      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-gray-200 p-3 px-6 dark:bg-moon-400"></div>
-      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-gray-200 p-3 px-6 dark:bg-moon-400"></div>
-    </div>
+    <div className={`f-col gap-4 lg:flex-row ${className}`}>{children}</div>
   );
-};
+}
 
-export default async function Statistics({ symbol }: Props) {
+export function StatisticsLoading({ className }: SharedProps) {
+  return (
+    <Structure className={className}>
+      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-gray-200 p-3 px-6 dark:bg-moon-400"></div>
+      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-gray-200 p-3 px-6 dark:bg-moon-400"></div>
+      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-gray-200 p-3 px-6 dark:bg-moon-400"></div>
+    </Structure>
+  );
+}
+
+export default async function Statistics({ symbol, className }: Props) {
   const fin = await getFinancials(symbol);
-
   if (!fin) return null;
 
   const startYear = 2015;
@@ -72,7 +82,7 @@ export default async function Statistics({ symbol }: Props) {
   ];
 
   return (
-    <div className="f-col gap-4 lg:flex-row">
+    <Structure className={className}>
       <LineChart title="Statistics" labels={labels} data={statConfig} />
       <BarChart
         title="Margins"
@@ -88,9 +98,7 @@ export default async function Statistics({ symbol }: Props) {
         <div className="h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-gray-200 p-3 px-6 dark:bg-moon-400">
           <p className="mb-1 text-[19px] font-medium">Dividends</p>
           <div className="f-box ml-0.5 h-4/5 gap-4">
-            <p className="text-xl font-medium text-gray-600">
-              Never Payed Dividends
-            </p>
+            <p className="error-text">Never Payed Dividends</p>
           </div>
         </div>
       ) : (
@@ -101,6 +109,6 @@ export default async function Statistics({ symbol }: Props) {
           labelType="percent"
         />
       )}
-    </div>
+    </Structure>
   );
 }

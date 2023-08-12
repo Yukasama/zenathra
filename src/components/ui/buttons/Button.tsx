@@ -45,7 +45,7 @@ export default function Button({
                 : "bg-green-500 hover:bg-green-600"
             } text-white`
       } ${disabled && "bg-gray-400 hover:bg-gray-400"} ${className}`}
-      disabled={disabled}>
+      disabled={disabled || loading}>
       {loading ? (
         <ScaleLoader color="#fff" height={15} width={2} />
       ) : (

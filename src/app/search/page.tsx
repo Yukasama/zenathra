@@ -3,6 +3,7 @@ import Loader from "@/components/routes/Loader";
 import { searchStocks } from "@/lib/stocks/client/getStocks";
 import notFound from "@/app/not-found";
 import SearchResults from "@/components/routes/search/SearchResults";
+import { redirect } from "next/navigation";
 
 interface Props {
   searchParams?: { [key: string]: string | undefined };
@@ -16,8 +17,10 @@ export default async function Search({ searchParams }: Props) {
   if (!search) return notFound();
 
   const stocks = await searchStocks(search);
+  if (!stocks) return <p>No stocks found.</p>;
 
-  if (!stocks) return <Loader />;
+  if (stocks.some((stock) => stock.symbol === search))
+    redirect(`/stocks/${search}`);
 
   return (
     <div className="f-col p-10">
@@ -26,7 +29,7 @@ export default async function Search({ searchParams }: Props) {
       </p>
       <Suspense fallback={<Loader />}>
         {/*// @ts-ignore*/}
-        <SearchResults search={search} />
+        <SearchResults results={stocks} />
       </Suspense>
     </div>
   );

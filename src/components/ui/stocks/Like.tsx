@@ -7,14 +7,16 @@ import { Portfolio } from "@/types/portfolio";
 import Button from "@/components/ui/buttons/Button";
 import { useState } from "react";
 import AddModal from "../portfolios/AddModal";
+import Modal from "../Modal";
 
 interface Props {
   user: User | null;
   symbol: string;
   portfolios: Portfolio[] | null;
+  className?: string;
 }
 
-export default function Like({ user, symbol, portfolios }: Props) {
+export default function Like({ user, symbol, portfolios, className }: Props) {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
@@ -26,12 +28,19 @@ export default function Like({ user, symbol, portfolios }: Props) {
   };
 
   return (
-    <div>
+    <div className={className}>
       <Button icon={<Plus className="h-4" />} onClick={handleClick} />
       {portfolios && user && (
-        <div className={`${open ? "block" : "hidden"} modal`}>
-          <AddModal portfolios={portfolios} setOpen={setOpen} symbol={symbol} />
-        </div>
+        <Modal
+          title={`Add '${symbol}' to portfolios`}
+          isOpen={open}
+          onClose={() => setOpen(false)}>
+          <AddModal
+            portfolios={portfolios}
+            setOpen={() => setOpen(false)}
+            symbol={symbol}
+          />
+        </Modal>
       )}
     </div>
   );

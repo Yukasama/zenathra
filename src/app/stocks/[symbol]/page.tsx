@@ -2,8 +2,12 @@ import {
   BarProgress,
   Eye,
   Statistics,
-  Interface,
+  AfterHours,
+  StockPrice,
   StockChart,
+  StatisticsLoading,
+  AfterHoursLoading,
+  StockPriceLoading,
 } from "@/components/routes/stocks/symbol";
 import { getStock } from "@/lib/stocks/client/getStocks";
 import { Stock } from "@prisma/client";
@@ -13,8 +17,6 @@ import { getUser } from "@/lib/user";
 import notFound from "@/app/not-found";
 import { User } from "@/types/user";
 import { ChartLoading } from "@/components/ui/charts/Chart";
-import { StatisticsLoading } from "@/components/routes/stocks/symbol/Statistics";
-import { InterfaceLoading } from "@/components/routes/stocks/symbol/Interface";
 
 // export async function generateStaticParams() {
 //   const symbols = await getAllSymbols();
@@ -45,10 +47,16 @@ export default async function Symbol({ params: { symbol } }: Props) {
       <div className="flex w-full">
         <div className="w-full">
           <div className="flex items-center gap-10 border-b border-gray-300 pb-4 dark:border-moon-100">
-            <Suspense fallback={<InterfaceLoading />}>
-              {/*// @ts-ignore*/}
-              <Interface user={user} stock={stock} />
-            </Suspense>
+            <div className={`relative f-col gap-2`}>
+              <Suspense fallback={<StockPriceLoading />}>
+                {/*// @ts-ignore*/}
+                <StockPrice user={user} stock={stock} />
+              </Suspense>
+              <Suspense fallback={<AfterHoursLoading />}>
+                {/*// @ts-ignore*/}
+                <AfterHours stock={stock} />
+              </Suspense>
+            </div>
             <BarProgress stock={stock} />
             <Eye stock={stock} user={user} />
           </div>

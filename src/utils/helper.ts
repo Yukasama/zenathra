@@ -61,5 +61,5 @@ export function MergeArrays(
 }
 
 export async function Timeout(ms: number) {
-  return await new Promise((resolve) => setTimeout(resolve, Number(ms) * 1000));
+  return await new Promise((resolve) => setTimeout(resolve, Number(ms)));
 }

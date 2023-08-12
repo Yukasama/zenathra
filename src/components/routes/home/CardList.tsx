@@ -7,14 +7,6 @@ interface Props {
   symbols: string[];
 }
 
-const CardLoading = () => {
-  return (
-    <>
-      <Card quote={null} image={null} />
-    </>
-  );
-};
-
 export const CardsLoading = () => {
   return (
     <div className="flex min-h-[100px] justify-evenly gap-4 border-y border-gray-200 py-3 dark:border-moon-200">

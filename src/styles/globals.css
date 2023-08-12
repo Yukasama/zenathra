@@ -55,6 +55,12 @@ select:-webkit-autofill:focus {
   .text {
     @apply text-moon-900 dark:text-white;
   }
+  .universal-text {
+    @apply text-gray-400 text-sm;
+  }
+  .error-text {
+    @apply text-xl text-gray-400 dark:text-gray-600 font-medium;
+  }
   .f-box {
     @apply flex items-center justify-center;
   }
