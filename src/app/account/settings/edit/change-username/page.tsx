@@ -1,16 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/buttons";
+import { AuthInput, Button, FormWrapper } from "@/components/ui";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { ArrowRightCircle } from "react-feather";
 import { z } from "zod";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AuthInput } from "@/components/ui/inputs";
-import Form from "@/components/ui/Form";
-import { updateUsername } from "@/lib/auth/updateUser";
+import { updateUsername } from "@/lib/user-update";
 
 const Schema = z
   .object({
@@ -22,7 +20,7 @@ const Schema = z
     path: ["confUsername"],
   });
 
-export default function ChangePassword() {
+export default function ChangeUsername() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -53,7 +51,7 @@ export default function ChangePassword() {
   };
 
   return (
-    <Form title="Change Your Username" onSubmit={handleSubmit(onSubmit)}>
+    <FormWrapper title="Change Your Username" onSubmit={handleSubmit(onSubmit)}>
       <AuthInput
         id="username"
         type="text"
@@ -76,6 +74,6 @@ export default function ChangePassword() {
         color="blue"
         icon={<ArrowRightCircle className="h-4 w-4" />}
       />
-    </Form>
+    </FormWrapper>
   );
 }

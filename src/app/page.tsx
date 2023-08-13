@@ -1,9 +1,13 @@
-import { getDailys } from "@/lib/stocks/client/getStocks";
-import { CardList, Highlight, Indizes } from "@/components/routes/home";
+import { getDailys } from "@/lib/stock-get";
+import {
+  StockCardList,
+  StockHighlight,
+  IndexList,
+  IndexListLoading,
+  StockCardListLoading,
+  StockHighlightLoading,
+} from "@/components";
 import { Suspense } from "react";
-import { CardsLoading } from "@/components/routes/home/CardList";
-import { HighlightLoading } from "@/components/routes/home/Highlight";
-import { IndizesLoading } from "@/components/routes/home/Indizes";
 
 export default async function Home() {
   const [actives, winners, losers]: [
@@ -19,41 +23,41 @@ export default async function Home() {
   return (
     <div className="m-1 mb-7 f-col gap-6">
       <div className="f-col md:flex-row items-center justify-between gap-4 p-4 md:gap-7 md:p-7">
-        <Suspense fallback={<HighlightLoading />}>
+        <Suspense fallback={<StockHighlightLoading />}>
           {/*// @ts-ignore*/}
-          <Highlight symbol={actives ? actives[0] : null} />
+          <StockHighlight symbol={actives ? actives[0] : null} />
         </Suspense>
-        <Suspense fallback={<IndizesLoading />}>
+        <Suspense fallback={<IndexListLoading />}>
           {/*// @ts-ignore*/}
-          <Indizes />
+          <IndexList />
         </Suspense>
-        <Suspense fallback={<IndizesLoading />}>
+        <Suspense fallback={<IndexListLoading />}>
           {/*// @ts-ignore*/}
-          <Indizes />
+          <IndexList />
         </Suspense>
       </div>
 
       <div className="mx-3 f-col">
         <p className="ml-1 mt-3 text-[23px] font-medium">Most Active</p>
-        <Suspense fallback={<CardsLoading />}>
+        <Suspense fallback={<StockCardListLoading />}>
           {/*// @ts-ignore*/}
-          {actives && <CardList symbols={actives} />}
+          {actives && <StockCardList symbols={actives} />}
         </Suspense>
       </div>
       <div className="mx-3 f-col">
         <p className="ml-1 mt-3 text-[23px] font-medium">Daily Winners</p>
-        <Suspense fallback={<CardsLoading />}>
+        <Suspense fallback={<StockCardListLoading />}>
           {/*// @ts-ignore*/}
-          {winners && <CardList symbols={winners} />}
+          {winners && <StockCardList symbols={winners} />}
         </Suspense>
       </div>
       <div className="mx-3 f-col">
         <p className="ml-1 mt-3 text-[23px] font-medium">
           Daily Underperformers
         </p>
-        <Suspense fallback={<CardsLoading />}>
+        <Suspense fallback={<StockCardListLoading />}>
           {/*// @ts-ignore*/}
-          {losers && <CardList symbols={losers} />}
+          {losers && <StockCardList symbols={losers} />}
         </Suspense>
       </div>
     </div>

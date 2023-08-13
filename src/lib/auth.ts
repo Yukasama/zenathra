@@ -7,7 +7,7 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import EmailProvider from "next-auth/providers/email";
 import { Client } from "postmark";
-import { siteConfig } from "@/config/site";
+import { siteConfig } from "@/config/site-config";
 import { env } from "@/env.mjs";
 import Google from "next-auth/providers/google";
 

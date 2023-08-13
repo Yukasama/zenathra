@@ -14,7 +14,7 @@ export default function Header({
   return (
     <div className={`f-col ${center && "items-center"} ${className}`}>
       <h1 className="text-lg font-medium">{header}</h1>
-      <h3 className="text-sm text-gray-600">{subHeader}</h3>
+      <h3 className="text-sm text-slate-600">{subHeader}</h3>
     </div>
   );
 }

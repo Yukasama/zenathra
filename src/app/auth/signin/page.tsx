@@ -5,14 +5,12 @@ import { signIn } from "next-auth/react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Button } from "@/components/ui/buttons";
+import { AuthInput, Button, Checkbox } from "@/components/ui";
 import { LogIn } from "react-feather";
-import { OAuth } from "@/components/routes/auth";
-import AuthInput from "@/components/ui/inputs/AuthInput";
+import { OAuth } from "@/components";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Checkbox } from "@/components/ui/inputs";
 
 const LoginSchema = z.object({
   email: z.string().email("Please enter a valid email."),
@@ -47,7 +45,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex translate-y-2 flex-col gap-3 rounded-xl border border-gray-300/60 bg-gray-200/20 p-10 pb-6 pt-5 dark:border-moon-200 dark:bg-moon-400/50 md:translate-y-0">
+    <>
       <h2 className="mb-1.5 text-center text-xl font-medium">
         Sign In To Your Account
       </h2>
@@ -89,11 +87,11 @@ export default function Login() {
       </form>
 
       <div className="flex items-center">
-        <div className="h-[1px] flex-1 bg-gray-400/60 dark:bg-moon-100"></div>
-        <div className="f-box h-10 w-10 rounded-full border border-gray-400/60 text-[12px] text-gray-400 dark:border-moon-100">
+        <div className="h-[1px] flex-1 bg-slate-400/60 dark:bg-moon-100"></div>
+        <div className="f-box h-10 w-10 rounded-full border border-slate-400/60 text-[12px] text-slate-400 dark:border-moon-100">
           OR
         </div>
-        <div className="h-[1px] flex-1 bg-gray-400/60 dark:bg-moon-100"></div>
+        <div className="h-[1px] flex-1 bg-slate-400/60 dark:bg-moon-100"></div>
       </div>
 
       <div className="f-col gap-2">
@@ -106,10 +104,10 @@ export default function Login() {
         <p className="text-sm">New to our platform?</p>
         <Link
           href="/auth/register"
-          className="rounded-md p-1 px-1.5 text-sm font-medium text-blue-500 hover:bg-gray-300 dark:hover:bg-moon-200">
+          className="rounded-md p-1 px-1.5 text-sm font-medium text-blue-500 hover:bg-slate-300 dark:hover:bg-moon-200">
           Sign Up.
         </Link>
       </div>
-    </div>
+    </>
   );
 }

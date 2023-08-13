@@ -1,19 +1,18 @@
 import { getUser } from "@/lib/user";
-import { getStocks } from "@/lib/stocks/client/getStocks";
-import { ListLoading } from "@/components/ui/stocks/List";
+import { getStocks } from "@/lib/stock-get";
 import { Suspense } from "react";
 import Image from "next/image";
-import List from "@/components/ui/stocks/List";
 import {
-  AddToPortfolio,
-  AddButton,
-} from "@/components/routes/account/portfolio";
-import { getPortfolio } from "@/lib/portfolio/getPortfolio";
+  PortfolioAddForm,
+  PortfolioAddButton,
+  PortfolioChart,
+  StockChartLoading,
+  StockList,
+  StockListLoading,
+} from "@/components";
+import { getPortfolio } from "@/lib/portfolio-get";
 import notFound from "@/app/not-found";
-import { ChartLoading } from "@/components/ui/charts/Chart";
-import PortfolioChart from "@/components/routes/portfolios/PortfolioChart";
-import { Portfolio } from "@/types/portfolio";
-import { User } from "@/types/user";
+import { Portfolio, User } from "@/types/db";
 
 interface Params {
   params: { id: string };
@@ -42,9 +41,9 @@ export async function generateMetadata({ params: { id } }: Params) {
 }
 
 // export async function generateStaticParams() {
-//   const portfolios: Portfolio[] = await getAllPortfolios();
+//   const { data, error } = await request("/api/portfolios/getAll");
 
-//   return portfolios.map((portfolio) => ({ id: portfolio.id }));
+//   return data.map((portfolio) => ({ id: portfolio.id }));
 // }
 
 export default async function PortfolioPage({ params: { id } }: Params) {
@@ -67,7 +66,7 @@ export default async function PortfolioPage({ params: { id } }: Params) {
               alt="No Stocks"
             />
           </div>
-          <AddToPortfolio portfolio={portfolio} />
+          <PortfolioAddForm portfolio={portfolio} />
         </div>
       );
     else return <p>No Stocks in this portfolio.</p>;
@@ -84,29 +83,32 @@ export default async function PortfolioPage({ params: { id } }: Params) {
         <h1 className="font-medium text-xl width-[350px] truncate">
           {portfolio.title}
         </h1>
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-slate-400">
           Created on {portfolio.createdAt.split("T")[0].replace(/-/g, "/")}
         </p>
       </div>
       {stocks ? (
         <div className="flex gap-4">
-          <Suspense fallback={<ChartLoading />}>
+          <Suspense fallback={<StockChartLoading />}>
             {/*// @ts-ignore*/}
             <PortfolioChart symbols={portfolio.symbols} />
           </Suspense>
           <Suspense
             fallback={
-              <ListLoading title="Portfolio Positions" className="wrapper" />
+              <StockListLoading
+                title="Portfolio Positions"
+                className="wrapper"
+              />
             }>
             {/*// @ts-ignore*/}
-            <List
+            <StockList
               symbols={portfolio.symbols}
               title="Portfolio Positions"
               error="No Positions found"
               className="wrapper"
             />
           </Suspense>
-          {user && <AddButton portfolio={portfolio} />}
+          {user && <PortfolioAddButton portfolio={portfolio} />}
         </div>
       ) : (
         <h2>There was an error with the desired portfolio.</h2>

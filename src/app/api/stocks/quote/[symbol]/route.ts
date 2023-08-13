@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { env } from "@/env.mjs";
 import { NotFoundError, ServerError } from "@/lib/errors";
 import { z } from "zod";
-import { fmpConfig } from "@/config/fmpApi";
-import { quote } from "@/config/fmpData";
+import { fmpConfig } from "@/config/fmp-api";
+import { quote } from "@/config/fmp-data";
 
 const Schema = z.object({
   params: z.object({

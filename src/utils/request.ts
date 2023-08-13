@@ -1,5 +1,5 @@
 import { env } from "@/env.mjs";
-import { Timer } from "@/utils/helper";
+import { Timer } from "@/lib/utils";
 
 interface RequestProps {
   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "OPTIONS";

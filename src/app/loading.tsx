@@ -1,4 +1,4 @@
-import Loader from "@/components/routes/Loader";
+import { Loader } from "@/components";
 
 export default function Loading() {
   return <Loader />;

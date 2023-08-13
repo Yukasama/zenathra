@@ -1,22 +1,23 @@
 import {
-  BarProgress,
-  Eye,
-  Statistics,
-  AfterHours,
-  StockPrice,
+  StockChartLoading,
+  StockList,
+  StockListLoading,
+  StockMetrics,
+  StockEye,
+  StockStatistics,
+  StockAfterHours,
+  StockPrice2,
   StockChart,
-  StatisticsLoading,
-  AfterHoursLoading,
-  StockPriceLoading,
-} from "@/components/routes/stocks/symbol";
-import { getStock } from "@/lib/stocks/client/getStocks";
+  StockStatisticsLoading,
+  StockAfterHoursLoading,
+  StockPrice2Loading,
+} from "@/components";
+import { getStock } from "@/lib/stock-get";
 import { Stock } from "@prisma/client";
-import List, { ListLoading } from "@/components/ui/stocks/List";
 import { Suspense } from "react";
 import { getUser } from "@/lib/user";
 import notFound from "@/app/not-found";
-import { User } from "@/types/user";
-import { ChartLoading } from "@/components/ui/charts/Chart";
+import { User } from "@/types/db";
 
 // export async function generateStaticParams() {
 //   const symbols = await getAllSymbols();
@@ -46,29 +47,29 @@ export default async function Symbol({ params: { symbol } }: Props) {
     <div className="m-4 overflow-x-hidden">
       <div className="flex w-full">
         <div className="w-full">
-          <div className="flex items-center gap-10 border-b border-gray-300 pb-4 dark:border-moon-100">
+          <div className="flex items-center gap-10 border-b border-slate-300 pb-4 dark:border-moon-100">
             <div className={`relative f-col gap-2`}>
-              <Suspense fallback={<StockPriceLoading />}>
+              <Suspense fallback={<StockPrice2Loading />}>
                 {/*// @ts-ignore*/}
-                <StockPrice user={user} stock={stock} />
+                <StockPrice2 user={user} stock={stock} />
               </Suspense>
-              <Suspense fallback={<AfterHoursLoading />}>
+              <Suspense fallback={<StockAfterHoursLoading />}>
                 {/*// @ts-ignore*/}
-                <AfterHours stock={stock} />
+                <StockAfterHours stock={stock} />
               </Suspense>
             </div>
-            <BarProgress stock={stock} />
-            <Eye stock={stock} user={user} />
+            <StockMetrics stock={stock} />
+            <StockEye stock={stock} user={user} />
           </div>
-          <div className="my-4 flex gap-4 border-b border-gray-300 pb-4 dark:border-moon-100">
-            <Suspense fallback={<ChartLoading />}>
+          <div className="my-4 flex gap-4 border-b border-slate-300 pb-4 dark:border-moon-100">
+            <Suspense fallback={<StockChartLoading />}>
               {/*// @ts-ignore*/}
               <StockChart symbol={symbol} />
             </Suspense>
             <Suspense
-              fallback={<ListLoading title="Peers" className="wrapper" />}>
+              fallback={<StockListLoading title="Peers" className="wrapper" />}>
               {/*// @ts-ignore*/}
-              <List
+              <StockList
                 symbols={stock.peersList.slice(0, 5)}
                 title="Peers"
                 error="No Peers found"
@@ -78,9 +79,9 @@ export default async function Symbol({ params: { symbol } }: Props) {
           </div>
         </div>
       </div>
-      <Suspense fallback={<StatisticsLoading />}>
+      <Suspense fallback={<StockStatisticsLoading />}>
         {/*// @ts-ignore*/}
-        <Statistics symbol={symbol} />
+        <StockStatistics symbol={symbol} />
       </Suspense>
     </div>
   );

@@ -1,8 +1,7 @@
 import { Suspense } from "react";
-import Loader from "@/components/routes/Loader";
-import { searchStocks } from "@/lib/stocks/client/getStocks";
+import { Loader, SearchResults } from "@/components";
+import { searchStocks } from "@/lib/stock-get";
 import notFound from "@/app/not-found";
-import SearchResults from "@/components/routes/search/SearchResults";
 import { redirect } from "next/navigation";
 
 interface Props {

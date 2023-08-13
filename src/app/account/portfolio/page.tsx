@@ -1,10 +1,7 @@
-import {
-  CreatePortfolioCard,
-  PortfolioCard,
-} from "@/components/routes/account/portfolio";
 import { getUser } from "@/lib/user";
 import { redirect } from "next/navigation";
-import { getPortfolios } from "@/lib/portfolio/getPortfolio";
+import { getPortfolios } from "@/lib/portfolio-get";
+import { PortfolioCard, PortfolioCreateCard } from "@/components";
 
 export default async function Portfolio() {
   const user = await getUser();
@@ -15,11 +12,9 @@ export default async function Portfolio() {
   return (
     <div className="f-col gap-10 p-4 lg:p-8 xl:grid xl:grid-cols-3 xl:p-12">
       {portfolios.map((portfolio) => (
-        <div key={portfolio.id}>
-          <PortfolioCard portfolio={portfolio} />
-        </div>
+        <PortfolioCard key={portfolio.id} portfolio={portfolio} />
       ))}
-      {portfolios.length < 6 && <CreatePortfolioCard />}
+      {portfolios.length < 6 && <PortfolioCreateCard />}
     </div>
   );
 }

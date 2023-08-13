@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { queryStocks } from "@/lib/stocks/client/getStocks";
+import { queryStocks } from "@/lib/stock-get";
 import {
   sectors,
   industries,
@@ -13,13 +13,11 @@ import {
   marketCaps,
   earningsDates,
   exchanges,
-} from "@/config/screener";
+} from "@/config/screener-values";
 import { Screener } from "@/types/stock";
 import { Stock } from "@prisma/client";
-import { SelectInput } from "@/components/ui/inputs";
-import { Button } from "@/components/ui/buttons";
+import { Button, Header, SelectInput } from "@/components/ui";
 import { BarChart2, FileText, Layers, RotateCcw } from "react-feather";
-import Header from "@/components/ui/Header";
 
 export default function ScreenerPage() {
   const [stocks, setStocks] = useState<Stock[] | null>();
@@ -45,7 +43,7 @@ export default function ScreenerPage() {
     setResetCounter((prevCounter) => prevCounter + 1);
   };
 
-  // async fetch on the client (i know)
+  // Async fetch on the client (i know)
   useEffect(() => {
     const inputs: Screener = {
       exchange: exchange,
@@ -165,7 +163,7 @@ export default function ScreenerPage() {
     return (
       <div
         className="animate-pulse-right grid h-[60px] 
-        animate-appear-up grid-cols-10 items-center gap-4 rounded-md bg-gray-200 px-4 dark:bg-moon-200 dark:hover:bg-moon-400"></div>
+        animate-appear-up grid-cols-10 items-center gap-4 rounded-md bg-slate-200 px-4 dark:bg-moon-200 dark:hover:bg-moon-400"></div>
     );
   };
 
@@ -186,8 +184,8 @@ export default function ScreenerPage() {
                 onClick={() => setActive(rating)}
                 className={`${
                   active === rating &&
-                  "border-b border-b-blue-500 bg-gray-200 dark:bg-moon-200"
-                } f-box flex-1 cursor-pointer bg-gray-100 p-3 px-5 font-medium hover:bg-gray-200 dark:bg-moon-400/70 dark:hover:bg-moon-200`}>
+                  "border-b border-b-blue-500 bg-slate-200 dark:bg-moon-200"
+                } f-box flex-1 cursor-pointer bg-slate-100 p-3 px-5 font-medium hover:bg-slate-200 dark:bg-moon-400/70 dark:hover:bg-moon-200`}>
                 <p className="hidden font-light lg:flex">{rating}</p>
                 <div className="flex lg:hidden">{ratings[rating]}</div>
               </button>
@@ -233,7 +231,7 @@ export default function ScreenerPage() {
                         reset={resetCounter}
                         relative
                       />
-                      <div className="f-box mt-2 h-8 w-8 rounded-md border border-gray-200 p-2 text-lg font-semibold dark:border-moon-100">
+                      <div className="f-box mt-2 h-8 w-8 rounded-md border border-slate-200 p-2 text-lg font-semibold dark:border-moon-100">
                         <p className="mb-0.5">&gt;</p>
                       </div>
                       <SelectInput
@@ -271,7 +269,7 @@ export default function ScreenerPage() {
                         reset={resetCounter}
                         relative
                       />
-                      <div className="f-box mt-2 h-8 w-8 rounded-md border border-gray-200 p-2 text-lg font-semibold dark:border-moon-100">
+                      <div className="f-box mt-2 h-8 w-8 rounded-md border border-slate-200 p-2 text-lg font-semibold dark:border-moon-100">
                         <p className="mb-0.5">&gt;</p>
                       </div>
                       <SelectInput
@@ -297,7 +295,7 @@ export default function ScreenerPage() {
       </div>
       <div className="col-span-4 overflow-auto lg:col-span-5 xl:col-span-6">
         <div>
-          <div className="sticky top-0 mb-0.5 grid grid-cols-10 gap-4 bg-gray-100/80 p-3 px-8 dark:bg-moon-300/80">
+          <div className="sticky top-0 mb-0.5 grid grid-cols-10 gap-4 bg-slate-100/80 p-3 px-8 dark:bg-moon-300/80">
             <p className="col-span-3 rounded-md bg-blue-500 p-1.5 px-3 font-medium text-white">
               Company
             </p>
@@ -333,7 +331,7 @@ export default function ScreenerPage() {
                     prefetch={false}
                     key={stock.symbol}
                     className="grid min-h-[60px] grid-cols-10 items-center 
-                    gap-4 rounded-md bg-gray-200 px-4 dark:bg-moon-200 dark:hover:bg-moon-400">
+                    gap-4 rounded-md bg-slate-200 px-4 dark:bg-moon-200 dark:hover:bg-moon-400">
                     <div className="col-span-3 flex items-center gap-4">
                       <div className="f-box h-10 w-10 rounded-sm dark:bg-white">
                         <Image
@@ -347,7 +345,7 @@ export default function ScreenerPage() {
                       </div>
                       <div className="f-col">
                         <p className="font-medium">{stock.symbol}</p>
-                        <p className="text-sm text-gray-700">
+                        <p className="text-sm text-slate-700">
                           {stock.companyName}
                         </p>
                       </div>

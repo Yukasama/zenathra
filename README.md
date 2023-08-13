@@ -1,8 +1,8 @@
 ## Elysium
+A website to analyze stocks.
 
 # Setup
-
-1. Download from Github
-2. npm i
-3. Create env.local from env.example, add the missing vars
-4. npm run dev
+1. Clone from Github: git clone https://github.com/Yukasama/elysium
+2. Install packages: pnpm i
+3. Environment variables: Add missing vars to .env.example and rename it to .env
+4. Start server: pnpm run dev

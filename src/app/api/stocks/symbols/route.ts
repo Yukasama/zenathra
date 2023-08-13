@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fmpUrls } from "@/config/fmpUrls";
+import { fmpUrls } from "@/config/fmp-urls";
 import { ArgumentError, NotFoundError, ServerError } from "@/lib/errors";
-import { fmpConfig } from "@/config/fmpApi";
+import { fmpConfig } from "@/config/fmp-api";
 import { z } from "zod";
 
 const Schema = z.object({

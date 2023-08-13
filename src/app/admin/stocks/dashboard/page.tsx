@@ -1,5 +1,4 @@
-import { AddStocks, CleanDatabase } from "@/components/routes/admin";
-import Error from "@/components/routes/Error";
+import { AdminAddStocks, AdminCleanDatabase, Error } from "@/components";
 import { getUser } from "@/lib/user";
 import { Home } from "react-feather";
 
@@ -19,8 +18,8 @@ export default async function StockControl() {
 
   return (
     <div className="flex gap-5 p-3 px-6">
-      <AddStocks />
-      <CleanDatabase />
+      <AdminAddStocks />
+      <AdminCleanDatabase />
     </div>
   );
 }

@@ -1,9 +1,9 @@
-import { Timeout, Timer } from "@/utils/helper";
-import { getSymbolList } from "@/lib/stocks/client/getStocks";
-import { cleanDb } from "@/lib/stocks/server/manageStocks";
-import create from "@/lib/stocks/server/create";
+import { Timeout, Timer } from "@/lib/utils";
+import { getSymbolList } from "@/lib/stock-get";
+import { cleanDb } from "@/lib/stock-update";
+import create from "@/lib/stock-create";
 import { NextRequest, NextResponse } from "next/server";
-import { fmpConfig } from "@/config/fmpApi";
+import { fmpConfig } from "@/config/fmp-api";
 import db from "@/lib/db";
 import { getUser } from "@/lib/user";
 import { ArgumentError, PermissionError, ServerError } from "@/lib/errors";

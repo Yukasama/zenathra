@@ -1,15 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/buttons";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { ArrowRightCircle } from "react-feather";
 import { z } from "zod";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AuthInput } from "@/components/ui/inputs";
-import Form from "@/components/ui/Form";
+import { AuthInput, Button, FormWrapper } from "@/components/ui";
 
 const Schema = z
   .object({
@@ -23,7 +21,7 @@ const Schema = z
     path: ["confPassword"],
   });
 
-export default function ChangePassword() {
+export default function ChangePicture() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -45,8 +43,14 @@ export default function ChangePassword() {
   };
 
   return (
-    <Form title="Change Your Picture" onSubmit={handleSubmit(onSubmit)}>
+    <FormWrapper title="Change Your Picture" onSubmit={handleSubmit(onSubmit)}>
       <div className="mt-40 text-center text-3xl font-thin">Coming soon...</div>
-    </Form>
+      <Button
+        loading={loading}
+        label="Change Picture"
+        color="blue"
+        icon={<ArrowRightCircle className="h-4 w-4" />}
+      />
+    </FormWrapper>
   );
 }

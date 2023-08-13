@@ -1,16 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/buttons";
+import { AuthInput, Button, FormWrapper } from "@/components/ui";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { ArrowRightCircle } from "react-feather";
 import { z } from "zod";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AuthInput } from "@/components/ui/inputs";
-import Form from "@/components/ui/Form";
-import { updatePassword } from "@/lib/auth/updateUser";
+import { updatePassword } from "@/lib/user-update";
 import { signOut } from "next-auth/react";
 
 const Schema = z
@@ -48,18 +46,16 @@ export default function ChangePassword() {
 
     const { error } = await updatePassword(data.oldPassword, data.password);
     if (!error) {
-      router.push("/");
+      setLoading(false);
       toast.success("Password successfully reset.");
-      signOut();
-    } else {
-      toast.error("Something went wrong. Please try again later.");
-    }
 
-    setLoading(false);
+      signOut({ redirect: true, callbackUrl: "/auth/signin" });
+      router.refresh();
+    } else toast.error("Something went wrong. Please try again later.");
   };
 
   return (
-    <Form title="Change Your Password" onSubmit={handleSubmit(onSubmit)}>
+    <FormWrapper title="Change Your Password" onSubmit={handleSubmit(onSubmit)}>
       <AuthInput
         id="oldPassword"
         type="password"
@@ -90,6 +86,6 @@ export default function ChangePassword() {
         color="blue"
         icon={<ArrowRightCircle className="h-4 w-4" />}
       />
-    </Form>
+    </FormWrapper>
   );
 }

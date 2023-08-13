@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { AuthInput, Checkbox } from "@/components/ui/inputs";
-import { Button } from "@/components/ui/buttons";
-import { OAuth } from "@/components/routes/auth";
+import { AuthInput, Button, Checkbox } from "@/components/ui";
+import { OAuth } from "@/components";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { ArrowRightCircle } from "react-feather";
-import { register as signUp } from "@/lib/auth/register";
+import { signUp } from "@/lib/user-update";
 import { z } from "zod";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -54,7 +53,7 @@ export default function Register() {
       await signIn("credentials", { ...data, redirect: true }).then(
         (callback) => {
           setLoading(false);
-          
+
           if (callback?.ok) router.refresh();
           if (callback?.error) toast.error(callback.error);
         }
@@ -63,7 +62,7 @@ export default function Register() {
   };
 
   return (
-    <div className="f-col translate-y-2 gap-3 rounded-xl border border-gray-300/60 bg-gray-200/20 p-10 pb-6 pt-5 dark:border-moon-200 dark:bg-moon-400/50 md:translate-y-0">
+    <>
       <h2 className="mb-1.5 text-center text-xl font-medium">
         Create Your Account
       </h2>
@@ -108,11 +107,11 @@ export default function Register() {
       </form>
 
       <div className="flex items-center">
-        <div className="h-[1px] flex-1 bg-gray-400/60 dark:bg-moon-100"></div>
-        <div className="f-box h-10 w-10 rounded-full border border-gray-400/60 text-[12px] text-gray-400 dark:border-moon-100">
+        <div className="h-[1px] flex-1 bg-slate-400/60 dark:bg-moon-100"></div>
+        <div className="f-box h-10 w-10 rounded-full border border-slate-400/60 text-[12px] text-slate-400 dark:border-moon-100">
           OR
         </div>
-        <div className="h-[1px] flex-1 bg-gray-400/60 dark:bg-moon-100"></div>
+        <div className="h-[1px] flex-1 bg-slate-400/60 dark:bg-moon-100"></div>
       </div>
 
       <div className="f-col gap-2">
@@ -125,10 +124,10 @@ export default function Register() {
         <p className="text-sm">Already with us?</p>
         <Link
           href="/auth/signin"
-          className="rounded-md p-1 px-1.5 text-sm font-medium text-blue-500 hover:bg-gray-300 dark:hover:bg-moon-200">
+          className="rounded-md p-1 px-1.5 text-sm font-medium text-blue-500 hover:bg-slate-300 dark:hover:bg-moon-200">
           Sign In.
         </Link>
       </div>
-    </div>
+    </>
   );
 }

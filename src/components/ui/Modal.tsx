@@ -39,7 +39,7 @@ export default function Modal({
   if (!isOpen) return null;
 
   return (
-    <div className="f-box top-0 left-0 fixed z-[5] h-full w-full bg-gray-400/60 dark:bg-moon-400/80 hiding-wall">
+    <div className="f-box top-0 left-0 fixed z-[5] h-full w-full bg-slate-400/60 dark:bg-moon-400/80 hiding-wall">
       <div
         onClick={(e) => e.stopPropagation()}
         className="input-window relative mb-12 f-col w-[400px] gap-7 wrapper-bright p-7">

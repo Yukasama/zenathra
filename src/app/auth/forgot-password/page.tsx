@@ -2,14 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/buttons";
+import { AuthInput, Button } from "@/components/ui";
 import { ArrowRightCircle } from "react-feather";
-import AuthInput from "@/components/ui/inputs/AuthInput";
 import { z } from "zod";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
-import { sendMail } from "@/lib/auth/sendMail";
+import { sendMail } from "@/lib/user-send-verification";
 
 const Schema = z.object({
   email: z.string().email("Please enter a valid email."),
@@ -50,7 +49,7 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="f-col translate-y-2 gap-3 rounded-xl border border-moon-200 bg-moon-400/50 p-10 pb-6 pt-5 md:translate-y-0">
+    <>
       <h2 className="mb-1.5 text-center text-xl font-medium">
         Forgot Your Password?
       </h2>
@@ -76,11 +75,11 @@ export default function ForgotPassword() {
           <p>Password successfully changed?</p>
           <Link
             href="/auth/signin"
-            className="rounded-md p-1 px-1.5 font-medium text-blue-500 hover:bg-gray-300 dark:hover:bg-moon-200">
+            className="rounded-md p-1 px-1.5 font-medium text-blue-500 hover:bg-slate-300 dark:hover:bg-moon-200">
             Head to Login.
           </Link>
         </div>
       )}
-    </div>
+    </>
   );
 }
