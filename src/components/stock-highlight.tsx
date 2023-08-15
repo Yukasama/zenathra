@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const StockHighlightLoading = () => {
-  return <div className="animate-pulse-right flex flex-1 min-h-[300px]"></div>;
+  return <div className="animate-pulse-right flex flex-1 min-h-[450px]"></div>;
 };
 
 export default async function StockHighlight({ symbol }: Props) {
