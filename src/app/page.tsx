@@ -24,15 +24,12 @@ export default async function Home() {
     <div className="m-1 mb-7 f-col gap-6">
       <div className="f-col md:flex-row items-center justify-between gap-4 p-4 md:gap-7 md:p-7">
         <Suspense fallback={<StockHighlightLoading />}>
-          {/*// @ts-ignore*/}
           <StockHighlight symbol={actives ? actives[0] : null} />
         </Suspense>
         <Suspense fallback={<IndexListLoading />}>
-          {/*// @ts-ignore*/}
           <IndexList />
         </Suspense>
         <Suspense fallback={<IndexListLoading />}>
-          {/*// @ts-ignore*/}
           <IndexList />
         </Suspense>
       </div>
@@ -40,14 +37,12 @@ export default async function Home() {
       <div className="mx-3 f-col">
         <p className="ml-1 mt-3 text-[23px] font-medium">Most Active</p>
         <Suspense fallback={<StockCardListLoading />}>
-          {/*// @ts-ignore*/}
           {actives && <StockCardList symbols={actives} />}
         </Suspense>
       </div>
       <div className="mx-3 f-col">
         <p className="ml-1 mt-3 text-[23px] font-medium">Daily Winners</p>
         <Suspense fallback={<StockCardListLoading />}>
-          {/*// @ts-ignore*/}
           {winners && <StockCardList symbols={winners} />}
         </Suspense>
       </div>
@@ -56,7 +51,6 @@ export default async function Home() {
           Daily Underperformers
         </p>
         <Suspense fallback={<StockCardListLoading />}>
-          {/*// @ts-ignore*/}
           {losers && <StockCardList symbols={losers} />}
         </Suspense>
       </div>

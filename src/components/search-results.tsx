@@ -17,11 +17,11 @@ export default async function SearchResults({ results }: Props) {
           <div className="grid-col-span-1 flex items-center gap-4">
             <div className="f-box h-10 w-10 rounded-sm">
               <Image
-                src={stock.image}
+                src={stock.image || "/images/stock.jpg"}
                 className="max-h-10 w-10 rounded-md p-1"
                 height={30}
                 width={30}
-                alt="Logo"
+                alt="Company Logo"
                 loading="lazy"
               />
             </div>

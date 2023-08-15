@@ -13,7 +13,7 @@ export async function signUp(email: string, password: string) {
 }
 
 export async function updateEmail(email: string) {
-  const { error } = await request("/api/users/updateEmail", {
+  const { error } = await request("/api/users/update-email", {
     body: {
       email: email,
     },
@@ -24,7 +24,7 @@ export async function updateEmail(email: string) {
 }
 
 export async function updatePassword(oldPassword: string, password: string) {
-  const { error } = await request("/api/users/updatePassword", {
+  const { error } = await request("/api/users/update-password", {
     body: {
       oldPassword: oldPassword,
       password: password,
@@ -36,7 +36,7 @@ export async function updatePassword(oldPassword: string, password: string) {
 }
 
 export async function updateUsername(username: string) {
-  const { error } = await request("/api/users/updateUsername", {
+  const { error } = await request("/api/users/update-username", {
     body: {
       username: username,
     },

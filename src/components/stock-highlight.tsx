@@ -40,7 +40,7 @@ export default async function StockHighlight({ symbol }: Props) {
                   src={image ? image.image : "/images/logo/logo.png"}
                   height={60}
                   width={60}
-                  alt={quote.name}
+                  alt={quote.name || "Stock Logo"}
                   priority
                 />
               </div>
@@ -59,7 +59,6 @@ export default async function StockHighlight({ symbol }: Props) {
                   className="scale-[0.7] -translate-x-[72px] sm:translate-x-0 sm:scale-100"
                 />
               }>
-              {/*// @ts-ignore*/}
               <StockHighlightChartLoader
                 symbol={symbol}
                 className="scale-[0.7] -translate-x-[72px] sm:translate-x-0 sm:scale-100"

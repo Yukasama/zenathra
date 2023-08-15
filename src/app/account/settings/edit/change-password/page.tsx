@@ -49,7 +49,7 @@ export default function ChangePassword() {
       setLoading(false);
       toast.success("Password successfully reset.");
 
-      signOut({ redirect: true, callbackUrl: "/auth/signin" });
+      signOut({ redirect: true, callbackUrl: "/auth/sign-in" });
       router.refresh();
     } else toast.error("Something went wrong. Please try again later.");
   };

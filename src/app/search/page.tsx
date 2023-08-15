@@ -27,7 +27,6 @@ export default async function Search({ searchParams }: Props) {
         Search Results for: {search}
       </p>
       <Suspense fallback={<Loader />}>
-        {/*// @ts-ignore*/}
         <SearchResults results={stocks} />
       </Suspense>
     </div>

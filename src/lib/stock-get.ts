@@ -152,4 +152,11 @@ export async function getCombinedHistory(
   return data;
 }
 
+export async function getAllSymbols(): Promise<string[]> {
+  const { data, error } = await request("/api/stocks/get-all-symbols");
+
+  if (error) return [];
+  return data;
+}
+
 

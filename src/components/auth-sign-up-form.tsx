@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { AuthInput, Button, Checkbox } from "@/components/ui";
 import { OAuth } from "@/components";
 import { useRouter } from "next/navigation";
@@ -26,7 +25,7 @@ const RegisterSchema = z
     path: ["confPassword"],
   });
 
-export default function Register() {
+export default function AuthSignUpForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -63,9 +62,6 @@ export default function Register() {
 
   return (
     <>
-      <h2 className="mb-1.5 text-center text-xl font-medium">
-        Create Your Account
-      </h2>
       <form
         onSubmit={handleSubmit(onSubmit)}
         autoComplete="off"
@@ -118,15 +114,6 @@ export default function Register() {
         <OAuth provider="google" />
         <OAuth provider="facebook" />
         <OAuth provider="github" />
-      </div>
-
-      <div className="f-box mt-2 gap-1">
-        <p className="text-sm">Already with us?</p>
-        <Link
-          href="/auth/signin"
-          className="rounded-md p-1 px-1.5 text-sm font-medium text-blue-500 hover:bg-slate-300 dark:hover:bg-moon-200">
-          Sign In.
-        </Link>
       </div>
     </>
   );

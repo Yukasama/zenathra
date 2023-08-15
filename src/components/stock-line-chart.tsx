@@ -66,7 +66,7 @@ export default function StockLineChart({
             : size === "md"
             ? "h-[310px] w-[510px]"
             : "h-[190px] w-[270px]"
-        } max-w-full transition-transform duration-[0.35s] hover:scale-[1.01]`}
+        } max-w-full transition-transform duration-300 hover:scale-[1.01]`}
         data={chartData}
         options={
           labelType === "percent"

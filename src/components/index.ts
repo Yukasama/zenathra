@@ -1,6 +1,9 @@
 import AccountSettings from "./account-settings";
 import AdminAddStocks from "./admin-add-stocks";
 import AdminCleanDatabase from "./admin-clean-database";
+import AuthSignInForm from "./auth-sign-in-form";
+import AuthSignUpForm from "./auth-sign-up-form";
+import AuthForgotPasswordForm from "./auth-forgot-password-form";
 import Error from "./error";
 import Footer from "./footer";
 import IndexList from "./index-list";
@@ -23,7 +26,9 @@ import SearchResults from "./search-results";
 import Searchbar from "./searchbar";
 import SidebarItem from "./sidebar-item";
 import SidebarPortable from "./sidebar-portable";
+import SidebarPortableClient from "./sidebar-portable-client";
 import Sidebar from "./sidebar";
+import SidebarToggle from "./sidebar-toggle";
 import StockAfterHours from "./stock-after-hours";
 import { StockAfterHoursLoading } from "./stock-after-hours";
 import StockBarChart from "./stock-bar-chart";
@@ -60,6 +65,9 @@ export {
   AccountSettings,
   AdminAddStocks,
   AdminCleanDatabase,
+  AuthSignInForm,
+  AuthSignUpForm,
+  AuthForgotPasswordForm,
   Error,
   Footer,
   IndexList,
@@ -82,7 +90,9 @@ export {
   Searchbar,
   SidebarItem,
   SidebarPortable,
+  SidebarPortableClient,
   Sidebar,
+  SidebarToggle,
   StockAfterHours,
   StockAfterHoursLoading,
   StockBarChart,

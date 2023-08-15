@@ -3,7 +3,7 @@ import { getStocks } from "@/lib/stock-get";
 import { Suspense } from "react";
 import Image from "next/image";
 import {
-  PortfolioAddForm,
+  PortfolioAddModal,
   PortfolioAddButton,
   PortfolioChart,
   StockChartLoading,
@@ -66,7 +66,7 @@ export default async function PortfolioPage({ params: { id } }: Params) {
               alt="No Stocks"
             />
           </div>
-          <PortfolioAddForm portfolio={portfolio} />
+          <PortfolioAddModal portfolio={portfolio} />
         </div>
       );
     else return <p>No Stocks in this portfolio.</p>;
@@ -90,7 +90,6 @@ export default async function PortfolioPage({ params: { id } }: Params) {
       {stocks ? (
         <div className="flex gap-4">
           <Suspense fallback={<StockChartLoading />}>
-            {/*// @ts-ignore*/}
             <PortfolioChart symbols={portfolio.symbols} />
           </Suspense>
           <Suspense
@@ -100,7 +99,6 @@ export default async function PortfolioPage({ params: { id } }: Params) {
                 className="wrapper"
               />
             }>
-            {/*// @ts-ignore*/}
             <StockList
               symbols={portfolio.symbols}
               title="Portfolio Positions"

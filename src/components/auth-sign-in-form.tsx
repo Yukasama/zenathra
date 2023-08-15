@@ -17,8 +17,8 @@ const LoginSchema = z.object({
   password: z.string().min(1, "Please enter a valid password."),
 });
 
-export default function Login() {
-  const [loading, setLoading] = useState(false);
+export default function AuthSignInForm() {
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const {
@@ -46,28 +46,21 @@ export default function Login() {
 
   return (
     <>
-      <h2 className="mb-1.5 text-center text-xl font-medium">
-        Sign In To Your Account
-      </h2>
       <form onSubmit={handleSubmit(onSubmit)} className="f-col gap-3">
-        <div className="f-col gap-2">
-          <AuthInput
-            label="E-Mail"
-            type="email"
-            register={register}
-            id="email"
-            errors={errors}
-          />
-        </div>
-        <div className="f-col gap-2">
-          <AuthInput
-            type="password"
-            label="Password"
-            register={register}
-            id="password"
-            errors={errors}
-          />
-        </div>
+        <AuthInput
+          label="E-Mail"
+          type="email"
+          register={register}
+          id="email"
+          errors={errors}
+        />
+        <AuthInput
+          type="password"
+          label="Password"
+          register={register}
+          id="password"
+          errors={errors}
+        />
         <Checkbox
           className="ml-1.5"
           heading="Remember Me"
@@ -98,15 +91,6 @@ export default function Login() {
         <OAuth provider="google" />
         <OAuth provider="facebook" />
         <OAuth provider="github" />
-      </div>
-
-      <div className="f-box mt-2 gap-1">
-        <p className="text-sm">New to our platform?</p>
-        <Link
-          href="/auth/register"
-          className="rounded-md p-1 px-1.5 text-sm font-medium text-blue-500 hover:bg-slate-300 dark:hover:bg-moon-200">
-          Sign Up.
-        </Link>
       </div>
     </>
   );

@@ -7,10 +7,10 @@ import {
   StockStatistics,
   StockAfterHours,
   StockPrice2,
-  StockChart,
   StockStatisticsLoading,
   StockAfterHoursLoading,
   StockPrice2Loading,
+  StockChartLoader,
 } from "@/components";
 import { getStock } from "@/lib/stock-get";
 import { Stock } from "@prisma/client";
@@ -48,13 +48,11 @@ export default async function Symbol({ params: { symbol } }: Props) {
       <div className="flex w-full">
         <div className="w-full">
           <div className="flex items-center gap-10 border-b border-slate-300 pb-4 dark:border-moon-100">
-            <div className={`relative f-col gap-2`}>
+            <div className="relative f-col gap-2">
               <Suspense fallback={<StockPrice2Loading />}>
-                {/*// @ts-ignore*/}
                 <StockPrice2 user={user} stock={stock} />
               </Suspense>
               <Suspense fallback={<StockAfterHoursLoading />}>
-                {/*// @ts-ignore*/}
                 <StockAfterHours stock={stock} />
               </Suspense>
             </div>
@@ -63,12 +61,10 @@ export default async function Symbol({ params: { symbol } }: Props) {
           </div>
           <div className="my-4 flex gap-4 border-b border-slate-300 pb-4 dark:border-moon-100">
             <Suspense fallback={<StockChartLoading />}>
-              {/*// @ts-ignore*/}
-              <StockChart symbol={symbol} />
+              <StockChartLoader symbol={symbol} />
             </Suspense>
             <Suspense
               fallback={<StockListLoading title="Peers" className="wrapper" />}>
-              {/*// @ts-ignore*/}
               <StockList
                 symbols={stock.peersList.slice(0, 5)}
                 title="Peers"
@@ -80,7 +76,6 @@ export default async function Symbol({ params: { symbol } }: Props) {
         </div>
       </div>
       <Suspense fallback={<StockStatisticsLoading />}>
-        {/*// @ts-ignore*/}
         <StockStatistics symbol={symbol} />
       </Suspense>
     </div>

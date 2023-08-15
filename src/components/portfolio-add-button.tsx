@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Plus } from "react-feather";
 import { PortfolioAddModal } from "@/components";
 import { Portfolio } from "@/types/db";

@@ -12,7 +12,7 @@ interface Params {
 //   if (data) return users.map((user) => ({ id: user.id }));
 // }
 
-export default async function UserId({ params: { id } }: Params) {
+export default async function U({ params: { id } }: Params) {
   const { data, error } = await request(`/api/users/${id}`);
 
   if (!error) return notFound();

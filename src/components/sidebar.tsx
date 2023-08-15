@@ -9,14 +9,11 @@ import {
   LogIn,
   Menu as MenuIcon,
 } from "react-feather";
-import { SidebarItem } from "@/components";
+import { SidebarItem, SidebarToggle } from "@/components";
 import { Menu } from "@/types/layout";
-import { useSession } from "next-auth/react";
-import { useSidebar } from "@/components/sidebar-provider";
 
 export default function Sidebar() {
-  const { data: session, status } = useSession();
-  const { toggleSidebar } = useSidebar();
+  const user = null;
 
   const menusUp: Menu[] = [
     {
@@ -44,7 +41,7 @@ export default function Sidebar() {
   ];
 
   const menusDown: Menu[] = [
-    session
+    user
       ? {
           title: "Settings",
           to: "/account/settings",
@@ -52,7 +49,7 @@ export default function Sidebar() {
         }
       : {
           title: "Login",
-          to: "/auth/signin",
+          to: "/auth/sign-in",
           icon: <LogIn className="h-[22px]" />,
         },
   ];
@@ -61,13 +58,11 @@ export default function Sidebar() {
     <div className="w-[70px] h-full z-20 hidden md:flex flex-col justify-between bg-slate-200/60 transition-width dark:bg-moon-700 py-1.5 shadow-sm shadow-slate-300 dark:shadow-moon-100">
       <div className="f-col items-center justify-between h-full">
         <div className="f-col">
-          <button
-            onClick={() => toggleSidebar()}
-            className="m-1 mx-4 mb-2.5 flex items-center rounded-lg">
+          <SidebarToggle className="m-1 mx-4 mb-2.5 flex items-center rounded-lg">
             <div className="p-3">
               <MenuIcon className="h-[22px]" />
             </div>
-          </button>
+          </SidebarToggle>
 
           <div className="f-col">
             {menusUp.map((menu) => (
@@ -78,12 +73,7 @@ export default function Sidebar() {
 
         <div className="f-col">
           {menusDown.map((menu) => (
-            <SidebarItem
-              key={menu.title}
-              {...menu}
-              loading={status === "loading"}
-              notext
-            />
+            <SidebarItem key={menu.title} {...menu} notext />
           ))}
         </div>
       </div>

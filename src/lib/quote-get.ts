@@ -32,7 +32,7 @@ export async function getQuotes(
 export async function getIndexQuotes(
   revalidate?: number
 ): Promise<Quote[] | null> {
-  const { data, error } = await request("/api/stocks/indexQuotes", {
+  const { data, error } = await request("/api/stocks/index-quotes", {
     cache: false,
     revalidate: revalidate || undefined,
   });

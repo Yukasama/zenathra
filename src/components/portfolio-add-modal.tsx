@@ -95,7 +95,7 @@ export default function PortfolioAddModal({ portfolio, onClose }: Props) {
                           src={result.image}
                           height={30}
                           width={30}
-                          alt={result.symbol}
+                          alt={result.symbol + "Logo"}
                         />
                       </div>
                       <div className="f-col">

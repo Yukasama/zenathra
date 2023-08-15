@@ -5,7 +5,6 @@ import { StockPortfolioAddButton } from "@/components";
 import { Quote } from "@/types/stock";
 import { Stock } from "@prisma/client";
 import { Portfolio, User } from "@/types/db";
-import { getPortfolios } from "@/lib/portfolio-get";
 import { getQuote } from "@/lib/quote-get";
 import { StructureProps } from "@/types/layout";
 
@@ -35,10 +34,7 @@ export function StockPrice2Loading({ className }: SharedProps) {
 
 export default async function StockPrice2({ user, stock }: Props) {
   const [quote, portfolios]: [Quote | null, Portfolio[] | null] =
-    await Promise.all([
-      getQuote(stock.symbol),
-      user ? getPortfolios(user.id) : null,
-    ]);
+    await Promise.all([getQuote(stock.symbol), null]);
 
   const positive: boolean =
     quote && quote.change ? (quote.change > 0 ? true : false) : true;

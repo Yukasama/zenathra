@@ -67,7 +67,7 @@ export default function Footer() {
                   src={`/images/oauth/${social.name}.png`}
                   height={20}
                   width={20}
-                  alt={social.name[0].toUpperCase() + social.name.slice(1)}
+                  alt={social.name[0].toUpperCase() + social.name.slice(1) || "Social Media Link"}
                 />
               </Link>
             ))}

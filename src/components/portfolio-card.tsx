@@ -22,7 +22,6 @@ export default function PortfolioCard({ portfolio }: Props) {
         <p className="text-lg font-medium">{portfolio.title}</p>
         <div>
           <Suspense fallback={<StockListLoading limit={3} />}>
-            {/*// @ts-ignore*/}
             <StockList
               symbols={portfolio.symbols}
               error="No Stocks in Portfolio"

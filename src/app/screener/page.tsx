@@ -18,6 +18,7 @@ import { Screener } from "@/types/stock";
 import { Stock } from "@prisma/client";
 import { Button, Header, SelectInput } from "@/components/ui";
 import { BarChart2, FileText, Layers, RotateCcw } from "react-feather";
+import { StructureProps } from "@/types/layout";
 
 export default function ScreenerPage() {
   const [stocks, setStocks] = useState<Stock[] | null>();
@@ -159,13 +160,19 @@ export default function ScreenerPage() {
     },
   ];
 
-  const ScreenerLoading = () => {
+  function ScreenerItemStructure({ isLoading, children }: StructureProps) {
     return (
       <div
-        className="animate-pulse-right grid h-[60px] 
-        animate-appear-up grid-cols-10 items-center gap-4 rounded-md bg-slate-200 px-4 dark:bg-moon-200 dark:hover:bg-moon-400"></div>
+        className={`${isLoading && "animate-pulse-right"} grid h-[60px] 
+    animate-appear-up grid-cols-10 items-center gap-4 rounded-md bg-slate-200 px-4 dark:bg-moon-200 dark:hover:bg-moon-400`}>
+        {children}
+      </div>
     );
-  };
+  }
+
+  function ScreenerItemLoading() {
+    return <ScreenerItemStructure isLoading />;
+  }
 
   const ratings: any = {
     Descriptive: <FileText />,
@@ -313,7 +320,7 @@ export default function ScreenerPage() {
             {loading || !stocks ? (
               <>
                 {[...Array(15)].map((_, i) => (
-                  <ScreenerLoading key={i} />
+                  <ScreenerItemLoading key={i} />
                 ))}
               </>
             ) : (!stocks || !stocks.length) && !loading ? (
@@ -326,43 +333,40 @@ export default function ScreenerPage() {
             ) : (
               <div className="f-col hidden-scrollbar h-[800px] gap-2 overflow-scroll">
                 {stocks.map((stock: Stock) => (
-                  <Link
-                    href={`/stocks/${stock.symbol}`}
-                    prefetch={false}
-                    key={stock.symbol}
-                    className="grid min-h-[60px] grid-cols-10 items-center 
-                    gap-4 rounded-md bg-slate-200 px-4 dark:bg-moon-200 dark:hover:bg-moon-400">
-                    <div className="col-span-3 flex items-center gap-4">
-                      <div className="f-box h-10 w-10 rounded-sm dark:bg-white">
-                        <Image
-                          src={stock.image}
-                          className="max-h-10 w-10 rounded-md p-1 dark:bg-white"
-                          height={30}
-                          width={30}
-                          alt="Logo"
-                          loading="lazy"
-                        />
+                  <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
+                    <ScreenerItemStructure>
+                      <div className="col-span-3 flex items-center gap-4">
+                        <div className="f-box h-10 w-10 rounded-sm dark:bg-white">
+                          <Image
+                            src={stock.image || "/images/stock.jpg"}
+                            className="max-h-10 w-10 rounded-md p-1 dark:bg-white"
+                            height={30}
+                            width={30}
+                            alt="Logo"
+                            loading="lazy"
+                          />
+                        </div>
+                        <div className="f-col">
+                          <p className="font-medium">{stock.symbol}</p>
+                          <p className="text-sm text-slate-700">
+                            {stock.companyName}
+                          </p>
+                        </div>
                       </div>
-                      <div className="f-col">
-                        <p className="font-medium">{stock.symbol}</p>
-                        <p className="text-sm text-slate-700">
-                          {stock.companyName}
-                        </p>
+                      <div
+                        className={`p-1.5 ${
+                          Number(stock.changes) > 0
+                            ? "text-green-400"
+                            : "text-red-400"
+                        }  col-span-1 font-medium`}>
+                        {Number(stock.changes) > 0 && "+"}
+                        {stock.changes}
                       </div>
-                    </div>
-                    <div
-                      className={`p-1.5 ${
-                        Number(stock.changes) > 0
-                          ? "text-green-400"
-                          : "text-red-400"
-                      }  col-span-1 font-medium`}>
-                      {Number(stock.changes) > 0 && "+"}
-                      {stock.changes}
-                    </div>
-                    <div className="col-span-1 p-1.5">
-                      {stock.peRatioTTM ? stock.peRatioTTM.toFixed(2) : 0}
-                    </div>
-                    <div className="col-span-2 p-1.5">{stock.sector}</div>
+                      <div className="col-span-1 p-1.5">
+                        {stock.peRatioTTM ? stock.peRatioTTM.toFixed(2) : 0}
+                      </div>
+                      <div className="col-span-2 p-1.5">{stock.sector}</div>
+                    </ScreenerItemStructure>
                   </Link>
                 ))}
               </div>

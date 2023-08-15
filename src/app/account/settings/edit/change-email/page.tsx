@@ -45,7 +45,7 @@ export default function ChangeEmail() {
       setLoading(false);
       toast.success("Email successfully reset.");
 
-      signOut({ redirect: true, callbackUrl: "/auth/signin" });
+      signOut({ redirect: true, callbackUrl: "/auth/sign-in" });
       router.refresh();
     } else toast.error(error || "An error occurred during email reset.");
   };

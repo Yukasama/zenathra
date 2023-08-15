@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import { Portfolio, User } from "@/types/db";
+import "server-only";
 
 export async function getPortfolio(
   portfolioId: Portfolio["id"]

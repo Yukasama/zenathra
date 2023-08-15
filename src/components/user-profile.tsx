@@ -6,11 +6,10 @@ import { Session } from "next-auth";
 
 interface Props {
   session: Session | null;
-  status: string;
 }
 
-export default function UserProfile({ session, status }: Props) {
-  const [collapsed, setCollapsed] = useState(false);
+export default function UserProfile({ session }: Props) {
+  const [collapsed, setCollapsed] = useState<boolean>(false);
 
   useEffect(() => {
     document.addEventListener("click", handleClick);
@@ -23,17 +22,12 @@ export default function UserProfile({ session, status }: Props) {
 
   return (
     <>
-      {status === "loading" ? (
-        <div className="essential icon animate-pulse-right"></div>
-      ) : (
-        <ProfileIcon
-          image={session ? session.user.image : null}
-          collapsed={collapsed}
-          setCollapsed={setCollapsed}
-        />
-      )}
-
-      <UserWindow session={session} status={status} collapsed={collapsed} />
+      <ProfileIcon
+        image={session?.user.image}
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+      />
+      <UserWindow session={session} collapsed={collapsed} />
     </>
   );
 }

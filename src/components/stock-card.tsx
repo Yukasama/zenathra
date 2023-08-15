@@ -40,7 +40,7 @@ export default function StockCard({ quote, image, className }: Props) {
   return (
     <Structure className={className}>
       <Link
-        className="h-full w-full f-col justify-between gap-1 p-3 transition-transform duration-[0.4s] hover:scale-[1.02]"
+        className="h-full w-full f-col justify-between gap-1 p-3 transition-transform duration-500 hover:scale-[1.02]"
         href={`/stocks/${quote.symbol}`}>
         <div className="f-res items-center gap-1">
           <div className="image h-9 w-9 rounded-md">

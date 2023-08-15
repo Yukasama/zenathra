@@ -5,7 +5,7 @@ import { PortfolioCard, PortfolioCreateCard } from "@/components";
 
 export default async function Portfolio() {
   const user = await getUser();
-  if (!user) redirect("/auth/signin");
+  if (!user) redirect("/auth/sign-in");
 
   const portfolios = await getPortfolios(user.id);
 

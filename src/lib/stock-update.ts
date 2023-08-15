@@ -29,10 +29,3 @@ export async function cleanDb(action: string): Promise<number> {
   if (error) return 0;
   return data;
 }
-
-export async function getAllSymbols(): Promise<string[]> {
-  const { data, error } = await request("/api/stocks/getAllSymbols");
-
-  if (error) return [];
-  return data;
-}
