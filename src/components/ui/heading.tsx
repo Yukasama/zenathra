@@ -5,7 +5,7 @@ interface Props {
   className?: string;
 }
 
-export default function Header({
+export default function Heading({
   header,
   subHeader,
   center,

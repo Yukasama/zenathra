@@ -16,7 +16,7 @@ import {
 } from "@/config/screener-values";
 import { Screener } from "@/types/stock";
 import { Stock } from "@prisma/client";
-import { Button, Header, SelectInput } from "@/components/ui";
+import { Button, Heading, SelectInput } from "@/components/ui";
 import { BarChart2, FileText, Layers, RotateCcw } from "react-feather";
 import { StructureProps } from "@/types/layout";
 
@@ -324,7 +324,7 @@ export default function ScreenerPage() {
                 ))}
               </>
             ) : (!stocks || !stocks.length) && !loading ? (
-              <Header
+              <Heading
                 header="No Stocks matching the query."
                 subHeader="Maybe try another one"
                 className="mt-10"

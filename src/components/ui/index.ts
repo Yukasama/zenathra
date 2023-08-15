@@ -2,7 +2,7 @@ import AuthInput from "./auth-input";
 import Button from "./button";
 import Checkbox from "./checkbox";
 import FormWrapper from "./form-wrapper";
-import Header from "./header";
+import Heading from "./heading";
 import Input from "./input";
 import Modal from "./modal";
 import SelectInput from "./select-input";
@@ -13,7 +13,7 @@ export {
   Button,
   Checkbox,
   FormWrapper,
-  Header,
+  Heading,
   Input,
   Modal,
   SelectInput,

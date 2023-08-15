@@ -3,19 +3,14 @@
 import { useEffect } from "react";
 import { X } from "react-feather";
 
-interface ModalProps {
+interface Props {
   children: React.ReactNode;
   isOpen: boolean;
   onClose: () => void;
   title?: string;
 }
 
-export default function Modal({
-  children,
-  isOpen,
-  onClose,
-  title,
-}: ModalProps) {
+export default function Modal({ children, isOpen, onClose, title }: Props) {
   useEffect(() => {
     const handleEscapePress = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
