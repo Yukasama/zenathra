@@ -10,7 +10,7 @@ interface Props {
   title?: string;
 }
 
-export default function Modal({ children, isOpen, onClose, title }: Props) {
+export default function ModalForm({ children, isOpen, onClose, title }: Props) {
   useEffect(() => {
     const handleEscapePress = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();

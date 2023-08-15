@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { LogoutWindow } from "@/components";
 import Link from "next/link";
-import { Modal } from "@/components/ui";
+import { ModalForm } from "@/components/ui";
 import { Session } from "next-auth";
 
 interface Props {
@@ -110,12 +110,12 @@ export default function UserWindow({ session, collapsed }: Props) {
         </div>
       </div>
 
-      <Modal
+      <ModalForm
         title="Sign Out?"
         isOpen={logoutShow}
         onClose={() => setLogoutShow(false)}>
         <LogoutWindow setShow={setLogoutShow} />
-      </Modal>
+      </ModalForm>
     </>
   );
 }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Plus } from "react-feather";
 import { PortfolioCreateModal } from "@/components";
-import { Modal } from "@/components/ui";
+import { ModalForm } from "@/components/ui";
 
 export default function PortfolioCreateCard() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,12 +17,12 @@ export default function PortfolioCreateCard() {
           <Plus className="h-7 w-7 text-white" />
         </div>
       </div>
-      <Modal
+      <ModalForm
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         title="Create your new Portfolio">
         <PortfolioCreateModal onClose={() => setIsOpen(false)} />
-      </Modal>
+      </ModalForm>
     </>
   );
 }

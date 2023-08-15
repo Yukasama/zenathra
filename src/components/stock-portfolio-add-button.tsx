@@ -3,7 +3,7 @@
 import { Plus } from "react-feather";
 import toast from "react-hot-toast";
 import { Portfolio, User } from "@/types/db";
-import { Button, Modal } from "@/components/ui";
+import { Button, ModalForm } from "@/components/ui";
 import { useState } from "react";
 import { StockPortfolioAddModal } from "@/components";
 
@@ -34,7 +34,7 @@ export default function StockPortfolioAddButton({
     <div className={className}>
       <Button icon={<Plus className="h-4" />} onClick={handleClick} />
       {portfolios && user && (
-        <Modal
+        <ModalForm
           title={`Add '${symbol}' to portfolios`}
           isOpen={open}
           onClose={() => setOpen(false)}>
@@ -43,7 +43,7 @@ export default function StockPortfolioAddButton({
             setOpen={() => setOpen(false)}
             symbol={symbol}
           />
-        </Modal>
+        </ModalForm>
       )}
     </div>
   );

@@ -4,7 +4,7 @@ import Checkbox from "./checkbox";
 import FormWrapper from "./form-wrapper";
 import Heading from "./heading";
 import Input from "./input";
-import Modal from "./modal";
+import ModalForm from "./modal-form";
 import SelectInput from "./select-input";
 import ThemeToggle from "./theme-toggle";
 
@@ -15,7 +15,7 @@ export {
   FormWrapper,
   Heading,
   Input,
-  Modal,
+  ModalForm,
   SelectInput,
   ThemeToggle,
 };
