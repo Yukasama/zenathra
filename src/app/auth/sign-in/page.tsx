@@ -1,5 +1,5 @@
 import Link from "next/link";
-import UserLoginForm from "@/components/auth-sign-in-form";
+import { AuthSignInForm } from "@/components";
 
 export default function SignIn() {
   return (
@@ -7,7 +7,7 @@ export default function SignIn() {
       <h2 className="mb-1.5 text-center text-xl font-medium">
         Sign In To Your Account
       </h2>
-      <UserLoginForm />
+      <AuthSignInForm />
       <div className="f-box mt-2 gap-1">
         <p className="text-sm">New to our platform?</p>
         <Link
