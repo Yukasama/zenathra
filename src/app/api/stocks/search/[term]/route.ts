@@ -66,9 +66,25 @@ function getSimilarityScore(term: string, word: string) {
 
 function simpleSearch(term: string, stocks: Stock[]) {
   const threshold = 0.7;
+  const normalizedTerm = normalizeString(term);
+
   return stocks.filter((stock) => {
-    const symbolScore = getSimilarityScore(term, stock.symbol);
-    const nameScore = getSimilarityScore(term, stock.companyName);
+    const normalizedSymbol = normalizeString(stock.symbol);
+    const normalizedCompanyName = normalizeString(stock.companyName);
+
+    if (
+      normalizedSymbol.startsWith(normalizedTerm) ||
+      normalizedCompanyName.startsWith(normalizedTerm)
+    )
+      return true;
+
+    const symbolScore = getSimilarityScore(normalizedTerm, normalizedSymbol);
+    const nameScore = getSimilarityScore(normalizedTerm, normalizedCompanyName);
+
     return symbolScore >= threshold || nameScore >= threshold;
   });
+}
+
+function normalizeString(str: string): string {
+  return str.trim().toLowerCase();
 }
