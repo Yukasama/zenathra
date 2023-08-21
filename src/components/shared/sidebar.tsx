@@ -9,7 +9,7 @@ import {
   LogIn,
   Menu as MenuIcon,
 } from "react-feather";
-import { SidebarItem, SidebarToggle } from "@/components";
+import { SidebarItem, SidebarToggle } from "@/components/shared";
 import { Menu } from "@/types/layout";
 
 export default function Sidebar() {

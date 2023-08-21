@@ -1,14 +1,14 @@
-interface SiteConfig {
-  name: string
-  description: string
-  url: string
+interface SiteProps {
+  name: string;
+  description: string;
+  url: string;
   links: {
-    twitter: string
-    github: string
-  }
+    twitter: string;
+    github: string;
+  };
 }
 
-export const siteConfig: SiteConfig = {
+export const site: SiteProps = {
   name: "Elysium",
   description:
     "A stock market analysis tool that provides a visual representation of the market's performance.",

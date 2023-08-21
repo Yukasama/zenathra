@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { fmpUrls } from "@/config/fmp-urls";
 import { NotFoundError, ServerError } from "@/lib/errors";
-import { fmpConfig } from "@/config/fmp-api";
+import { fmpConfig } from "@/config/fmp";
 import { indexQuotes } from "@/config/fmp-data";
 
 export async function GET() {

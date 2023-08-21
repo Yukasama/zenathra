@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ProfileIcon, UserWindow } from "@/components";
+import { ProfileIcon, UserWindow } from "@/components/shared";
 import { Session } from "next-auth";
 
 interface Props {

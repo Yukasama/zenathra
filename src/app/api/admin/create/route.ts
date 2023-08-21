@@ -3,7 +3,7 @@ import { getSymbolList } from "@/lib/stock-get";
 import { cleanDb } from "@/lib/stock-update";
 import create from "@/lib/stock-create";
 import { NextRequest, NextResponse } from "next/server";
-import { fmpConfig } from "@/config/fmp-api";
+import { fmpConfig } from "@/config/fmp";
 import db from "@/lib/db";
 import { getUser } from "@/lib/user";
 import { ArgumentError, PermissionError, ServerError } from "@/lib/errors";

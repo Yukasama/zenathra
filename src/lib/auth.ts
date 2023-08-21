@@ -7,7 +7,7 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import EmailProvider from "next-auth/providers/email";
 import { Client } from "postmark";
-import { siteConfig } from "@/config/site-config";
+import { site } from "@/config/site";
 import { env } from "@/env.mjs";
 import Google from "next-auth/providers/google";
 
@@ -90,7 +90,7 @@ export const authOptions: NextAuthOptions = {
     //       From: provider.from as string,
     //       TemplateModel: {
     //         action_url: url,
-    //         product_name: siteConfig.name,
+    //         product_name: site.name,
     //       },
     //       Headers: [
     //         {
@@ -106,7 +106,6 @@ export const authOptions: NextAuthOptions = {
     //   },
     // }),
   ],
-  debug: env.NODE_ENV === "development",
   callbacks: {
     async session({ token, session }) {
       if (token) {
@@ -114,12 +113,10 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.name;
         session.user.email = token.email;
         session.user.image = token.picture;
+        session.user.username = token.username;
       }
 
       return session;
-    },
-    async redirect({ url, baseUrl }) {
-      return baseUrl;
     },
     async jwt({ token, user }) {
       const dbUser = await db.user.findFirst({
@@ -129,8 +126,19 @@ export const authOptions: NextAuthOptions = {
       });
 
       if (!dbUser) {
-        if (user) token.id = user?.id;
+        token.id = user!.id;
         return token;
+      }
+
+      if (!dbUser.username) {
+        await db.user.update({
+          where: {
+            id: dbUser.id,
+          },
+          data: {
+            username: nanoid(10),
+          },
+        });
       }
 
       return {
@@ -138,11 +146,13 @@ export const authOptions: NextAuthOptions = {
         name: dbUser.name,
         email: dbUser.email,
         picture: dbUser.image,
+        username: dbUser.username,
       };
+    },
+    redirect() {
+      return "/";
     },
   },
 };
 
-export async function getSession() {
-  return await getServerSession(authOptions);
-}
+export const getSession = () => getServerSession(authOptions);

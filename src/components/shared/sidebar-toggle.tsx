@@ -1,6 +1,6 @@
 "use client";
 
-import { useSidebar } from "@/components/sidebar-provider";
+import { useSidebar } from "@/components/shared/sidebar-provider";
 import { cn } from "@/lib/utils";
 
 interface Props extends React.HTMLAttributes<HTMLButtonElement> {

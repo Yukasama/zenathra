@@ -9,9 +9,9 @@ import {
   LogIn,
   X,
 } from "react-feather";
-import { SidebarItem, Searchbar, SidebarToggle } from "@/components";
+import { SidebarItem, Searchbar, SidebarToggle } from "@/components/shared";
 import { Menu } from "@/types/layout";
-import { useSidebar } from "@/components/sidebar-provider";
+import { useSidebar } from "@/components/shared/sidebar-provider";
 import { useEffect } from "react";
 import Image from "next/image";
 import { Session } from "next-auth";

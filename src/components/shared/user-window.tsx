@@ -3,7 +3,7 @@
 import { LogIn, Send, LogOut, Globe } from "react-feather";
 import Image from "next/image";
 import { useState } from "react";
-import { LogoutWindow } from "@/components";
+import { LogoutWindow } from "@/components/shared";
 import Link from "next/link";
 import { ModalForm } from "@/components/ui";
 import { Session } from "next-auth";

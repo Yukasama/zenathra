@@ -3,67 +3,85 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
-model User {
-  id                   String      @id @default(auto()) @map("_id") @db.ObjectId
-  name                 String?
-  email                String?     @unique
-  emailVerified        DateTime?
-  image                String?
-  hashedPassword       String
-  role                 Role        @default(user)
-  createdAt            DateTime    @default(now())
-  updatedAt            DateTime    @updatedAt
-  accounts             Account[]
-  recentlyViewedStocks String[]
-  Portfolio            Portfolio[]
-}
-
-enum Role {
+enum UserRole {
   user
   admin
 }
 
 model Account {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String  @db.ObjectId
+  id                String  @id @default(cuid())
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.String
-  access_token      String? @db.String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.String
+  id_token          String? @db.Text
   session_state     String?
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
 
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  expires      DateTime
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id             String    @id @default(cuid())
+  username       String?   @unique
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  hashedPassword String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  role       UserRole    @default(user)
+  accounts   Account[]
+  sessions   Session[]
+  portfolios Portfolio[] @relation("CreatedBy")
+
+  recentlyViewedStocks Stock[]
+
+  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?   @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+}
+
 model Portfolio {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String   @db.ObjectId
+  id        String   @id @default(cuid())
   title     String
-  imageSrc  String?
+  public    Boolean  @default(false)
+  image     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  symbols   String[]
-  public    Boolean  @default(false)
 
-  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stocks Stock[]
+
+  userId String
+  User   User   @relation("CreatedBy", fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Stock {
-  id                                        String       @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt                                 DateTime     @default(now())
-  updatedAt                                 DateTime     @updatedAt
-  symbol                                    String       @unique
+  id String @id @default(cuid())
+
+  symbol                                    String   @unique
   eye                                       Int?
   price                                     Float
   beta                                      Float
@@ -205,17 +223,29 @@ model Stock {
   capexPerShareTTM                          Float
   dividendPerShareTTM                       Float
   debtToMarketCapTTM                        Float
-  peersList                                 String[]
   targetHigh                                Float?
   targetLow                                 Float?
   targetConsensus                           Float?
   targetMedian                              Float?
-  Financials                                Financials[]
+  createdAt                                 DateTime @default(now())
+  updatedAt                                 DateTime @updatedAt
+
+  peers Stock[] @relation("PeerRelation", references: [id])
+
+  financialsId String?
+  financials   Financials[] @relation(fields: [financialsId], references: [id], onDelete: Cascade)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  Portfolio   Portfolio?  @relation(fields: [portfolioId], references: [id])
+  portfolioId String?
 }
 
+
 model Financials {
-  id                                       String   @id @default(auto()) @map("_id") @db.ObjectId
-  stockId                                  String   @db.ObjectId
+  id                                       String   @id @default(cuid())
+  stockId                                  String
   createdAt                                DateTime @default(now())
   updatedAt                                DateTime @updatedAt
   date                                     String

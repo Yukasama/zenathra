@@ -3,7 +3,7 @@
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
-import { SidebarProvider } from "./sidebar-provider";
+import { SidebarProvider } from "@/components/shared";
 
 interface Props {
   children: React.ReactNode;

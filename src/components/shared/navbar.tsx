@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { Searchbar, UserProfile } from "@/components";
+import { Searchbar, UserProfile, SidebarToggle } from "@/components/shared";
 import { ThemeToggle } from "@/components/ui";
-import SidebarToggle from "./sidebar-toggle";
 import { Menu } from "react-feather";
 import { getServerSession } from "next-auth";
 
