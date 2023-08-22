@@ -1,12 +1,8 @@
-import "server-only";
-
-import db from "@/lib/db";
-import { env } from "@/env.mjs";
 import { FMP_API_URL } from "@/config/fmp";
+import { env } from "@/env.mjs";
+import { db } from "@/lib/db";
 
-export function MergeArrays(
-  arrays: Record<string, any>[][]
-): Record<string, any>[] {
+function MergeArrays(arrays: Record<string, any>[][]): Record<string, any>[] {
   if (
     !Array.isArray(arrays) ||
     !arrays.every((array) => Array.isArray(array))
@@ -24,17 +20,15 @@ export function MergeArrays(
 
     for (const item of array) {
       const existingItem = result.find((i) => i.date === item.date);
-      if (existingItem) {
-        Object.assign(existingItem, item);
-      } else {
-        result.push(item);
-      }
+      if (existingItem) Object.assign(existingItem, item);
+      else result.push(item);
     }
   }
+
   return result;
 }
 
-export default async function create(symbols: string[]): Promise<void> {
+export default async function uploadStocks(symbols: string[]): Promise<void> {
   if (!symbols.length) throw new Error("ArgumentError: No symbols provided");
 
   const financialUrls = symbols.map((symbol) => [

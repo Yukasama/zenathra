@@ -1,6 +1,6 @@
 import { getSession } from "@/lib/auth";
-import db from "@/lib/db";
-import { ArgumentError, PermissionError, ServerError } from "@/lib/errors";
+import { db } from "@/lib/db";
+import { ArgumentError, PermissionError, ServerError } from "@/lib/response";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 

@@ -35,8 +35,10 @@ export default async function RootLayout({ children }: Props) {
         <Provider>
           <div className="h-screen w-screen flex overflow-hidden bg-slate-100 dark:bg-moon-300">
             <Sidebar />
+            {/* @ts-expect-error Server Component */}
             <SidebarPortable />
             <div className="w-full overflow-auto">
+              {/* @ts-expect-error Server Component */}
               <Navbar />
               <main className="min-h-full">{children}</main>
               <Footer />

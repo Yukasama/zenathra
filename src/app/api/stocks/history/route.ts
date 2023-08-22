@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { historyUrls } from "@/config/fmp";
-import { NotFoundError, ServerError } from "@/lib/errors";
+import { NotFoundError, ServerError } from "@/lib/response";
 import { historyTimes } from "@/config/fmp";
 import { z } from "zod";
 

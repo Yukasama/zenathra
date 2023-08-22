@@ -1,39 +1,28 @@
-import { NextRequest, NextResponse } from "next/server";
-import db from "@/lib/db";
-import { ArgumentError, PermissionError } from "@/lib/errors";
-import { getUser } from "@/lib/user";
+import { db } from "@/lib/db";
+import {
+  InternalServerErrorResponse,
+  UnauthorizedResponse,
+  UnprocessableEntityResponse,
+} from "@/lib/response";
 import { z } from "zod";
+import { getAuthSession } from "@/lib/auth";
 
-const Schema = z.object({
-  action: z.string().nonempty(),
-});
-
-export async function POST(req: NextRequest) {
+export async function POST() {
   try {
-    const user = await getUser();
-    if (!user) throw new PermissionError("User is not logged in.");
+    const session = await getAuthSession();
+    if (!session?.user) return new UnauthorizedResponse();
 
-    const result = Schema.safeParse(await req.json());
-    if (!result.success) throw new ArgumentError(result.error.message);
-    const { action } = result.data;
+    const count = await db.stock.deleteMany({
+      where: {
+        symbol: undefined,
+      },
+    });
 
-    if (!action) throw new ArgumentError();
-    if (user.role !== "admin") throw new PermissionError();
+    return new Response(count.toString());
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return new UnprocessableEntityResponse(error.message);
 
-    if (action === "Stocks" || action === "All") {
-      const count = await db.stock.deleteMany({
-        where: {
-          symbol: undefined,
-        },
-      });
-      return NextResponse.json(count);
-    }
-
-    throw new ArgumentError();
-  } catch (err: any) {
-    return NextResponse.json(
-      { message: err.message },
-      { status: err.status || 500 }
-    );
+    return new InternalServerErrorResponse();
   }
 }

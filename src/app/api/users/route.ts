@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import db from "@/lib/db";
-import { ArgumentError, ConflictError, ServerError } from "@/lib/errors";
+import { db } from "@/lib/db";
+import { ArgumentError, ConflictError, ServerError } from "@/lib/response";
 import { getSession } from "@/lib/auth";
 import { z } from "zod";
 

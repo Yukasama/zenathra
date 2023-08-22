@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import db from "@/lib/db";
-import { ArgumentError, NotFoundError } from "@/lib/errors";
+import { db } from "@/lib/db";
+import { ArgumentError, NotFoundError } from "@/lib/response";
 import { z } from "zod";
 import { Stock } from "@prisma/client";
 

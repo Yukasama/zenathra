@@ -2,12 +2,12 @@ import { NextAuthOptions, getServerSession } from "next-auth";
 import Facebook from "next-auth/providers/facebook";
 import GitHub from "next-auth/providers/github";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import db from "@/lib/db";
+import { db } from "@/lib/db";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
-import EmailProvider from "next-auth/providers/email";
-import { Client } from "postmark";
-import { site } from "@/config/site";
+// import EmailProvider from "next-auth/providers/email";
+// import { Client } from "postmark";
+// import { site } from "@/config/site";
 import { env } from "@/env.mjs";
 import Google from "next-auth/providers/google";
 import { nanoid } from "nanoid";
@@ -156,4 +156,4 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-export const getSession = () => getServerSession(authOptions);
+export const getAuthSession = () => getServerSession(authOptions);

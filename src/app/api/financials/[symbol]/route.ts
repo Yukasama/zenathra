@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import db from "@/lib/db";
-import { ArgumentError, NotFoundError } from "@/lib/errors";
+import { db } from "@/lib/db";
+import { ArgumentError, NotFoundError } from "@/lib/response";
 
 const Schema = z.object({
   params: z.object({

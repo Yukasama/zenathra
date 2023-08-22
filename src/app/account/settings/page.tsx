@@ -1,8 +1,8 @@
 import { AccountSettings } from "@/components";
-import { getUser } from "@/lib/user";
+import { getAuthSession } from "@/lib/auth";
 
-export default async function SettingsPage() {
-  const user = await getUser();
+export default async function page() {
+  const session = await getAuthSession();
 
-  return <AccountSettings user={user} />;
+  return <AccountSettings user={session?.user} />;
 }

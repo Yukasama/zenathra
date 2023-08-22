@@ -1,18 +1,26 @@
-import { getUser } from "@/lib/user";
-import { redirect } from "next/navigation";
-import { getPortfolios } from "@/lib/portfolio-get";
 import { PortfolioCard, PortfolioCreateCard } from "@/components";
+import { db } from "@/lib/db";
+import { getAuthSession } from "@/lib/auth";
 
-export default async function Portfolio() {
-  const user = await getUser();
-  if (!user) redirect("/auth/sign-in");
+export default async function page() {
+  const session = await getAuthSession();
 
-  const portfolios = await getPortfolios(user.id);
+  const portfolios = await db.portfolio.findMany({
+    where: { creatorId: session?.user.id },
+  });
 
   return (
-    <div className="f-col gap-10 p-4 lg:p-8 xl:grid xl:grid-cols-3 xl:p-12">
+    <div className="f-col gap-8 xl:gap-10 p-4 lg:p-8 xl:p-12 xl:grid xl:grid-cols-3">
       {portfolios.map((portfolio) => (
-        <PortfolioCard key={portfolio.id} portfolio={portfolio} />
+        <PortfolioCard
+          key={portfolio.id}
+          portfolio={{
+            title: portfolio.title,
+            id: portfolio.id,
+            public: portfolio.public,
+          }}
+          stocks={portfolio.stocks}
+        />
       ))}
       {portfolios.length < 6 && <PortfolioCreateCard />}
     </div>

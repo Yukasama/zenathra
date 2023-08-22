@@ -1,5 +1,5 @@
 import AuthInput from "./auth-input";
-import Button from "./button";
+import Button from "./custom-button";
 import Checkbox from "./checkbox";
 import FormWrapper from "./form-wrapper";
 import Heading from "./heading";

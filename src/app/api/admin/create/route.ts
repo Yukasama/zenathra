@@ -1,13 +1,15 @@
 import { Timeout, Timer } from "@/lib/utils";
 import { getSymbolList } from "@/lib/stock-get";
-import { cleanDb } from "@/lib/stock-update";
-import create from "@/lib/stock-create";
-import { NextRequest, NextResponse } from "next/server";
 import { fmpConfig } from "@/config/fmp";
-import db from "@/lib/db";
+import { db } from "@/lib/db";
 import { getUser } from "@/lib/user";
-import { ArgumentError, PermissionError, ServerError } from "@/lib/errors";
+import {
+  InternalServerErrorResponse,
+  UnprocessableEntityResponse,
+} from "@/lib/response";
 import { z } from "zod";
+import uploadStocks from "@/lib/upload-stocks";
+import axios from "axios";
 
 const Schema = z.object({
   symbol: z.string().nonempty(),
@@ -16,7 +18,7 @@ const Schema = z.object({
   pullTimes: z.number().int().positive().optional(),
 });
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     const user = await getUser();
     if (!user) throw new PermissionError("User is not logged in.");
@@ -62,7 +64,7 @@ export async function POST(req: NextRequest) {
         }
 
         try {
-          await create(symbols);
+          await uploadStocks(symbols);
           console.log(
             `${Number(
               fmpConfig.docsPerPull
@@ -83,20 +85,20 @@ export async function POST(req: NextRequest) {
       symbolArray = [symbol];
 
       try {
-        await create(symbolArray);
+        await uploadStocks(symbolArray);
         console.log(`${symbol} has been written to Database in ${howLong.ms}.`);
       } catch {
         console.error(`Failed to write ${symbol} to Database.`);
       }
     }
 
-    if (clean) await cleanDb("Stocks");
+    if (clean) await axios.post("/api/admin/clean");
 
-    return NextResponse.json({ message: "Stocks created successfully." });
-  } catch (err: any) {
-    return NextResponse.json(
-      { message: err.message },
-      { status: err.status || 500 }
-    );
+    return new Response("OK");
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return new UnprocessableEntityResponse(error.message);
+
+    return new InternalServerErrorResponse();
   }
 }

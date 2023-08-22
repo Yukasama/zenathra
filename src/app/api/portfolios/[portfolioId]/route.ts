@@ -1,10 +1,10 @@
-import db from "@/lib/db";
+import { db } from "@/lib/db";
 import {
   ArgumentError,
   NotFoundError,
   PermissionError,
   ServerError,
-} from "@/lib/errors";
+} from "@/lib/response";
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { z } from "zod";

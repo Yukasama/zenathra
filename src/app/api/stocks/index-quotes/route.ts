@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { fmpUrls } from "@/config/fmp";
-import { NotFoundError, ServerError } from "@/lib/errors";
+import { NotFoundError, ServerError } from "@/lib/response";
 import { fmpConfig } from "@/config/fmp";
 import { indexQuotes } from "@/config/fmp";
 

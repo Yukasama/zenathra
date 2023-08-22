@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fmpUrls } from "@/config/fmp";
-import { ArgumentError, NotFoundError, ServerError } from "@/lib/errors";
+import { ArgumentError, NotFoundError, ServerError } from "@/lib/response";
 import { fmpConfig } from "@/config/fmp";
 import { z } from "zod";
 
