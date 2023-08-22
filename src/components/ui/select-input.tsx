@@ -60,7 +60,7 @@ export default function SelectInput({
             isOpen && "rotate-180"
           }`}
         />
-        <div className="text rounded-lg p-3 px-4 pr-10 text-sm">{option}</div>
+        <div className="rounded-lg p-3 px-4 pr-10 text-sm">{option}</div>
         {isOpen && (
           <div
             className={`${

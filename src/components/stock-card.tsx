@@ -42,7 +42,7 @@ export default function StockCard({ quote, image, className }: Props) {
       <Link
         className="h-full w-full f-col justify-between gap-1 p-3 transition-transform duration-500 hover:scale-[1.02]"
         href={`/stocks/${quote.symbol}`}>
-        <div className="f-res items-center gap-1">
+        <div className="f-col lg:flex-row items-center gap-1">
           <div className="image h-9 w-9 rounded-md">
             <Image
               className="rounded-lg"

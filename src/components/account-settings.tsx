@@ -135,7 +135,7 @@ export default function AccountSettings({ user }: Props) {
                 <div className="f-col gap-2" key={info.title}>
                   <Link
                     href={info.link}
-                    className="f-between w-full rounded-lg p-5 hover:bg-slate-200 dark:hover:bg-moon-200">
+                    className="flex justify-between items-center w-full rounded-lg p-5 hover:bg-slate-200 dark:hover:bg-moon-200">
                     <p className="w-[50px] font-light text-slate-600">
                       {info.title}
                     </p>
@@ -192,7 +192,7 @@ export default function AccountSettings({ user }: Props) {
                 <div className="f-col gap-2" key={info.title}>
                   <Link
                     href={info.link}
-                    className="f-between w-full rounded-lg p-5 hover:bg-slate-200 dark:hover:bg-moon-200">
+                    className="flex justify-between items-center w-full rounded-lg p-5 hover:bg-slate-200 dark:hover:bg-moon-200">
                     <p className="w-[50px] font-light text-slate-600">
                       {info.title}
                     </p>

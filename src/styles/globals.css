@@ -115,29 +115,11 @@ select:-webkit-autofill:focus {
 }
 
 @layer components {
-  .text {
-    @apply text-moon-900 dark:text-white;
-  }
-  .universal-text {
-    @apply text-gray-400 text-sm;
-  }
-  .error-text {
-    @apply text-xl text-gray-400 dark:text-gray-600 font-medium;
-  }
   .f-box {
     @apply flex items-center justify-center;
   }
   .f-col {
     @apply flex flex-col;
-  }
-  .f-between {
-    @apply flex justify-between items-center;
-  }
-  .f-res {
-    @apply f-col lg:flex-row;
-  }
-  .absolute-corner {
-    @apply absolute top-0 left-0;
   }
   .image {
     @apply f-box overflow-hidden rounded-md p-1;
@@ -149,7 +131,7 @@ select:-webkit-autofill:focus {
     @apply h-[1px] bg-gray-300/80 dark:bg-moon-100;
   }
   .input {
-    @apply text w-full rounded-md border border-gray-300 dark:border-moon-100 bg-gray-100 p-3.5 pb-3 pt-4 outline-none transition-border focus:border-blue-500 dark:focus:border-blue-500 dark:bg-moon-300;
+    @apply w-full rounded-md border border-gray-300 dark:border-moon-100 bg-gray-100 p-3.5 pb-3 pt-4 outline-none transition-border focus:border-blue-500 dark:focus:border-blue-500 dark:bg-moon-300;
   }
   .icon {
     @apply f-box h-8 lg:h-9 w-8 lg:w-9 rounded-md p-[2px] lg:p-[3px] transition-none hover:bg-gray-200 dark:hover:bg-moon-100;

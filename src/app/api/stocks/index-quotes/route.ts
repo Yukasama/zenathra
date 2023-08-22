@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { fmpUrls } from "@/config/fmp-urls";
+import { fmpUrls } from "@/config/fmp";
 import { NotFoundError, ServerError } from "@/lib/errors";
 import { fmpConfig } from "@/config/fmp";
-import { indexQuotes } from "@/config/fmp-data";
+import { indexQuotes } from "@/config/fmp";
 
 export async function GET() {
   try {

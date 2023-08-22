@@ -98,7 +98,9 @@ export default async function StockStatistics({ symbol, className }: Props) {
         <div className="h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-slate-200 p-3 px-6 dark:bg-moon-400">
           <p className="mb-1 text-[19px] font-medium">Dividends</p>
           <div className="f-box ml-0.5 h-4/5 gap-4">
-            <p className="error-text">Never Payed Dividends</p>
+            <p className="text-xl text-gray-400 dark:text-gray-600 font-medium">
+              Never Payed Dividends
+            </p>
           </div>
         </div>
       ) : (

@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { env } from "@/env.mjs";
 import { NotFoundError, ServerError } from "@/lib/errors";
 import { z } from "zod";
-import { fmpConfig } from "@/config/fmp";
-import { quote } from "@/config/fmp-data";
+import { FMP_API_URL, fmpConfig } from "@/config/fmp";
+import { quote } from "@/config/fmp";
 
 const Schema = z.object({
   params: z.object({
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest, rawParams: unknown) {
 
     if (symbols.length > 20) symbols = symbols.slice(0, 20);
 
-    const url = `${env.NEXT_PUBLIC_FMP_API_URL}v3/quote/${
+    const url = `${FMP_API_URL}v3/quote/${
       Array.isArray(symbols) ? symbols.join(",") : symbols
     }?apikey=${env.FMP_API_KEY}`;
 

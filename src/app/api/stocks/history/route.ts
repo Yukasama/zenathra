@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { historyUrls } from "@/config/fmp-urls";
+import { historyUrls } from "@/config/fmp";
 import { NotFoundError, ServerError } from "@/lib/errors";
-import { historyTimes } from "@/config/history-times";
+import { historyTimes } from "@/config/fmp";
 import { z } from "zod";
 
 const Schema = z.object({

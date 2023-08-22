@@ -33,7 +33,7 @@ export default function Searchbar({ placeholder = "Search", onChange }: Props) {
       onSubmit={handleSearch}
       className={`my-0.5 flex max-w-[380px] flex-1 items-center justify-between rounded-md p-2 px-3 box`}>
       <input
-        className="text h-full border-none bg-slate-100 outline-none dark:bg-moon-700 lg:w-[300px]"
+        className="h-full border-none bg-slate-100 outline-none dark:bg-moon-700 lg:w-[300px]"
         value={input}
         placeholder={placeholder}
         onChange={handleChange}

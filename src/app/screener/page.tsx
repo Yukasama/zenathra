@@ -13,7 +13,7 @@ import {
   marketCaps,
   earningsDates,
   exchanges,
-} from "@/config/screener-values";
+} from "@/config/screener";
 import { Screener } from "@/types/stock";
 import { Stock } from "@prisma/client";
 import { Button, Heading, SelectInput } from "@/components/ui";

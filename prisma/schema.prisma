@@ -13,6 +13,11 @@ enum UserRole {
   admin
 }
 
+enum SubscriptionType {
+  basic
+  premium
+}
+
 model Account {
   id                String  @id @default(cuid())
   type              String
@@ -43,6 +48,7 @@ model Session {
 
 model User {
   id             String    @id @default(cuid())
+  name           String?
   username       String?   @unique
   email          String?   @unique
   emailVerified  DateTime?
@@ -51,10 +57,11 @@ model User {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
-  role       UserRole    @default(user)
-  accounts   Account[]
-  sessions   Session[]
-  portfolios Portfolio[] @relation("CreatedBy")
+  role          UserRole           @default(user)
+  accounts      Account[]
+  sessions      Session[]
+  subscriptions UserSubscription[]
+  portfolios    Portfolio[]        @relation("CreatedBy")
 
   recentlyViewedStocks Stock[]
 
@@ -62,6 +69,32 @@ model User {
   stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
   stripePriceId          String?   @map(name: "stripe_price_id")
   stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+}
+
+model Subscription {
+  id       String           @id @default(cuid())
+  type     SubscriptionType @default(basic)
+  price    Float
+  duration Int
+
+  users UserSubscription[]
+}
+
+model UserSubscription {
+  id        String    @id @default(cuid())
+  startDate DateTime  @default(now())
+  endDate   DateTime?
+
+  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?   @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  subscriptionPlanId String
+  subscriptionPlan   Subscription @relation(fields: [subscriptionPlanId], references: [id])
 }
 
 model Portfolio {
@@ -230,22 +263,21 @@ model Stock {
   createdAt                                 DateTime @default(now())
   updatedAt                                 DateTime @updatedAt
 
-  peers Stock[] @relation("PeerRelation", references: [id])
+  peerId String?
+  peer   Stock?  @relation("PeerRelation", fields: [peerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  peers  Stock[] @relation("PeerRelation")
 
-  financialsId String?
-  financials   Financials[] @relation(fields: [financialsId], references: [id], onDelete: Cascade)
+  financials Financials[]
 
   userId String?
   user   User?   @relation(fields: [userId], references: [id])
 
-  Portfolio   Portfolio?  @relation(fields: [portfolioId], references: [id])
+  Portfolio   Portfolio? @relation(fields: [portfolioId], references: [id])
   portfolioId String?
 }
 
-
 model Financials {
   id                                       String   @id @default(cuid())
-  stockId                                  String
   createdAt                                DateTime @default(now())
   updatedAt                                DateTime @updatedAt
   date                                     String
@@ -458,7 +490,8 @@ model Financials {
   roe                                      Float?
   capexPerShare                            Float?
 
-  stock Stock @relation(fields: [stockId], references: [id], onDelete: Cascade)
+  stockId String
+  stock   Stock  @relation(fields: [stockId], references: [id], onDelete: Cascade)
 
   @@unique([symbol, calendarYear])
 }

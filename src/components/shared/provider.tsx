@@ -15,7 +15,7 @@ export default function Provider({ children }: Props) {
       <Toaster
         position="top-center"
         toastOptions={{
-          className: "bg-slate-100 text dark:bg-moon-100",
+          className: "bg-slate-100 dark:bg-moon-100",
         }}
       />
       <SessionProvider>

@@ -2,6 +2,7 @@ import "server-only";
 
 import db from "@/lib/db";
 import { env } from "@/env.mjs";
+import { FMP_API_URL } from "@/config/fmp";
 
 export function MergeArrays(
   arrays: Record<string, any>[][]
@@ -37,19 +38,19 @@ export default async function create(symbols: string[]): Promise<void> {
   if (!symbols.length) throw new Error("ArgumentError: No symbols provided");
 
   const financialUrls = symbols.map((symbol) => [
-    `${env.NEXT_PUBLIC_FMP_API_URL}v3/income-statement/${symbol}?limit=120&apikey=${env.FMP_API_KEY}`,
-    `${env.NEXT_PUBLIC_FMP_API_URL}v3/balance-sheet-statement/${symbol}?limit=120&apikey=${env.FMP_API_KEY}`,
-    `${env.NEXT_PUBLIC_FMP_API_URL}v3/cash-flow-statement/${symbol}?limit=120&apikey=${env.FMP_API_KEY}`,
-    `${env.NEXT_PUBLIC_FMP_API_URL}v3/ratios/${symbol}?limit=120&apikey=${env.FMP_API_KEY}`,
-    `${env.NEXT_PUBLIC_FMP_API_URL}v3/key-metrics/${symbol}?limit=120&apikey=${env.FMP_API_KEY}`,
+    `${FMP_API_URL}v3/income-statement/${symbol}?limit=120&apikey=${env.FMP_API_KEY}`,
+    `${FMP_API_URL}v3/balance-sheet-statement/${symbol}?limit=120&apikey=${env.FMP_API_KEY}`,
+    `${FMP_API_URL}v3/cash-flow-statement/${symbol}?limit=120&apikey=${env.FMP_API_KEY}`,
+    `${FMP_API_URL}v3/ratios/${symbol}?limit=120&apikey=${env.FMP_API_KEY}`,
+    `${FMP_API_URL}v3/key-metrics/${symbol}?limit=120&apikey=${env.FMP_API_KEY}`,
   ]);
 
   const profileUrls = symbols.map((symbol) => [
-    `${env.NEXT_PUBLIC_FMP_API_URL}v3/profile/${symbol}?apikey=${env.FMP_API_KEY}`,
-    `${env.NEXT_PUBLIC_FMP_API_URL}v3/ratios-ttm/${symbol}?apikey=${env.FMP_API_KEY}`,
-    `${env.NEXT_PUBLIC_FMP_API_URL}v3/key-metrics-ttm/${symbol}?apikey=${env.FMP_API_KEY}`,
-    `${env.NEXT_PUBLIC_FMP_API_URL}v4/stock_peers?symbol=${symbol}&apikey=${env.FMP_API_KEY}`,
-    //`${env.NEXT_PUBLIC_FMP_API_URL}v4/price-target-consensus?symbol=${symbol}&apikey=${env.FMP_API_KEY}`,
+    `${FMP_API_URL}v3/profile/${symbol}?apikey=${env.FMP_API_KEY}`,
+    `${FMP_API_URL}v3/ratios-ttm/${symbol}?apikey=${env.FMP_API_KEY}`,
+    `${FMP_API_URL}v3/key-metrics-ttm/${symbol}?apikey=${env.FMP_API_KEY}`,
+    `${FMP_API_URL}v4/stock_peers?symbol=${symbol}&apikey=${env.FMP_API_KEY}`,
+    //`${FMP_API_URL}v4/price-target-consensus?symbol=${symbol}&apikey=${env.FMP_API_KEY}`,
   ]);
 
   const responses = await Promise.allSettled(

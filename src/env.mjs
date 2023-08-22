@@ -9,10 +9,6 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string().min(1)
         : z.string().min(1).optional(),
-    NEXTAUTH_URL: z.preprocess(
-      (str) => process.env.VERCEL_URL ?? str,
-      process.env.VERCEL ? z.string().min(1) : z.string().url()
-    ),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
     FACEBOOK_APP_ID: z.string(),
@@ -23,18 +19,10 @@ export const env = createEnv({
     GMAIL_EMAIL_ADDRESS: z.string().email(),
     GMAIL_APP_PASSWORD: z.string().nonempty(),
   },
-
-  client: {
-    NEXT_PUBLIC_HOST: z.string().url(),
-    NEXT_PUBLIC_FMP_API_URL: z.string().url(),
-  },
   runtimeEnv: {
-    NEXT_PUBLIC_HOST: process.env.NEXT_PUBLIC_HOST,
-    NEXT_PUBLIC_FMP_API_URL: process.env.NEXT_PUBLIC_FMP_API_URL,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,

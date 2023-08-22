@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { footerLinks, socials } from "@/config/footer-config";
+import { footerLinks, site } from "@/config/site";
 
 export default function Footer() {
   return (
@@ -39,7 +39,7 @@ export default function Footer() {
 
       <div className="f-col gap-3">
         <div className="h-[1px] bg-slate-300 dark:bg-moon-100"></div>
-        <div className="mx-2 f-res flex-col-reverse lg:flex-row-reverse items-center justify-between">
+        <div className="mx-2 f-col lg:flex-row flex-col-reverse items-center justify-between">
           <div className="flex gap-5">
             <p className="hidden lg:flex text-[13px] text-slate-500">
               Please note that this website is in development stage.
@@ -54,20 +54,22 @@ export default function Footer() {
               href="/terms">
               Terms
             </Link>
-            <p className="text-[13px] text-slate-500">&copy; 2023 Elysium</p>
+            <p className="text-[13px] text-slate-500">
+              &copy; 2023 {site.name[0].toUpperCase() + site.name.slice(1)}
+            </p>
           </div>
           <div className="flex items-center gap-4">
-            {socials.map((social) => (
+            {Object.entries(site.links).map(([name, url]) => (
               <Link
-                key={social.name}
-                href="/"
+                key={name}
+                href={url}
                 className="f-box h-10 w-10 rounded-md">
                 <Image
-                  className={`${social.name === "github" && "dark:invert"}`}
-                  src={`/images/oauth/${social.name}.png`}
+                  className={`${name === "github" && "dark:invert"}`}
+                  src={`/images/oauth/${name}.png`}
                   height={20}
                   width={20}
-                  alt={social.name[0].toUpperCase() + social.name.slice(1) || "Social Media Link"}
+                  alt={name[0].toUpperCase() + name.slice(1)}
                 />
               </Link>
             ))}

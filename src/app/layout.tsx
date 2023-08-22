@@ -4,7 +4,7 @@ import {
   Sidebar,
   Provider,
   SidebarPortable,
-} from "@/components";
+} from "@/components/shared";
 import "@/styles/globals.css";
 import { Metadata } from "next";
 

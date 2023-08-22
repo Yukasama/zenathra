@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fmpUrls } from "@/config/fmp-urls";
+import { fmpUrls } from "@/config/fmp";
 import { NotFoundError, ServerError } from "@/lib/errors";
 import { z } from "zod";
 import { fmpConfig } from "@/config/fmp";
