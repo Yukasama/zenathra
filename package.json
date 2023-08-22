@@ -72,7 +72,7 @@
     "nodemailer": "^6.9.4",
     "postcss": "8.4.23",
     "postmark": "^3.0.19",
-    "prisma": "^4.16.2",
+    "prisma": "^5.1.1",
     "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-chartjs-2": "^5.2.0",
