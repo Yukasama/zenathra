@@ -1,40 +1,49 @@
+import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { ArgumentError, PermissionError, ServerError } from "@/lib/response";
-import { getUser } from "@/lib/user";
-import { NextRequest, NextResponse } from "next/server";
+import {
+  ConflictResponse,
+  InternalServerErrorResponse,
+  UnauthorizedResponse,
+  UnprocessableEntityResponse,
+} from "@/lib/response";
+import { UpdateUsernameSchema } from "@/lib/validators/user";
 import z from "zod";
 
-const Schema = z.object({
-  username: z.string().min(1, "Please enter a valid name."),
-});
-
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const user = await getUser();
-    if (!user) throw new PermissionError("User is not logged in.");
+    const session = await getAuthSession();
+    if (!session?.user) return new UnauthorizedResponse();
 
-    const parsed = Schema.safeParse(await req.json());
-    if (!parsed.success) throw new ArgumentError(parsed.error.message);
-    const { username } = parsed.data;
+    const { username } = UpdateUsernameSchema.parse(await req.json());
 
-    try {
-      await db.user.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          name: username,
-        },
-      });
-    } catch {
-      throw new ServerError("Username could not be changed.");
-    }
+    if (await db.user.findFirst({ where: { username } }))
+      throw new UnprocessableEntityResponse("Username already taken");
 
-    return NextResponse.json({ message: "Username changed successfully." });
-  } catch (err: any) {
-    return NextResponse.json(
-      { message: err.message },
-      { status: err.status || 500 }
-    );
+    const accounts = await db.account.findMany({
+      where: {
+        userId: session.user.id,
+      },
+    });
+
+    if (accounts.length > 0)
+      throw new ConflictResponse(
+        "Email change not possible since you have linked accounts to your mail"
+      );
+
+    await db.user.update({
+      where: {
+        id: session.user.id,
+      },
+      data: {
+        username: username,
+      },
+    });
+
+    return new Response("OK");
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return new UnprocessableEntityResponse(error.message);
+
+    return new InternalServerErrorResponse();
   }
 }

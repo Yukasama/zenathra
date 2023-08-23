@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     });
 
     if (!portfolio)
-      return new UnauthorizedResponse("Portfolio not found or not owned.");
+      return new UnauthorizedResponse("Portfolio not found or not owned");
 
     await db.portfolio.delete({
       where: {

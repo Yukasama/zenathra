@@ -1,75 +1,49 @@
-import { NextRequest, NextResponse } from "next/server";
 import { historyUrls } from "@/config/fmp";
-import { InternalServerErrorResponse, NotFoundResponse } from "@/lib/response";
+import {
+  InternalServerErrorResponse,
+  UnprocessableEntityResponse,
+} from "@/lib/response";
 import { historyTimes } from "@/config/fmp";
 import { z } from "zod";
+import axios from "axios";
+import { StockHistorySchema } from "@/lib/validators/stock";
 
-const Schema = z.object({
-  symbol: z.string(),
-  range: z.enum(["1D", "5D", "1M", "6M", "1Y", "5Y", "ALL", "Everything"]),
-});
-
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const { symbol, range } = Schema.parse(await req.json());
-
-    let data = null;
+    const { symbol, range } = StockHistorySchema.parse(await req.json());
 
     if (range === "Everything") {
       if (Array.isArray(symbol)) {
-        if (Array.isArray(symbol)) {
-          const data = await Promise.all(
-            symbol.map(async (s) => await fetchHistory(s))
-          );
-          const averageData = await getAverageClose(data);
-          return NextResponse.json(averageData);
-        }
+        const data = await Promise.all(
+          symbol.map(async (s) => await fetchHistory(s))
+        );
+        return new Response(JSON.stringify(await getAverageClose(data)));
       }
-      data = await fetchHistory(symbol);
+      return new Response(JSON.stringify(await fetchHistory(symbol)));
     } else {
-      const response = await fetch(
-        historyUrls(symbol, historyTimes[range][0]),
-        {
-          cache: "no-cache",
-        }
-      )
-        .then(async (res) => await res.json())
-        .catch(() => {
-          throw new InternalServerErrorResponse("Fetch from FMP failed");
-        });
+      const { data } = await axios.get(
+        historyUrls(symbol, historyTimes[range][0])
+      );
 
       const history: History[] =
-        historyTimes[range][0] === "day1" ? response.historical : response;
+        historyTimes[range][0] === "day1" ? data.historical : data;
 
-      if (!history.length)
-        throw new NotFoundResponse("No data found for this stock.");
-
-      data = history.slice(0, historyTimes[range][1]).reverse();
+      return history.slice(0, historyTimes[range][1]).reverse();
     }
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return new UnprocessableEntityResponse(error.message);
 
-    return NextResponse.json(data);
-  } catch (err: any) {
-    return NextResponse.json(
-      { message: err.message },
-      { status: err.status || 500 }
-    );
+    return new InternalServerErrorResponse();
   }
 }
 
 async function fetchHistory(symbol: string) {
   const fetches: History[][] = await Promise.all(
-    ["min1", "min5", "min30", "day1"].map((time) => {
-      return fetch(historyUrls(symbol, time), {
-        cache: "no-cache",
-      })
-        .then(async (res) => {
-          if (time === "day1") {
-            return await res.json().then((data) => data.historical);
-          } else {
-            return await res.json();
-          }
-        })
-        .catch(() => null);
+    ["min1", "min5", "min30", "day1"].map(async (time) => {
+      const { data } = await axios.get(historyUrls(symbol, time));
+      if (time === "day1") return data.historical;
+      return data;
     })
   );
 
@@ -85,9 +59,7 @@ async function fetchHistory(symbol: string) {
 }
 
 async function getAverageClose(data: any) {
-  const result: any = {};
-
-  data.forEach((symbolData: any) => {
+  const result = data.forEach((symbolData: any) => {
     Object.keys(symbolData).forEach((range) => {
       if (!result[range]) result[range] = [];
 

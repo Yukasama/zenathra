@@ -1,17 +1,12 @@
 import { env } from "@/env.mjs";
-import { NextRequest, NextResponse } from "next/server";
+import { InternalServerErrorResponse, UnprocessableEntityResponse } from "@/lib/response";
+import { UserSendMailSchema } from "@/lib/validators/user";
 import nodemailer from "nodemailer";
 import { z } from "zod";
 
-const Schema = z.object({
-  email: z.string().email(),
-  subject: z.string().nonempty(),
-  message: z.string().nonempty(),
-});
-
-export async function POST(req: NextRequest) {
+export async function POST(req: Response) {
   try {
-    const { email, subject, message } = Schema.parse(await req.json());
+    const { email, subject, message } = UserSendMailSchema.parse(await req.json());
 
     const mail = {
       from: env.GMAIL_EMAIL_ADDRESS,
@@ -35,11 +30,11 @@ export async function POST(req: NextRequest) {
 
     await transporter.sendMail(mail);
 
-    return NextResponse.json({ message: "Email sent." });
-  } catch (err: any) {
-    return NextResponse.json(
-      { message: err.message },
-      { status: err.status || 500 }
-    );
+    return new Response("OK");
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return new UnprocessableEntityResponse(error.message);
+
+    return new InternalServerErrorResponse();
   }
 }

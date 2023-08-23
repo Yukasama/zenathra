@@ -1,54 +1,49 @@
+import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { ArgumentError, PermissionError, ServerError } from "@/lib/response";
-import { getUser } from "@/lib/user";
-import { NextRequest, NextResponse } from "next/server";
+import {
+  ConflictResponse,
+  InternalServerErrorResponse,
+  UnauthorizedResponse,
+  UnprocessableEntityResponse,
+} from "@/lib/response";
+import { UpdateEmailSchema } from "@/lib/validators/user";
 import z from "zod";
 
-const Schema = z.object({
-  email: z.string().email("Invalid email address."),
-});
-
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const user = await getUser();
-    if (!user) throw new PermissionError("User is not logged in.");
+    const session = await getAuthSession();
+    if (!session?.user) return new UnauthorizedResponse();
 
-    const parsed = Schema.safeParse(await req.json());
-    if (!parsed.success) throw new ArgumentError(parsed.error.message);
-    const { email } = parsed.data;
+    const { email } = UpdateEmailSchema.parse(await req.json());
 
-    if (await db.user.findUnique({ where: { email } }))
-      throw new ArgumentError("Email is already registered.");
+    if (await db.user.findFirst({ where: { email } }))
+      throw new UnprocessableEntityResponse("Email is already registered");
 
     const accounts = await db.account.findMany({
       where: {
-        userId: user.id,
+        userId: session.user.id,
       },
     });
 
     if (accounts.length > 0)
-      throw new PermissionError(
-        "Email change not possible since you have linked accounts to your mail."
+      throw new ConflictResponse(
+        "Email change not possible since you have linked accounts to your mail"
       );
 
-    try {
-      await db.user.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          email: email,
-        },
-      });
-    } catch {
-      throw new ServerError("Email could not be changed.");
-    }
+    await db.user.update({
+      where: {
+        id: session.user.id,
+      },
+      data: {
+        email: email,
+      },
+    });
 
-    return NextResponse.json({ message: "Email changed successfully." });
-  } catch (err: any) {
-    return NextResponse.json(
-      { message: err.message },
-      { status: err.status || 500 }
-    );
+    return new Response("OK");
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return new UnprocessableEntityResponse(error.message);
+
+    return new InternalServerErrorResponse();
   }
 }

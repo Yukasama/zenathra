@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     });
 
     if (!portfolio)
-      return new NotFoundResponse("Portfolio not found or not owned.");
+      return new NotFoundResponse("Portfolio not found or not owned");
 
     const stocksInDatabase = await db.stock.findMany({
       select: {

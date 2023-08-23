@@ -1,39 +1,28 @@
 import { db } from "@/lib/db";
-import { ArgumentError, PermissionError, ServerError } from "@/lib/response";
-import { getUser } from "@/lib/user";
-import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 import bcrypt from "bcrypt";
+import { getAuthSession } from "@/lib/auth";
+import {
+  ConflictResponse,
+  ForbiddenResponse,
+  InternalServerErrorResponse,
+  UnauthorizedResponse,
+  UnprocessableEntityResponse,
+} from "@/lib/response";
+import { UpdatePasswordSchema } from "@/lib/validators/user";
 
-const Schema = z.object({
-  action: z.enum(["email", "username", "password"]),
-});
-
-const EmailSchema = z.object({
-  email: z.string().email("Please enter a valid email address."),
-});
-
-const PasswordSchema = z.object({
-  oldPassword: z.string().min(1, "Please enter a valid password."),
-  password: z.string().min(11, "Password must contain 11 or more characters."),
-});
-
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const user = await getUser();
-    if (!user) throw new PermissionError("User is not logged in.");
+    const session = await getAuthSession();
+    if (!session?.user) return new UnauthorizedResponse();
 
-    const parsed = Schema.safeParse(await req.json());
-    if (!parsed.success) throw new ArgumentError(parsed.error.message);
-    const { action } = parsed.data;
-
-    const databaseUser = await db.user.findUnique({
+    const user = await db.user.findFirst({
       where: {
-        id: user.id,
+        id: session.user.id,
       },
     });
 
-    if (!databaseUser) throw new ServerError("User not found.");
+    if (!user) return new UnauthorizedResponse();
 
     const accounts = await db.account.findMany({
       where: {
@@ -42,40 +31,31 @@ export async function POST(req: NextRequest) {
     });
 
     if (accounts.length > 0)
-      throw new PermissionError(
-        "Change not possible since you have multiple linked accounts to your mail."
+      throw new ConflictResponse(
+        "Change not possible since you have multiple linked accounts to your mail"
       );
 
-    if (action === "password") {
-      const parsedPassword = PasswordSchema.safeParse(await req.json());
-      if (!parsedPassword.success)
-        throw new ArgumentError(parsedPassword.error.message);
-      const { oldPassword, password } = parsedPassword.data;
+    const { oldPassword, password } = UpdatePasswordSchema.parse(await req.json());
 
-      if (!(await bcrypt.compare(oldPassword, databaseUser.hashedPassword)))
-        throw new ArgumentError("Invalid password.");
+    if (!(await bcrypt.compare(oldPassword, user.hashedPassword)))
+      return new ForbiddenResponse("Old password is incorrect");
 
-      const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
-      try {
-        await db.user.update({
-          where: {
-            id: user.id,
-          },
-          data: {
-            hashedPassword: hashedPassword,
-          },
-        });
-      } catch {
-        throw new ServerError("Password could not be changed.");
-      }
-    }
+    await db.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        hashedPassword: hashedPassword,
+      },
+    });
 
-    return NextResponse.json({ message: "Password changed successfully." });
-  } catch (err: any) {
-    return NextResponse.json(
-      { message: err.message },
-      { status: err.status || 500 }
-    );
+    return new Response("OK");
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return new UnprocessableEntityResponse(error.message);
+
+    return new InternalServerErrorResponse();
   }
 }
