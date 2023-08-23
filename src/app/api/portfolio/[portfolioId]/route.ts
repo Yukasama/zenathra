@@ -1,12 +1,7 @@
+import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import {
-  ArgumentError,
-  NotFoundError,
-  PermissionError,
-  ServerError,
-} from "@/lib/response";
+import { UnauthorizedResponse } from "@/lib/response";
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
 import { z } from "zod";
 
 const Schema = z.object({
@@ -14,37 +9,6 @@ const Schema = z.object({
     portfolioId: z.string().nonempty(),
   }),
 });
-
-export async function GET(req: NextRequest, rawParams: unknown) {
-  try {
-    const result = Schema.safeParse(rawParams);
-    if (!result.success) throw new ArgumentError(result.error.message);
-    const { portfolioId } = result.data.params;
-
-    const portfolio = await db.portfolio.findUnique({
-      where: {
-        id: portfolioId,
-      },
-    });
-
-    if (!portfolio) throw new NotFoundError("Portfolio not found.");
-
-    const session = await getSession();
-
-    if (
-      !portfolio.public &&
-      (!session || (session && session.user.id !== portfolio.userId))
-    )
-      throw new PermissionError("This portfolio is private.");
-
-    return NextResponse.json(portfolio);
-  } catch (err: any) {
-    return NextResponse.json(
-      { message: err.message },
-      { status: err.status || 500 }
-    );
-  }
-}
 
 const PostSchema = z.object({
   symbols: z.union([z.string().nonempty(), z.array(z.string().nonempty())]),
@@ -59,13 +23,8 @@ const PostParamsSchema = z.object({
 
 export async function POST(req: NextRequest, rawParams: unknown) {
   try {
-    let session = null;
-    try {
-      session = await getSession();
-      if (!session?.user || !session?.user.email) throw new PermissionError();
-    } catch {
-      throw new ServerError();
-    }
+    const session = await getAuthSession();
+    if (!session?.user) return new UnauthorizedResponse();
 
     const paramsResult = PostParamsSchema.safeParse(rawParams);
     if (!paramsResult.success)

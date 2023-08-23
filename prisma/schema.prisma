@@ -105,10 +105,22 @@ model Portfolio {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  stocks Stock[]
+  stocks StockInPortfolio[]
 
   creatorId String
   creator   User   @relation("CreatedBy", fields: [creatorId], references: [id], onDelete: Cascade)
+}
+
+model StockInPortfolio {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  portfolioId String
+  stockId     String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  stock       Stock     @relation(fields: [stockId], references: [id])
+
+  @@id([portfolioId, stockId])
 }
 
 model Stock {
@@ -262,17 +274,15 @@ model Stock {
   createdAt                                 DateTime @default(now())
   updatedAt                                 DateTime @updatedAt
 
+  portfolios StockInPortfolio[]
+  financials Financials[]
+
   peerId String?
   peer   Stock?  @relation("PeerRelation", fields: [peerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   peers  Stock[] @relation("PeerRelation")
 
-  financials Financials[]
-
   creatorId String?
   creator   User?   @relation(fields: [creatorId], references: [id])
-
-  portfolioId String?
-  Portfolio   Portfolio? @relation(fields: [portfolioId], references: [id])
 }
 
 model Financials {

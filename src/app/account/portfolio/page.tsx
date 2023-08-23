@@ -7,6 +7,13 @@ export default async function page() {
 
   const portfolios = await db.portfolio.findMany({
     where: { creatorId: session?.user.id },
+    include: {
+      stocks: {
+        include: {
+          stock: true,
+        },
+      },
+    },
   });
 
   return (

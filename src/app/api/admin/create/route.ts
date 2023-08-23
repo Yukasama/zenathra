@@ -1,36 +1,34 @@
-import { Timeout, Timer } from "@/lib/utils";
-import { getSymbolList } from "@/lib/stock-get";
+import { Timeout } from "@/lib/utils";
 import { fmpConfig } from "@/config/fmp";
 import { db } from "@/lib/db";
-import { getUser } from "@/lib/user";
 import {
+  BadRequestResponse,
+  ForbiddenResponse,
   InternalServerErrorResponse,
+  UnauthorizedResponse,
   UnprocessableEntityResponse,
 } from "@/lib/response";
 import { z } from "zod";
 import uploadStocks from "@/lib/upload-stocks";
 import axios from "axios";
-
-const Schema = z.object({
-  symbol: z.string().nonempty(),
-  skip: z.boolean().optional(),
-  clean: z.boolean().optional(),
-  pullTimes: z.number().int().positive().optional(),
-});
+import { getAuthSession } from "@/lib/auth";
+import { UploadStockSchema } from "@/lib/validators/stock";
 
 export async function POST(req: Request) {
   try {
-    const user = await getUser();
-    if (!user) throw new PermissionError("User is not logged in.");
+    const session = await getAuthSession();
+    if (!session?.user) return new UnauthorizedResponse();
 
-    const howLong = Timer();
+    const { symbol, skip, clean, pullTimes } = UploadStockSchema.parse(
+      await req.json()
+    );
 
-    const result = Schema.safeParse(await req.json());
-    if (!result.success) throw new ArgumentError(result.error.message);
-    const { symbol, skip = false, clean = false, pullTimes = 1 } = result.data;
+    const user = await db.user.findFirst({
+      where: { id: session.user.id },
+    });
 
-    if (!symbol) throw new ArgumentError();
-    if (user.role !== "admin") throw new PermissionError();
+    if (!user) return new UnauthorizedResponse();
+    if (user.role !== "admin") return new ForbiddenResponse();
 
     let alreadySymbols: string[] = [];
     if (skip) {
@@ -42,55 +40,32 @@ export async function POST(req: Request) {
       alreadySymbols = allStocks.map((stock) => stock.symbol);
     }
 
-    let symbolArray: string[] | string[][] | null = [];
-    let pulls = pullTimes || 1;
-
     if (symbol === "All" || symbol === "US500") {
-      symbolArray = await getSymbolList(symbol, pulls);
+      const { data } = await axios.post("/api/stocks/symbols", {
+        symbolSet: symbol,
+        pullTimes: pullTimes || 1,
+      });
+      const symbolArray: string[][] = data;
 
-      if (!symbolArray) throw new ServerError("Symbols could not be fetched.");
+      if (!symbolArray)
+        return new InternalServerErrorResponse("Symbols could not be fetched.");
 
-      let currentIteration = 0;
       const totalIterations = symbolArray.length;
+      let currentIteration = 0;
 
       for (let symbols of symbolArray) {
         currentIteration++;
 
         symbols = symbols.filter((s) => s && s !== null && s !== undefined);
         if (skip) symbols = symbols.filter((s) => !alreadySymbols.includes(s));
-        if (symbols.length === 0) {
-          console.log(`${Number(fmpConfig.docsPerPull)} symbols were skipped.`);
-          continue;
-        }
+        if (symbols.length === 0) continue;
 
-        try {
-          await uploadStocks(symbols);
-          console.log(
-            `${Number(
-              fmpConfig.docsPerPull
-            )} symbols have been written to Database in ${
-              howLong.ms
-            } (including ${symbols[0]}${symbols[1] && ", " + symbols[1]}${
-              symbols[2] && ", " + symbols[2]
-            }).`
-          );
-        } catch {
-          console.error(`Failed to write symbols to Database.`);
-        }
+        await uploadStocks(symbols);
 
         if (currentIteration !== totalIterations)
           await Timeout(Number(fmpConfig.timeout));
       }
-    } else {
-      symbolArray = [symbol];
-
-      try {
-        await uploadStocks(symbolArray);
-        console.log(`${symbol} has been written to Database in ${howLong.ms}.`);
-      } catch {
-        console.error(`Failed to write ${symbol} to Database.`);
-      }
-    }
+    } else await uploadStocks([symbol]);
 
     if (clean) await axios.post("/api/admin/clean");
 
@@ -99,6 +74,8 @@ export async function POST(req: Request) {
     if (error instanceof z.ZodError)
       return new UnprocessableEntityResponse(error.message);
 
-    return new InternalServerErrorResponse();
+    return new InternalServerErrorResponse(
+      "Failed to write stocks to the database"
+    );
   }
 }

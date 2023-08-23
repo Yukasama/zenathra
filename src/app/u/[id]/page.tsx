@@ -1,5 +1,4 @@
-import { User } from "@/types/db";
-import { request } from "@/utils/request";
+import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 
 interface Params {
@@ -7,17 +6,17 @@ interface Params {
 }
 
 // export async function generateStaticParams() {
-//   const { data, error } = await request("/api/users/getAll");
+//   const users = await db.user.findMany();
 
-//   if (data) return users.map((user) => ({ id: user.id }));
+//   if (users) return users.map((user) => ({ id: user.id }));
 // }
 
-export default async function U({ params: { id } }: Params) {
-  const { data, error } = await request(`/api/users/${id}`);
+export default async function page({ params: { id } }: Params) {
+  const user = await db.user.findFirst({
+    where: { id },
+  });
 
-  if (!error) return notFound();
-
-  const user: User = data;
+  if (!user) return notFound();
 
   return <div>{user.name}</div>;
 }

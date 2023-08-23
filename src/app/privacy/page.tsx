@@ -1,5 +1,5 @@
-export default function Privacy() {
+export default function page() {
   return (
-    <div>Privacy</div>
-  )
+    <div className="mt-52 text-center text-3xl font-thin">Coming soon...</div>
+  );
 }

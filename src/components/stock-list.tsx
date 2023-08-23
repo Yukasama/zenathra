@@ -3,6 +3,7 @@ import { getQuotes } from "@/lib/quote-get";
 import { Quote, StockImage } from "@/types/stock";
 import { StockListItem, StockListItemLoading } from "@/components";
 import { StructureProps } from "@/types/layout";
+import { Stock } from "@prisma/client";
 
 interface ListStructureProps extends StructureProps {
   title?: string;
@@ -15,7 +16,7 @@ interface SharedProps {
 }
 
 interface Props extends SharedProps {
-  symbols: string[];
+  symbols: Stock[];
   error?: string;
 }
 
@@ -47,7 +48,7 @@ export function StockListLoading({ title, limit = 5, className }: SharedProps) {
 }
 
 export default async function StockList({
-  symbols,
+  stocks,
   title = "",
   error,
   limit = 5,
