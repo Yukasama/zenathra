@@ -1,4 +1,4 @@
-import { getDailys } from "@/lib/stock-get";
+import { getDailys } from "@/lib/fmp";
 import {
   StockCardList,
   StockHighlight,

@@ -2,14 +2,13 @@ import { Timeout } from "@/lib/utils";
 import { fmpConfig } from "@/config/fmp";
 import { db } from "@/lib/db";
 import {
-  BadRequestResponse,
   ForbiddenResponse,
   InternalServerErrorResponse,
   UnauthorizedResponse,
   UnprocessableEntityResponse,
 } from "@/lib/response";
 import { z } from "zod";
-import uploadStocks from "@/lib/upload-stocks";
+import uploadStocks from "@/lib/stock-upload";
 import axios from "axios";
 import { getAuthSession } from "@/lib/auth";
 import { UploadStockSchema } from "@/lib/validators/stock";
@@ -74,8 +73,6 @@ export async function POST(req: Request) {
     if (error instanceof z.ZodError)
       return new UnprocessableEntityResponse(error.message);
 
-    return new InternalServerErrorResponse(
-      "Failed to write stocks to the database"
-    );
+    return new InternalServerErrorResponse();
   }
 }

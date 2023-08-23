@@ -28,37 +28,13 @@ export async function POST(req: Request) {
     if (!portfolio)
       return new NotFoundResponse("Portfolio not found or not owned.");
 
-    const stocksInDatabase = await db.stock.findMany({
-      select: {
-        id: true,
-      },
+    await db.stockInPortfolio.deleteMany({
       where: {
-        id: {
+        portfolioId: portfolioId,
+        stockId: {
           in: stockIds,
         },
       },
-    });
-
-    const portfolioStocks = await db.stockInPortfolio.findMany({
-      where: {
-        portfolioId: portfolioId,
-      },
-      select: {
-        stockId: true,
-      },
-    });
-
-    const portfolioStockIds = portfolioStocks.map((stock) => stock.stockId);
-
-    const newStocks = stocksInDatabase
-      .map((stock) => stock.id)
-      .filter((id) => !portfolioStockIds.includes(id));
-
-    await db.stockInPortfolio.createMany({
-      data: newStocks.map((stockId) => ({
-        portfolioId: portfolioId,
-        stockId: stockId,
-      })),
     });
 
     return new Response("OK");

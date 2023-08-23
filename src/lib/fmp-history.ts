@@ -1,58 +1,42 @@
-import { NextRequest, NextResponse } from "next/server";
-import { historyUrls } from "@/config/fmp";
-import { NotFoundError, ServerError } from "@/lib/response";
-import { historyTimes } from "@/config/fmp";
-import { z } from "zod";
+import "server-only";
 
-const Schema = z.object({
-  symbol: z.string(),
-  range: z.enum(["1D", "5D", "1M", "6M", "1Y", "5Y", "ALL", "Everything"]),
-});
+import { historyUrls, historyTimes } from "@/config/fmp";
+import { TimeFrame } from "@/types/stock";
+import { env } from "@/env.mjs";
 
-export async function POST(req: NextRequest) {
+interface Props {
+  symbol: string | string[];
+  range: TimeFrame | "Everything";
+}
+
+export async function getHistory({ symbol, range }: Props) {
   try {
-    const { symbol, range } = Schema.parse(await req.json());
-
-    let data = null;
-
     if (range === "Everything") {
       if (Array.isArray(symbol)) {
-        if (Array.isArray(symbol)) {
-          const data = await Promise.all(
-            symbol.map(async (s) => await fetchHistory(s))
-          );
-          const averageData = await getAverageClose(data);
-          return NextResponse.json(averageData);
-        }
+        const data = await Promise.all(
+          symbol.map(async (s) => await fetchHistory(s))
+        );
+        return await getAverageClose(data);
       }
-      data = await fetchHistory(symbol);
+      return await fetchHistory(symbol);
     } else {
       const response = await fetch(
         historyUrls(symbol, historyTimes[range][0]),
         {
           cache: "no-cache",
         }
-      )
-        .then(async (res) => await res.json())
-        .catch(() => {
-          throw new ServerError("Fetch from FMP failed");
-        });
+      ).then(async (res) => await res.json());
 
       const history: History[] =
         historyTimes[range][0] === "day1" ? response.historical : response;
 
-      if (!history.length)
-        throw new NotFoundError("No data found for this stock.");
-
-      data = history.slice(0, historyTimes[range][1]).reverse();
+      return history.slice(0, historyTimes[range][1]).reverse();
     }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    if (env.NODE_ENV === "development") console.error(err);
 
-    return NextResponse.json(data);
-  } catch (err: any) {
-    return NextResponse.json(
-      { message: err.message },
-      { status: err.status || 500 }
-    );
+    return null;
   }
 }
 

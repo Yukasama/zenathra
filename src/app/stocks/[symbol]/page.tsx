@@ -12,15 +12,17 @@ import {
   StockPrice2Loading,
   StockChartLoader,
 } from "@/components";
-import { getStock } from "@/lib/stock-get";
 import { Stock } from "@prisma/client";
 import { Suspense } from "react";
-import { getUser } from "@/lib/user";
 import notFound from "@/app/not-found";
 import { User } from "@/types/db";
 
 // export async function generateStaticParams() {
-//   const symbols = await getAllSymbols();
+//   const symbols = await db.stock.findMany({
+//     select: {
+//       symbol: true,
+//     },
+//   });
 
 //   return symbols.map((symbol) => {
 //     return {
