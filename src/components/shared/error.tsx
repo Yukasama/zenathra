@@ -1,8 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui";
+import { RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { RefreshCcw } from "react-feather";
 
 interface Props {
   error?: string;

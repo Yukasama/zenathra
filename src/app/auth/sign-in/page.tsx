@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AuthSignInForm } from "@/components";
 
-export default function SignIn() {
+export default function page() {
   return (
     <>
       <h2 className="mb-1.5 text-center text-xl font-medium">

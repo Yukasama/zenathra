@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Searchbar, UserProfile, SidebarToggle } from "@/components/shared";
 import { ThemeToggle } from "@/components/ui";
-import { Menu } from "react-feather";
-import { getServerSession } from "next-auth";
+import { Menu } from "lucide-react";
+import { getAuthSession } from "@/lib/auth";
 
 export default async function Navbar() {
-  const session = await getServerSession();
+  const session = await getAuthSession();
 
   return (
     <div className="sticky top-0 z-20 flex w-full justify-between gap-4 p-2 px-4">
@@ -17,7 +17,7 @@ export default async function Navbar() {
       </SidebarToggle>
 
       <div className="box flex items-center justify-end gap-2 px-3">
-        {!session && (
+        {!session?.user && (
           <div className="hidden items-center gap-3 lg:flex">
             <Link
               href="/auth/sign-in"

@@ -1,6 +1,6 @@
 import { AuthForgotPasswordForm } from "@/components";
 
-export default function ForgotPassword() {
+export default function page() {
   return (
     <>
       <h2 className="mb-1.5 text-center text-xl font-medium">

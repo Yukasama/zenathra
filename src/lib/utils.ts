@@ -43,12 +43,13 @@ export async function Timeout(ms: number) {
   return await new Promise((resolve) => setTimeout(resolve, Number(ms)));
 }
 
-export const rateLimiter = (windowMs?: number, max?: number) =>
+export function rateLimiter(windowMs?: number, max?: number) {
   rateLimit({
     windowMs: windowMs || 15 * 60 * 1000,
     max: max || 100,
     message: "Too many requests, please try again later.",
   });
+}
 
 export function nextConnect(req: Request, res: Response, middleware: any) {
   return new Promise((resolve, reject) => {
@@ -61,7 +62,7 @@ export function nextConnect(req: Request, res: Response, middleware: any) {
   });
 }
 
-export default function useDebounce<T>(value: T, delay: number) {
+export function useDebounce<T>(value: T, delay: number) {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {

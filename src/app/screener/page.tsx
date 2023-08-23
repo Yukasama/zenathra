@@ -17,10 +17,10 @@ import {
 import { Screener } from "@/types/stock";
 import { Stock } from "@prisma/client";
 import { Button, Heading, SelectInput } from "@/components/ui";
-import { BarChart2, FileText, Layers, RotateCcw } from "react-feather";
 import { StructureProps } from "@/types/layout";
+import { BarChart2, FileText, Layers, RotateCcw } from "lucide-react";
 
-export default function ScreenerPage() {
+export default function Page() {
   const [stocks, setStocks] = useState<Stock[] | null>();
   const [active, setActive] = useState<string>("Descriptive");
   const [loading, setLoading] = useState<boolean>(false);

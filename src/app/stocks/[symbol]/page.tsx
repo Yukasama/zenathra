@@ -14,8 +14,10 @@ import {
 } from "@/components";
 import { Stock } from "@prisma/client";
 import { Suspense } from "react";
-import notFound from "@/app/not-found";
-import { User } from "@/types/db";
+import { getAuthSession } from "@/lib/auth";
+import { Session } from "next-auth";
+import { notFound } from "next/navigation";
+import { db } from "@/lib/db";
 
 // export async function generateStaticParams() {
 //   const symbols = await db.stock.findMany({
@@ -38,9 +40,11 @@ interface Props {
 }
 
 export default async function Symbol({ params: { symbol } }: Props) {
-  const [user, stock]: [User | null, Stock | null] = await Promise.all([
-    getUser(),
-    getStock(symbol),
+  const [session, stock]: [Session | null, Stock | null] = await Promise.all([
+    getAuthSession(),
+    db.stock.findFirst({
+      where: { symbol: symbol },
+    }),
   ]);
 
   if (!stock) return notFound();
@@ -52,14 +56,14 @@ export default async function Symbol({ params: { symbol } }: Props) {
           <div className="flex items-center gap-10 border-b border-slate-300 pb-4 dark:border-moon-100">
             <div className="relative f-col gap-2">
               <Suspense fallback={<StockPrice2Loading />}>
-                <StockPrice2 user={user} stock={stock} />
+                <StockPrice2 session={session} stock={stock} />
               </Suspense>
               <Suspense fallback={<StockAfterHoursLoading />}>
                 <StockAfterHours stock={stock} />
               </Suspense>
             </div>
             <StockMetrics stock={stock} />
-            <StockEye stock={stock} user={user} />
+            <StockEye stock={stock} user={session} />
           </div>
           <div className="my-4 flex gap-4 border-b border-slate-300 pb-4 dark:border-moon-100">
             <Suspense fallback={<StockChartLoading />}>

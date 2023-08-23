@@ -1,5 +1,3 @@
-import { getUser } from "@/lib/user";
-import { getStocks } from "@/lib/stock-get";
 import { Suspense } from "react";
 import Image from "next/image";
 import {
@@ -10,18 +8,20 @@ import {
   StockList,
   StockListLoading,
 } from "@/components";
-import { getPortfolio } from "@/lib/portfolio-get";
-import notFound from "@/app/not-found";
-import { Portfolio, User } from "@/types/db";
+import { getAuthSession } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { notFound } from "next/navigation";
 
 interface Params {
   params: { id: string };
 }
 
 export async function generateMetadata({ params: { id } }: Params) {
-  const [user, portfolio]: [User | null, Portfolio | null] = await Promise.all([
-    getUser(),
-    getPortfolio(id),
+  const [session, portfolio] = await Promise.all([
+    getAuthSession(),
+    db.portfolio.findFirst({
+      where: { id },
+    }),
   ]);
 
   if (!portfolio)
@@ -29,13 +29,13 @@ export async function generateMetadata({ params: { id } }: Params) {
       title: "Portfolio not found",
     };
 
-  if (!portfolio.public && user && user.id !== portfolio.userId)
+  if (!portfolio.public && session?.user.id !== portfolio.creatorId)
     return {
       title: "This portfolio is private",
     };
   else {
     return {
-      title: `Portfolios - ${portfolio.title}`,
+      title: portfolio.title,
     };
   }
 }
@@ -46,16 +46,21 @@ export async function generateMetadata({ params: { id } }: Params) {
 //   return data.map((portfolio) => ({ id: portfolio.id }));
 // }
 
-export default async function PortfolioPage({ params: { id } }: Params) {
-  const [user, portfolio]: [User | null, Portfolio | null] = await Promise.all([
-    getUser(),
-    getPortfolio(id),
+export default async function page({ params: { id } }: Params) {
+  const [session, portfolio, stockIds] = await Promise.all([
+    getAuthSession(),
+    db.portfolio.findFirst({
+      where: { id },
+    }),
+    db.stockInPortfolio.findMany({
+      select: { stockId: true },
+      where: { portfolioId: id },
+    }),
   ]);
 
   if (!portfolio) return notFound();
-  // If no stocks in portfolio
-  else if (!portfolio.symbols.length) {
-    if (user && user.id === portfolio.userId)
+  else if (!stockIds.length) {
+    if (session?.user.id === portfolio.creatorId)
       return (
         <div>
           <div>
@@ -74,8 +79,6 @@ export default async function PortfolioPage({ params: { id } }: Params) {
 
   // If the portfolio is private
   if (!portfolio.public && !user) return <p>This Portfolio is private.</p>;
-
-  const stocks = await getStocks(portfolio.symbols);
 
   return (
     <div className="p-5">

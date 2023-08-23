@@ -1,9 +1,8 @@
 "use client";
 
-import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "next-themes";
-import { SessionProvider } from "next-auth/react";
 import { SidebarProvider } from "@/components/shared";
+import { Toaster } from "../ui/toaster";
 
 interface Props {
   children: React.ReactNode;
@@ -11,16 +10,9 @@ interface Props {
 
 export default function Provider({ children }: Props) {
   return (
-    <ThemeProvider enableSystem={true} attribute="class">
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          className: "bg-slate-100 dark:bg-moon-100",
-        }}
-      />
-      <SessionProvider>
-        <SidebarProvider>{children}</SidebarProvider>
-      </SessionProvider>
+    <ThemeProvider enableSystem={true} attribute="class ">
+      <Toaster />
+      <SidebarProvider>{children}</SidebarProvider>
     </ThemeProvider>
   );
 }

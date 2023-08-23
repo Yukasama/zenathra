@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { Search } from "react-feather";
 import { Button } from "@/components/ui";
+import { Search } from "lucide-react";
 
 interface Props {
   placeholder?: string;

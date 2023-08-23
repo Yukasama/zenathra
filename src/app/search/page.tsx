@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Loader, SearchResults } from "@/components";
+import { SearchResults } from "@/components";
 import { searchStocks } from "@/lib/stock-get";
 import notFound from "@/app/not-found";
 import { redirect } from "next/navigation";
@@ -26,7 +26,7 @@ export default async function Search({ searchParams }: Props) {
       <p className="p-2 px-3 text-[25px] font-thin">
         Search Results for: {search}
       </p>
-      <Suspense fallback={<Loader />}>
+      <Suspense fallback={<p>Loading...</p>}>
         <SearchResults results={stocks} />
       </Suspense>
     </div>

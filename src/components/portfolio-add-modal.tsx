@@ -1,16 +1,12 @@
 "use client";
 
-import { addToPortfolio } from "@/lib/portfolio-update";
 import { Button, Input } from "@/components/ui";
-import { Plus, Trash } from "react-feather";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
 import { useEffect, useState } from "react";
-import { searchStocks } from "@/lib/stock-get";
 import { Stock } from "@prisma/client";
 import { Portfolio } from "@/types/db";
 import Image from "next/image";
-import useDebounce from "@/utils/use-debounce";
+import { useDebounce } from "@/lib/utils";
 
 interface Props {
   portfolio: Portfolio;

@@ -1,5 +1,9 @@
-import { Loader } from "@/components";
+import { ScaleLoader } from "react-spinners";
 
-export default function Loading() {
-  return <Loader />;
+export default function loading() {
+  return (
+    <div className="f-box translate-y-96">
+      <ScaleLoader color="#0099ff" />
+    </div>
+  );
 }

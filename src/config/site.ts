@@ -3,6 +3,7 @@ interface SiteProps {
   description: string;
   url: string;
   links: { [key: string]: string };
+  keywords: string[];
 }
 
 export const site: SiteProps = {
@@ -17,6 +18,14 @@ export const site: SiteProps = {
     youtube: "https://www.youtube.com/channel/elysium",
     instagram: "https://www.instagram.com/elysium",
   },
+  keywords: [
+    "elysium",
+    "stocks",
+    "stock market",
+    "stock market tool",
+    "stock market app",
+    "stock market website",
+  ],
 };
 
 export const footerLinks = [

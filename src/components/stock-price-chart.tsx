@@ -163,7 +163,7 @@ export default function StockPriceChart({
         </div>
       </div>
       {!his ? (
-        <Loader className="-translate-y-6" />
+        <p>Loading...</p>
       ) : (
         <Line
           className={`${

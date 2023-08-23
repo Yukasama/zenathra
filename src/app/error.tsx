@@ -1,7 +1,7 @@
 "use client";
 
-import { Error } from "@/components";
+import { Error } from "@/components/shared";
 
-export default function ErrorPage() {
+export default function error() {
   return <Error />;
 }

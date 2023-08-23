@@ -1,19 +1,15 @@
 import Link from "next/link";
-import Image from "next/image";
-import { ChevronsUp, ChevronsDown } from "react-feather";
 import { StockPortfolioAddButton } from "@/components";
-import { Quote } from "@/types/stock";
 import { Stock } from "@prisma/client";
-import { Portfolio, User } from "@/types/db";
-import { getQuote } from "@/lib/quote-get";
 import { StructureProps } from "@/types/layout";
+import React from "react";
+import { Session } from "next-auth";
+import { ChevronsDown, ChevronsUp } from "lucide-react";
+import { getQuote } from "@/lib/fmp";
+import { StockImage } from "./shared/stock-image";
 
-interface SharedProps {
-  className?: string;
-}
-
-interface Props {
-  user: User | null;
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
+  session: Session | null;
   stock: Stock;
 }
 
@@ -28,29 +24,21 @@ function Structure({ className, isLoading, children }: StructureProps) {
   );
 }
 
-export function StockPrice2Loading({ className }: SharedProps) {
+export function StockPrice2Loading({ className }: StructureProps) {
   return <Structure className={className} isLoading />;
 }
 
-export default async function StockPrice2({ user, stock }: Props) {
-  const [quote, portfolios]: [Quote | null, Portfolio[] | null] =
-    await Promise.all([getQuote(stock.symbol), null]);
+export default async function StockPrice2({ session, stock }: Props) {
+  const [quote, portfolios] = await Promise.all([getQuote(stock.symbol), null]);
 
-  const positive: boolean =
+  const positive =
     quote && quote.change ? (quote.change > 0 ? true : false) : true;
 
   return (
     <Structure>
       <div className="image h-[50px] w-[50px]">
         <Link prefetch={false} href={stock.website || ""} target="_blank">
-          <Image
-            className="rounded-md"
-            src={stock.image || "/images/stock.jpg"}
-            height={50}
-            width={50}
-            alt="Company Logo"
-            loading="lazy"
-          />
+          <StockImage src={stock.image} px={50} />
         </Link>
       </div>
       <div className="f-col">
@@ -87,7 +75,7 @@ export default async function StockPrice2({ user, stock }: Props) {
       </div>
       <div className="absolute right-2.5 top-2.5 flex">
         <StockPortfolioAddButton
-          user={user}
+          session={session}
           symbol={stock.symbol}
           portfolios={portfolios}
         />

@@ -1,21 +1,22 @@
 "use client";
 
-import { Plus } from "react-feather";
 import toast from "react-hot-toast";
 import { Portfolio, User } from "@/types/db";
 import { Button, ModalForm } from "@/components/ui";
 import { useState } from "react";
 import { StockPortfolioAddModal } from "@/components";
+import { Session } from "next-auth";
+import { Plus } from "lucide-react";
 
 interface Props {
-  user: User | null;
+  session: Session | null;
   symbol: string;
   portfolios: Portfolio[] | null;
   className?: string;
 }
 
 export default function StockPortfolioAddButton({
-  user,
+  session,
   symbol,
   portfolios,
   className,
@@ -23,7 +24,7 @@ export default function StockPortfolioAddButton({
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
-    if (!user) return toast.error("You have to be logged in.");
+    if (!session) return toast.error("You have to be logged in.");
     if (!portfolios || portfolios.length === 0)
       return toast.error("You have to create a portfolio first.");
 
@@ -33,7 +34,7 @@ export default function StockPortfolioAddButton({
   return (
     <div className={className}>
       <Button icon={<Plus className="h-4" />} onClick={handleClick} />
-      {portfolios && user && (
+      {portfolios && session?.user && (
         <ModalForm
           title={`Add '${symbol}' to portfolios`}
           isOpen={open}
