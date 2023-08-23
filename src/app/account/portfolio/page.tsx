@@ -7,18 +7,21 @@ export default async function page() {
 
   const portfolios = await db.portfolio.findMany({
     where: { creatorId: session?.user.id },
-    include: {
-      stocks: {
-        include: {
-          stock: true,
-        },
-      },
-    },
   });
+
+  const flattenedPortfolios = await Promise.all(
+    portfolios.map(async (portfolio) => ({
+      ...portfolio,
+      stockIds: await db.stockInPortfolio.findMany({
+        select: { stockId: true },
+        where: { portfolioId: portfolio.id },
+      }),
+    }))
+  );
 
   return (
     <div className="f-col gap-8 xl:gap-10 p-4 lg:p-8 xl:p-12 xl:grid xl:grid-cols-3">
-      {portfolios.map((portfolio) => (
+      {flattenedPortfolios.map((portfolio) => (
         <PortfolioCard
           key={portfolio.id}
           portfolio={{
@@ -26,7 +29,7 @@ export default async function page() {
             id: portfolio.id,
             public: portfolio.public,
           }}
-          stocks={portfolio.stocks}
+          stockIds={portfolio.stockIds.map((stock) => stock.stockId)}
         />
       ))}
       {portfolios.length < 6 && <PortfolioCreateCard />}

@@ -13,7 +13,7 @@ interface Props {
   icon?: any;
 }
 
-export default function Button({
+export default function CustomButton({
   disabled = false,
   loading = false,
   label = "",

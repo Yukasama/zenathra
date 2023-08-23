@@ -1,22 +1,20 @@
-import { getImages } from "@/lib/stock-get";
-import { getQuotes } from "@/lib/quote-get";
-import { Quote, StockImage } from "@/types/stock";
 import { StockListItem, StockListItemLoading } from "@/components";
 import { StructureProps } from "@/types/layout";
-import { Stock } from "@prisma/client";
+import React from "react";
+import { db } from "@/lib/db";
+import { getQuotes } from "@/lib/fmp";
 
 interface ListStructureProps extends StructureProps {
   title?: string;
 }
 
-interface SharedProps {
+interface SharedProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
   limit?: number;
-  className?: string;
 }
 
 interface Props extends SharedProps {
-  symbols: Stock[];
+  stockIds: string[];
   error?: string;
 }
 
@@ -48,34 +46,52 @@ export function StockListLoading({ title, limit = 5, className }: SharedProps) {
 }
 
 export default async function StockList({
-  stocks,
+  stockIds,
   title = "",
   error,
   limit = 5,
   className,
 }: Props) {
-  if (!symbols?.length)
+  if (!stockIds?.length)
     return (
       <p className="text-xl text-center font-medium text-slate-600">{error}</p>
     );
 
-  const symbolsToFetch = symbols.slice(0, Math.min(symbols.length, limit));
+  const idsToFetch = stockIds.slice(0, Math.min(stockIds.length, limit));
 
-  let [peerImages, quotes]: [StockImage[] | null, Quote[] | null] =
-    await Promise.all([getImages(symbolsToFetch), getQuotes(symbolsToFetch)]);
+  let stocks = await db.stock.findMany({
+    select: { id: true, symbol: true, image: true },
+    where: { id: { in: idsToFetch } },
+  });
 
-  if (!Array.isArray(peerImages) && peerImages) peerImages = [peerImages];
+  const quotes = await getQuotes(stocks.map((s) => s.symbol));
+
+  if (!Array.isArray(stocks)) stocks = [stocks];
 
   return (
     <Structure title={title} className={className}>
-      {symbols.map((symbol) => (
-        <StockListItem
-          key={symbol}
-          symbol={symbol}
-          image={peerImages && peerImages.find((p) => p.symbol === symbol)}
-          quote={quotes?.find((q) => symbol === q.symbol) ?? null}
-        />
-      ))}
+      {stockIds.map((stockId) => {
+        const stockItem = stocks?.find((s) => stockId === s.id);
+
+        return (
+          <StockListItem
+            key={stockId}
+            stock={
+              stockItem
+                ? {
+                    symbol: stockItem.symbol,
+                    image: stockItem.image,
+                  }
+                : null
+            }
+            quote={
+              quotes?.find(
+                (q) => stocks.find((s) => stockId === s.id)?.symbol === q.symbol
+              ) ?? null
+            }
+          />
+        );
+      })}
     </Structure>
   );
 }

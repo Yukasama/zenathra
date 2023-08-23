@@ -50,11 +50,6 @@ export type Quote = {
   timestamp: number;
 };
 
-export type StockImage = {
-  symbol: string;
-  image: string;
-};
-
 export type StockChartProps = {
   title?: string;
   labels: string[];

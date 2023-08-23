@@ -1,43 +1,56 @@
 "use client";
 
-import { deletePortfolio } from "@/lib/portfolio-update";
 import { Portfolio } from "@/types/db";
 import { useRouter } from "next/navigation";
-import { Trash } from "react-feather";
 import { Button } from "@/components/ui";
-import toast from "react-hot-toast";
-import { useState } from "react";
+import { startTransition } from "react";
+import axios from "axios";
+import { toast } from "@/hooks/use-toast";
+import { useMutation } from "@tanstack/react-query";
+import { DeletePortfolioProps } from "@/lib/validators/portfolio";
+import { Trash } from "lucide-react";
 
 type Props = {
-  portfolio: Portfolio;
+  portfolio: Pick<Portfolio, "id" | "title">;
 };
 
 export default function PortfolioDeleteButton({ portfolio }: Props) {
-  const [loading, setLoading] = useState(false);
-
   const router = useRouter();
 
-  const handleDelete = async () => {
-    setLoading(true);
+  const { mutate: deletePortfolio, isLoading } = useMutation({
+    mutationFn: async () => {
+      const payload: DeletePortfolioProps = {
+        portfolioId: portfolio.id,
+      };
 
-    const loading = toast.loading(`Deleting Portfolio '${portfolio.title}'...`);
-    try {
-      await deletePortfolio(portfolio.id);
-      toast.success(`Portfolio '${portfolio.title}' deleted.`, { id: loading });
-    } catch {
-      toast.error("Failed to delete portfolio", { id: loading });
-    }
+      const { data } = await axios.post("/api/portfolio/delete", payload);
+      return data as string;
+    },
+    onError: () => {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: `Portfolio '${portfolio.title}' could not be deleted.`,
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      startTransition(() => {
+        router.refresh();
+      });
 
-    setLoading(false);
-    router.refresh();
-  };
+      toast({
+        title: "Portfolio Deleted.",
+        description: `Portfolio '${portfolio.title}' won't longer show up in your portfolios.`,
+      });
+    },
+  });
 
   return (
     <Button
       color="red"
-      loading={loading}
+      loading={isLoading}
       label="Delete"
-      onClick={handleDelete}
+      onClick={() => deletePortfolio()}
       icon={<Trash className="h-4 w-4" />}
     />
   );

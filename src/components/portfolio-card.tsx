@@ -1,4 +1,4 @@
-import { Portfolio, Stock } from "@prisma/client";
+import { Portfolio } from "@prisma/client";
 import Link from "next/link";
 import {
   PortfolioDeleteButton,
@@ -8,13 +8,11 @@ import {
 import { Suspense } from "react";
 
 interface Props {
-  portfolio: Pick<Portfolio, "id" | "title" | "public"> | null;
-  stocks: Stock[];
+  portfolio: Pick<Portfolio, "id" | "title" | "public">;
+  stockIds: string[];
 }
 
-export default function PortfolioCard({ portfolio, stocks }: Props) {
-  if (!portfolio) return <div>Not Found</div>;
-
+export default function PortfolioCard({ portfolio, stockIds }: Props) {
   return (
     <div className="relative">
       <Link
@@ -25,7 +23,7 @@ export default function PortfolioCard({ portfolio, stocks }: Props) {
           <Suspense fallback={<StockListLoading limit={3} />}>
             {/* @ts-expect-error Server Component */}
             <StockList
-              symbols={stocks}
+              stockIds={stockIds}
               error="No Stocks in Portfolio"
               className="group-hover:scale-[1.01] duration-300"
               limit={3}
@@ -34,7 +32,12 @@ export default function PortfolioCard({ portfolio, stocks }: Props) {
         </div>
       </Link>
       <div className="absolute bottom-5 right-5">
-        <PortfolioDeleteButton portfolio={portfolio} />
+        <PortfolioDeleteButton
+          portfolio={{
+            id: portfolio.id,
+            title: portfolio.title,
+          }}
+        />
       </div>
     </div>
   );
