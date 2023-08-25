@@ -65,7 +65,7 @@ export default async function Symbol({ params: { symbol } }: Props) {
               </Suspense>
             </div>
             <StockMetrics stock={stock} />
-            <StockEye stock={stock} user={session} />
+            <StockEye stock={stock} session={session} />
           </div>
           <div className="my-4 flex gap-4 border-b border-slate-300 pb-4 dark:border-moon-100">
             <Suspense fallback={<StockChartLoading />}>
@@ -76,7 +76,7 @@ export default async function Symbol({ params: { symbol } }: Props) {
               fallback={<StockListLoading title="Peers" className="wrapper" />}>
               {/* @ts-expect-error Server Component */}
               <StockList
-                symbols={stock.peersList.slice(0, 5)}
+                symbols={stock.peerId.slice(0, 5)}
                 title="Peers"
                 error="No Peers found"
                 className="wrapper"

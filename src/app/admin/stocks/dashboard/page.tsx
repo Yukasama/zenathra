@@ -1,20 +1,16 @@
-import { AdminAddStocks, AdminCleanDatabase, Error } from "@/components";
-import { getUser } from "@/lib/user";
-import { Home } from "react-feather";
+import { AdminAddStocks, AdminCleanDatabase } from "@/components";
+import Error from "next/error";
+import { getAuthSession } from "@/lib/auth";
+import { db } from "@/lib/db";
 
 export default async function StockControl() {
-  const user = await getUser();
+  const session = await getAuthSession();
 
-  if (!user || user.role !== "admin")
-    return (
-      <Error
-        error="You're not authorized to be here."
-        statusCode={403}
-        action="home"
-        buttonLabel="Return To Home"
-        buttonIcon={<Home className="h-4 w-4" />}
-      />
-    );
+  const user = await db.user.findFirst({
+    where: { id: session?.user.id },
+  });
+
+  if (user?.role !== "admin") return Error;
 
   return (
     <div className="flex gap-5 p-3 px-6">

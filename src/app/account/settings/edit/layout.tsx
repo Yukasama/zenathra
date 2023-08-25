@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui";
-import { ArrowLeft } from "react-feather";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 interface Props {
