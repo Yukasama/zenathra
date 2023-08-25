@@ -1,13 +1,13 @@
-import { User } from "@/types/db";
 import { Stock } from "@prisma/client";
-import { Lock } from "react-feather";
+import { Lock } from "lucide-react";
+import { Session } from "next-auth";
 
 interface Props {
+  session: Session | null;
   stock: Stock | null;
-  user: User | null;
 }
 
-export default function StockEye({ stock, user }: Props) {
+export default function StockEye({ session, stock }: Props) {
   const value = stock?.eye || 78;
   const dashArray = 2 * Math.PI * 54;
   const dashOffset = (1 - value / 165) * dashArray;
@@ -44,10 +44,10 @@ export default function StockEye({ stock, user }: Props) {
       </svg>
       <div className="f-box relative h-[90%] w-full flex-col">
         <p className="text-center text-[30px] font-medium">
-          {user ? value : <Lock className="mb-1.5 h-6" />}
+          {session?.user ? value : <Lock className="mb-1.5 h-6" />}
         </p>
         <p className="text-center text-[13px] font-light text-blue-500">
-          {user ? score : "Locked"}
+          {session?.user ? score : "Locked"}
         </p>
       </div>
     </div>

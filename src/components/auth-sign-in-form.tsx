@@ -6,11 +6,11 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AuthInput, Button, Checkbox } from "@/components/ui";
-import { LogIn } from "react-feather";
 import { OAuth } from "@/components";
-import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "@/hooks/use-toast";
+import { LogIn } from "lucide-react";
 
 const LoginSchema = z.object({
   email: z.string().email("Please enter a valid email."),
@@ -40,7 +40,12 @@ export default function AuthSignInForm() {
       setLoading(false);
 
       if (callback?.ok) router.refresh();
-      if (callback?.error) toast.error(callback.error);
+      if (callback?.error)
+        toast({
+          title: "Oops! Something went wrong.",
+          description: "Please check your credentials and try again.",
+          variant: "destructive",
+        });
     });
   };
 

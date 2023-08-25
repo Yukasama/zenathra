@@ -1,26 +1,26 @@
 "use client";
 
-import { User } from "@/types/db";
 import Image from "next/image";
 import { useState } from "react";
-import {
-  ChevronRight,
-  CreditCard,
-  Grid,
-  Layers,
-  Lock,
-  MessageCircle,
-  Trash2,
-  User as UserIcon,
-} from "react-feather";
 import { Button } from "@/components/ui";
 import Link from "next/link";
+import {
+  UserIcon,
+  Grid,
+  MessageCircle,
+  CreditCard,
+  ChevronRight,
+  Layers,
+  Trash2,
+  LockIcon,
+} from "lucide-react";
+import { Session } from "next-auth";
 
 interface Props {
-  user: User | null;
+  session: Session | null;
 }
 
-export default function AccountSettings({ user }: Props) {
+export default function AccountSettings({ session }: Props) {
   const [active, setActive] = useState("personal");
 
   const tabs = [
@@ -37,7 +37,7 @@ export default function AccountSettings({ user }: Props) {
     {
       id: "security",
       label: "Security",
-      icon: <Lock />,
+      icon: <LockIcon />,
     },
     {
       id: "notifications",
@@ -56,7 +56,7 @@ export default function AccountSettings({ user }: Props) {
       title: "Picture",
       value: (
         <Image
-          src={user?.image || "/images/unknown-user.png"}
+          src={session?.user.image || "/images/unknown-user.png"}
           className="h-12 w-12 rounded-full border text-center"
           height={48}
           width={48}
@@ -67,12 +67,12 @@ export default function AccountSettings({ user }: Props) {
     },
     {
       title: "Name",
-      value: <p className="flex-1 text-center">{user?.name || "Guest"}</p>,
+      value: <p className="flex-1 text-center">{session?.user.name || "Guest"}</p>,
       link: "/account/settings/edit/change-username",
     },
     {
       title: "E-Mail",
-      value: <p className="flex-1 text-center">{user?.email}</p>,
+      value: <p className="flex-1 text-center">{session?.user.email}</p>,
       link: "/account/settings/edit/change-email",
     },
   ];
@@ -116,7 +116,7 @@ export default function AccountSettings({ user }: Props) {
             <div className="f-col items-center gap-4">
               <Image
                 className="h-20 w-20 rounded-full"
-                src={user?.image || "/images/unknown-user.png"}
+                src={session?.user.image || "/images/unknown-user.png"}
                 height={80}
                 width={80}
                 alt="User Logo"
@@ -173,7 +173,7 @@ export default function AccountSettings({ user }: Props) {
             <div className="f-col items-center gap-4">
               <Image
                 className="h-20 w-20 rounded-full"
-                src={user?.image || "/images/unknown-user.png"}
+                src={session?.user.image || "/images/unknown-user.png"}
                 height={80}
                 width={80}
                 alt="User Logo"

@@ -3,12 +3,9 @@
 import { useState } from "react";
 import { AuthInput, Button, FormWrapper } from "@/components/ui";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { ArrowRightCircle } from "react-feather";
 import { z } from "zod";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateUsername } from "@/lib/user-update";
 
 const Schema = z
   .object({
