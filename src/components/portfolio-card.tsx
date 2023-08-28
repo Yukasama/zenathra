@@ -21,7 +21,6 @@ export default function PortfolioCard({ portfolio, stockIds }: Props) {
         <p className="text-lg font-medium">{portfolio.title}</p>
         <div>
           <Suspense fallback={<StockListLoading limit={3} />}>
-            {/* @ts-expect-error Server Component */}
             <StockList
               stockIds={stockIds}
               error="No Stocks in Portfolio"

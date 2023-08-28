@@ -1,48 +1,100 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
-import { Button } from "@/components/ui";
-import { Search } from "lucide-react";
+import { Prisma, Stock } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import debounce from "lodash.debounce";
+import { usePathname, useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-interface Props {
-  placeholder?: string;
-  onChange?: any;
-}
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { useOnClickOutside } from "@/hooks/use-on-click-outside";
+import { Users } from "lucide-react";
 
-export default function Searchbar({ placeholder = "Search", onChange }: Props) {
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
+export default function Searchbar() {
+  const [input, setInput] = useState<string>("");
+  const pathname = usePathname();
+  const commandRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const handleChange = (e: any) => {
-    onChange && onChange(e.target.value);
-    setInput(e.target.value);
-  };
+  useOnClickOutside(commandRef, () => {
+    setInput("");
+  });
 
-  const handleSearch = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
+  const request = debounce(async () => {
+    refetch();
+  }, 300);
 
-    router.replace(`/search?q=${input}`);
-    setLoading(false);
-  };
+  const debounceRequest = useCallback(() => {
+    request();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const {
+    isFetching,
+    data: queryResults,
+    refetch,
+    isFetched,
+  } = useQuery({
+    queryFn: async () => {
+      if (!input) return [];
+      const { data } = await axios.get(`/api/search?q=${input}`);
+      return data as (Stock & {
+        _count: Prisma.StockCountOutputType;
+      })[];
+    },
+    queryKey: ["search-query"],
+    enabled: false,
+  });
+
+  useEffect(() => {
+    setInput("");
+  }, [pathname]);
 
   return (
-    <form
-      onSubmit={handleSearch}
-      className={`my-0.5 flex max-w-[380px] flex-1 items-center justify-between rounded-md p-2 px-3 box`}>
-      <input
-        className="h-full border-none bg-slate-100 outline-none dark:bg-moon-700 lg:w-[300px]"
+    <Command
+      ref={commandRef}
+      className="relative rounded-lg border max-w-lg z-50 overflow-visible">
+      <CommandInput
+        isLoading={isFetching}
+        onValueChange={(text) => {
+          setInput(text);
+          debounceRequest();
+        }}
         value={input}
-        placeholder={placeholder}
-        onChange={handleChange}
+        className="outline-none border-none focus:border-none focus:outline-none ring-0"
+        placeholder="Search stocks..."
       />
-      <Button
-        disabled={!input}
-        loading={loading}
-        icon={<Search className="h-4" />}
-      />
-    </form>
+
+      {input.length > 0 && (
+        <CommandList className="absolute bg-white top-full inset-x-0 shadow rounded-b-md">
+          {isFetched && <CommandEmpty>No results found.</CommandEmpty>}
+          {(queryResults?.length ?? 0) > 0 ? (
+            <CommandGroup heading="Stocks">
+              {queryResults?.map((stock) => (
+                <CommandItem
+                  onSelect={(e) => {
+                    router.push(`/r/${e}`);
+                    router.refresh();
+                  }}
+                  key={stock.id}
+                  value={stock.companyName}>
+                  <Users className="mr-2 h-4 w-4" />
+                  <a href={`/stocks/${stock.symbol}`}>{stock.symbol}</a>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          ) : null}
+        </CommandList>
+      )}
+    </Command>
   );
 }

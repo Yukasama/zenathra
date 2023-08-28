@@ -1,8 +1,23 @@
 import { getAuthSession } from "@/lib/auth";
 import { TRPCError, initTRPC } from "@trpc/server";
 import { db } from "@/lib/db";
+import { ZodError } from "zod";
 
-const t = initTRPC.create();
+const t = initTRPC.create({
+  errorFormatter(opts) {
+    const { shape, error } = opts;
+    return {
+      ...shape,
+      data: {
+        ...shape.data,
+        zodError:
+          error.code === "BAD_REQUEST" && error.cause instanceof ZodError
+            ? error.cause.flatten()
+            : null,
+      },
+    };
+  },
+});
 
 export const middleware = t.middleware;
 
@@ -39,5 +54,7 @@ const isAdmin = middleware(async (opts) => {
 });
 
 export const publicProcedure = t.procedure;
+
 export const authorizedProcedure = t.procedure.use(isAuthorized);
+
 export const adminProcedure = t.procedure.use(isAdmin);

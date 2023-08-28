@@ -1,10 +1,19 @@
-import { getQuotes } from "@/lib/quote-get";
-import { getImages } from "@/lib/stock-get";
-import { Quote, StockImage } from "@/types/stock";
 import { StockCard } from "@/components";
+import { getQuotes } from "@/lib/fmp";
+import { StructureProps } from "@/types/layout";
+import { db } from "@/lib/db";
 
 interface Props {
-  symbols: string[];
+  symbols: string[] | null;
+}
+
+function Structure({ className, isLoading, children }: StructureProps) {
+  return (
+    <div
+      className={`flex min-h-[100px] justify-evenly gap-4 border-y border-slate-200 py-3 dark:border-moon-200 ${className}`}>
+      {children}
+    </div>
+  );
 }
 
 export const StockCardListLoading = () => {
@@ -20,10 +29,21 @@ export const StockCardListLoading = () => {
 };
 
 export default async function StockCardList({ symbols }: Props) {
+  if (!symbols)
+    return (
+      <div className="f-col gap-3">
+        <p className="text-lg">l</p>
+      </div>
+    );
   symbols = symbols.slice(0, 5);
 
-  let [quotes, images]: [Quote[] | null, StockImage[] | null] =
-    await Promise.all([getQuotes(symbols), getImages(symbols)]);
+  let [quotes, images] = await Promise.all([
+    getQuotes(symbols),
+    db.stock.findMany({
+      select: { symbol: true, image: true },
+      where: { symbol: { in: symbols } },
+    }),
+  ]);
 
   if (!quotes || quotes.length < 5) return <StockCardListLoading />;
 
@@ -31,15 +51,13 @@ export default async function StockCardList({ symbols }: Props) {
 
   return (
     <div className="flex min-h-[100px] justify-evenly gap-4 border-y border-slate-200 py-3 dark:border-moon-200">
-      <>
-        {quotes.map((quote, i) => (
-          <StockCard
-            key={i}
-            quote={quote}
-            image={images && images.find((s) => s.symbol === quote.symbol)}
-          />
-        ))}
-      </>
+      {quotes.map((quote, i) => (
+        <StockCard
+          key={i}
+          quote={quote}
+          image={images && images.find((s) => s.symbol === quote.symbol)}
+        />
+      ))}
     </div>
   );
 }

@@ -35,18 +35,18 @@ export type Quote = {
   dayHigh: number;
   yearHigh: number;
   yearLow: number;
-  marketCap: number;
+  marketCap: number | null;
   priceAvg50: number;
   priceAvg200: number;
-  exchange: string;
+  exchange: string | null;
   volume: number;
   avgVolume: number;
   open: number;
-  previousClose: number;
-  eps: number;
-  pe: number;
-  earningsAnnouncement: string;
-  sharesOutstanding: number;
+  previousClose: number | null;
+  eps: number | null;
+  pe: number | null;
+  earningsAnnouncement: string | null;
+  sharesOutstanding: number | null;
   timestamp: number;
 };
 

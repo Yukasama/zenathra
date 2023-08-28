@@ -56,11 +56,9 @@ export default async function Symbol({ params: { symbol } }: Props) {
           <div className="flex items-center gap-10 border-b border-slate-300 pb-4 dark:border-moon-100">
             <div className="relative f-col gap-2">
               <Suspense fallback={<StockPrice2Loading />}>
-                {/* @ts-expect-error Server Component */}
                 <StockPrice2 session={session} stock={stock} />
               </Suspense>
               <Suspense fallback={<StockAfterHoursLoading />}>
-                {/* @ts-expect-error Server Component */}
                 <StockAfterHours stock={stock} />
               </Suspense>
             </div>
@@ -69,14 +67,12 @@ export default async function Symbol({ params: { symbol } }: Props) {
           </div>
           <div className="my-4 flex gap-4 border-b border-slate-300 pb-4 dark:border-moon-100">
             <Suspense fallback={<StockChartLoading />}>
-              {/* @ts-expect-error Server Component */}
               <StockChartLoader symbol={symbol} />
             </Suspense>
             <Suspense
               fallback={<StockListLoading title="Peers" className="wrapper" />}>
-              {/* @ts-expect-error Server Component */}
               <StockList
-                symbols={stock.peerId.slice(0, 5)}
+                stockIds={stock.peerId.slice(0, 5)}
                 title="Peers"
                 error="No Peers found"
                 className="wrapper"

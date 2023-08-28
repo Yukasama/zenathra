@@ -1,4 +1,4 @@
-import { TimeFrame } from "@/types/stock";
+import { Quote, TimeFrame } from "@/types/stock";
 import { env } from "@/env.mjs";
 
 interface FmpConfig {
@@ -49,34 +49,32 @@ export const historyUrls: any = (symbol: string, timeFrame: TimeFrame) => {
 };
 
 // Dummy Data
-export const quote = [
-  {
-    symbol: "AAPL",
-    name: "Apple Inc.",
-    price: 175.43,
-    changesPercentage: 1.4105,
-    change: 2.44,
-    dayLow: 173.11,
-    dayHigh: 175.77,
-    yearHigh: 176.39,
-    yearLow: 124.17,
-    marketCap: 2759285913979,
-    priceAvg50: 166.2418,
-    priceAvg200: 152.2899,
-    exchange: "NASDAQ",
-    volume: 52056501,
-    avgVolume: 57939876,
-    open: 175.37,
-    previousClose: 172.99,
-    eps: 5.9,
-    pe: 29.73,
-    earningsAnnouncement: "2023-07-26T20:00:00.000+0000",
-    sharesOutstanding: 15728700416,
-    timestamp: 1685131205,
-  },
-];
+export const quote: Quote = {
+  symbol: "AAPL",
+  name: "Apple Inc.",
+  price: 175.43,
+  changesPercentage: 1.4105,
+  change: 2.44,
+  dayLow: 173.11,
+  dayHigh: 175.77,
+  yearHigh: 176.39,
+  yearLow: 124.17,
+  marketCap: 2759285913979,
+  priceAvg50: 166.2418,
+  priceAvg200: 152.2899,
+  exchange: "NASDAQ",
+  volume: 52056501,
+  avgVolume: 57939876,
+  open: 175.37,
+  previousClose: 172.99,
+  eps: 5.9,
+  pe: 29.73,
+  earningsAnnouncement: "2023-07-26T20:00:00.000+0000",
+  sharesOutstanding: 15728700416,
+  timestamp: 1685131205,
+};
 
-export const indexQuotes = [
+export const indexQuotes: Quote[] = [
   {
     symbol: "RTSI.ME",
     name: "RTS Index",

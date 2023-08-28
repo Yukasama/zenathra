@@ -1,4 +1,4 @@
-import "server-only";
+//import "server-only";
 
 import {
   FMP_API_URL,
@@ -9,9 +9,9 @@ import {
 } from "@/config/fmp";
 import { env } from "@/env.mjs";
 import axios from "axios";
-import { StockAction } from "@/types/stock";
+import { Quote, StockAction } from "@/types/stock";
 
-async function getDailys(action: StockAction) {
+async function getDailys(action: StockAction): Promise<string[] | null> {
   try {
     if (fmpConfig.simulation) return ["AAPL", "MSFT", "GOOG", "TSLA", "NVDA"];
 
@@ -33,7 +33,7 @@ async function getDailys(action: StockAction) {
   }
 }
 
-async function getIndexQuotes() {
+async function getIndexQuotes(): Promise<Quote[] | null> {
   try {
     const requiredIndexes = ["^GSPC", "^GDAXI", "^NDX", "^DJI"];
 
@@ -51,9 +51,9 @@ async function getIndexQuotes() {
   }
 }
 
-async function getQuote(symbol: string) {
+async function getQuote(symbol: string): Promise<Quote | null> {
   try {
-    if (fmpConfig.simulation) return new Response(JSON.stringify(quote));
+    if (fmpConfig.simulation) return quote;
 
     const url = `${FMP_API_URL}v3/quote/${symbol}?apikey=${env.FMP_API_KEY}`;
 
@@ -65,7 +65,7 @@ async function getQuote(symbol: string) {
   }
 }
 
-async function getQuotes(symbols: string[]) {
+async function getQuotes(symbols: string[]): Promise<Quote[] | null> {
   try {
     if (symbols.length > 20) symbols = symbols.slice(0, 20);
 
@@ -81,7 +81,10 @@ async function getQuotes(symbols: string[]) {
   }
 }
 
-async function getSymbols(symbolSet: string, pullTimes = 1) {
+async function getSymbols(
+  symbolSet: string,
+  pullTimes = 1
+): Promise<string[][] | null> {
   try {
     const url = fmpUrls[symbolSet];
 
@@ -99,9 +102,8 @@ async function getSymbols(symbolSet: string, pullTimes = 1) {
 
     const symbols = [];
 
-    for (let i = 0; i < results.length; i += Number(fmpConfig.docsPerPull)) {
+    for (let i = 0; i < results.length; i += Number(fmpConfig.docsPerPull))
       symbols.push(results.slice(i, i + Number(fmpConfig.docsPerPull)));
-    }
 
     return symbols;
   } catch {
