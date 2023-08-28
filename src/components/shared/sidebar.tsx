@@ -1,19 +1,19 @@
-"use client";
-
+import { SidebarItem, SidebarToggle } from "@/components/shared";
+import { authOptions } from "@/lib/auth";
+import { Menu } from "@/types/layout";
 import {
-  BookOpen,
-  BarChart2,
   Home,
+  BarChart2,
   Filter,
+  BookOpen,
   Settings,
   LogIn,
-  Menu as MenuIcon,
-} from "react-feather";
-import { SidebarItem, SidebarToggle } from "@/components/shared";
-import { Menu } from "@/types/layout";
+  MenuIcon,
+} from "lucide-react";
+import { getServerSession } from "next-auth";
 
-export default function Sidebar() {
-  const user = null;
+export default async function Sidebar() {
+  const session = await getServerSession(authOptions);
 
   const menusUp: Menu[] = [
     {
@@ -41,7 +41,7 @@ export default function Sidebar() {
   ];
 
   const menusDown: Menu[] = [
-    user
+    session?.user
       ? {
           title: "Settings",
           to: "/account/settings",

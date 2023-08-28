@@ -27,7 +27,7 @@ export default function UserProfile({ session }: Props) {
         collapsed={collapsed}
         setCollapsed={setCollapsed}
       />
-      <UserWindow session={session} collapsed={collapsed} />
+      <UserWindow user={session?.user} collapsed={collapsed} />
     </>
   );
 }

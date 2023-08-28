@@ -1,6 +1,4 @@
-import Error from "./error";
 import Footer from "./footer";
-import Loader from "./loader";
 import LogoutWindow from "./logout-window";
 import Navbar from "./navbar";
 import ProfileIcon from "./profile-icon";
@@ -16,9 +14,7 @@ import UserProfile from "./user-profile";
 import UserWindow from "./user-window";
 
 export {
-  Error,
   Footer,
-  Loader,
   LogoutWindow,
   Navbar,
   ProfileIcon,

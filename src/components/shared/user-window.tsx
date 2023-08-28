@@ -1,19 +1,19 @@
 "use client";
 
-import { LogIn, Send, LogOut, Globe } from "react-feather";
 import Image from "next/image";
 import { useState } from "react";
 import { LogoutWindow } from "@/components/shared";
 import Link from "next/link";
 import { ModalForm } from "@/components/ui";
-import { Session } from "next-auth";
+import { LogIn, Send, Globe, LogOut } from "lucide-react";
+import { User } from "@/types/db";
 
 interface Props {
-  session: Session | null;
+  user: User | null;
   collapsed: boolean;
 }
 
-export default function UserWindow({ session, collapsed }: Props) {
+export default function UserWindow({ user, collapsed }: Props) {
   const [logoutShow, setLogoutShow] = useState(false);
 
   return (
@@ -28,14 +28,11 @@ export default function UserWindow({ session, collapsed }: Props) {
             <div
               className="flex h-[60px] w-full items-center rounded-md
               bg-slate-200 dark:bg-moon-500">
-              <Link href={`/users/${session ? session.user.id : null}`}>
+              <Link href={`/users/${user?.id ?? null}`}>
                 <Image
                   className="m-4 rounded-full"
                   referrerPolicy="no-referrer"
-                  src={
-                    (session && session.user.image) ||
-                    "/images/unknown-user.png"
-                  }
+                  src={user?.image ?? "/images/unknown-user.png"}
                   width={45}
                   height={45}
                   alt="User Logo"
@@ -44,14 +41,9 @@ export default function UserWindow({ session, collapsed }: Props) {
               </Link>
               <div className="f-col">
                 <p className="w-[130px] truncate text-[14px] font-medium">
-                  {session && session.user.name
-                    ? session.user.name
-                    : session && session.user.email
-                    ? session.user.email.split("@")[0].charAt(0).toUpperCase() +
-                      session.user.email.split("@")[0].slice(1).toLowerCase()
-                    : "Guest"}
+                  {user?.username}
                 </p>
-                {session && session.user && (
+                {user && (
                   <Link
                     href="/account/settings"
                     className="text-[13px] text-blue-500">
@@ -62,7 +54,7 @@ export default function UserWindow({ session, collapsed }: Props) {
             </div>
             <div className="line my-1 h-full w-full"></div>
             <div className="z-5 f-col gap-2.5 w-full items-center">
-              {!session && (
+              {!user && (
                 <div className="w-full f-col items-center">
                   <Link
                     href="/auth/sign-in"
@@ -96,7 +88,7 @@ export default function UserWindow({ session, collapsed }: Props) {
                 <Globe className="mx-4 mr-3 h-4" />
                 <p className="text-[14px] font-medium">Language</p>
               </button>
-              {session && (
+              {user && (
                 <button
                   onClick={() => setLogoutShow(true)}
                   className="flex h-[40px] items-center rounded-md bg-blue-500

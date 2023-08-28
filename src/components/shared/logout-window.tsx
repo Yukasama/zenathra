@@ -1,10 +1,10 @@
 "use client";
 
-import toast from "react-hot-toast";
 import { signOut } from "next-auth/react";
 import { FormEvent } from "react";
-import { LogOut, SkipBack } from "react-feather";
 import { Button, Checkbox } from "@/components/ui";
+import { toast } from "@/hooks/use-toast";
+import { LogOut, SkipBack } from "lucide-react";
 
 interface Props {
   setShow: any;
@@ -15,12 +15,13 @@ export default function LogoutWindow({ setShow }: Props) {
     e.preventDefault();
     setShow(false);
 
-    const loading = toast.loading("Logging out...");
-
     try {
       await signOut();
     } catch {
-      toast.error("An error occurred during logout.", { id: loading });
+      toast({
+        title: "Oops! Something went wrong.",
+        description: "Please try again later.",
+      })
     }
   };
 

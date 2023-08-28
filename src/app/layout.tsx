@@ -10,6 +10,7 @@ import { Metadata } from "next";
 import { cn } from "@/lib/utils";
 import { Inter } from "next/font/google";
 import { site } from "@/config/site";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: site.name,
@@ -50,6 +51,7 @@ export default async function RootLayout({ children, authModal }: Props) {
             </div>
           </div>
         </Provider>
+        <Toaster />
       </body>
     </html>
   );

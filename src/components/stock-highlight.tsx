@@ -1,29 +1,53 @@
-import { getQuote } from "@/lib/quote-get";
-import { getImage } from "@/lib/stock-get";
-import { Quote, StockImage } from "@/types/stock";
-import Image from "next/image";
-import {
-  StockHighlightChartLoader,
-  StockChartLoading,
-  StockPrice,
-} from "@/components";
-import { Suspense } from "react";
+import { StockChartLoading, StockPrice, StockPriceChart } from "@/components";
+import React, { Suspense } from "react";
+import { getQuote } from "@/lib/fmp";
+import { db } from "@/lib/db";
+import { StockImage } from "./shared/stock-image";
+import axios from "axios";
+import { StockHistoryProps } from "@/lib/validators/stock";
+import { StructureProps } from "@/types/layout";
+import { cn } from "@/lib/utils";
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   symbol: string | null;
 }
 
-export const StockHighlightLoading = () => {
-  return <div className="animate-pulse-right flex flex-1 min-h-[450px]"></div>;
-};
+function Structure({ className, isLoading, children }: StructureProps) {
+  return (
+    <div
+      className={cn(
+        `${isLoading && "animate-pulse-right"} flex flex-1 min-h-[450px]`,
+        className
+      )}>
+      {children}
+    </div>
+  );
+}
 
-export default async function StockHighlight({ symbol }: Props) {
+export function StockHighlightLoading({ className }: StructureProps) {
+  return <Structure isLoading className={className} />;
+}
+
+export default async function StockHighlight({ symbol, className }: Props) {
   if (!symbol)
-    return <div className="animate-pulse-right flex min-h-[450px]"></div>;
+    return (
+      <Structure className={className}>
+        <p className="text-lg">Highlight could not be loaded.</p>
+      </Structure>
+    );
 
-  const [quote, image]: [Quote | null, StockImage | null] = await Promise.all([
+  const payload: StockHistoryProps = {
+    symbol,
+    range: "1D",
+  };
+
+  const [quote, image, { data }] = await Promise.all([
     getQuote(symbol),
-    getImage(symbol),
+    db.stock.findFirst({
+      select: { image: true },
+      where: { symbol: symbol },
+    }),
+    await axios.post("/api/stock/history", payload),
   ]);
 
   return (
@@ -35,17 +59,15 @@ export default async function StockHighlight({ symbol }: Props) {
           <div className="f-col flex-1 gap-3">
             <div className="flex items-center gap-3">
               <div className="image h-[60px] w-[60px]">
-                <Image
+                <StockImage
                   className="image"
-                  src={image ? image.image : "/images/logo/logo.png"}
-                  height={60}
-                  width={60}
-                  alt={quote.name || "Stock Logo"}
+                  src={image?.image}
+                  px={60}
                   priority
                 />
               </div>
               <div className="f-col">
-                <p className="text-[25px] font-medium">{quote.symbol}</p>
+                <p className="text-[25px] font-medium">{symbol}</p>
                 <p className="max-w-[220px] truncate text-[15px] font-medium text-slate-600">
                   {quote.name}
                 </p>
@@ -59,8 +81,9 @@ export default async function StockHighlight({ symbol }: Props) {
                   className="scale-[0.7] -translate-x-[72px] sm:translate-x-0 sm:scale-100"
                 />
               }>
-              <StockHighlightChartLoader
-                symbol={symbol}
+              <StockPriceChart
+                history={data}
+                size="md"
                 className="scale-[0.7] -translate-x-[72px] sm:translate-x-0 sm:scale-100"
               />
             </Suspense>

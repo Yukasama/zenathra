@@ -1,19 +1,19 @@
 "use client";
 
-import {
-  BookOpen,
-  BarChart2,
-  Home,
-  Filter,
-  Settings,
-  LogIn,
-  X,
-} from "react-feather";
 import { SidebarItem, Searchbar, SidebarToggle } from "@/components/shared";
 import { Menu } from "@/types/layout";
 import { useSidebar } from "@/components/shared/sidebar-provider";
 import { useEffect } from "react";
 import Image from "next/image";
+import {
+  Home,
+  BarChart2,
+  Filter,
+  BookOpen,
+  Settings,
+  LogIn,
+  X,
+} from "lucide-react";
 import { Session } from "next-auth";
 
 interface Props {
@@ -26,6 +26,7 @@ export default function SidebarPortableClient({ session }: Props) {
   useEffect(() => {
     document.addEventListener("click", handleClick);
     return () => document.removeEventListener("click", handleClick);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -60,7 +61,7 @@ export default function SidebarPortableClient({ session }: Props) {
   ];
 
   const menusDown: Menu[] = [
-    session
+    session?.user
       ? {
           title: "Settings",
           to: "/account/settings",
@@ -100,7 +101,7 @@ export default function SidebarPortableClient({ session }: Props) {
               </SidebarToggle>
             </div>
             <div className="m-auto w-[90%]">
-              <Searchbar placeholder="Search Stocks..." />
+              <Searchbar />
             </div>
 
             <div className="f-col w-full">
