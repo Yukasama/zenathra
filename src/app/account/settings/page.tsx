@@ -1,4 +1,4 @@
-import { AccountSettings } from "@/components";
+import AccountSettings from "@/components/account-settings";
 import { getAuthSession } from "@/lib/auth";
 
 export default async function page() {

@@ -1,6 +1,8 @@
 "use client";
 
-import { SidebarItem, Searchbar, SidebarToggle } from "@/components/shared";
+import SidebarItem from "./sidebar-item";
+import Searchbar from "./searchbar";
+import SidebarToggle from "./sidebar-toggle";
 import { Menu } from "@/types/layout";
 import { useSidebar } from "@/components/shared/sidebar-provider";
 import { useEffect } from "react";
@@ -14,7 +16,7 @@ import {
   LogIn,
   X,
 } from "lucide-react";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 
 interface Props {
   session: Session | null;

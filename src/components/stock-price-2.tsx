@@ -1,17 +1,12 @@
 import Link from "next/link";
 import { StockPortfolioAddButton } from "@/components";
-import { Stock } from "@prisma/client";
 import { StructureProps } from "@/types/layout";
 import React from "react";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import { ChevronsDown, ChevronsUp } from "lucide-react";
 import { getQuote } from "@/lib/fmp";
 import { StockImage } from "./shared/stock-image";
-
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  session: Session | null;
-  stock: Stock;
-}
+import { Stock } from "@prisma/client";
 
 function Structure({ className, isLoading, children }: StructureProps) {
   return (
@@ -26,6 +21,11 @@ function Structure({ className, isLoading, children }: StructureProps) {
 
 export function StockPrice2Loading({ className }: StructureProps) {
   return <Structure className={className} isLoading />;
+}
+
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
+  session: Session | null;
+  stock: Stock;
 }
 
 export default async function StockPrice2({ session, stock }: Props) {

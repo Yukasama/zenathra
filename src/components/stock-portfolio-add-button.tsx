@@ -1,11 +1,11 @@
 "use client";
 
 import toast from "react-hot-toast";
-import { Portfolio, User } from "@/types/db";
+import { Portfolio } from "@/types/db";
 import { Button, ModalForm } from "@/components/ui";
 import { useState } from "react";
 import { StockPortfolioAddModal } from "@/components";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import { Plus } from "lucide-react";
 
 interface Props {

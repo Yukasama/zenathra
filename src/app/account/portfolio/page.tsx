@@ -1,4 +1,5 @@
-import { PortfolioCard, PortfolioCreateCard } from "@/components";
+import PortfolioCard from "@/components/portfolio-card";
+import PortfolioCreateCard from "@/components/portfolio-create-card";
 import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
 

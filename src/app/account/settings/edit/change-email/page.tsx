@@ -1,15 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { AuthInput, Button, FormWrapper } from "@/components/ui";
+import { startTransition } from "react";
+import AuthInput from "@/components/ui/auth-input";
+import { Button } from "@/components/ui/button";
+import FormWrapper from "@/components/ui/form-wrapper";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { ArrowRightCircle } from "react-feather";
 import { z } from "zod";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateEmail } from "@/lib/user-update";
 import { signOut } from "next-auth/react";
+import { ArrowRightCircle } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { UserUpdateEmailProps } from "@/lib/validators/user";
+import axios, { AxiosError } from "axios";
+import { toast } from "@/hooks/use-toast";
 
 const Schema = z
   .object({
@@ -21,9 +25,8 @@ const Schema = z
     path: ["confEmail"],
   });
 
-export default function ChangeEmail() {
+export default function Page() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -37,18 +40,47 @@ export default function ChangeEmail() {
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    setLoading(true);
+  const { mutate: updateEmail, isLoading } = useMutation({
+    mutationFn: async (payload: UserUpdateEmailProps) => {
+      const { data } = await axios.post("/api/user/update-email", payload);
+      return data as string;
+    },
+    onError: (err) => {
+      if (err instanceof AxiosError) {
+        if (err.response?.status === 422) {
+          return toast({
+            title: "Oops! Something went wrong.",
+            description: "Multiple accounts linked to one mail.",
+            variant: "destructive",
+          });
+        }
+      }
+      toast({
+        title: "Oops! Something went wrong.",
+        description: "Email could not be updated.",
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      startTransition(() => {
+        router.refresh();
+      });
 
-    const { error } = await updateEmail(data.email);
-    if (!error) {
-      setLoading(false);
-      toast.success("Email successfully reset.");
+      toast({
+        description: "Email updated successfully.",
+      });
 
-      signOut({ redirect: true, callbackUrl: "/auth/sign-in" });
-      router.refresh();
-    } else toast.error(error || "An error occurred during email reset.");
-  };
+      signOut();
+    },
+  });
+
+  function onSubmit(data: FieldValues) {
+    const payload: UserUpdateEmailProps = {
+      email: data.email,
+    };
+
+    updateEmail(payload);
+  }
 
   return (
     <FormWrapper title="Change Your E-Mail" onSubmit={handleSubmit(onSubmit)}>
@@ -68,12 +100,10 @@ export default function ChangeEmail() {
         errors={errors}
       />
 
-      <Button
-        loading={loading}
-        label="Change Email"
-        color="blue"
-        icon={<ArrowRightCircle className="h-4 w-4" />}
-      />
+      <Button isLoading={isLoading}>
+        Change Email
+        <ArrowRightCircle className="h-4 w-4" />
+      </Button>
     </FormWrapper>
   );
 }

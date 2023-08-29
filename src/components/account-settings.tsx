@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Button } from "@/components/ui";
+import { Button } from "./ui/button";
 import Link from "next/link";
 import {
   UserIcon,
@@ -14,7 +14,7 @@ import {
   Trash2,
   LockIcon,
 } from "lucide-react";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 
 interface Props {
   session: Session | null;
@@ -67,7 +67,9 @@ export default function AccountSettings({ session }: Props) {
     },
     {
       title: "Name",
-      value: <p className="flex-1 text-center">{session?.user.name || "Guest"}</p>,
+      value: (
+        <p className="flex-1 text-center">{session?.user.name || "Guest"}</p>
+      ),
       link: "/account/settings/edit/change-username",
     },
     {
@@ -151,17 +153,14 @@ export default function AccountSettings({ session }: Props) {
               ))}
             </div>
             <div className="mt-2 flex gap-5">
-              <Button
-                label="Export Data"
-                icon={<Layers className="h-4 w-4" />}
-                outline
-              />
-              <Button
-                label="Delete Account"
-                icon={<Trash2 className="h-4 w-4" />}
-                color="red"
-                outline
-              />
+              <Button>
+                <Layers className="h-4 w-4" />
+                Export Data
+              </Button>
+              <Button variant="destructive">
+                <Trash2 className="h-4 w-4" />
+                Delete Account
+              </Button>
             </div>
           </>
         ) : active === "portfolio" ? (

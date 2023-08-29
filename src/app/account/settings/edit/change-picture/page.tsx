@@ -1,13 +1,19 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { ArrowRightCircle } from "react-feather";
 import { z } from "zod";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AuthInput, Button, FormWrapper } from "@/components/ui";
+import AuthInput from "@/components/ui/auth-input";
+import { Button } from "@/components/ui/button";
+import FormWrapper from "@/components/ui/form-wrapper";
+import { ArrowRightCircle } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import { UserUpdatePasswordProps } from "@/lib/validators/user";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { signOut } from "next-auth/react";
+import { startTransition } from "react";
 
 const Schema = z
   .object({
@@ -21,9 +27,8 @@ const Schema = z
     path: ["confPassword"],
   });
 
-export default function ChangePicture() {
+export default function Page() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -37,20 +42,56 @@ export default function ChangePicture() {
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    setLoading(true);
-    setLoading(false);
-  };
+  const { mutate: updateEmail, isLoading } = useMutation({
+    mutationFn: async (payload: UserUpdatePasswordProps) => {
+      const { data } = await axios.post("/api/user/update-password", payload);
+      return data as string;
+    },
+    onError: (err) => {
+      if (err instanceof AxiosError) {
+        if (err.response?.status === 422) {
+          return toast({
+            title: "Incorrect Password provided.",
+            description: "Please enter the correct one or reset your password.",
+            variant: "destructive",
+          });
+        }
+      }
+      toast({
+        title: "Oops! Something went wrong.",
+        description: "Password could not be updated.",
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      startTransition(() => {
+        router.refresh();
+      });
+
+      toast({
+        description: "Password updated successfully.",
+      });
+
+      signOut();
+    },
+  });
+
+  function onSubmit(data: FieldValues) {
+    const payload: UserUpdatePasswordProps = {
+      oldPassword: data.oldPassword,
+      password: data.password,
+    };
+
+    updateEmail(payload);
+  }
 
   return (
     <FormWrapper title="Change Your Picture" onSubmit={handleSubmit(onSubmit)}>
       <div className="mt-40 text-center text-3xl font-thin">Coming soon...</div>
-      <Button
-        loading={loading}
-        label="Change Picture"
-        color="blue"
-        icon={<ArrowRightCircle className="h-4 w-4" />}
-      />
+      <Button isLoading={isLoading}>
+        Change Picture
+        <ArrowRightCircle className="h-4 w-4" />
+      </Button>
     </FormWrapper>
   );
 }

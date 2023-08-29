@@ -3,12 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { AuthInput, Button } from "@/components/ui";
-import { ArrowRightCircle } from "react-feather";
 import { z } from "zod";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 import { sendVerificationMail } from "@/lib/user-send-verification";
+import { ArrowRightCircle } from "lucide-react";
 
 const Schema = z.object({
   email: z.string().email("Please enter a valid email."),

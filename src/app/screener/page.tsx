@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { queryStocks } from "@/lib/stock-get";
 import {
   sectors,
   industries,
@@ -15,15 +14,18 @@ import {
   exchanges,
 } from "@/config/screener";
 import { Screener } from "@/types/stock";
-import { Stock } from "@prisma/client";
-import { Button, Heading, SelectInput } from "@/components/ui";
+import { Prisma, Stock } from "@prisma/client";
+import { Button } from "@/components/ui/button";
+import Heading from "@/components/ui/heading";
+import SelectInput from "@/components/ui/select-input";
 import { StructureProps } from "@/types/layout";
 import { BarChart2, FileText, Layers, RotateCcw } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import debounce from "lodash.debounce";
 
 export default function Page() {
-  const [stocks, setStocks] = useState<Stock[] | null>();
   const [active, setActive] = useState<string>("Descriptive");
-  const [loading, setLoading] = useState<boolean>(false);
 
   const [resetCounter, setResetCounter] = useState(0);
 
@@ -44,26 +46,46 @@ export default function Page() {
     setResetCounter((prevCounter) => prevCounter + 1);
   };
 
-  // Async fetch on the client (i know)
+  const {
+    data: results,
+    isFetching,
+    isFetched,
+    refetch,
+  } = useQuery({
+    queryFn: async () => {
+      const payload: Screener = {
+        exchange: exchange,
+        sector: sector,
+        industry: industry,
+        country: country,
+        earningsDate: earningsDate,
+        peRatio: [peRatio1, peRatio2],
+        pegRatio: [pegRatio1, pegRatio2],
+        marketCap: marketCap,
+      };
+
+      const { data } = await axios.get(`/api/stock/query/${payload}`);
+      return data as (Stock & {
+        _count: Prisma.StockCountOutputType;
+      })[];
+    },
+    enabled: false,
+  });
+
+  const request = debounce(async () => {
+    refetch();
+  }, 300);
+
+  const debounceRequest = useCallback(() => {
+    request();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
-    const inputs: Screener = {
-      exchange: exchange,
-      sector: sector,
-      industry: industry,
-      country: country,
-      earningsDate: earningsDate,
-      peRatio: [peRatio1, peRatio2],
-      pegRatio: [pegRatio1, pegRatio2],
-      marketCap: marketCap,
-    };
-    const fetch = async () => {
-      setLoading(true);
-      setStocks(
-        await queryStocks(inputs).then((res) => (res ? res.slice(0, 15) : []))
-      );
-      setLoading(false);
-    };
-    fetch();
+    debounceRequest();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     exchange,
     sector,
@@ -292,11 +314,7 @@ export default function Page() {
             ))}
           </div>
           <div className="absolute bottom-10 right-5">
-            <Button
-              label="Reset Filters"
-              icon={<RotateCcw className="h-4 w-4" />}
-              onClick={resetFilters}
-            />
+            <Button onClick={resetFilters}>Reset Filters</Button>
           </div>
         </div>
       </div>
@@ -317,13 +335,13 @@ export default function Page() {
             </p>
           </div>
           <div className="f-col mb-5 mt-1 gap-2 px-1 lg:px-8">
-            {loading || !stocks ? (
+            {isFetching ? (
               <>
                 {[...Array(15)].map((_, i) => (
                   <ScreenerItemLoading key={i} />
                 ))}
               </>
-            ) : (!stocks || !stocks.length) && !loading ? (
+            ) : isFetched && !results?.length ? (
               <Heading
                 header="No Stocks matching the query."
                 subHeader="Maybe try another one"
@@ -332,7 +350,7 @@ export default function Page() {
               />
             ) : (
               <div className="f-col hidden-scrollbar h-[800px] gap-2 overflow-scroll">
-                {stocks.map((stock: Stock) => (
+                {results?.map((stock: Stock) => (
                   <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
                     <ScreenerItemStructure>
                       <div className="col-span-3 flex items-center gap-4">

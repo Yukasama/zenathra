@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -11,7 +11,10 @@ export default function Layout({ children }: Props) {
     <div className="f-box fixed left-0 top-0 z-30 h-screen w-screen bg-moon-300">
       <div className="absolute left-7 top-3.5">
         <Link href="/account/settings">
-          <Button label="Back" icon={<ArrowLeft className="h-5 w-5" />} />
+          <Button>
+            <ArrowLeft className="h-5 w-5" />
+            Back
+          </Button>
         </Link>
       </div>
       {children}

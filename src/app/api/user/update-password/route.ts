@@ -9,7 +9,7 @@ import {
   UnauthorizedResponse,
   UnprocessableEntityResponse,
 } from "@/lib/response";
-import { UpdatePasswordSchema } from "@/lib/validators/user";
+import { UserUpdatePasswordSchema } from "@/lib/validators/user";
 
 export async function POST(req: Request) {
   try {
@@ -35,7 +35,9 @@ export async function POST(req: Request) {
         "Change not possible since you have multiple linked accounts to your mail"
       );
 
-    const { oldPassword, password } = UpdatePasswordSchema.parse(await req.json());
+    const { oldPassword, password } = UserUpdatePasswordSchema.parse(
+      await req.json()
+    );
 
     if (!(await bcrypt.compare(oldPassword, user.hashedPassword)))
       return new ForbiddenResponse("Old password is incorrect");

@@ -1,7 +1,7 @@
 import { Quote, TimeFrame } from "@/types/stock";
 import { env } from "@/env.mjs";
 
-interface FmpConfig {
+interface FmpConfig { 
   timeout: number;
   docsPerPull: number;
   simulation?: boolean;

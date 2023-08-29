@@ -1,5 +1,4 @@
-import { Portfolio as PrismaPortfolio } from "@prisma/client";
-import { User as PrismaUser } from "@prisma/client";
+import { Stock, User as PrismaUser } from "@prisma/client";
 
 export type User = Omit<
   PrismaUser,
@@ -10,7 +9,6 @@ export type User = Omit<
   emailVerified: string | null;
 };
 
-export type Portfolio = Omit<PrismaPortfolio, "createdAt" | "updatedAt"> & {
-  createdAt: string;
-  updatedAt: string;
-};
+export interface StockWithPeers extends Stock {
+  peers: { id: string }[];
+}

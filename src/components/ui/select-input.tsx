@@ -1,7 +1,7 @@
 "use client";
 
+import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown } from "react-feather";
 
 interface Props {
   label?: string;

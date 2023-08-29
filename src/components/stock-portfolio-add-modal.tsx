@@ -3,10 +3,10 @@
 import { Portfolio } from "@/types/db";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui";
-import { Plus, Trash2 } from "react-feather";
 import { addToPortfolio, removeFromPortfolio } from "@/lib/portfolio-update";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Plus, Trash2 } from "lucide-react";
 
 interface Props {
   portfolios: Portfolio[];

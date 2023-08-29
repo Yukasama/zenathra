@@ -1,22 +1,19 @@
 import { Suspense } from "react";
 import Image from "next/image";
-import {
-  PortfolioAddModal,
-  PortfolioAddButton,
-  PortfolioChart,
-  StockChartLoading,
-  StockList,
-  StockListLoading,
-} from "@/components";
+import PortfolioAddModal from "@/components/portfolio-add-modal";
+import PortfolioAddButton from "@/components/portfolio-add-button";
+import PortfolioChart from "@/components/portfolio-chart";
+import { StockChartLoading } from "@/components/stock-chart";
+import StockList, { StockListLoading } from "@/components/stock-list";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 
-interface Params {
+interface Props {
   params: { id: string };
 }
 
-export async function generateMetadata({ params: { id } }: Params) {
+export async function generateMetadata({ params: { id } }: Props) {
   const [session, portfolio] = await Promise.all([
     getAuthSession(),
     db.portfolio.findFirst({
@@ -33,11 +30,10 @@ export async function generateMetadata({ params: { id } }: Params) {
     return {
       title: "This portfolio is private",
     };
-  else {
-    return {
-      title: portfolio.title,
-    };
-  }
+
+  return {
+    title: portfolio.title,
+  };
 }
 
 // export async function generateStaticParams() {
@@ -46,7 +42,7 @@ export async function generateMetadata({ params: { id } }: Params) {
 //   return data.map((portfolio) => ({ id: portfolio.id }));
 // }
 
-export default async function page({ params: { id } }: Params) {
+export default async function page({ params: { id } }: Props) {
   const [session, portfolio, stockIds] = await Promise.all([
     getAuthSession(),
     db.portfolio.findFirst({
@@ -59,7 +55,8 @@ export default async function page({ params: { id } }: Params) {
   ]);
 
   if (!portfolio) return notFound();
-  else if (!stockIds.length) {
+
+  if (!stockIds.length) {
     if (session?.user.id === portfolio.creatorId)
       return (
         <div>
@@ -74,11 +71,12 @@ export default async function page({ params: { id } }: Params) {
           <PortfolioAddModal portfolio={portfolio} />
         </div>
       );
-    else return <p>No Stocks in this portfolio.</p>;
+    return <p>No Stocks in this portfolio.</p>;
   }
 
   // If the portfolio is private
-  if (!portfolio.public && !user) return <p>This Portfolio is private.</p>;
+  if (!portfolio.public && !session?.user)
+    return <p>This Portfolio is private.</p>;
 
   return (
     <div className="p-5">
@@ -87,13 +85,13 @@ export default async function page({ params: { id } }: Params) {
           {portfolio.title}
         </h1>
         <p className="text-sm text-slate-400">
-          Created on {portfolio.createdAt.split("T")[0].replace(/-/g, "/")}
+          Created on {portfolio.createdAt.toISOString().split(",")}
         </p>
       </div>
-      {stocks ? (
+      {stockIds ? (
         <div className="flex gap-4">
           <Suspense fallback={<StockChartLoading />}>
-            <PortfolioChart symbols={portfolio.symbols} />
+            <PortfolioChart stockIds={stockIds.map((s) => s.stockId)} />
           </Suspense>
           <Suspense
             fallback={
@@ -103,16 +101,16 @@ export default async function page({ params: { id } }: Params) {
               />
             }>
             <StockList
-              symbols={portfolio.symbols}
+              stockIds={stockIds.map((s) => s.stockId)}
               title="Portfolio Positions"
               error="No Positions found"
               className="wrapper"
             />
           </Suspense>
-          {user && <PortfolioAddButton portfolio={portfolio} />}
+          {session?.user && <PortfolioAddButton portfolio={portfolio} />}
         </div>
       ) : (
-        <h2>There was an error with the desired portfolio.</h2>
+        <h2>There are no stocks in this portfolio.</h2>
       )}
     </div>
   );

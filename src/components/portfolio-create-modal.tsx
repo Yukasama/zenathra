@@ -2,10 +2,10 @@
 
 import { createPortfolio } from "@/lib/portfolio-update";
 import { useRouter } from "next/navigation";
-import { Plus } from "react-feather";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { Button, Input, Checkbox } from "@/components/ui";
+import { Plus } from "lucide-react";
 
 interface Props {
   numberOfPortfolios?: number;

@@ -1,44 +1,53 @@
 "use client";
 
-import { createStocks } from "@/lib/stock-update";
-import { FormEvent, useState } from "react";
-import toast from "react-hot-toast";
-import { Button, SelectInput, Checkbox } from "@/components/ui";
-import { Plus } from "react-feather";
+import { useState } from "react";
+import { Plus } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { UploadStockProps } from "@/lib/validators/stock";
+import axios from "axios";
+import { toast } from "@/hooks/use-toast";
+import { Select } from "./ui/select";
+import { Checkbox } from "./ui/checkbox";
 
 export default function AdminAddStocks() {
-  const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState("All");
   const [skip, setSkip] = useState(false);
   const [clean, setClean] = useState(true);
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    const loading = toast.loading(
-      `${selected} ${selected !== "All" ? "is" : "files"} being added...`
-    );
+  const { mutate: uploadStocks, isLoading } = useMutation({
+    mutationFn: async () => {
+      const payload: UploadStockProps = {
+        symbol: selected,
+        skip,
+        clean,
+        pullTimes: 10,
+      };
 
-    const pullTimes = 100;
-    await createStocks(selected, skip, clean, pullTimes)
-      .then(() => {
-        toast.success(`${selected} added successfully!`, { id: loading });
-      })
-      .catch(() =>
-        toast.error(`${selected} could not be added!`, { id: loading })
-      );
-
-    setLoading(false);
-  };
+      await axios.post("/api/stock/upload", payload);
+    },
+    onError: () => {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: `Stocks could not be uploaded.`,
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Stocks uploaded.",
+        description: `Files were successfully added to the database.`,
+      });
+    },
+  });
 
   return (
     <form
       className="f-col w-[400px] gap-3 rounded-lg bg-slate-100 p-4 px-6 pb-6 shadow-md dark:bg-moon-400"
-      onSubmit={onSubmit}
+      onSubmit={() => uploadStocks()}
       method="POST">
       <p className="text-[19px] font-medium">Push Symbols</p>
 
-      <SelectInput
+      <Select
         options={[
           "All",
           "US500",
@@ -61,6 +70,19 @@ export default function AdminAddStocks() {
           label="Skips already added symbols"
           onChange={setSkip}
         />
+        <div className="items-top flex space-x-2">
+          <Checkbox id="skip" onChange={() => setSkip((prev) => )} />
+          <div className="grid gap-1.5 leading-none">
+            <label
+              htmlFor="skip"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Skipping Stocks
+            </label>
+            <p className="text-sm text-muted-foreground">
+              Skips already added symbols
+            </p>
+          </div>
+        </div>
         <Checkbox
           heading="Clean Database"
           label="Cleans the database of empty records"
@@ -70,7 +92,7 @@ export default function AdminAddStocks() {
 
       <Button
         className="px-10"
-        disabled={loading}
+        disabled={isLoading}
         label="Add Stocks"
         icon={<Plus className="h-4 w-4" />}
       />

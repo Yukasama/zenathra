@@ -1,4 +1,4 @@
-import { AuthSignUpForm } from "@/components";
+import AuthSignUpForm from "@/components/auth-sign-up-form";
 import CloseModal from "@/components/close-modal";
 
 export default function page() {

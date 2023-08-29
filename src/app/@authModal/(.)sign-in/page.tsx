@@ -1,4 +1,4 @@
-import { AuthSignInForm } from "@/components";
+import AuthSignInForm from "@/components/auth-sign-in-form";
 import CloseModal from "@/components/close-modal";
 
 export default function page() {

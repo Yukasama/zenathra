@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "react-feather";
 import { PortfolioAddModal } from "@/components";
 import { Portfolio } from "@/types/db";
 import { ModalForm } from "@/components/ui";
+import { Plus } from "lucide-react";
 
 interface Props {
   portfolio: Portfolio;

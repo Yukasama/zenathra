@@ -5,12 +5,12 @@ import { AuthInput, Button, Checkbox } from "@/components/ui";
 import { OAuth } from "@/components";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { ArrowRightCircle } from "react-feather";
 import { signUp } from "@/lib/user-update";
 import { z } from "zod";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
+import { ArrowRightCircle } from "lucide-react";
 
 const RegisterSchema = z
   .object({

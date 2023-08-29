@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "react-feather";
 import { PortfolioCreateModal } from "@/components";
 import { ModalForm } from "@/components/ui";
+import { Plus } from "lucide-react";
 
 export default function PortfolioCreateCard() {
   const [isOpen, setIsOpen] = useState(false);

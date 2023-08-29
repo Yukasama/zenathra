@@ -5,7 +5,7 @@ export const UserSignUpSchema = z.object({
   password: z.string().min(11, "Password must be atleast 11 characters."),
 });
 
-export const UpdateUsernameSchema = z.object({
+export const UserUpdateUsernameSchema = z.object({
   username: z
     .string()
     .min(3)
@@ -13,11 +13,11 @@ export const UpdateUsernameSchema = z.object({
     .regex(/^[a-zA-Z0-9_]+$/),
 });
 
-export const UpdateEmailSchema = z.object({
+export const UserUpdateEmailSchema = z.object({
   email: z.string().email("Invalid email address."),
 });
 
-export const UpdatePasswordSchema = z.object({
+export const UserUpdatePasswordSchema = z.object({
   oldPassword: z.string().min(1, "Please enter a valid password."),
   password: z.string().min(11, "Password must contain 11 or more characters."),
 });
@@ -30,11 +30,11 @@ export const UserSendMailSchema = z.object({
 
 export type UserSignUpProps = z.infer<typeof UserSignUpSchema>;
 
-export type UsernameProps = z.infer<typeof UpdateUsernameSchema>;
+export type UserUpdateUsernameProps = z.infer<typeof UserUpdateUsernameSchema>;
 
-export type EmailProps = z.infer<typeof UpdateEmailSchema>;
+export type UserUpdateEmailProps = z.infer<typeof UserUpdateEmailSchema>;
 
-export type UserUpdatePasswordProps = z.infer<typeof UpdatePasswordSchema>;
+export type UserUpdatePasswordProps = z.infer<typeof UserUpdatePasswordSchema>;
 
 export type UserSendMailProps = z.infer<typeof UserSendMailSchema>;
 

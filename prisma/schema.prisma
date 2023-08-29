@@ -278,8 +278,8 @@ model Stock {
   financials Financials[]
 
   peerId String?
-  peer   Stock?  @relation("PeerRelation", fields: [peerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  peers  Stock[] @relation("PeerRelation")
+  peer   Stock?  @relation("Peers", fields: [peerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  peers  Stock[] @relation("Peers")
 
   creatorId String?
   creator   User?   @relation(fields: [creatorId], references: [id])

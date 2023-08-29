@@ -1,6 +1,6 @@
 import { Stock } from "@prisma/client";
 import { Lock } from "lucide-react";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 
 interface Props {
   session: Session | null;

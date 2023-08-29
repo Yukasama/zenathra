@@ -6,7 +6,7 @@ import {
   UnauthorizedResponse,
   UnprocessableEntityResponse,
 } from "@/lib/response";
-import { UpdateEmailSchema } from "@/lib/validators/user";
+import { UserUpdateEmailSchema } from "@/lib/validators/user";
 import z from "zod";
 
 export async function POST(req: Request) {
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const session = await getAuthSession();
     if (!session?.user) return new UnauthorizedResponse();
 
-    const { email } = UpdateEmailSchema.parse(await req.json());
+    const { email } = UserUpdateEmailSchema.parse(await req.json());
 
     if (await db.user.findFirst({ where: { email } }))
       throw new UnprocessableEntityResponse("Email is already registered");

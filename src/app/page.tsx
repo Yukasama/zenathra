@@ -1,12 +1,10 @@
 import { getDailys } from "@/lib/fmp";
-import {
-  StockCardList,
-  StockHighlight,
-  IndexList,
-  IndexListLoading,
-  StockCardListLoading,
-  StockHighlightLoading,
-} from "@/components";
+import StockHighlight from "@/components/stock-highlight";
+import StockCardList from "@/components/stock-card-list";
+import IndexList from "@/components/index-list";
+import { IndexListLoading } from "@/components/index-list";
+import { StockCardListLoading } from "@/components/stock-card-list";
+import { StockHighlightLoading } from "@/components/stock-highlight";
 import { Suspense } from "react";
 
 export default async function page() {
@@ -39,7 +37,7 @@ export default async function page() {
       <div className="mx-3 f-col">
         <p className="ml-1 mt-3 text-[23px] font-medium">Daily Winners</p>
         <Suspense fallback={<StockCardListLoading />}>
-          {winners && <StockCardList symbols={winners} />}
+          {<StockCardList symbols={winners} />}
         </Suspense>
       </div>
       <div className="mx-3 f-col">
@@ -47,7 +45,7 @@ export default async function page() {
           Daily Underperformers
         </p>
         <Suspense fallback={<StockCardListLoading />}>
-          {losers && <StockCardList symbols={losers} />}
+          {<StockCardList symbols={losers} />}
         </Suspense>
       </div>
     </div>

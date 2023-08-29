@@ -1,5 +1,5 @@
 import { Quote } from "@/types/stock";
-import { TrendingDown, TrendingUp } from "react-feather";
+import { TrendingUp, TrendingDown } from "lucide-react";
 
 interface Props {
   quote: Quote | null;

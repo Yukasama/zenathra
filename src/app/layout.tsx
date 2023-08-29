@@ -1,16 +1,15 @@
-import {
-  Footer,
-  Navbar,
-  Sidebar,
-  Provider,
-  SidebarPortable,
-} from "@/components/shared";
-import "@/styles/globals.css";
+import Footer from "@/components/shared/footer";
+import Navbar from "@/components/shared/navbar";
+import Sidebar from "@/components/shared/sidebar";
+import SidebarPortable from "@/components/shared/sidebar-portable";
+import Provider from "@/components/shared/provider";
 import { Metadata } from "next";
 import { cn } from "@/lib/utils";
 import { Inter } from "next/font/google";
 import { site } from "@/config/site";
 import { Toaster } from "@/components/ui/toaster";
+
+import "@/styles/globals.css";
 
 export const metadata: Metadata = {
   title: site.name,
@@ -38,17 +37,15 @@ export default async function RootLayout({ children, authModal }: Props) {
         inter.className
       )}
       suppressHydrationWarning>
-      <body>
+      <body className="h-screen w-screen flex overflow-hidden bg-slate-100 dark:bg-moon-300">
         <Provider>
-          <div className="h-screen w-screen flex overflow-hidden bg-slate-100 dark:bg-moon-300">
-            <Sidebar />
-            <SidebarPortable />
-            <div className="w-full overflow-auto">
-              {authModal}
-              <Navbar />
-              <main className="min-h-full">{children}</main>
-              <Footer />
-            </div>
+          <Sidebar />
+          <SidebarPortable />
+          <div className="w-full overflow-auto">
+            {authModal}
+            <Navbar />
+            <main className="min-h-full">{children}</main>
+            <Footer />
           </div>
         </Provider>
         <Toaster />

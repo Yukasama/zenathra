@@ -6,7 +6,7 @@ import {
   UnauthorizedResponse,
   UnprocessableEntityResponse,
 } from "@/lib/response";
-import { UpdateUsernameSchema } from "@/lib/validators/user";
+import { UserUpdateUsernameSchema } from "@/lib/validators/user";
 import z from "zod";
 
 export async function POST(req: Request) {
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const session = await getAuthSession();
     if (!session?.user) return new UnauthorizedResponse();
 
-    const { username } = UpdateUsernameSchema.parse(await req.json());
+    const { username } = UserUpdateUsernameSchema.parse(await req.json());
 
     if (await db.user.findFirst({ where: { username } }))
       throw new UnprocessableEntityResponse("Username already taken");

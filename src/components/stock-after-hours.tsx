@@ -1,7 +1,7 @@
-import { ChevronsUp, ChevronsDown } from "react-feather";
 import { Stock } from "@prisma/client";
 import { getQuote } from "@/lib/quote-get";
 import { StructureProps } from "@/types/layout";
+import { ChevronsUp, ChevronsDown } from "lucide-react";
 
 interface SharedProps {
   className?: string;

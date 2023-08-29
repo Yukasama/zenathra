@@ -1,7 +1,7 @@
 "use client";
 
 import { ThemeProvider } from "next-themes";
-import { SidebarProvider } from "@/components/shared";
+import { SidebarProvider } from "./sidebar-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { useState } from "react";
@@ -26,7 +26,7 @@ export default function Provider({ children }: Props) {
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider enableSystem={true} attribute="class">
+        <ThemeProvider enableSystem attribute="class">
           <SidebarProvider>{children}</SidebarProvider>
         </ThemeProvider>
       </QueryClientProvider>

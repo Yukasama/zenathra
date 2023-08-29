@@ -1,23 +1,19 @@
-import {
-  StockChartLoading,
-  StockList,
-  StockListLoading,
-  StockMetrics,
-  StockEye,
-  StockStatistics,
-  StockAfterHours,
-  StockPrice2,
+import { StockChartLoading } from "@/components/stock-chart";
+import StockList, { StockListLoading } from "@/components/stock-list";
+import StockMetrics from "@/components/stock-metrics";
+import StockEye from "@/components/stock-eye";
+import StockStatistics, {
   StockStatisticsLoading,
+} from "@/components/stock-statistics";
+import StockAfterHours, {
   StockAfterHoursLoading,
-  StockPrice2Loading,
-  StockChartLoader,
-} from "@/components";
-import { Stock } from "@prisma/client";
+} from "@/components/stock-after-hours";
+import StockPrice2, { StockPrice2Loading } from "@/components/stock-price-2";
 import { Suspense } from "react";
 import { getAuthSession } from "@/lib/auth";
-import { Session } from "next-auth";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
+import StockChartLoader from "@/components/stock-chart-loader";
 
 // export async function generateStaticParams() {
 //   const symbols = await db.stock.findMany({
@@ -40,10 +36,20 @@ interface Props {
 }
 
 export default async function Symbol({ params: { symbol } }: Props) {
-  const [session, stock]: [Session | null, Stock | null] = await Promise.all([
+  const [session, stock, stockWithPeers] = await Promise.all([
     getAuthSession(),
     db.stock.findFirst({
       where: { symbol: symbol },
+    }),
+    db.stock.findFirst({
+      where: { symbol: symbol },
+      select: {
+        peers: {
+          select: {
+            id: true,
+          },
+        },
+      },
     }),
   ]);
 
@@ -72,7 +78,9 @@ export default async function Symbol({ params: { symbol } }: Props) {
             <Suspense
               fallback={<StockListLoading title="Peers" className="wrapper" />}>
               <StockList
-                stockIds={stock.peerId.slice(0, 5)}
+                stockIds={stockWithPeers?.peers
+                  .map((peer) => peer.id)
+                  .slice(0, 5)}
                 title="Peers"
                 error="No Peers found"
                 className="wrapper"

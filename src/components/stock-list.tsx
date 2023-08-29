@@ -13,11 +13,6 @@ interface SharedProps extends React.HTMLAttributes<HTMLDivElement> {
   limit?: number;
 }
 
-interface Props extends SharedProps {
-  stockIds: string[];
-  error?: string;
-}
-
 function Structure({
   title,
   children,
@@ -43,6 +38,11 @@ export function StockListLoading({ title, limit = 5, className }: SharedProps) {
       ))}
     </Structure>
   );
+}
+
+interface Props extends SharedProps {
+  stockIds: string[] | undefined;
+  error?: string;
 }
 
 export default async function StockList({

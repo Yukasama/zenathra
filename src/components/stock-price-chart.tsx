@@ -15,8 +15,8 @@ import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { corsairPlugin, chartOptions } from "@/config/chart-options";
 import { AllHistory, History, Quote, TimeFrame } from "@/types/stock";
-import { Loader, StockChartStructure } from "@/components";
-import { TrendingDown, TrendingUp } from "react-feather";
+import { StockChartStructure } from "@/components";
+import { TrendingUp, TrendingDown } from "lucide-react";
 
 Chart.register(
   LinearScale,

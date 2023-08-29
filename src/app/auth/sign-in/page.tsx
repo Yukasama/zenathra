@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AuthSignInForm } from "@/components";
+import AuthSignInForm from "@/components/auth-sign-in-form";
 
 export default function page() {
   return (

@@ -1,11 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { AuthInput, Button, FormWrapper } from "@/components/ui";
+import { startTransition } from "react";
+import AuthInput from "@/components/ui/auth-input";
+import { Button } from "@/components/ui/button";
+import FormWrapper from "@/components/ui/form-wrapper";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/hooks/use-toast";
+import { UserUpdateUsernameProps } from "@/lib/validators/user";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { ArrowRightCircle } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 const Schema = z
   .object({
@@ -17,9 +25,8 @@ const Schema = z
     path: ["confUsername"],
   });
 
-export default function ChangeUsername() {
+export default function Page() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -33,19 +40,47 @@ export default function ChangeUsername() {
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    setLoading(true);
+  const { mutate: updateEmail, isLoading } = useMutation({
+    mutationFn: async (payload: UserUpdateUsernameProps) => {
+      const { data } = await axios.post("/api/user/update-password", payload);
+      return data as string;
+    },
+    onError: (err) => {
+      if (err instanceof AxiosError) {
+        if (err.response?.status === 422) {
+          return toast({
+            title: "Oops! Something went wrong.",
+            description: "Multiple accounts linked to one mail.",
+            variant: "destructive",
+          });
+        }
+      }
+      toast({
+        title: "Oops! Something went wrong.",
+        description: "Username could not be updated.",
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      startTransition(() => {
+        router.refresh();
+      });
 
-    const { error } = await updateUsername(data.username);
-    if (!error) {
-      router.push("/");
-      toast.success("Username successfully changed.");
-    } else {
-      toast.error("Something went wrong. Please try again later.");
-    }
+      toast({
+        description: "Username updated successfully.",
+      });
 
-    setLoading(false);
-  };
+      signOut();
+    },
+  });
+
+  function onSubmit(data: FieldValues) {
+    const payload: UserUpdateUsernameProps = {
+      username: data.username,
+    };
+
+    updateEmail(payload);
+  }
 
   return (
     <FormWrapper title="Change Your Username" onSubmit={handleSubmit(onSubmit)}>
@@ -65,12 +100,10 @@ export default function ChangeUsername() {
         errors={errors}
       />
 
-      <Button
-        loading={loading}
-        label="Change Username"
-        color="blue"
-        icon={<ArrowRightCircle className="h-4 w-4" />}
-      />
+      <Button isLoading={isLoading}>
+        <ArrowRightCircle className="h-4 w-4" />
+        Change Username
+      </Button>
     </FormWrapper>
   );
 }

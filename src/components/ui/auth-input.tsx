@@ -1,7 +1,7 @@
 "use client";
 
+import { AlertCircle } from "lucide-react";
 import { ReactNode } from "react";
-import { AlertCircle } from "react-feather";
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 
 interface Props {

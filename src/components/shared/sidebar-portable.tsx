@@ -1,9 +1,8 @@
-import { authOptions } from "@/lib/auth";
+import { getAuthSession } from "@/lib/auth";
 import SidebarPortableClient from "./sidebar-portable-client";
-import { getServerSession } from "next-auth";
 
 export default async function SidebarPortable() {
-  const session = await getServerSession(authOptions);
+  const session = await getAuthSession();
 
   return <SidebarPortableClient session={session} />;
 }

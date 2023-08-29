@@ -4,7 +4,7 @@ import { cleanDb } from "@/lib/stock-update";
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { Button, SelectInput } from "@/components/ui";
-import { RefreshCcw } from "react-feather";
+import { RefreshCcw } from "lucide-react";
 
 export default function AdminCleanDatabase() {
   const [loading, setLoading] = useState(false);

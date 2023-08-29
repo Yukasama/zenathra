@@ -6,15 +6,7 @@ import axios from "axios";
 import debounce from "lodash.debounce";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import * as Command from "@/components/ui/command";
 import { useOnClickOutside } from "@/hooks/use-on-click-outside";
 import { Users } from "lucide-react";
 
@@ -60,10 +52,10 @@ export default function Searchbar() {
   }, [pathname]);
 
   return (
-    <Command
+    <Command.Command
       ref={commandRef}
       className="relative rounded-lg border max-w-lg z-50 overflow-visible">
-      <CommandInput
+      <Command.CommandInput
         isLoading={isFetching}
         onValueChange={(text) => {
           setInput(text);
@@ -75,12 +67,14 @@ export default function Searchbar() {
       />
 
       {input.length > 0 && (
-        <CommandList className="absolute bg-white top-full inset-x-0 shadow rounded-b-md">
-          {isFetched && <CommandEmpty>No results found.</CommandEmpty>}
+        <Command.CommandList className="absolute bg-white top-full inset-x-0 shadow rounded-b-md">
+          {isFetched && (
+            <Command.CommandEmpty>No results found.</Command.CommandEmpty>
+          )}
           {(queryResults?.length ?? 0) > 0 ? (
-            <CommandGroup heading="Stocks">
+            <Command.CommandGroup heading="Stocks">
               {queryResults?.map((stock) => (
-                <CommandItem
+                <Command.CommandItem
                   onSelect={(e) => {
                     router.push(`/r/${e}`);
                     router.refresh();
@@ -89,12 +83,12 @@ export default function Searchbar() {
                   value={stock.companyName}>
                   <Users className="mr-2 h-4 w-4" />
                   <a href={`/stocks/${stock.symbol}`}>{stock.symbol}</a>
-                </CommandItem>
+                </Command.CommandItem>
               ))}
-            </CommandGroup>
+            </Command.CommandGroup>
           ) : null}
-        </CommandList>
+        </Command.CommandList>
       )}
-    </Command>
+    </Command.Command>
   );
 }

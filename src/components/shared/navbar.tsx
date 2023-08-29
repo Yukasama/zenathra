@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { Searchbar, UserProfile, SidebarToggle } from "@/components/shared";
-import { ThemeToggle } from "@/components/ui";
+import ThemeToggle from "./theme-toggle";
 import { Menu } from "lucide-react";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getAuthSession } from "@/lib/auth";
+import Searchbar from "./searchbar";
+import { UserAccountNav } from "./user-account-nav";
+import SidebarToggle from "./sidebar-toggle";
 
 export default async function Navbar() {
-  const session = await getServerSession(authOptions);
+  const session = await getAuthSession();
 
   return (
     <div className="sticky top-0 z-20 flex w-full justify-between gap-4 p-2 px-4">
@@ -18,7 +19,7 @@ export default async function Navbar() {
       </SidebarToggle>
 
       <div className="box flex items-center justify-end gap-2 px-3">
-        {!session?.user && (
+        {!session && (
           <div className="hidden items-center gap-3 lg:flex">
             <Link
               href="/auth/sign-in"
@@ -33,7 +34,7 @@ export default async function Navbar() {
           </div>
         )}
         <ThemeToggle />
-        <UserProfile session={session} />
+        {session?.user && <UserAccountNav user={session.user} />}
       </div>
     </div>
   );

@@ -1,15 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { AuthInput, Button, FormWrapper } from "@/components/ui";
+import { startTransition } from "react";
+import AuthInput from "@/components/ui/auth-input";
+import { Button } from "@/components/ui/button";
+import FormWrapper from "@/components/ui/form-wrapper";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { ArrowRightCircle } from "react-feather";
 import { z } from "zod";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updatePassword } from "@/lib/user-update";
 import { signOut } from "next-auth/react";
+import { ArrowRightCircle } from "lucide-react";
+import axios, { AxiosError } from "axios";
+import { UserUpdatePasswordProps } from "@/lib/validators/user";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "@/hooks/use-toast";
 
 const Schema = z
   .object({
@@ -24,9 +28,8 @@ const Schema = z
     path: ["confPassword"],
   });
 
-export default function ChangePassword() {
+export default function Page() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -41,18 +44,48 @@ export default function ChangePassword() {
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    setLoading(true);
+  const { mutate: updateEmail, isLoading } = useMutation({
+    mutationFn: async (payload: UserUpdatePasswordProps) => {
+      const { data } = await axios.post("/api/user/update-password", payload);
+      return data as string;
+    },
+    onError: (err) => {
+      if (err instanceof AxiosError) {
+        if (err.response?.status === 422) {
+          return toast({
+            title: "Incorrect Password provided.",
+            description: "Please enter the correct one or reset your password.",
+            variant: "destructive",
+          });
+        }
+      }
+      toast({
+        title: "Oops! Something went wrong.",
+        description: "Password could not be updated.",
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      startTransition(() => {
+        router.refresh();
+      });
 
-    const { error } = await updatePassword(data.oldPassword, data.password);
-    if (!error) {
-      setLoading(false);
-      toast.success("Password successfully reset.");
+      toast({
+        description: "Password updated successfully.",
+      });
 
-      signOut({ redirect: true, callbackUrl: "/auth/sign-in" });
-      router.refresh();
-    } else toast.error("Something went wrong. Please try again later.");
-  };
+      signOut();
+    },
+  });
+
+  function onSubmit(data: FieldValues) {
+    const payload: UserUpdatePasswordProps = {
+      oldPassword: data.oldPassword,
+      password: data.password,
+    };
+
+    updateEmail(payload);
+  }
 
   return (
     <FormWrapper title="Change Your Password" onSubmit={handleSubmit(onSubmit)}>
@@ -80,12 +113,10 @@ export default function ChangePassword() {
         errors={errors}
       />
 
-      <Button
-        loading={loading}
-        label="Change Password"
-        color="blue"
-        icon={<ArrowRightCircle className="h-4 w-4" />}
-      />
+      <Button isLoading={isLoading}>
+        Change Password
+        <ArrowRightCircle className="h-4 w-4" />
+      </Button>
     </FormWrapper>
   );
 }

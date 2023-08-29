@@ -1,5 +1,4 @@
-import { SidebarItem, SidebarToggle } from "@/components/shared";
-import { authOptions } from "@/lib/auth";
+import SidebarItem from "./sidebar-item";
 import { Menu } from "@/types/layout";
 import {
   Home,
@@ -10,10 +9,11 @@ import {
   LogIn,
   MenuIcon,
 } from "lucide-react";
-import { getServerSession } from "next-auth";
+import SidebarToggle from "./sidebar-toggle";
+import { getAuthSession } from "@/lib/auth";
 
 export default async function Sidebar() {
-  const session = await getServerSession(authOptions);
+  const session = await getAuthSession();
 
   const menusUp: Menu[] = [
     {
@@ -41,7 +41,7 @@ export default async function Sidebar() {
   ];
 
   const menusDown: Menu[] = [
-    session?.user
+    session
       ? {
           title: "Settings",
           to: "/account/settings",

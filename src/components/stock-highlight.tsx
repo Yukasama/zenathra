@@ -1,5 +1,4 @@
-import { StockChartLoading, StockPrice, StockPriceChart } from "@/components";
-import React, { Suspense } from "react";
+import { StockPrice, StockPriceChart } from "@/components";
 import { getQuote } from "@/lib/fmp";
 import { db } from "@/lib/db";
 import { StockImage } from "./shared/stock-image";
@@ -74,19 +73,11 @@ export default async function StockHighlight({ symbol, className }: Props) {
               </div>
               <StockPrice quote={quote} />
             </div>
-            <Suspense
-              fallback={
-                <StockChartLoading
-                  size="md"
-                  className="scale-[0.7] -translate-x-[72px] sm:translate-x-0 sm:scale-100"
-                />
-              }>
-              <StockPriceChart
-                history={data}
-                size="md"
-                className="scale-[0.7] -translate-x-[72px] sm:translate-x-0 sm:scale-100"
-              />
-            </Suspense>
+            <StockPriceChart
+              history={data}
+              size="md"
+              className="scale-[0.7] -translate-x-[72px] sm:translate-x-0 sm:scale-100"
+            />
           </div>
         </div>
       )}
