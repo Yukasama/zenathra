@@ -1,4 +1,4 @@
-export type History = {
+export interface History {
   date: string;
   open: number;
   high: number;
@@ -12,9 +12,9 @@ export type History = {
   vwap: number;
   label: string;
   changeOverTime: number;
-};
+}
 
-export type Screener = {
+export interface Screener {
   exchange: string;
   sector: string;
   industry: string;
@@ -23,9 +23,9 @@ export type Screener = {
   marketCap: string;
   peRatio: [string, string];
   pegRatio: [string, string];
-};
+}
 
-export type Quote = {
+export interface Quote {
   symbol: string;
   name: string;
   price: number;
@@ -48,18 +48,20 @@ export type Quote = {
   earningsAnnouncement: string | null;
   sharesOutstanding: number | null;
   timestamp: number;
-};
+}
 
-export type StockChartProps = {
+export interface StockChartProps {
   title?: string;
   labels: string[];
   data: {}[];
-  labelType?: string;
+  labelinterface?: string;
   size?: "lg" | "md" | "sm";
-};
+}
 
 export type StockAction = "actives" | "winners" | "losers";
 
 export type TimeFrame = "1D" | "5D" | "1M" | "6M" | "1Y" | "5Y" | "ALL";
 
-export type AllHistory = { [key in TimeFrame]: History[] | null };
+export interface AllHistory {
+  [key in TimeFrame]: History[] | null;
+}

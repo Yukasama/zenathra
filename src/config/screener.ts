@@ -21,9 +21,8 @@ export function buildFilter(screener: Screener): Prisma.StockWhereInput {
       "Small (50 Mil.)": 50_000_000,
     };
 
-    if (screener.marketCap in marketCapMapping) {
+    if (screener.marketCap in marketCapMapping)
       filter.marketCapTTM = { gte: marketCapMapping[screener.marketCap] };
-    }
   }
 
   if (
@@ -33,24 +32,17 @@ export function buildFilter(screener: Screener): Prisma.StockWhereInput {
     const [left, right] = screener.peRatio;
     let peRatioFilter: Prisma.FloatFilter | undefined;
 
-    if (left === ">50") {
-      peRatioFilter = { lt: 50 };
-    } else if (right === ">50") {
-      peRatioFilter = { gt: 50 };
-    } else if (left !== "Any" && right !== "Any") {
+    if (left === ">50") peRatioFilter = { lt: 50 };
+    else if (right === ">50") peRatioFilter = { gt: 50 };
+    else if (left !== "Any" && right !== "Any")
       peRatioFilter = {
         lte: Number(left),
         gte: Number(right),
       };
-    } else if (left !== "Any") {
-      peRatioFilter = { lte: Number(left) };
-    } else if (right !== "Any") {
-      peRatioFilter = { gte: Number(right) };
-    }
+    else if (left !== "Any") peRatioFilter = { lte: Number(left) };
+    else if (right !== "Any") peRatioFilter = { gte: Number(right) };
 
-    if (peRatioFilter) {
-      filter.peRatioTTM = peRatioFilter;
-    }
+    if (peRatioFilter) filter.peRatioTTM = peRatioFilter;
   }
 
   if (
@@ -60,24 +52,17 @@ export function buildFilter(screener: Screener): Prisma.StockWhereInput {
     const [left, right] = screener.pegRatio;
     let pegRatioFilter: Prisma.FloatFilter | undefined;
 
-    if (left === ">10") {
-      pegRatioFilter = { lt: 10 };
-    } else if (right === ">10") {
-      pegRatioFilter = { gt: 10 };
-    } else if (left !== "Any" && right !== "Any") {
+    if (left === ">10") pegRatioFilter = { lt: 10 };
+    else if (right === ">10") pegRatioFilter = { gt: 10 };
+    else if (left !== "Any" && right !== "Any")
       pegRatioFilter = {
         lte: Number(left),
         gte: Number(right),
       };
-    } else if (left !== "Any") {
-      pegRatioFilter = { lte: Number(left) };
-    } else if (right !== "Any") {
-      pegRatioFilter = { gte: Number(right) };
-    }
+    else if (left !== "Any") pegRatioFilter = { lte: Number(left) };
+    else if (right !== "Any") pegRatioFilter = { gte: Number(right) };
 
-    if (pegRatioFilter) {
-      filter.pegRatioTTM = pegRatioFilter;
-    }
+    if (pegRatioFilter) filter.pegRatioTTM = pegRatioFilter;
   }
 
   return filter;

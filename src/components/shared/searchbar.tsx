@@ -86,7 +86,16 @@ export default function Searchbar() {
                 </Command.CommandItem>
               ))}
             </Command.CommandGroup>
-          ) : null}
+          ) : (
+            <>
+              {[...Array(4)].map((_, i) => (
+                <div
+                  key={i}
+                  className="animate-pulse-right h-12 rounded-md p-1 px-2"
+                />
+              ))}
+            </>
+          )}
         </Command.CommandList>
       )}
     </Command.Command>

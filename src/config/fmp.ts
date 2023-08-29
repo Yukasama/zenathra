@@ -1,7 +1,7 @@
 import { Quote, TimeFrame } from "@/types/stock";
 import { env } from "@/env.mjs";
 
-interface FmpConfig { 
+interface FmpConfig {
   timeout: number;
   docsPerPull: number;
   simulation?: boolean;
@@ -13,9 +13,9 @@ export const fmpConfig: FmpConfig = {
   simulation: false,
 };
 
-export const FMP_API_URL = "https://financialmodelingprep.com/api/";
+export const FMP_API_URL: string = "https://financialmodelingprep.com/api/";
 
-export const fmpUrls: any = {
+export const fmpUrls: { [key: string]: string } = {
   All: `${FMP_API_URL}v3/stock/list?apikey=${env.FMP_API_KEY}`,
   US500: `${FMP_API_URL}v3/sp500_constituent?apikey=${env.FMP_API_KEY}`,
 
@@ -35,7 +35,7 @@ export const historyTimes: Record<TimeFrame, [string, number]> = {
   ALL: ["day1", 1550],
 };
 
-export const historyUrls: any = (symbol: string, timeFrame: TimeFrame) => {
+export const historyUrls = (symbol: string, timeFrame: TimeFrame) => {
   const urls: any = {
     min1: `${FMP_API_URL}v3/historical-chart/1min/${symbol}?apikey=${env.FMP_API_KEY}`,
     min5: `${FMP_API_URL}v3/historical-chart/5min/${symbol}?apikey=${env.FMP_API_KEY}`,

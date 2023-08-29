@@ -1,10 +1,12 @@
 import { z } from "zod";
 
 export const UploadStockSchema = z.object({
-  symbol: z.string().nonempty(),
+  stock: z.string({
+    required_error: "Please select a stock to upload.",
+  }),
   skip: z.boolean().optional(),
   clean: z.boolean().optional(),
-  pullTimes: z.number().int().positive().optional(),
+  pullTimes: z.number().min(1).max(100).default(1),
 });
 
 export const StockScreenerSchema = z.object({

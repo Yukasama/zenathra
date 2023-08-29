@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { AuthInput, Button } from "@/components/ui";
+import AuthInput from "./ui/auth-input";
+import { Button } from "./ui/button";
 import { z } from "zod";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "react-hot-toast";
-import { sendVerificationMail } from "@/lib/user-send-verification";
 import { ArrowRightCircle } from "lucide-react";
 
 const Schema = z.object({
@@ -32,19 +31,6 @@ export default function AuthForgotPasswordForm() {
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setLoading(true);
 
-    const { error } = await sendVerificationMail(
-      data.email,
-      "Reset Password",
-      "This mail resets your password"
-    );
-    if (!error) {
-      toast.success("Password reset email sent.");
-      setSent(true);
-    } else {
-      toast.error(
-        "Could not send password reset email. Please try again later." + error
-      );
-    }
     setLoading(false);
   };
 
@@ -60,12 +46,10 @@ export default function AuthForgotPasswordForm() {
             errors={errors}
           />
 
-          <Button
-            disabled={loading}
-            label="Reset Password"
-            color="blue"
-            icon={<ArrowRightCircle className="h-4 w-4" />}
-          />
+          <Button isLoading={loading}>
+            <ArrowRightCircle className="h-4 w-4" />
+            Reset Password
+          </Button>
         </form>
       ) : (
         <div className="flex items-center gap-1">

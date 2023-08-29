@@ -1,4 +1,4 @@
-import { StockPriceChart } from "@/components";
+import StockPriceChart from "./stock-price-chart";
 import { db } from "@/lib/db";
 import { StockHistoryProps } from "@/lib/validators/stock";
 import axios from "axios";

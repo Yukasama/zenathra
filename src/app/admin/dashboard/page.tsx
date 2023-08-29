@@ -1,5 +1,4 @@
 import AdminAddStocks from "@/components/admin-add-stocks";
-import AdminCleanDatabase from "@/components/admin-clean-database";
 import Error from "next/error";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -16,7 +15,6 @@ export default async function page() {
   return (
     <div className="flex gap-5 p-3 px-6">
       <AdminAddStocks />
-      <AdminCleanDatabase />
     </div>
   );
 }

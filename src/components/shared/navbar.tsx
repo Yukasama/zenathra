@@ -19,7 +19,7 @@ export default async function Navbar() {
       </SidebarToggle>
 
       <div className="box flex items-center justify-end gap-2 px-3">
-        {!session && (
+        {!session?.user && (
           <div className="hidden items-center gap-3 lg:flex">
             <Link
               href="/auth/sign-in"

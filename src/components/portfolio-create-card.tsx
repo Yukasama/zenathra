@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { PortfolioCreateModal } from "@/components";
-import { ModalForm } from "@/components/ui";
+import PortfolioCreateModal from "./portfolio-create-modal";
+import ModalForm from "./ui/modal-form";
 import { Plus } from "lucide-react";
 
 export default function PortfolioCreateCard() {

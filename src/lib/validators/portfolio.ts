@@ -5,7 +5,8 @@ export const CreatePortfolioSchema = z.object({
   publicPortfolio: z.boolean().optional(),
   stockIds: z
     .array(z.string().nonempty())
-    .max(20, "A maximum of 20 symbols can be added at a time.").optional(),
+    .max(20, "A maximum of 20 symbols can be added at a time.")
+    .optional(),
 });
 
 export const ModifySymbolsPortfolioSchema = z.object({
@@ -18,6 +19,8 @@ export const ModifySymbolsPortfolioSchema = z.object({
 export const DeletePortfolioSchema = z.object({
   portfolioId: z.string().nonempty(),
 });
+
+export type CreatePortfolioProps = z.infer<typeof CreatePortfolioSchema>;
 
 export type ModifySymbolsPortfolioProps = z.infer<
   typeof ModifySymbolsPortfolioSchema

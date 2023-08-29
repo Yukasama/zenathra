@@ -1,13 +1,10 @@
 "use client";
 
-import { FC } from "react";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-interface Props {}
-
-const CloseModal: FC<Props> = ({}) => {
+export function CloseModal() {
   const router = useRouter();
 
   return (
@@ -19,6 +16,4 @@ const CloseModal: FC<Props> = ({}) => {
       <X className="w-4 h-4" />
     </Button>
   );
-};
-
-export default CloseModal;
+}

@@ -23,6 +23,7 @@ export default function ModalForm({ children, isOpen, onClose, title }: Props) {
   useEffect(() => {
     document.addEventListener("click", handleHide);
     return () => document.removeEventListener("click", handleHide);
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

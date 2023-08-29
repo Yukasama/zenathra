@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { PortfolioAddModal } from "@/components";
-import { Portfolio } from "@/types/db";
-import { ModalForm } from "@/components/ui";
+import PortfolioAddModal from "./portfolio-add-modal";
+import ModalForm from "./ui/modal-form";
 import { Plus } from "lucide-react";
+import { Portfolio } from "@prisma/client";
 
 interface Props {
   portfolio: Portfolio;
+  stockIds: string[];
 }
 
-export default function PortfolioAddButton({ portfolio }: Props) {
+export default function PortfolioAddButton({ portfolio, stockIds }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -26,6 +27,7 @@ export default function PortfolioAddButton({ portfolio }: Props) {
         onClose={() => setOpen(false)}>
         <PortfolioAddModal
           portfolio={portfolio}
+          stockIds={stockIds}
           onClose={() => setOpen(false)}
         />
       </ModalForm>

@@ -1,19 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { footerLinks, site } from "@/config/site";
+import CompanyLogo from "./company-logo";
 
 export default function Footer() {
   return (
     <div className="f-col w-full justify-between gap-8 bg-slate-300/50 px-10 xl:px-60 py-4 pt-7 shadow-sm dark:bg-moon-600 dark:shadow-moon-100">
       <div className="f-col gap-6 px-3">
         <div className="flex items-center gap-3">
-          <Image
-            className="rounded-md"
-            src="/images/logo/logo.png"
-            width={40}
-            height={40}
-            alt="Company Logo"
-          />
+          <CompanyLogo px={40} />
           <p className="text-lg font-light">Elysium</p>
         </div>
         <div className="grid grid-cols-2 lg:flex gap-5 lg:gap-16">
@@ -42,7 +37,7 @@ export default function Footer() {
         <div className="mx-2 f-col lg:flex-row flex-col-reverse items-center justify-between">
           <div className="flex gap-5">
             <p className="hidden lg:flex text-[13px] text-slate-500">
-              Please note that this website is in development stage.
+              This website is in development stage.
             </p>
             <Link
               className="text-[13px] text-slate-500 hover:underline"

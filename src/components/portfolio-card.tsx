@@ -1,10 +1,7 @@
 import { Portfolio } from "@prisma/client";
 import Link from "next/link";
-import {
-  PortfolioDeleteButton,
-  StockList,
-  StockListLoading,
-} from "@/components";
+import PortfolioDeleteButton from "./portfolio-delete-button";
+import StockList, { StockListLoading } from "./stock-list";
 import { Suspense } from "react";
 
 interface Props {

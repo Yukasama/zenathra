@@ -62,9 +62,7 @@ export default function Page() {
       });
     },
     onSuccess: () => {
-      startTransition(() => {
-        router.refresh();
-      });
+      startTransition(() => router.refresh());
 
       toast({
         description: "Email updated successfully.",

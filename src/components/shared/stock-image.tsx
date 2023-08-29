@@ -10,7 +10,7 @@ interface Props extends React.HTMLAttributes<HTMLImageElement> {
 export function StockImage({ px, src, className, priority }: Props) {
   return (
     <Image
-      className={cn(className, "rounded-md")}
+      className={cn(className, "rounded-full")}
       src={src ?? "/images/stock.jpg"}
       height={px}
       width={px}

@@ -1,11 +1,30 @@
 "use client";
 
-import { createPortfolio } from "@/lib/portfolio-update";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { useState } from "react";
-import { Button, Input, Checkbox } from "@/components/ui";
+import { startTransition } from "react";
+import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
+import { Input } from "./ui/input";
 import { Plus } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import {
+  CreatePortfolioProps,
+  CreatePortfolioSchema,
+} from "@/lib/validators/portfolio";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { title } from "process";
+import { FieldValues, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 interface Props {
   numberOfPortfolios?: number;
@@ -16,56 +35,99 @@ export default function PortfolioCreateModal({
   numberOfPortfolios = 0,
   onClose,
 }: Props) {
-  const [title, setTitle] = useState("");
-  const [publicPortfolio, setPublicPortfolio] = useState(false);
-
   const router = useRouter();
 
-  const handleClick = async () => {
-    setTitle("");
+  const form = useForm({
+    resolver: zodResolver(CreatePortfolioSchema),
+  });
 
-    if (title.length < 1) return toast.error("Please choose a longer title.");
-    if (title.length > 30) return toast.error("Please choose a shorter title.");
-    if (numberOfPortfolios >= 3)
-      return toast.error("Maximum number of portfolios reached.");
+  const { mutate: createPortfolio, isLoading } = useMutation({
+    mutationFn: async (data: CreatePortfolioProps) => {
+      if (title.length < 1)
+        return toast({
+          title: "Oops! Something went wrong.",
+          description: "Please choose a longer title.",
+        });
+      if (title.length > 30)
+        return toast({
+          title: "Oops! Something went wrong.",
+          description: "Please choose a shorter title.",
+        });
+      if (numberOfPortfolios >= 3)
+        return toast({
+          title: "Oops! Something went wrong.",
+          description: "Maximum number of portfolios reached.",
+        });
 
-    const loading = toast.loading(`Creating Portfolio '${title}'...`);
-    await createPortfolio(title, publicPortfolio)
-      .then(() => {
-        toast.success(`Portfolio '${title}' created.`, { id: loading });
-      })
-      .catch(() => {
-        toast.error("Error creating Portfolio.", { id: loading });
+      await axios.post("/api/portfolio/create", { ...data });
+    },
+    onError: () => {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: `Failed to create portfolio.`,
+        variant: "destructive",
       });
+    },
+    onSuccess: () => {
+      startTransition(() => router.refresh());
+      onClose();
 
-    onClose();
-    router.refresh();
-  };
+      toast({
+        description: `Portfolio ${title} successfully created.`,
+      });
+    },
+  });
+
+  function onSubmit(data: FieldValues) {
+    const payload: CreatePortfolioProps = {
+      title: data.title,
+      publicPortfolio: data.publicPortfolio,
+    };
+    createPortfolio(payload);
+  }
 
   return (
-    <>
-      <Input
-        id="createPortfolio"
-        type="text"
-        label="Choose your title..."
-        heading="Portfolio Title"
-        subheading="Give your portfolio a title"
-        onChange={setTitle}
-        focus
-        required
-      />
-      <Checkbox
-        className="ml-1"
-        heading="Make public"
-        label="Display portfolio publicly?"
-        onChange={setPublicPortfolio}
-      />
-      <Button
-        label="Create Portfolio"
-        icon={<Plus className="h-[16px] w-[16px]" />}
-        onClick={handleClick}
-        color="blue"
-      />
-    </>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input placeholder="Choose your name..." {...field} required />
+              </FormControl>
+              <FormDescription>
+                This is what your portfolio will be called.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="publicPortfolio"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Make public</FormLabel>
+                <FormDescription>Display portfolio publicly?</FormDescription>
+              </div>
+            </FormItem>
+          )}
+        />
+        <Button isLoading={isLoading}>
+          <Plus className="h-4 w-4" />
+          Create Portfolio
+        </Button>
+      </form>
+    </Form>
   );
 }

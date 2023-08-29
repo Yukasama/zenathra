@@ -1,151 +1,165 @@
 "use client";
 
-import { Button, Input } from "@/components/ui";
+import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Stock } from "@prisma/client";
-import { Portfolio } from "@/types/db";
-import Image from "next/image";
-import { useDebounce } from "@/lib/utils";
+import { startTransition, useCallback, useState } from "react";
+import { Portfolio, Prisma, Stock } from "@prisma/client";
+import { toast } from "@/hooks/use-toast";
+import { ModifySymbolsPortfolioProps } from "@/lib/validators/portfolio";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { Plus, Trash } from "lucide-react";
+import debounce from "lodash.debounce";
+import { StockImage } from "./shared/stock-image";
+import * as Command from "@/components/ui/command";
 
 interface Props {
   portfolio: Portfolio;
+  stockIds: string[];
   onClose?: any;
 }
 
-export default function PortfolioAddModal({ portfolio, onClose }: Props) {
+export default function PortfolioAddModal({
+  portfolio,
+  stockIds,
+  onClose,
+}: Props) {
   const [search, setSearch] = useState("");
-  const [results, setResults] = useState<Stock[] | null | undefined>([]);
   const [selected, setSelected] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
-  const handleClick = async () => {
-    if (selected.length < 1)
-      return toast.error("Please select atleast one stock.");
-    if (selected.length >= 20)
-      return toast.error("Please select less than 20 stock.");
+  const request = debounce(async () => {
+    refetch();
+  }, 300);
 
-    const { error } = await addToPortfolio(selected, portfolio.id);
-    if (error) {
-      toast.error("Failed to add stocks to portfolio.");
-    } else {
-      toast.success("Added stocks to portfolio.");
-    }
-
-    onClose();
-    router.refresh();
-  };
-
-  const debouncedSearch = useDebounce(search, 200);
-
-  useEffect(() => {
-    let isCancelled = false;
-
-    const fetchResults = async () => {
-      const searchResults = await searchStocks(debouncedSearch);
-      if (isCancelled) return;
-
-      const merged = portfolio?.symbols
-        ? searchResults?.filter((r) => !portfolio.symbols.includes(r.symbol))
-        : searchResults;
-      setResults(merged);
-
-      setLoading(false);
-    };
-
-    if (debouncedSearch.length > 0) {
-      setLoading(true);
-      fetchResults();
-    }
-
-    return () => {
-      isCancelled = true;
-    };
+  const debounceRequest = useCallback(() => {
+    request();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch]);
+  }, []);
+
+  const {
+    isFetching,
+    data: queryResults,
+    refetch,
+    isFetched,
+  } = useQuery({
+    queryFn: async () => {
+      if (!search) return [];
+      const { data } = await axios.get(`/api/search?q=${search}`);
+      const results = data as (Stock & {
+        _count: Prisma.StockCountOutputType;
+      })[];
+      return results.filter((r) => {
+        !stockIds.includes(r.id);
+      });
+    },
+    queryKey: ["search-query"],
+    enabled: false,
+  });
+
+  const { mutate: addToPortfolio, isLoading } = useMutation({
+    mutationFn: async () => {
+      if (selected.length < 1)
+        return toast({ description: "Please select atleast one stock." });
+      if (selected.length >= 20)
+        return toast({ description: "You can only add 20 stocks at a time." });
+
+      const payload: ModifySymbolsPortfolioProps = {
+        portfolioId: portfolio.id,
+        stockIds: selected,
+      };
+      await axios.post("/api/portfolio/add", payload);
+    },
+    onError: () => {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: `Failed to add stocks to portfolio.`,
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      startTransition(() => router.refresh());
+      onClose();
+
+      toast({
+        description: `Added stocks to portfolio.`,
+      });
+    },
+  });
 
   return (
-    <>
-      <Input
-        id="search"
-        onChange={setSearch}
-        heading="Search Stocks"
-        subheading="Search companies by name or ticker"
-        label="Enter company name..."
+    <Command.Command className="relative rounded-lg border max-w-lg z-50 overflow-visible">
+      <Command.CommandInput
+        isLoading={isFetching}
+        onValueChange={(text) => {
+          setSearch(text);
+          debounceRequest();
+        }}
+        value={search}
+        className="outline-none border-none focus:border-none focus:outline-none ring-0"
+        placeholder="Search stocks..."
       />
-      <div className="f-col gap-1">
-        {search && (
-          <>
-            {!loading ? (
-              <>
-                {results?.slice(0, 4).map((result) => (
-                  <div
-                    className="flex items-center justify-between rounded-md bg-moon-400 p-1 px-2 h-12"
-                    key={result.symbol}>
-                    <div className="flex items-center gap-2">
-                      <div className="image h-[30px] w-[30px]">
-                        <Image
-                          src={result.image}
-                          height={30}
-                          width={30}
-                          alt={result.symbol + "Logo"}
-                        />
-                      </div>
-                      <div className="f-col">
-                        <p className="text-sm font-medium">{result.symbol}</p>
-                        <p className="w-[250px] text-[12px] text-slate-600">
-                          {result.companyName}
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                      {selected.includes(result.symbol) ? (
-                        <Button
-                          icon={<Trash className="h-4 w-4" />}
-                          color="red"
-                          onClick={() =>
-                            setSelected(
-                              selected.filter((s) => s !== result.symbol)
-                            )
-                          }
-                        />
-                      ) : (
-                        <Button
-                          icon={<Plus className="h-4 w-4" />}
-                          color="green"
-                          onClick={() =>
-                            setSelected([...selected, result.symbol])
-                          }
-                          outline
-                        />
-                      )}
+
+      {search.length > 0 && (
+        <Command.CommandList className="absolute bg-white top-full inset-x-0 shadow rounded-b-md">
+          {isFetched && (
+            <Command.CommandEmpty>No results found.</Command.CommandEmpty>
+          )}
+          {(queryResults?.length ?? 0) > 0 ? (
+            <Command.CommandGroup heading="Stocks">
+              {queryResults?.map((result) => (
+                <Command.CommandItem
+                  className="flex items-center justify-between rounded-md bg-moon-400 p-1 px-2 h-12"
+                  key={result.symbol}>
+                  <div className="flex items-center gap-2">
+                    <StockImage src={result.image} px={30} />
+                    <div className="f-col">
+                      <p className="text-sm font-medium">{result.symbol}</p>
+                      <p className="w-[250px] text-[12px] text-slate-600">
+                        {result.companyName}
+                      </p>
                     </div>
                   </div>
-                ))}
-              </>
-            ) : (
-              <>
-                {[...Array(4)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="animate-pulse-right h-12 rounded-md
-                p-1 px-2"></div>
-                ))}
-              </>
-            )}
-          </>
-        )}
-      </div>
-      <Button
-        icon={<Plus className="h-4 w-4" />}
-        label="Add Stocks"
-        color="green"
-        onClick={handleClick}
-        outline
-      />
-    </>
+                  <div>
+                    {selected.includes(result.symbol) ? (
+                      <Button
+                        onClick={() =>
+                          setSelected(
+                            selected.filter((s) => s !== result.symbol)
+                          )
+                        }>
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() =>
+                          setSelected([...selected, result.symbol])
+                        }>
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                </Command.CommandItem>
+              ))}
+            </Command.CommandGroup>
+          ) : (
+            <>
+              {[...Array(4)].map((_, i) => (
+                <div
+                  key={i}
+                  className="animate-pulse-right h-12 rounded-md p-1 px-2"
+                />
+              ))}
+            </>
+          )}
+        </Command.CommandList>
+      )}
+      <Button isLoading={isLoading} onClick={() => addToPortfolio()}>
+        <Plus className="h-4 w-4" />
+        Add to Portfolio
+      </Button>
+    </Command.Command>
   );
 }

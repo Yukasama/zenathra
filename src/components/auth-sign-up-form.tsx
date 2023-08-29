@@ -1,16 +1,29 @@
 "use client";
 
-import { useState } from "react";
-import { AuthInput, Button, Checkbox } from "@/components/ui";
-import { OAuth } from "@/components";
+import OAuth from "./oauth";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { signUp } from "@/lib/user-update";
 import { z } from "zod";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
-import { ArrowRightCircle } from "lucide-react";
+import { FieldValues, useForm } from "react-hook-form";
+import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
+import Link from "next/link";
+import { toast } from "@/hooks/use-toast";
+import { LogIn } from "lucide-react";
+import { UserSignUpProps } from "@/lib/validators/user";
+import { useMutation } from "@tanstack/react-query";
+import { startTransition } from "react";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "./ui/input";
+import axios from "axios";
 
 const RegisterSchema = z
   .object({
@@ -19,6 +32,7 @@ const RegisterSchema = z
       .string()
       .min(11, "Password must contain 11 or more characters."),
     confPassword: z.string(),
+    remember: z.boolean().optional(),
   })
   .refine((data) => data.password === data.confPassword, {
     message: "Passwords do not match",
@@ -27,81 +41,110 @@ const RegisterSchema = z
 
 export default function AuthSignUpForm() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FieldValues>({
+  const form = useForm({
     resolver: zodResolver(RegisterSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      confPassword: "",
+  });
+
+  const { mutate: register, isLoading } = useMutation({
+    mutationFn: async (data: UserSignUpProps) => {
+      await axios.post("/api/user/sign-up", { ...data });
+    },
+    onError: () => {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: `Please check your credentials and try again.`,
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      startTransition(() => router.refresh());
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    setLoading(true);
-
-    const { error } = await signUp(data.email, data.password);
-
-    if (error) toast.error(error || "An error occurred during signup.");
-    else {
-      await signIn("credentials", { ...data, redirect: true }).then(
-        (callback) => {
-          setLoading(false);
-
-          if (callback?.ok) router.refresh();
-          if (callback?.error) toast.error(callback.error);
-        }
-      );
-    }
-  };
+  function onSubmit(data: FieldValues) {
+    const payload: UserSignUpProps = {
+      email: data.email,
+      password: data.password,
+      remember: data.remember,
+    };
+    register(payload);
+  }
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        autoComplete="off"
-        className="f-col gap-3">
-        <AuthInput
-          id="email"
-          type="email"
-          label="Email"
-          register={register}
-          errors={errors}
-        />
-        <AuthInput
-          id="password"
-          type="password"
-          label="Password"
-          register={register}
-          errors={errors}
-        />
-        <AuthInput
-          id="confPassword"
-          type="password"
-          label="Confirm Password"
-          register={register}
-          errors={errors}
-        />
-
-        <Checkbox
-          className="ml-1.5"
-          heading="Remember Me"
-          label="Keep me logged in on this device."
-          onChange={() => {}}
-        />
-
-        <Button
-          loading={loading}
-          label="Sign Up"
-          icon={<ArrowRightCircle className="h-4 w-4" />}
-        />
-      </form>
-
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-2/3 space-y-6">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>E-Mail</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="Enter your E-Mail" {...field} />
+                </FormControl>
+                <FormDescription>
+                  This is the email you used to sign up.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="Enter your Password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="confpassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="Confirm your Password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="remember"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>Remember Me</FormLabel>
+                  <FormDescription>
+                    Keep me logged in on this device
+                  </FormDescription>
+                </div>
+              </FormItem>
+            )}
+          />
+          <Button isLoading={isLoading}>
+            <LogIn className="h-4 w-4" />
+            Sign Up
+          </Button>
+        </form>
+      </Form>
       <div className="flex items-center">
         <div className="h-[1px] flex-1 bg-slate-400/60 dark:bg-moon-100"></div>
         <div className="f-box h-10 w-10 rounded-full border border-slate-400/60 text-[12px] text-slate-400 dark:border-moon-100">

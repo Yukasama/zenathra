@@ -1,5 +1,5 @@
-import { getIndexQuotes } from "@/lib/quote-get";
-import { StockPrice } from "@/components";
+import { getIndexQuotes } from "@/lib/fmp";
+import StockPrice from "./stock-price";
 
 export const IndexListLoading = () => {
   return <div className="animate-pulse-right flex min-h-[450px] flex-1"></div>;

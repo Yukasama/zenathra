@@ -68,7 +68,10 @@ export default async function page({ params: { id } }: Props) {
               alt="No Stocks"
             />
           </div>
-          <PortfolioAddModal portfolio={portfolio} />
+          <PortfolioAddModal
+            portfolio={portfolio}
+            stockIds={stockIds.map((s) => s.stockId)}
+          />
         </div>
       );
     return <p>No Stocks in this portfolio.</p>;
@@ -107,7 +110,12 @@ export default async function page({ params: { id } }: Props) {
               className="wrapper"
             />
           </Suspense>
-          {session?.user && <PortfolioAddButton portfolio={portfolio} />}
+          {session?.user && (
+            <PortfolioAddButton
+              portfolio={portfolio}
+              stockIds={stockIds.map((s) => s.stockId)}
+            />
+          )}
         </div>
       ) : (
         <h2>There are no stocks in this portfolio.</h2>
