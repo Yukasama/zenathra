@@ -1,8 +1,8 @@
 "use client";
 
-import { Portfolio } from "@/types/db";
+import { Portfolio } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui";
+import { Button } from "./ui/button";
 import { startTransition } from "react";
 import axios from "axios";
 import { toast } from "@/hooks/use-toast";
@@ -23,8 +23,7 @@ export default function PortfolioDeleteButton({ portfolio }: Props) {
         portfolioId: portfolio.id,
       };
 
-      const { data } = await axios.post("/api/portfolio/delete", payload);
-      return data as string;
+      await axios.post("/api/portfolio/delete", payload);
     },
     onError: () => {
       toast({
@@ -47,11 +46,11 @@ export default function PortfolioDeleteButton({ portfolio }: Props) {
 
   return (
     <Button
-      color="red"
-      loading={isLoading}
-      label="Delete"
-      onClick={() => deletePortfolio()}
-      icon={<Trash className="h-4 w-4" />}
-    />
+      isLoading={isLoading}
+      variant="destructive"
+      onClick={() => deletePortfolio()}>
+      <Trash className="h-4 w-4" />
+      Delete
+    </Button>
   );
 }

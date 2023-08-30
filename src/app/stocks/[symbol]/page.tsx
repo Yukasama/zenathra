@@ -1,4 +1,4 @@
-import { StockChartLoading } from "@/components/stock-chart";
+import { StockChartLoading } from "@/components/chart-line";
 import StockList, { StockListLoading } from "@/components/stock-list";
 import StockMetrics from "@/components/stock-metrics";
 import StockEye from "@/components/stock-eye";

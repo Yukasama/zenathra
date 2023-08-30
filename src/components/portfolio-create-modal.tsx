@@ -13,18 +13,9 @@ import {
 } from "@/lib/validators/portfolio";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { title } from "process";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import * as Form from "./ui/form";
 
 interface Props {
   numberOfPortfolios?: number;
@@ -43,12 +34,12 @@ export default function PortfolioCreateModal({
 
   const { mutate: createPortfolio, isLoading } = useMutation({
     mutationFn: async (data: CreatePortfolioProps) => {
-      if (title.length < 1)
+      if (data.title.length < 1)
         return toast({
           title: "Oops! Something went wrong.",
           description: "Please choose a longer title.",
         });
-      if (title.length > 30)
+      if (data.title.length > 30)
         return toast({
           title: "Oops! Something went wrong.",
           description: "Please choose a shorter title.",
@@ -73,7 +64,7 @@ export default function PortfolioCreateModal({
       onClose();
 
       toast({
-        description: `Portfolio ${title} successfully created.`,
+        description: `Portfolio successfully created.`,
       });
     },
   });
@@ -83,44 +74,45 @@ export default function PortfolioCreateModal({
       title: data.title,
       publicPortfolio: data.publicPortfolio,
     };
+
     createPortfolio(payload);
   }
 
   return (
-    <Form {...form}>
+    <Form.Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-        <FormField
+        <Form.FormField
           control={form.control}
           name="title"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
+            <Form.FormItem>
+              <Form.FormLabel>Title</Form.FormLabel>
+              <Form.FormControl>
                 <Input placeholder="Choose your name..." {...field} required />
-              </FormControl>
-              <FormDescription>
+              </Form.FormControl>
+              <Form.FormDescription>
                 This is what your portfolio will be called.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
+              </Form.FormDescription>
+              <Form.FormMessage />
+            </Form.FormItem>
           )}
         />
-        <FormField
+        <Form.FormField
           control={form.control}
           name="publicPortfolio"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-              <FormControl>
+            <Form.FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <Form.FormControl>
                 <Checkbox
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
-              </FormControl>
+              </Form.FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel>Make public</FormLabel>
-                <FormDescription>Display portfolio publicly?</FormDescription>
+                <Form.FormLabel>Make public</Form.FormLabel>
+                <Form.FormDescription>Display portfolio publicly?</Form.FormDescription>
               </div>
-            </FormItem>
+            </Form.FormItem>
           )}
         />
         <Button isLoading={isLoading}>
@@ -128,6 +120,6 @@ export default function PortfolioCreateModal({
           Create Portfolio
         </Button>
       </form>
-    </Form>
+    </Form.Form>
   );
 }

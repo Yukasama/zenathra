@@ -1,39 +1,46 @@
 "use client";
 
-import toast from "react-hot-toast";
-import { Portfolio } from "@/types/db";
-import { Button, ModalForm } from "@/components/ui";
+import { Button } from "./ui/button";
+import ModalForm from "./ui/modal-form";
 import { useState } from "react";
-import { StockPortfolioAddModal } from "@/components";
+import StockPortfolioAddModal from "./stock-portfolio-add-modal";
 import type { Session } from "next-auth";
 import { Plus } from "lucide-react";
+import { useCustomToasts } from "@/hooks/use-custom-toasts";
+import { toast } from "@/hooks/use-toast";
+import { PortfolioWithStocks } from "@/types/db";
 
 interface Props {
   session: Session | null;
+  symbolId: string;
   symbol: string;
-  portfolios: Portfolio[] | null;
+  portfolios: PortfolioWithStocks[] | null;
   className?: string;
 }
 
 export default function StockPortfolioAddButton({
   session,
+  symbolId,
   symbol,
   portfolios,
   className,
 }: Props) {
   const [open, setOpen] = useState(false);
+  const { loginToast } = useCustomToasts();
 
   const handleClick = () => {
-    if (!session) return toast.error("You have to be logged in.");
+    if (!session) return loginToast();
     if (!portfolios || portfolios.length === 0)
-      return toast.error("You have to create a portfolio first.");
+      return toast({ description: "You have to create a portfolio first." });
 
     setOpen(true);
   };
 
   return (
     <div className={className}>
-      <Button icon={<Plus className="h-4" />} onClick={handleClick} />
+      <Button onClick={handleClick}>
+        <Plus className="h-4" />
+      </Button>
       {portfolios && session?.user && (
         <ModalForm
           title={`Add '${symbol}' to portfolios`}
@@ -41,8 +48,7 @@ export default function StockPortfolioAddButton({
           onClose={() => setOpen(false)}>
           <StockPortfolioAddModal
             portfolios={portfolios}
-            setOpen={() => setOpen(false)}
-            symbol={symbol}
+            symbolId={symbolId}
           />
         </ModalForm>
       )}

@@ -1,13 +1,9 @@
 import { Stock } from "@prisma/client";
-import { getQuote } from "@/lib/quote-get";
 import { StructureProps } from "@/types/layout";
 import { ChevronsUp, ChevronsDown } from "lucide-react";
+import { getQuote } from "@/lib/fmp";
 
-interface SharedProps {
-  className?: string;
-}
-
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   stock: Stock;
 }
 
@@ -22,18 +18,18 @@ function Structure({ className, isLoading, children }: StructureProps) {
   );
 }
 
-export function StockAfterHoursLoading({ className }: SharedProps) {
+export function StockAfterHoursLoading({ className }: StructureProps) {
   return <Structure className={className} isLoading />;
 }
 
-export default async function StockAfterHours({ stock }: Props) {
+export default async function StockAfterHours({ stock, className }: Props) {
   const quote = await getQuote(stock.symbol);
 
   const positive: boolean =
     quote && quote.change ? (quote.change > 0 ? true : false) : true;
 
   return (
-    <Structure>
+    <Structure className={className}>
       <div className="flex h-[40px] w-[350px] items-center gap-1 rounded-lg bg-slate-200 p-2 px-4 dark:bg-moon-400">
         <p className="mr-0.5 text-[15px] text-moon-100 dark:text-slate-400">
           After Hours:

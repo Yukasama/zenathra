@@ -3,7 +3,7 @@ import Image from "next/image";
 import PortfolioAddModal from "@/components/portfolio-add-modal";
 import PortfolioAddButton from "@/components/portfolio-add-button";
 import PortfolioChart from "@/components/portfolio-chart";
-import { StockChartLoading } from "@/components/stock-chart";
+import { StockChartLoading } from "@/components/chart-line";
 import StockList, { StockListLoading } from "@/components/stock-list";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";

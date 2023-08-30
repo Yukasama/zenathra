@@ -1,4 +1,4 @@
-import { StockListItem, StockListItemLoading } from "@/components";
+import StockListItem, { StockListItemLoading } from "./stock-list-item";
 import { StructureProps } from "@/types/layout";
 import React from "react";
 import { db } from "@/lib/db";

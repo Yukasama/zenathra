@@ -1,7 +1,7 @@
-import { Quote, StockImage } from "@/types/stock";
+import { Quote } from "@/types/stock";
 import Image from "next/image";
 import Link from "next/link";
-import { StockPrice } from "@/components";
+import StockPrice from "./stock-price";
 import { StructureProps } from "@/types/layout";
 
 interface SharedProps {
@@ -9,7 +9,7 @@ interface SharedProps {
 }
 interface Props extends SharedProps {
   quote: Quote | null;
-  image: StockImage | null | undefined;
+  image: string | undefined;
 }
 
 function Structure({ className, isLoading, children }: StructureProps) {
@@ -46,7 +46,7 @@ export default function StockCard({ quote, image, className }: Props) {
           <div className="image h-9 w-9 rounded-md">
             <Image
               className="rounded-lg"
-              src={image ? image.image : "/images/stock.jpg"}
+              src={image ?? "/images/stock.jpg"}
               height={36}
               width={36}
               alt={quote.symbol + "Image"}

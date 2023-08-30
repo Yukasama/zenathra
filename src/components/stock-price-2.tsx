@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { StockPortfolioAddButton } from "@/components";
+import StockPortfolioAddButton from "./stock-portfolio-add-button";
 import { StructureProps } from "@/types/layout";
 import React from "react";
 import type { Session } from "next-auth";
@@ -7,6 +7,7 @@ import { ChevronsDown, ChevronsUp } from "lucide-react";
 import { getQuote } from "@/lib/fmp";
 import { StockImage } from "./shared/stock-image";
 import { Stock } from "@prisma/client";
+import { db } from "@/lib/db";
 
 function Structure({ className, isLoading, children }: StructureProps) {
   return (
@@ -29,7 +30,22 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export default async function StockPrice2({ session, stock }: Props) {
-  const [quote, portfolios] = await Promise.all([getQuote(stock.symbol), null]);
+  const [quote, portfolios] = await Promise.all([
+    getQuote(stock.symbol),
+    db.portfolio.findMany({
+      where: { creatorId: session?.user.id },
+    }),
+  ]);
+
+  const flattenedPortfolios = await Promise.all(
+    portfolios.map(async (portfolio) => ({
+      ...portfolio,
+      stockIds: await db.stockInPortfolio.findMany({
+        select: { stockId: true },
+        where: { portfolioId: portfolio.id },
+      }),
+    }))
+  );
 
   const positive =
     quote && quote.change ? (quote.change > 0 ? true : false) : true;
@@ -76,8 +92,9 @@ export default async function StockPrice2({ session, stock }: Props) {
       <div className="absolute right-2.5 top-2.5 flex">
         <StockPortfolioAddButton
           session={session}
+          symbolId={stock.id}
           symbol={stock.symbol}
-          portfolios={portfolios}
+          portfolios={flattenedPortfolios}
         />
       </div>
     </Structure>

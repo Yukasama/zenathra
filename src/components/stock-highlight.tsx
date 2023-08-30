@@ -1,4 +1,5 @@
-import { StockPrice, StockPriceChart } from "@/components";
+import StockPrice from "./stock-price";
+import StockPriceChart from "./stock-price-chart";
 import { getQuote } from "@/lib/fmp";
 import { db } from "@/lib/db";
 import { StockImage } from "./shared/stock-image";

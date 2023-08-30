@@ -8,3 +8,16 @@ export type User = Omit<
   updatedAt: string;
   emailVerified: string | null;
 };
+
+export type PortfolioWithStocks = {
+  stockIds: {
+    stockId: string;
+  }[];
+  title: string;
+  image: string | null;
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  creatorId: string;
+  public: boolean;
+};

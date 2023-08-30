@@ -1,4 +1,4 @@
-import { StockCard } from "@/components";
+import StockCard from "./stock-card";
 import { getQuotes } from "@/lib/fmp";
 import { StructureProps } from "@/types/layout";
 import { db } from "@/lib/db";
@@ -19,11 +19,11 @@ function Structure({ className, isLoading, children }: StructureProps) {
 export const StockCardListLoading = () => {
   return (
     <div className="flex min-h-[100px] justify-evenly gap-4 border-y border-slate-200 py-3 dark:border-moon-200">
-      <StockCard quote={null} image={null} />
-      <StockCard quote={null} image={null} />
-      <StockCard quote={null} image={null} />
-      <StockCard quote={null} image={null} />
-      <StockCard quote={null} image={null} />
+      <StockCard quote={null} image={undefined} />
+      <StockCard quote={null} image={undefined} />
+      <StockCard quote={null} image={undefined} />
+      <StockCard quote={null} image={undefined} />
+      <StockCard quote={null} image={undefined} />
     </div>
   );
 };
@@ -55,7 +55,7 @@ export default async function StockCardList({ symbols }: Props) {
         <StockCard
           key={i}
           quote={quote}
-          image={images && images.find((s) => s.symbol === quote.symbol)}
+          image={images && images.find((s) => s.symbol === quote.symbol)?.image}
         />
       ))}
     </div>
