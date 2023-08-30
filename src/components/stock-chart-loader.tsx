@@ -14,5 +14,5 @@ export default async function StockChartLoader({ symbol }: Props) {
 
   const history = await axios.post("/api/stock/history", payload);
 
-  return <StockPriceChart history={history} />;
+  return <StockPriceChart data={history} />;
 }

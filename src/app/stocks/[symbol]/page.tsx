@@ -1,4 +1,3 @@
-import { StockChartLoading } from "@/components/chart-line";
 import StockList, { StockListLoading } from "@/components/stock-list";
 import StockMetrics from "@/components/stock-metrics";
 import StockEye from "@/components/stock-eye";
@@ -72,8 +71,8 @@ export default async function Symbol({ params: { symbol } }: Props) {
             <StockEye stock={stock} session={session} />
           </div>
           <div className="my-4 flex gap-4 border-b border-slate-300 pb-4 dark:border-moon-100">
-            <Suspense fallback={<StockChartLoading />}>
-              <StockChartLoader symbol={symbol} />
+            <Suspense fallback={<p>Loading...</p>}>
+              {/* <StockChartLoader symbol={symbol} /> */}
             </Suspense>
             <Suspense
               fallback={<StockListLoading title="Peers" className="wrapper" />}>
@@ -90,7 +89,7 @@ export default async function Symbol({ params: { symbol } }: Props) {
         </div>
       </div>
       <Suspense fallback={<StockStatisticsLoading />}>
-        <StockStatistics symbol={symbol} />
+        {/* <StockStatistics symbol={symbol} /> */}
       </Suspense>
     </div>
   );

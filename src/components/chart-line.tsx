@@ -67,7 +67,7 @@ const data = [
 interface Props {
   title?: string;
   description?: string;
-  data: { name: string; uv: number; pv: number; amt: number }[];
+  data: { name: string; uv: number; pv: number; amt?: number }[];
 }
 
 export default function ChartLine({ title, description, data }: Props) {

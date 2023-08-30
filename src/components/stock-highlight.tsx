@@ -75,8 +75,7 @@ export default async function StockHighlight({ symbol, className }: Props) {
               <StockPrice quote={quote} />
             </div>
             <StockPriceChart
-              history={data}
-              size="md"
+              data={data}
               className="scale-[0.7] -translate-x-[72px] sm:translate-x-0 sm:scale-100"
             />
           </div>

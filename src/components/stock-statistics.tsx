@@ -1,8 +1,9 @@
-import { StockLineChart, StockBarChart } from "@/components";
-import { getFinancials } from "@/lib/stock-get";
+import ChartLine from "./chart-line";
+import ChartBar from "./chart-bar";
 import { Financials } from "@prisma/client";
 import { Years } from "@/lib/utils";
 import { StructureProps } from "@/types/layout";
+import axios from "axios";
 
 interface SharedProps {
   className?: string;
@@ -29,7 +30,9 @@ export function StockStatisticsLoading({ className }: SharedProps) {
 }
 
 export default async function StockStatistics({ symbol, className }: Props) {
-  const fin = await getFinancials(symbol);
+  const fin = (await axios.post("/api/stock/financials", {
+    symbol,
+  })) as Financials[];
   if (!fin) return null;
 
   const startYear = 2015;
@@ -37,54 +40,52 @@ export default async function StockStatistics({ symbol, className }: Props) {
 
   const statConfig = [
     {
-      label: "P/E Ratio",
-      data: fin.map((financials: Financials) => financials.peRatio),
-      color: "0, 153, 235",
+      name: "P/E Ratio",
+      uv: fin.map((financials: Financials) => financials.peRatio),
+      pv: labels,
     },
     {
-      label: "EPS",
-      data: fin.map((financials: Financials) => financials.eps),
-      color: "135, 0, 235",
+      name: "EPS",
+      uv: fin.map((financials: Financials) => financials.eps),
+      pv: labels,
     },
     {
-      label: "P/B Ratio",
-      data: fin.map((financials: Financials) => financials.pbRatio),
-      color: "0, 255, 150",
+      name: "P/B Ratio",
+      uv: fin.map((financials: Financials) => financials.pbRatio),
+      pv: labels,
     },
   ];
 
   const marginConfig = [
     {
-      label: "Gross Margin",
-      data: fin.map((financials: Financials) => financials.grossProfitMargin),
-      color: "0, 175, 235",
+      name: "Gross Margin",
+      uv: fin.map((financials: Financials) => financials.grossProfitMargin),
+      pv: labels,
     },
     {
-      label: "Operating Margin",
-      data: fin.map(
-        (financials: Financials) => financials.operatingProfitMargin
-      ),
-      color: "0, 115, 245",
+      name: "Operating Margin",
+      uv: fin.map((financials: Financials) => financials.operatingProfitMargin),
+      pv: labels,
     },
     {
-      label: "Profit Margin",
-      data: fin.map((financials: Financials) => financials.netProfitMargin),
-      color: "0, 65, 235",
+      name: "Profit Margin",
+      uv: fin.map((financials: Financials) => financials.netProfitMargin),
+      pv: labels,
     },
   ];
 
   const dividendConfig = [
     {
-      label: "Dividend %",
-      data: fin.map((financials: Financials) => financials.dividendYield),
-      color: "0, 255, 150",
+      name: "Dividend %",
+      uv: fin.map((financials: Financials) => financials.dividendYield),
+      pv: labels,
     },
   ];
 
   return (
     <Structure className={className}>
-      <StockLineChart title="Statistics" labels={labels} data={statConfig} />
-      <StockBarChart
+      <ChartLine title="Statistics" labels={labels} data={statConfig} />
+      <ChartBar
         title="Margins"
         labels={labels}
         data={marginConfig}
