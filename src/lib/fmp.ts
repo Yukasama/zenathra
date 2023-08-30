@@ -67,6 +67,8 @@ async function getQuote(symbol: string): Promise<Quote | null> {
 
 async function getQuotes(symbols: string[]): Promise<Quote[] | null> {
   try {
+    if (fmpConfig.simulation) return [quote, quote, quote, quote, quote];
+
     if (symbols.length > 20) symbols = symbols.slice(0, 20);
 
     const url = `${FMP_API_URL}v3/quote/${symbols.join(",")}?apikey=${
@@ -86,6 +88,12 @@ async function getSymbols(
   pullTimes = 1
 ): Promise<string[][] | null> {
   try {
+    if (fmpConfig.simulation)
+      return [
+        ["AAPL", "MSFT", "GOOG"],
+        ["TSLA", "NVDA", "META"],
+      ];
+
     const url = fmpUrls[symbolSet];
 
     const { data } = await axios.get(url);

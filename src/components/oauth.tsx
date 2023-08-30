@@ -36,11 +36,8 @@ export default function OAuth({ provider, className, ...props }: Props) {
     <div className={cn("flex justify-center", className)} {...props}>
       <Button
         isLoading={isLoading}
-        type="button"
-        size="sm"
-        className="w-full"
-        onClick={onSubmit}
-        disabled={isLoading}>
+        className="w-full border"
+        onClick={onSubmit}>
         {!isLoading && <Icons.google className="h-4 w-4 mr-2" />}
         {provider[0].toUpperCase() + provider.slice(1)}
       </Button>

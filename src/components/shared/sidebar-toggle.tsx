@@ -13,7 +13,7 @@ export default function SidebarToggle({ children, className }: Props) {
 
   return (
     <Button
-      size="xs"
+      size="sm"
       variant="subtle"
       className={cn(className)}
       onClick={() => toggleSidebar()}>

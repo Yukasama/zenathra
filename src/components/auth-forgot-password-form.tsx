@@ -55,7 +55,7 @@ export default function AuthForgotPasswordForm() {
         <div className="flex items-center gap-1">
           <p>Password successfully changed?</p>
           <Link
-            href="/auth/sign-in"
+            href="/sign-in"
             className="rounded-md p-1 px-1.5 font-medium text-blue-500 hover:bg-slate-300 dark:hover:bg-zinc-200">
             Head to Login.
           </Link>

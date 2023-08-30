@@ -1,74 +1,59 @@
 import { Quote } from "@/types/stock";
-import Image from "next/image";
 import Link from "next/link";
 import StockPrice from "./stock-price";
-import { StructureProps } from "@/types/layout";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { StockImage } from "./shared/stock-image";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "./ui/button";
+import React from "react";
 
-interface SharedProps {
-  className?: string;
-}
-interface Props extends SharedProps {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   quote: Quote | null;
   image: string | undefined;
 }
 
-function Structure({ className, isLoading, children }: StructureProps) {
-  return (
-    <div
-      className={`${
-        isLoading && "animate-pulse-right"
-      } box f-box h-[200px] w-[300px] min-w-[150px] shadow-md ${className}`}>
-      {children}
-    </div>
-  );
-}
-
-export function StockCardLoading({ className }: SharedProps) {
-  return <Structure className={className} isLoading />;
-}
-
 export default function StockCard({ quote, image, className }: Props) {
-  if (!quote || !quote.symbol)
-    return (
-      <Structure>
-        <p className="text-lg font-medium text-slate-600">
-          Stock Could Not Be Loaded
-        </p>
-      </Structure>
-    );
+  if (!quote) return <div className="flex">Stock could not be loaded</div>;
 
   return (
-    <Structure className={className}>
-      <Link
-        className="h-full w-full f-col justify-between gap-1 p-3 transition-transform duration-500 hover:scale-[1.02]"
-        href={`/stocks/${quote.symbol}`}>
-        <div className="f-col lg:flex-row items-center gap-1">
-          <div className="image h-9 w-9 rounded-md">
-            <Image
-              className="rounded-lg"
-              src={image ?? "/images/stock.jpg"}
-              height={36}
-              width={36}
-              alt={quote.symbol + "Image"}
-              loading="lazy"
-            />
-          </div>
-          <div className="f-col">
-            <div className="w-[130px] truncate text-center text-[14px] font-normal xl:w-[200px] xl:text-left xl:text-[16px] xl:font-medium">
-              {quote.name}
-            </div>
-            <div className="text-center text-[11px] text-slate-500 dark:text-slate-700 xl:text-left">
-              {quote.symbol}
+    <Link
+      className="hover:scale-[1.01] transition duration-300"
+      href={`/stocks/${quote.symbol}`}>
+      <Card className={cn(className)}>
+        <CardHeader>
+          <div className="flex justify-between">
+            <div className="flex gap-3">
+              <StockImage src={image} px={40} priority />
+              <div className="f-col gap-1">
+                <CardTitle>{quote.symbol}</CardTitle>
+                <CardDescription>{quote?.name}</CardDescription>
+              </div>
             </div>
           </div>
-        </div>
+        </CardHeader>
 
-        {/* <div className="px-2 py-1 rounded-md shadow-sm">
-        <p className="text-[12px]">{stock?.sector || "N/A"}</p>
-      </div> */}
+        <CardContent className="flex gap-3">
+          <div
+            className={cn(buttonVariants({ variant: "subtle", size: "sm" }))}>
+            Technology
+          </div>
+          <div
+            className={cn(buttonVariants({ variant: "subtle", size: "sm" }))}>
+            Computer Devices
+          </div>
+        </CardContent>
 
-        <StockPrice quote={quote} />
-      </Link>
-    </Structure>
+        <CardFooter>
+          <StockPrice quote={quote} />
+        </CardFooter>
+      </Card>
+    </Link>
   );
 }

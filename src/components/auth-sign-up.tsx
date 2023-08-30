@@ -1,16 +1,16 @@
 "use client";
 
-import { signIn } from "next-auth/react";
-import { FieldValues, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "./ui/button";
-import { Checkbox } from "./ui/checkbox";
 import OAuth from "./oauth";
 import { useRouter } from "next/navigation";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FieldValues, useForm } from "react-hook-form";
+import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
 import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
 import { LogIn } from "lucide-react";
-import { UserSignInProps, UserSignInSchema } from "@/lib/validators/user";
+import { UserSignUpProps } from "@/lib/validators/user";
 import { useMutation } from "@tanstack/react-query";
 import { startTransition } from "react";
 import {
@@ -23,16 +23,33 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "./ui/input";
+import axios from "axios";
 
-export default function AuthSignInForm() {
+const RegisterSchema = z
+  .object({
+    email: z.string().email("Please enter a valid email."),
+    password: z
+      .string()
+      .min(11, "Password must contain 11 or more characters."),
+    confPassword: z.string(),
+    remember: z.boolean().optional(),
+  })
+  .refine((data) => data.password === data.confPassword, {
+    message: "Passwords do not match",
+    path: ["confPassword"],
+  });
+
+export default function AuthSignUp() {
   const router = useRouter();
 
   const form = useForm({
-    resolver: zodResolver(UserSignInSchema),
+    resolver: zodResolver(RegisterSchema),
   });
 
-  const { mutate: login, isLoading } = useMutation({
-    mutationFn: (data: UserSignInProps) => signIn("credentials", { ...data }),
+  const { mutate: register, isLoading } = useMutation({
+    mutationFn: async (data: UserSignUpProps) => {
+      await axios.post("/api/user/sign-up", { ...data });
+    },
     onError: () => {
       toast({
         title: "Oops! Something went wrong.",
@@ -46,17 +63,20 @@ export default function AuthSignInForm() {
   });
 
   function onSubmit(data: FieldValues) {
-    const payload: UserSignInProps = {
+    const payload: UserSignUpProps = {
       email: data.email,
       password: data.password,
+      remember: data.remember,
     };
-    login(payload);
+    register(payload);
   }
 
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 f-col">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-2/3 space-y-6">
           <FormField
             control={form.control}
             name="email"
@@ -64,8 +84,15 @@ export default function AuthSignInForm() {
               <FormItem>
                 <FormLabel>E-Mail</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your E-Mail" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="Enter your E-Mail"
+                    {...field}
+                  />
                 </FormControl>
+                <FormDescription>
+                  This is the email you used to sign up.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -77,7 +104,28 @@ export default function AuthSignInForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your Password" {...field} />
+                  <Input
+                    type="password"
+                    placeholder="Enter your Password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="confpassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Confirm your Password"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -87,7 +135,7 @@ export default function AuthSignInForm() {
             control={form.control}
             name="remember"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -103,14 +151,9 @@ export default function AuthSignInForm() {
               </FormItem>
             )}
           />
-          <Link
-            href="/auth/forgot-password"
-            className="ml-auto rounded-md p-1 px-2 text-sm text-blue-500 hover:bg-blue-500/10">
-            Forgot Password?
-          </Link>
           <Button isLoading={isLoading}>
-            <LogIn className="h-4" />
-            Sign In
+            <LogIn className="h-4 w-4" />
+            Sign Up
           </Button>
         </form>
       </Form>

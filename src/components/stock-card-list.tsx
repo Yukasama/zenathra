@@ -2,9 +2,18 @@ import StockCard from "./stock-card";
 import { getQuotes } from "@/lib/fmp";
 import { StructureProps } from "@/types/layout";
 import { db } from "@/lib/db";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 interface Props {
   symbols: string[] | null;
+  title: string;
+  description?: string;
 }
 
 function Structure({ className, isLoading, children }: StructureProps) {
@@ -28,7 +37,11 @@ export const StockCardListLoading = () => {
   );
 };
 
-export default async function StockCardList({ symbols }: Props) {
+export default async function StockCardList({
+  symbols,
+  title,
+  description,
+}: Props) {
   if (!symbols)
     return (
       <div className="f-col gap-3">
@@ -50,14 +63,22 @@ export default async function StockCardList({ symbols }: Props) {
   if (!Array.isArray(images) && images) images = [images];
 
   return (
-    <div className="flex min-h-[100px] justify-evenly gap-4 border-y border-slate-200 py-3 dark:border-zinc-200">
-      {quotes.map((quote, i) => (
-        <StockCard
-          key={i}
-          quote={quote}
-          image={images && images.find((s) => s.symbol === quote.symbol)?.image}
-        />
-      ))}
-    </div>
+    <Card className="border-none">
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      <CardContent className="flex justify-between gap-4">
+        {quotes.map((quote, i) => (
+          <StockCard
+            key={i}
+            quote={quote}
+            image={
+              images && images.find((s) => s.symbol === quote.symbol)?.image
+            }
+          />
+        ))}
+      </CardContent>
+    </Card>
   );
 }

@@ -21,7 +21,7 @@ export default async function IndexList() {
         <CardTitle>Index List</CardTitle>
         <CardDescription>Most popular indexes</CardDescription>
       </CardHeader>
-      <CardContent className="f-col gap-2 w-full">
+      <CardContent className="f-col gap-4 w-full">
         {indexQuotes &&
           indexQuotes.map((q) => (
             <div key={q.symbol} className="flex justify-between">

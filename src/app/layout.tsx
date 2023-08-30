@@ -30,10 +30,7 @@ export default async function RootLayout({ children, authModal }: LayoutProps) {
   return (
     <html
       lang="en"
-      className={cn(
-        "bg-white text-slate-900 antialiased light",
-        inter.className
-      )}
+      className={cn("text-slate-900 antialiased light", inter.className)}
       suppressHydrationWarning>
       <body className="w-screen h-screen flex overflow-hidden">
         <Provider>

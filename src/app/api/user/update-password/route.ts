@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import z from "zod";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { getAuthSession } from "@/lib/auth";
 import {
   ConflictResponse,

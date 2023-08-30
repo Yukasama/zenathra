@@ -13,18 +13,14 @@ export default function ThemeToggle() {
     setMounted(true);
   }, []);
 
-  if (!mounted)
-    return (
-      <div className="essential icon animate-pulse-right">
-        <Sun className="invisible h-5" />
-      </div>
-    );
-
   return (
     <>
       {!mounted ? (
-        <Button variant="outline" size="sm" className="">
-          <Moon className="h-5" />
+        <Button
+          variant="link"
+          size="sm"
+          className="essential animate-pulse-right">
+          <Moon className="h-5 invisible" />
         </Button>
       ) : (
         <Button

@@ -1,19 +1,19 @@
 import Link from "next/link";
-import AuthSignInForm from "@/components/auth-sign-in-form";
+import AuthSignUp from "@/components/auth-sign-up";
 
 export default function page() {
   return (
     <>
       <h2 className="mb-1.5 text-center text-xl font-medium">
-        Sign In To Your Account
+        Create Your Account
       </h2>
-      <AuthSignInForm />
+      <AuthSignUp />
       <div className="f-box mt-2 gap-1">
-        <p className="text-sm">New to our platform?</p>
+        <p className="text-sm">Already with us?</p>
         <Link
-          href="/auth/sign-up"
+          href="/auth/signin"
           className="rounded-md p-1 px-1.5 text-sm font-medium text-blue-500 hover:bg-slate-300 dark:hover:bg-zinc-200">
-          Sign Up.
+          Sign In.
         </Link>
       </div>
     </>

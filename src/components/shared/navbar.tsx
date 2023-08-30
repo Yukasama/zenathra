@@ -18,8 +18,6 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import NavbarMenu from "./navbar-menu";
 
-
-
 export default async function Navbar() {
   const session = await getAuthSession();
 
@@ -38,7 +36,7 @@ export default async function Navbar() {
         {!session?.user && (
           <div className="hidden items-center gap-3 lg:flex">
             <Link
-              href="/auth/sign-in"
+              href="/sign-in"
               className={buttonVariants({ variant: "subtle" })}>
               Sign In
             </Link>

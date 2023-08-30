@@ -71,7 +71,7 @@ export default function SidebarPortableClient({ session }: Props) {
         }
       : {
           title: "Login",
-          to: "/auth/sign-in",
+          to: "/sign-in",
           icon: <LogIn className="h-[22px]" />,
         },
   ];

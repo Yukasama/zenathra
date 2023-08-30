@@ -10,17 +10,40 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { Card } from "./ui/card";
+
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: {
+  active: any;
+  payload: any;
+  label: any;
+}) => {
+  if (active && payload && payload.length) {
+    return (
+      <Card className="p-2">
+        <p className="text-[15px]">{label}</p>
+        <p className="text-sm text-[#8884d8]">{payload[0].value}</p>
+        <p className="text-sm text-[#82ca9d]">{payload[1].value}</p>
+      </Card>
+    );
+  }
+
+  return null;
+};
 
 export default function ChartArea({ data, size = "md" }: ChartProps) {
-  const [isClient, setIsClient] = useState<boolean>(false);
+  const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsClient(true);
+    setMounted(true);
   }, []);
 
   return (
     <>
-      {isClient ? (
+      {mounted ? (
         <AreaChart
           width={size === "sm" ? 450 : size === "md" ? 600 : 800}
           height={size === "sm" ? 225 : size === "md" ? 300 : 400}
@@ -39,7 +62,8 @@ export default function ChartArea({ data, size = "md" }: ChartProps) {
           <XAxis dataKey="name" fontSize={12} />
           <YAxis fontSize={12} />
           <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-          <Tooltip />
+          {/* @ts-ignore */}
+          <Tooltip content={<CustomTooltip />} />
           <Area
             type="monotone"
             dataKey="uv"

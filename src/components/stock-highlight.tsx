@@ -109,9 +109,9 @@ export default async function StockHighlight({ symbol, className }: Props) {
         <div className="flex justify-between">
           <div className="flex gap-3">
             <StockImage src={image?.image} px={40} priority />
-            <div className="f-col">
-              <p className="text-xl">{symbol}</p>
-              <p className="truncate text-sm text-zinc-400">{quote?.name}</p>
+            <div className="f-col gap-1">
+              <CardTitle>{symbol}</CardTitle>
+              <CardDescription>{quote?.name}</CardDescription>
             </div>
           </div>
           <StockPrice quote={quote} />

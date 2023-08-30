@@ -1,4 +1,4 @@
-import AuthSignUpForm from "@/components/auth-sign-up-form";
+import AuthSignUp from "@/components/auth-sign-up";
 import CloseModal from "@/components/close-modal";
 
 export default function page() {
@@ -10,7 +10,7 @@ export default function page() {
             <CloseModal />
           </div>
 
-          <AuthSignUpForm />
+          <AuthSignUp />
         </div>
       </div>
     </div>
