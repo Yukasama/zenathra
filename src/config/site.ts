@@ -4,6 +4,7 @@ interface SiteProps {
   url: string;
   links: { [key: string]: string };
   keywords: string[];
+  creator: string;
 }
 
 export const site: SiteProps = {
@@ -26,6 +27,7 @@ export const site: SiteProps = {
     "stock market app",
     "stock market website",
   ],
+  creator: "Yukasama",
 };
 
 export const footerLinks = [

@@ -50,12 +50,11 @@ export interface Quote {
   timestamp: number;
 }
 
-export interface StockChartProps {
+export interface ChartProps {
   title?: string;
-  labels: string[];
+  description?: string;
   data: {}[];
-  labelinterface?: string;
-  size?: "lg" | "md" | "sm";
+  size?: "sm" | "md" | "lg";
 }
 
 export type StockAction = "actives" | "winners" | "losers";

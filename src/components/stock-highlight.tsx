@@ -1,5 +1,4 @@
 import StockPrice from "./stock-price";
-import StockPriceChart from "./stock-price-chart";
 import { getQuote } from "@/lib/fmp";
 import { db } from "@/lib/db";
 import { StockImage } from "./shared/stock-image";
@@ -7,6 +6,15 @@ import axios from "axios";
 import { StockHistoryProps } from "@/lib/validators/stock";
 import { StructureProps } from "@/types/layout";
 import { cn } from "@/lib/utils";
+import ChartArea from "./chart-area";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   symbol: string | null;
@@ -29,6 +37,51 @@ export function StockHighlightLoading({ className }: StructureProps) {
 }
 
 export default async function StockHighlight({ symbol, className }: Props) {
+  const data = [
+    {
+      name: "Page A",
+      uv: 4000,
+      pv: 2400,
+      amt: 2400,
+    },
+    {
+      name: "Page B",
+      uv: 3000,
+      pv: 1398,
+      amt: 2210,
+    },
+    {
+      name: "Page C",
+      uv: 2000,
+      pv: 9800,
+      amt: 2290,
+    },
+    {
+      name: "Page D",
+      uv: 2780,
+      pv: 3908,
+      amt: 2000,
+    },
+    {
+      name: "Page E",
+      uv: 1890,
+      pv: 4800,
+      amt: 2181,
+    },
+    {
+      name: "Page F",
+      uv: 2390,
+      pv: 3800,
+      amt: 2500,
+    },
+    {
+      name: "Page G",
+      uv: 3490,
+      pv: 4300,
+      amt: 2100,
+    },
+  ];
+
   if (!symbol)
     return (
       <Structure className={className}>
@@ -41,46 +94,32 @@ export default async function StockHighlight({ symbol, className }: Props) {
     range: "1D",
   };
 
-  const [quote, image, { data }] = await Promise.all([
+  const [quote, image] = await Promise.all([
     getQuote(symbol),
     db.stock.findFirst({
       select: { image: true },
       where: { symbol: symbol },
     }),
-    await axios.post("/api/stock/history", payload),
+    // axios.post("/api/stock/history", payload),
   ]);
 
   return (
-    <div className="box f-col flex-1 w-full xl:flex-row min-h-[450px]">
-      {!quote ? (
-        <div className="animate-pulse-right h-full w-full"></div>
-      ) : (
-        <div className="flex flex-1 items-center justify-between gap-4 p-4 md:gap-7 md:p-7">
-          <div className="f-col flex-1 gap-3">
-            <div className="flex items-center gap-3">
-              <div className="image h-[60px] w-[60px]">
-                <StockImage
-                  className="image"
-                  src={image?.image}
-                  px={60}
-                  priority
-                />
-              </div>
-              <div className="f-col">
-                <p className="text-[25px] font-medium">{symbol}</p>
-                <p className="max-w-[220px] truncate text-[15px] font-medium text-slate-600">
-                  {quote.name}
-                </p>
-              </div>
-              <StockPrice quote={quote} />
+    <Card className={cn(className)}>
+      <CardHeader>
+        <div className="flex justify-between">
+          <div className="flex gap-3">
+            <StockImage src={image?.image} px={40} priority />
+            <div className="f-col">
+              <p className="text-xl">{symbol}</p>
+              <p className="truncate text-sm text-zinc-400">{quote?.name}</p>
             </div>
-            <StockPriceChart
-              data={data}
-              className="scale-[0.7] -translate-x-[72px] sm:translate-x-0 sm:scale-100"
-            />
           </div>
+          <StockPrice quote={quote} />
         </div>
-      )}
-    </div>
+      </CardHeader>
+      <CardContent className="grid gap-4">
+        <ChartArea data={data} size="sm" />
+      </CardContent>
+    </Card>
   );
 }

@@ -14,7 +14,7 @@ export const StockScreenerSchema = z.object({
 });
 
 export const SearchStocksSchema = z.object({
-  query: z.string().nonempty(),
+  q: z.string().nonempty(),
 });
 
 export const StockHistorySchema = z.object({

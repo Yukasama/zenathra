@@ -12,7 +12,7 @@ export default function page() {
         <p className="text-sm">New to our platform?</p>
         <Link
           href="/auth/sign-up"
-          className="rounded-md p-1 px-1.5 text-sm font-medium text-blue-500 hover:bg-slate-300 dark:hover:bg-moon-200">
+          className="rounded-md p-1 px-1.5 text-sm font-medium text-blue-500 hover:bg-slate-300 dark:hover:bg-zinc-200">
           Sign Up.
         </Link>
       </div>

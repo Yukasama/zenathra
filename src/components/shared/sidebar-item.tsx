@@ -33,8 +33,8 @@ export default function SidebarItem({
         onClick={onClick}
         className={`${
           isActive(to.split("/").pop()!) &&
-          "border-moon-700 bg-slate-300/80 dark:bg-moon-200"
-        } m-1 mx-4 flex items-center rounded-lg hover:bg-slate-300/80 dark:hover:bg-moon-200 ${
+          "border-zinc-700 bg-slate-300/80 dark:bg-zinc-200"
+        } m-1 mx-4 flex items-center rounded-lg hover:bg-slate-300/80 dark:hover:bg-zinc-200 ${
           loading && "animate-pulse-right h-12 w-12"
         }`}>
         {!loading && (
@@ -47,7 +47,7 @@ export default function SidebarItem({
       <div
         className={`${
           gap && "m-3 mx-5 mt-4 h-[1px]"
-        } bg-slate-400/60 dark:bg-moon-100`}></div>
+        } bg-slate-400/60 dark:bg-zinc-100`}></div>
     </>
   );
 }

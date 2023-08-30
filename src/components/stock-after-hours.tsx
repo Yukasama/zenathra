@@ -12,7 +12,7 @@ function Structure({ className, isLoading, children }: StructureProps) {
     <div
       className={`${
         isLoading && "animate-pulse-right"
-      } flex h-[40px] w-[350px] items-center gap-1 rounded-lg bg-slate-200 p-2 px-4 dark:bg-moon-400 ${className}`}>
+      } flex h-[40px] w-[350px] items-center gap-1 rounded-lg bg-slate-200 p-2 px-4 dark:bg-zinc-400 ${className}`}>
       {children}
     </div>
   );
@@ -30,8 +30,8 @@ export default async function StockAfterHours({ stock, className }: Props) {
 
   return (
     <Structure className={className}>
-      <div className="flex h-[40px] w-[350px] items-center gap-1 rounded-lg bg-slate-200 p-2 px-4 dark:bg-moon-400">
-        <p className="mr-0.5 text-[15px] text-moon-100 dark:text-slate-400">
+      <div className="flex h-[40px] w-[350px] items-center gap-1 rounded-lg bg-slate-200 p-2 px-4 dark:bg-zinc-400">
+        <p className="mr-0.5 text-[15px] text-zinc-100 dark:text-slate-400">
           After Hours:
         </p>
         <p className="text-[16px]">

@@ -31,7 +31,7 @@ export default function StockEye({ session, stock }: Props) {
           </linearGradient>
         </defs>
         <circle
-          className="animate-appear-down fill-slate-100 dark:fill-moon-300"
+          className="animate-appear-down fill-slate-100 dark:fill-zinc-300"
           cx="60"
           cy="60"
           r="54"

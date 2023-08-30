@@ -53,7 +53,7 @@ export default function SelectInput({
       <p className="mb-[1px] ml-[1px] font-medium">{label}</p>
       <div
         ref={dropdownRef}
-        className="relative cursor-pointer rounded-lg border border-slate-200 dark:border-moon-100"
+        className="relative cursor-pointer rounded-lg border border-slate-200 dark:border-zinc-100"
         onClick={() => setIsOpen(!isOpen)}>
         <ChevronDown
           className={`absolute right-4 top-[14px] h-4 w-4 transition-transform ${
@@ -65,10 +65,10 @@ export default function SelectInput({
           <div
             className={`${
               !relative && "absolute"
-            } hidden-scrollbar bg-white dark:bg-slate-800 z-10 mt-1 max-h-[202px] w-full overflow-y-auto rounded-lg border border-slate-200 shadow-lg dark:border-moon-300`}>
+            } hidden-scrollbar bg-white dark:bg-slate-800 z-10 mt-1 max-h-[202px] w-full overflow-y-auto rounded-lg border border-slate-200 shadow-lg dark:border-zinc-300`}>
             {options.map((option, index) => (
               <div
-                className="z-10 cursor-pointer bg-slate-100 px-4 py-2 text-sm hover:bg-slate-200 dark:bg-moon-400 dark:hover:bg-moon-200"
+                className="z-10 cursor-pointer bg-slate-100 px-4 py-2 text-sm hover:bg-slate-200 dark:bg-zinc-400 dark:hover:bg-zinc-200"
                 key={option + index}
                 onClick={() => handleChange(option)}>
                 {option}

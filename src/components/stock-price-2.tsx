@@ -14,7 +14,7 @@ function Structure({ className, isLoading, children }: StructureProps) {
     <div
       className={`${
         isLoading && "animate-pulse-right"
-      } flex h-[90px] w-[350px] animate-appear-up items-center gap-3 rounded-lg bg-slate-200 p-2 px-4 dark:bg-moon-400 ${className}`}>
+      } flex h-[90px] w-[350px] animate-appear-up items-center gap-3 rounded-lg bg-slate-200 p-2 px-4 dark:bg-zinc-400 ${className}`}>
       {children}
     </div>
   );

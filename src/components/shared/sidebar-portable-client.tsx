@@ -78,13 +78,13 @@ export default function SidebarPortableClient({ session }: Props) {
 
   return (
     <div
-      className={`fixed left-0 top-0 h-screen w-screen bg-slate-100/50 opacity-0 transition-opacity duration-300 dark:bg-moon-300/50 ${
+      className={`fixed left-0 top-0 h-screen w-screen bg-slate-100/50 opacity-0 transition-opacity duration-300 dark:bg-zinc-300/50 ${
         open ? "opacity-100 z-30" : "-z-20"
       } hiding-sidebar`}>
       <div
         className={`sidebar fixed w-80 ${
           open ? "translate-x-0" : "-translate-x-96"
-        } f-col h-full justify-between bg-slate-200 py-3 shadow-sm shadow-moon-100 duration-300 dark:bg-moon-700`}>
+        } f-col h-full justify-between bg-slate-200 py-3 shadow-sm shadow-zinc-100 duration-300 dark:bg-zinc-700`}>
         <div className="f-col h-full w-full items-center justify-between">
           <div className="f-col w-full gap-4">
             <div className="flex w-full items-center justify-between px-3 pl-7">

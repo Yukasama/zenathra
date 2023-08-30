@@ -2,35 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-moon-300;
-}
-::-webkit-scrollbar-thumb {
-  @apply bg-blue-500;
-}
-.hidden-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.hidden-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus input:-webkit-autofill,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
-select:-webkit-autofill,
-select:-webkit-autofill:hover,
-select:-webkit-autofill:focus {
-  @apply shadow-[inset_0_0_0_30px] shadow-gray-100 dark:shadow-moon-300;
-  -webkit-text-fill-color: var(--color-theme);
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -76,21 +47,31 @@ select:-webkit-autofill:focus {
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;
   }
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-zinc-300;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-primary;
+}
+.hidden-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hidden-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
-  }
-  p,
-  i,
-  li,
-  label {
-    @apply text-moon-900 dark:text-white;
-  }
-  input,
-  select {
-    @apply outline-none;
   }
 }
 
@@ -100,33 +81,6 @@ select:-webkit-autofill:focus {
   }
   .f-col {
     @apply flex flex-col;
-  }
-  .image {
-    @apply f-box overflow-hidden rounded-md p-1;
-  }
-  .line {
-    @apply h-[1px] bg-gray-400/80 dark:bg-moon-200;
-  }
-  .line-bright {
-    @apply h-[1px] bg-gray-300/80 dark:bg-moon-100;
-  }
-  .input {
-    @apply w-full rounded-md border border-gray-300 dark:border-moon-100 bg-gray-100 p-3.5 pb-3 pt-4 outline-none transition-border focus:border-blue-500 dark:focus:border-blue-500 dark:bg-moon-300;
-  }
-  .icon {
-    @apply f-box h-8 lg:h-9 w-8 lg:w-9 rounded-md p-[2px] lg:p-[3px] transition-none hover:bg-gray-200 dark:hover:bg-moon-100;
-  }
-  .wrapper {
-    @apply bg-gray-200 dark:bg-moon-400 rounded-md animate-appear-up;
-  }
-  .wrapper-bright {
-    @apply bg-gray-100 dark:bg-moon-300 rounded-md animate-appear-up;
-  }
-  .box {
-    @apply bg-gray-100 dark:bg-moon-700 border border-gray-200 dark:border-moon-100 rounded-md;
-  }
-  .borderless-box {
-    @apply bg-gray-100 dark:bg-moon-700 rounded-md;
   }
 }
 

@@ -22,9 +22,9 @@ function Structure({ className, children }: StructureProps) {
 export function StockStatisticsLoading({ className }: SharedProps) {
   return (
     <Structure className={className}>
-      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-slate-200 p-3 px-6 dark:bg-moon-400"></div>
-      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-slate-200 p-3 px-6 dark:bg-moon-400"></div>
-      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-slate-200 p-3 px-6 dark:bg-moon-400"></div>
+      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-slate-200 p-3 px-6 dark:bg-zinc-400"></div>
+      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-slate-200 p-3 px-6 dark:bg-zinc-400"></div>
+      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-slate-200 p-3 px-6 dark:bg-zinc-400"></div>
     </Structure>
   );
 }
@@ -96,7 +96,7 @@ export default async function StockStatistics({ symbol, className }: Props) {
         .map((financials: Financials) => financials.dividendYield)
         .filter((d) => d !== 0 && d !== undefined && d !== null).length ===
       0 ? (
-        <div className="h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-slate-200 p-3 px-6 dark:bg-moon-400">
+        <div className="h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-slate-200 p-3 px-6 dark:bg-zinc-400">
           <p className="mb-1 text-[19px] font-medium">Dividends</p>
           <div className="f-box ml-0.5 h-4/5 gap-4">
             <p className="text-xl text-gray-400 dark:text-gray-600 font-medium">

@@ -18,7 +18,7 @@ export default async function page() {
     <div className="m-1 mb-7 f-col gap-6">
       <div className="f-col md:flex-row items-center justify-between gap-4 p-4 md:gap-7 md:p-7">
         <Suspense fallback={<StockHighlightLoading />}>
-          {/* <StockHighlight symbol={actives?.[0] ?? null} /> */}
+          <StockHighlight symbol={actives?.[0] ?? null} />
         </Suspense>
         <Suspense fallback={<IndexListLoading />}>
           <IndexList />

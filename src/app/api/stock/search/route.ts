@@ -1,6 +1,5 @@
 import { db } from "@/lib/db";
 import { z } from "zod";
-import { SearchStocksSchema } from "@/lib/validators/stock";
 import {
   InternalServerErrorResponse,
   UnprocessableEntityResponse,
@@ -11,12 +10,14 @@ export async function GET(req: Request) {
     const url = new URL(req.url);
 
     const q = url.searchParams.get("q");
-    const { query } = SearchStocksSchema.parse({ q });
+
+    if (!q)
+      return new UnprocessableEntityResponse("Missing query parameter 'q'");
 
     const results = await db.stock.findMany({
       where: {
         symbol: {
-          startsWith: query,
+          startsWith: q,
         },
       },
       include: {

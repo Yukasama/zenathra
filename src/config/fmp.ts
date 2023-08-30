@@ -10,7 +10,7 @@ interface FmpConfig {
 export const fmpConfig: FmpConfig = {
   timeout: 60,
   docsPerPull: 33,
-  simulation: false,
+  simulation: true,
 };
 
 export const FMP_API_URL: string = "https://financialmodelingprep.com/api/";

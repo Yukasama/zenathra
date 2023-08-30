@@ -8,7 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as Command from "@/components/ui/command";
 import { useOnClickOutside } from "@/hooks/use-on-click-outside";
-import { Users } from "lucide-react";
+import Link from "next/link";
 
 export default function Searchbar() {
   const [input, setInput] = useState<string>("");
@@ -38,7 +38,7 @@ export default function Searchbar() {
   } = useQuery({
     queryFn: async () => {
       if (!input) return [];
-      const { data } = await axios.get(`/api/search?q=${input}`);
+      const { data } = await axios.get(`/api/stock/search?q=${input}`);
       return data as (Stock & {
         _count: Prisma.StockCountOutputType;
       })[];
@@ -54,7 +54,7 @@ export default function Searchbar() {
   return (
     <Command.Command
       ref={commandRef}
-      className="relative rounded-lg border max-w-lg z-50 overflow-visible">
+      className="relative rounded-md border max-w-lg z-50 overflow-visible">
       <Command.CommandInput
         isLoading={isFetching}
         onValueChange={(text) => {
@@ -62,16 +62,26 @@ export default function Searchbar() {
           debounceRequest();
         }}
         value={input}
-        className="outline-none border-none focus:border-none focus:outline-none ring-0"
+        className="outline-none border-none focus:border-none focus:outline-none ring-0 shadow-none"
         placeholder="Search stocks..."
       />
 
       {input.length > 0 && (
-        <Command.CommandList className="absolute bg-white top-full inset-x-0 shadow rounded-b-md">
+        <Command.CommandList className="absolute top-full border bg-card inset-x-0 shadow rounded-b-md">
           {isFetched && (
             <Command.CommandEmpty>No results found.</Command.CommandEmpty>
           )}
-          {(queryResults?.length ?? 0) > 0 ? (
+          {isFetching && (
+            <Command.CommandEmpty>
+              {[...Array(4)].map((_, i) => (
+                <div
+                  key={i}
+                  className="animate-pulse-right h-12 rounded-md p-1 px-2"
+                />
+              ))}
+            </Command.CommandEmpty>
+          )}
+          {(queryResults?.length ?? 0) > 0 && (
             <Command.CommandGroup heading="Stocks">
               {queryResults?.map((stock) => (
                 <Command.CommandItem
@@ -81,20 +91,10 @@ export default function Searchbar() {
                   }}
                   key={stock.id}
                   value={stock.companyName}>
-                  <Users className="mr-2 h-4 w-4" />
-                  <a href={`/stocks/${stock.symbol}`}>{stock.symbol}</a>
+                  <Link href={`/stocks/${stock.symbol}`}>{stock.symbol}</Link>
                 </Command.CommandItem>
               ))}
             </Command.CommandGroup>
-          ) : (
-            <>
-              {[...Array(4)].map((_, i) => (
-                <div
-                  key={i}
-                  className="animate-pulse-right h-12 rounded-md p-1 px-2"
-                />
-              ))}
-            </>
           )}
         </Command.CommandList>
       )}

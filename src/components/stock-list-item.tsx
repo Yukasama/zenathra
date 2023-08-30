@@ -18,7 +18,7 @@ function Structure({ children, className, isLoading }: StructureProps) {
       className={`mb-1 flex h-[50px] items-center justify-between gap-3 rounded-md p-3 pl-2 ${
         isLoading
           ? "animate-pulse-right"
-          : "bg-slate-100 hover:bg-slate-300 dark:bg-moon-300 dark:hover:bg-moon-200"
+          : "bg-slate-100 hover:bg-slate-300 dark:bg-zinc-300 dark:hover:bg-zinc-200"
       } ${className}`}>
       {children}
     </div>

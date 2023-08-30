@@ -89,7 +89,7 @@ export default function AccountSettings({ session }: Props) {
 
   return (
     <div className="grid min-h-screen grid-cols-7">
-      <div className="col-span-2 bg-slate-200/50 p-10 dark:bg-moon-400/30">
+      <div className="col-span-2 bg-slate-200/50 p-10 dark:bg-zinc-400/30">
         <p className="mb-3 p-1 text-[30px] font-semibold">Settings</p>
 
         <div className="f-col gap-2">
@@ -100,7 +100,7 @@ export default function AccountSettings({ session }: Props) {
               className={`p-3 shadow-sm ${
                 active === tab.id
                   ? "bg-blue-500"
-                  : "hover:bg-slate-300/50 hover:dark:bg-moon-200"
+                  : "hover:bg-slate-300/50 hover:dark:bg-zinc-200"
               } flex gap-2 rounded-lg`}>
               <p className={`${active === tab.id && "text-white"}`}>
                 {tab.icon}
@@ -131,13 +131,13 @@ export default function AccountSettings({ session }: Props) {
               </div>
             </div>
 
-            <div className="flex w-full flex-col gap-2 rounded-lg border border-slate-300 p-3 px-5 dark:border-moon-100">
+            <div className="flex w-full flex-col gap-2 rounded-lg border border-slate-300 p-3 px-5 dark:border-zinc-100">
               <h2 className="p-3 text-xl font-light">General Information</h2>
               {personalInfo.map((info) => (
                 <div className="f-col gap-2" key={info.title}>
                   <Link
                     href={info.link}
-                    className="flex justify-between items-center w-full rounded-lg p-5 hover:bg-slate-200 dark:hover:bg-moon-200">
+                    className="flex justify-between items-center w-full rounded-lg p-5 hover:bg-slate-200 dark:hover:bg-zinc-200">
                     <p className="w-[50px] font-light text-slate-600">
                       {info.title}
                     </p>
@@ -147,7 +147,7 @@ export default function AccountSettings({ session }: Props) {
                     </div>
                   </Link>
                   {info.title !== "E-Mail" && (
-                    <div className="mx-auto h-[1px] w-[97%] bg-slate-300 dark:bg-moon-100"></div>
+                    <div className="mx-auto h-[1px] w-[97%] bg-slate-300 dark:bg-zinc-100"></div>
                   )}
                 </div>
               ))}
@@ -185,13 +185,13 @@ export default function AccountSettings({ session }: Props) {
               </div>
             </div>
 
-            <div className="f-col w-full gap-2 rounded-lg border border-slate-300 p-3 px-5 dark:border-moon-100">
+            <div className="f-col w-full gap-2 rounded-lg border border-slate-300 p-3 px-5 dark:border-zinc-100">
               <h2 className="p-3 text-xl font-light">Authentication</h2>
               {security.map((info) => (
                 <div className="f-col gap-2" key={info.title}>
                   <Link
                     href={info.link}
-                    className="flex justify-between items-center w-full rounded-lg p-5 hover:bg-slate-200 dark:hover:bg-moon-200">
+                    className="flex justify-between items-center w-full rounded-lg p-5 hover:bg-slate-200 dark:hover:bg-zinc-200">
                     <p className="w-[50px] font-light text-slate-600">
                       {info.title}
                     </p>
@@ -201,7 +201,7 @@ export default function AccountSettings({ session }: Props) {
                     </div>
                   </Link>
                   {info.title !== "E-Mail" && (
-                    <div className="mx-auto h-[1px] w-[97%] bg-slate-300 dark:bg-moon-100"></div>
+                    <div className="mx-auto h-[1px] w-[97%] bg-slate-300 dark:bg-zinc-100"></div>
                   )}
                 </div>
               ))}

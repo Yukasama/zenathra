@@ -1,4 +1,4 @@
-const { fontFamily } = require('tailwindcss/defaultTheme')
+const { fontFamily } = require("tailwindcss/defaultTheme");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -20,17 +20,6 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        moon: {
-          100: "#273252",
-          200: "#202942",
-          300: "#1a2238",
-          400: "#141b2d",
-          500: "#141a29",
-          600: "#101624",
-          700: "#0c101b",
-          800: "#080b12",
-          900: "#040509",
-        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

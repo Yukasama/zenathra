@@ -84,7 +84,11 @@ export default function AuthSignUpForm() {
               <FormItem>
                 <FormLabel>E-Mail</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="Enter your E-Mail" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="Enter your E-Mail"
+                    {...field}
+                  />
                 </FormControl>
                 <FormDescription>
                   This is the email you used to sign up.
@@ -100,7 +104,11 @@ export default function AuthSignUpForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="Enter your Password" {...field} />
+                  <Input
+                    type="password"
+                    placeholder="Enter your Password"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -113,7 +121,11 @@ export default function AuthSignUpForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="Confirm your Password" {...field} />
+                  <Input
+                    type="password"
+                    placeholder="Confirm your Password"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -146,11 +158,11 @@ export default function AuthSignUpForm() {
         </form>
       </Form>
       <div className="flex items-center">
-        <div className="h-[1px] flex-1 bg-slate-400/60 dark:bg-moon-100"></div>
-        <div className="f-box h-10 w-10 rounded-full border border-slate-400/60 text-[12px] text-slate-400 dark:border-moon-100">
+        <div className="h-[1px] flex-1 bg-slate-400/60 dark:bg-zinc-100"></div>
+        <div className="f-box h-10 w-10 rounded-full border border-slate-400/60 text-[12px] text-slate-400 dark:border-zinc-100">
           OR
         </div>
-        <div className="h-[1px] flex-1 bg-slate-400/60 dark:bg-moon-100"></div>
+        <div className="h-[1px] flex-1 bg-slate-400/60 dark:bg-zinc-100"></div>
       </div>
 
       <div className="f-col gap-2">

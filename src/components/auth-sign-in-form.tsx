@@ -56,9 +56,7 @@ export default function AuthSignInForm() {
   return (
     <>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-2/3 space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 f-col">
           <FormField
             control={form.control}
             name="email"
@@ -68,9 +66,6 @@ export default function AuthSignInForm() {
                 <FormControl>
                   <Input placeholder="Enter your E-Mail" {...field} />
                 </FormControl>
-                <FormDescription>
-                  This is the email you used to sign up.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -92,7 +87,7 @@ export default function AuthSignInForm() {
             control={form.control}
             name="remember"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormItem>
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -120,11 +115,11 @@ export default function AuthSignInForm() {
         </form>
       </Form>
       <div className="flex items-center">
-        <div className="h-[1px] flex-1 bg-slate-400/60 dark:bg-moon-100"></div>
-        <div className="f-box h-10 w-10 rounded-full border border-slate-400/60 text-[12px] text-slate-400 dark:border-moon-100">
+        <div className="h-[1px] flex-1 bg-slate-400/60 dark:bg-zinc-100"></div>
+        <div className="f-box h-10 w-10 rounded-full border border-slate-400/60 text-[12px] text-slate-400 dark:border-zinc-100">
           OR
         </div>
-        <div className="h-[1px] flex-1 bg-slate-400/60 dark:bg-moon-100"></div>
+        <div className="h-[1px] flex-1 bg-slate-400/60 dark:bg-zinc-100"></div>
       </div>
 
       <div className="f-col gap-2">

@@ -14,21 +14,19 @@ import "@/styles/globals.css";
 export const metadata: Metadata = {
   title: site.name,
   description: site.description,
-  icons: {
-    icon: "/images/favicon.ico",
-  },
+  icons: { icon: "/favicon.ico" },
   keywords: site.keywords,
-  creator: "Yukasama",
+  creator: site.creator,
 };
 
 const inter = Inter({ subsets: ["latin"] });
 
-interface Props {
+interface LayoutProps {
   children: React.ReactNode;
   authModal: React.ReactNode;
 }
 
-export default async function RootLayout({ children, authModal }: Props) {
+export default async function RootLayout({ children, authModal }: LayoutProps) {
   return (
     <html
       lang="en"
@@ -37,12 +35,15 @@ export default async function RootLayout({ children, authModal }: Props) {
         inter.className
       )}
       suppressHydrationWarning>
-      <body className="h-screen w-screen flex overflow-hidden bg-slate-100 dark:bg-moon-300">
+      <body className="w-screen h-screen flex overflow-hidden">
         <Provider>
+          {/* @ts-expect-error Server Component */}
           <Sidebar />
+          {/* @ts-expect-error Server Component */}
           <SidebarPortable />
+          {authModal}
           <div className="w-full overflow-auto">
-            {authModal}
+            {/* @ts-expect-error Server Component */}
             <Navbar />
             <main className="min-h-full">{children}</main>
             <Footer />

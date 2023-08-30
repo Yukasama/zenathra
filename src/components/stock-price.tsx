@@ -10,7 +10,7 @@ export default function StockPrice({ quote }: Props) {
     quote && quote.change ? (quote.change > 0 ? true : false) : true;
 
   return (
-    <div className="mx-1 f-col items-center justify-between gap-4 lg:flex-row">
+    <div className="mx-1 f-col items-center justify-between lg:gap-4 lg:flex-row">
       <div className="flex items-center">
         <span className="mt-1">$</span>
         <p className="text-[22px] xl:text-[26px] font-light">

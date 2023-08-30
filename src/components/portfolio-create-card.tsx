@@ -12,7 +12,7 @@ export default function PortfolioCreateCard() {
     <>
       <div
         onClick={() => setIsOpen(true)}
-        className="relative group f-box h-full min-h-[300px] gap-4 p-5 box hover:bg-slate-200 dark:hover:bg-moon-800 cursor-pointer">
+        className="relative group f-box h-full min-h-[300px] gap-4 p-5 box hover:bg-slate-200 dark:hover:bg-zinc-800 cursor-pointer">
         <div className="f-box h-10 w-10 rounded-full bg-blue-500 group-hover:bg-blue-500/80">
           <Plus className="h-7 w-7 text-white" />
         </div>

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import SidebarToggle from "./sidebar-toggle";
 import { getAuthSession } from "@/lib/auth";
+import { Card } from "../ui/card";
 
 export default async function Sidebar() {
   const session = await getAuthSession();
@@ -55,28 +56,10 @@ export default async function Sidebar() {
   ];
 
   return (
-    <div className="w-[70px] h-full z-20 hidden md:flex flex-col justify-between bg-slate-200/60 transition-width dark:bg-moon-700 py-1.5 shadow-sm shadow-slate-300 dark:shadow-moon-100">
-      <div className="f-col items-center justify-between h-full">
-        <div className="f-col">
-          <SidebarToggle className="m-1 mx-4 mb-2.5 flex items-center rounded-lg">
-            <div className="p-3">
-              <MenuIcon className="h-[22px]" />
-            </div>
-          </SidebarToggle>
-
-          <div className="f-col">
-            {menusUp.map((menu) => (
-              <SidebarItem key={menu.title} {...menu} notext />
-            ))}
-          </div>
-        </div>
-
-        <div className="f-col">
-          {menusDown.map((menu) => (
-            <SidebarItem key={menu.title} {...menu} notext />
-          ))}
-        </div>
-      </div>
-    </div>
+    <Card className="rounded-none border-y-0 f-col p-3.5">
+      <SidebarToggle>
+        <MenuIcon className="h-[18px]" />
+      </SidebarToggle>
+    </Card>
   );
 }

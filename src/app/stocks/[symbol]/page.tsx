@@ -58,7 +58,7 @@ export default async function Symbol({ params: { symbol } }: Props) {
     <div className="m-4 overflow-x-hidden">
       <div className="flex w-full">
         <div className="w-full">
-          <div className="flex items-center gap-10 border-b border-slate-300 pb-4 dark:border-moon-100">
+          <div className="flex items-center gap-10 border-b border-slate-300 pb-4 dark:border-zinc-100">
             <div className="relative f-col gap-2">
               <Suspense fallback={<StockPrice2Loading />}>
                 <StockPrice2 session={session} stock={stock} />
@@ -70,7 +70,7 @@ export default async function Symbol({ params: { symbol } }: Props) {
             <StockMetrics stock={stock} />
             <StockEye stock={stock} session={session} />
           </div>
-          <div className="my-4 flex gap-4 border-b border-slate-300 pb-4 dark:border-moon-100">
+          <div className="my-4 flex gap-4 border-b border-slate-300 pb-4 dark:border-zinc-100">
             <Suspense fallback={<p>Loading...</p>}>
               {/* <StockChartLoader symbol={symbol} /> */}
             </Suspense>

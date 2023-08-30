@@ -186,7 +186,7 @@ export default function Page() {
     return (
       <div
         className={`${isLoading && "animate-pulse-right"} grid h-[60px] 
-    animate-appear-up grid-cols-10 items-center gap-4 rounded-md bg-slate-200 px-4 dark:bg-moon-200 dark:hover:bg-moon-400`}>
+    animate-appear-up grid-cols-10 items-center gap-4 rounded-md bg-slate-200 px-4 dark:bg-zinc-200 dark:hover:bg-zinc-400`}>
         {children}
       </div>
     );
@@ -204,17 +204,17 @@ export default function Page() {
 
   return (
     <div className="grid h-full grid-cols-8">
-      <div className="col-span-4 f-col h-full overflow-hidden shadow-md dark:bg-moon-400/30 lg:col-span-3 xl:col-span-2">
+      <div className="col-span-4 f-col h-full overflow-hidden shadow-md dark:bg-zinc-400/30 lg:col-span-3 xl:col-span-2">
         <div className="hidden-scrollbar f-col mt-[2px] h-full overflow-y-auto">
-          <div className="sticky top-0 z-10 flex bg-moon-300">
+          <div className="sticky top-0 z-10 flex bg-zinc-300">
             {Object.keys(ratings).map((rating) => (
               <button
                 key={rating}
                 onClick={() => setActive(rating)}
                 className={`${
                   active === rating &&
-                  "border-b border-b-blue-500 bg-slate-200 dark:bg-moon-200"
-                } f-box flex-1 cursor-pointer bg-slate-100 p-3 px-5 font-medium hover:bg-slate-200 dark:bg-moon-400/70 dark:hover:bg-moon-200`}>
+                  "border-b border-b-blue-500 bg-slate-200 dark:bg-zinc-200"
+                } f-box flex-1 cursor-pointer bg-slate-100 p-3 px-5 font-medium hover:bg-slate-200 dark:bg-zinc-400/70 dark:hover:bg-zinc-200`}>
                 <p className="hidden font-light lg:flex">{rating}</p>
                 <div className="flex lg:hidden">{ratings[rating]}</div>
               </button>
@@ -260,7 +260,7 @@ export default function Page() {
                         reset={resetCounter}
                         relative
                       />
-                      <div className="f-box mt-2 h-8 w-8 rounded-md border border-slate-200 p-2 text-lg font-semibold dark:border-moon-100">
+                      <div className="f-box mt-2 h-8 w-8 rounded-md border border-slate-200 p-2 text-lg font-semibold dark:border-zinc-100">
                         <p className="mb-0.5">&gt;</p>
                       </div>
                       <SelectInput
@@ -298,7 +298,7 @@ export default function Page() {
                         reset={resetCounter}
                         relative
                       />
-                      <div className="f-box mt-2 h-8 w-8 rounded-md border border-slate-200 p-2 text-lg font-semibold dark:border-moon-100">
+                      <div className="f-box mt-2 h-8 w-8 rounded-md border border-slate-200 p-2 text-lg font-semibold dark:border-zinc-100">
                         <p className="mb-0.5">&gt;</p>
                       </div>
                       <SelectInput
@@ -320,7 +320,7 @@ export default function Page() {
       </div>
       <div className="col-span-4 overflow-auto lg:col-span-5 xl:col-span-6">
         <div>
-          <div className="sticky top-0 mb-0.5 grid grid-cols-10 gap-4 bg-slate-100/80 p-3 px-8 dark:bg-moon-300/80">
+          <div className="sticky top-0 mb-0.5 grid grid-cols-10 gap-4 bg-slate-100/80 p-3 px-8 dark:bg-zinc-300/80">
             <p className="col-span-3 rounded-md bg-blue-500 p-1.5 px-3 font-medium text-white">
               Company
             </p>

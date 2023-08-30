@@ -5,6 +5,20 @@ import { getAuthSession } from "@/lib/auth";
 import Searchbar from "./searchbar";
 import { UserAccountNav } from "./user-account-nav";
 import SidebarToggle from "./sidebar-toggle";
+import { buttonVariants } from "../ui/button";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import React from "react";
+import { cn } from "@/lib/utils";
+import NavbarMenu from "./navbar-menu";
+
+
 
 export default async function Navbar() {
   const session = await getAuthSession();
@@ -18,18 +32,15 @@ export default async function Navbar() {
         <Menu />
       </SidebarToggle>
 
-      <div className="box flex items-center justify-end gap-2 px-3">
+      <NavbarMenu />
+
+      <div className="flex px-2 gap-2 items-center">
         {!session?.user && (
           <div className="hidden items-center gap-3 lg:flex">
             <Link
               href="/auth/sign-in"
-              className="rounded-md bg-slate-300/50 p-1.5 px-4 font-semibold hover:bg-slate-300 dark:bg-moon-200 dark:hover:bg-moon-300">
+              className={buttonVariants({ variant: "subtle" })}>
               Sign In
-            </Link>
-            <Link
-              href="/auth/sign-up"
-              className="rounded-md bg-blue-500 p-1.5 px-4 font-semibold text-white hover:bg-blue-600">
-              Sign Up
             </Link>
           </div>
         )}

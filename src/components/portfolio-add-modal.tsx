@@ -111,7 +111,7 @@ export default function PortfolioAddModal({
             <Command.CommandGroup heading="Stocks">
               {queryResults?.map((result) => (
                 <Command.CommandItem
-                  className="flex items-center justify-between rounded-md bg-moon-400 p-1 px-2 h-12"
+                  className="flex items-center justify-between rounded-md bg-zinc-400 p-1 px-2 h-12"
                   key={result.symbol}>
                   <div className="flex items-center gap-2">
                     <StockImage src={result.image} px={30} />

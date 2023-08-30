@@ -14,7 +14,7 @@ export default function PortfolioCard({ portfolio, stockIds }: Props) {
     <div className="relative">
       <Link
         href={`/portfolios/${portfolio.id}`}
-        className="f-col group min-h-[300px] p-5 box hover:bg-slate-200 dark:hover:bg-moon-800">
+        className="f-col group min-h-[300px] p-5 box hover:bg-slate-200 dark:hover:bg-zinc-800">
         <p className="text-lg font-medium">{portfolio.title}</p>
         <div>
           <Suspense fallback={<StockListLoading limit={3} />}>

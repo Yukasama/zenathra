@@ -41,11 +41,7 @@ export default function OAuth({ provider, className, ...props }: Props) {
         className="w-full"
         onClick={onSubmit}
         disabled={isLoading}>
-        {!isLoading && (
-          <>
-            <Icons.google className="h-4 w-4 mr-2" />
-          </>
-        )}
+        {!isLoading && <Icons.google className="h-4 w-4 mr-2" />}
         {provider[0].toUpperCase() + provider.slice(1)}
       </Button>
     </div>

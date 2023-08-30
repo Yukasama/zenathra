@@ -10,7 +10,7 @@ interface Props {
 function Structure({ className, isLoading, children }: StructureProps) {
   return (
     <div
-      className={`flex min-h-[100px] justify-evenly gap-4 border-y border-slate-200 py-3 dark:border-moon-200 ${className}`}>
+      className={`flex min-h-[100px] justify-evenly gap-4 border-y border-slate-200 py-3 dark:border-zinc-200 ${className}`}>
       {children}
     </div>
   );
@@ -18,7 +18,7 @@ function Structure({ className, isLoading, children }: StructureProps) {
 
 export const StockCardListLoading = () => {
   return (
-    <div className="flex min-h-[100px] justify-evenly gap-4 border-y border-slate-200 py-3 dark:border-moon-200">
+    <div className="flex min-h-[100px] justify-evenly gap-4 border-y border-slate-200 py-3 dark:border-zinc-200">
       <StockCard quote={null} image={undefined} />
       <StockCard quote={null} image={undefined} />
       <StockCard quote={null} image={undefined} />
@@ -50,7 +50,7 @@ export default async function StockCardList({ symbols }: Props) {
   if (!Array.isArray(images) && images) images = [images];
 
   return (
-    <div className="flex min-h-[100px] justify-evenly gap-4 border-y border-slate-200 py-3 dark:border-moon-200">
+    <div className="flex min-h-[100px] justify-evenly gap-4 border-y border-slate-200 py-3 dark:border-zinc-200">
       {quotes.map((quote, i) => (
         <StockCard
           key={i}
