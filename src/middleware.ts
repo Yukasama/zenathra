@@ -9,19 +9,19 @@ export default withAuth(
     const token = await getToken({ req });
     const isAuth = !!token;
 
-    const isAuthPage = path.startsWith("/auth/");
+    const isAuthPage = ["/sign-in", "/sign-up", "/forgot-password"];
     const userRoutes = ["/account/:path*"];
     const adminRoutes = ["/admin/:path*", "/api/admin/:path*"];
 
-    if (isAuthPage) {
+    if (isAuthPage.includes(path)) {
       if (isAuth) return NextResponse.redirect(new URL("/", req.url));
       return null;
     }
 
     if (
       !isAuth &&
-      (adminRoutes.some((routes) => path.startsWith(routes)) ||
-        userRoutes.some((routes) => path.startsWith(routes)))
+      (adminRoutes.some((route) => path.startsWith(route)) ||
+        userRoutes.some((route) => path.startsWith(route)))
     ) {
       let from = path;
       if (req.nextUrl.search) {
@@ -29,14 +29,14 @@ export default withAuth(
       }
 
       return NextResponse.redirect(
-        new URL(`/auth/login?from=${encodeURIComponent(from)}`, req.url)
+        new URL(`/sign-in?from=${encodeURIComponent(from)}`, req.url)
       );
     }
 
     if (
       isAuth &&
       token.role !== "admin" &&
-      adminRoutes.some((routes) => path.startsWith(routes))
+      adminRoutes.some((route) => path.startsWith(route))
     ) {
       let from = path;
       if (req.nextUrl.search) {
@@ -44,9 +44,12 @@ export default withAuth(
       }
 
       return NextResponse.redirect(
-        new URL(`/auth/login?from=${encodeURIComponent(from)}`, req.url)
+        new URL(`/?from=${encodeURIComponent(from)}`, req.url)
       );
     }
+
+    // Important to allow the request to continue if no conditions match
+    return null;
   },
   {
     callbacks: {
@@ -58,5 +61,11 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/auth/:path*", "/admin/:path*", "/account/:path*"],
+  matcher: [
+    "/sign-in",
+    "/sign-up",
+    "/forgot-password",
+    "/admin/:path*",
+    "/account/:path*",
+  ],
 };

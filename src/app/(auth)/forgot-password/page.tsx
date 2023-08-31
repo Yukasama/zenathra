@@ -1,12 +1,34 @@
+import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import AuthForgotPasswordForm from "@/components/auth-forgot-password-form";
 
 export default function page() {
   return (
-    <>
-      <h2 className="mb-1.5 text-center text-xl font-medium">
-        Forgot Your Password?
-      </h2>
-      <AuthForgotPasswordForm />
-    </>
+    <Card className="p-2">
+      <CardHeader>
+        <CardTitle>Forgot Your Password?</CardTitle>
+        <CardDescription>Request A Reset Link Here</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <AuthForgotPasswordForm />
+      </CardContent>
+      <CardFooter>
+        <div className="f-box mt-2 gap-1">
+          <p className="text-sm">Already signed up?</p>
+          <Link
+            href="/sign-in"
+            className="rounded-md p-1 px-1.5 text-sm font-medium text-blue-500 hover:bg-slate-300 dark:hover:bg-zinc-200">
+            Sign In.
+          </Link>
+        </div>
+      </CardFooter>
+    </Card>
   );
 }

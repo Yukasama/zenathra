@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import type { Session } from "next-auth";
+import { Card, CardContent, CardHeader } from "../ui/card";
 
 interface Props {
   session: Session | null;
@@ -37,97 +38,36 @@ export default function SidebarPortableClient({ session }: Props) {
       toggleSidebar();
   }
 
-  const menusUp: Menu[] = [
-    {
-      title: "Home",
-      to: "/",
-      icon: <Home className="h-[22px]" />,
-    },
-    {
-      title: "Portfolio",
-      to: "/account/portfolio",
-      icon: <BarChart2 className="h-[22px]" />,
-      gap: true,
-    },
-    {
-      title: "Screener",
-      to: "/screener",
-      icon: <Filter className="h-[22px]" />,
-      gap: true,
-    },
-    {
-      title: "Education",
-      to: "/education",
-      icon: <BookOpen className="h-[22px]" />,
-    },
-  ];
-
-  const menusDown: Menu[] = [
-    session?.user
-      ? {
-          title: "Settings",
-          to: "/account/settings",
-          icon: <Settings className="h-[22px]" />,
-        }
-      : {
-          title: "Login",
-          to: "/sign-in",
-          icon: <LogIn className="h-[22px]" />,
-        },
-  ];
-
   return (
     <div
-      className={`fixed left-0 top-0 h-screen w-screen bg-slate-100/50 opacity-0 transition-opacity duration-300 dark:bg-zinc-300/50 ${
+      className={`fixed left-0 top-0 h-screen w-screen bg-slate-100/50 opacity-0 transition-opacity duration-300 dark:bg-slate-950/50 ${
         open ? "opacity-100 z-30" : "-z-20"
       } hiding-sidebar`}>
-      <div
-        className={`sidebar fixed w-80 ${
+      <Card
+        className={`sidebar fixed ${
           open ? "translate-x-0" : "-translate-x-96"
-        } f-col h-full justify-between bg-slate-200 py-3 shadow-sm shadow-zinc-100 duration-300 dark:bg-zinc-700`}>
-        <div className="f-col h-full w-full items-center justify-between">
-          <div className="f-col w-full gap-4">
-            <div className="flex w-full items-center justify-between px-3 pl-7">
-              <div className="flex items-center gap-3">
-                <Image
-                  className="rounded-md"
-                  src="/images/logo/logo.png"
-                  width={40}
-                  height={40}
-                  alt="Company Logo"
-                />
-                <p className="text-lg font-light">Elysium</p>
-              </div>
-              <SidebarToggle className="right-2 top-2 p-3">
-                <X className="h-[22px]" />
-              </SidebarToggle>
-            </div>
-            <div className="m-auto w-[90%]">
-              <Searchbar />
-            </div>
-
-            <div className="f-col w-full">
-              {menusUp.map((menu) => (
-                <SidebarItem
-                  key={`${menu.title}-portable`}
-                  onClick={toggleSidebar}
-                  {...menu}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="f-col w-full">
-            {menusDown.map((menu) => (
-              <SidebarItem
-                key={`${menu.title}-portable`}
-                onClick={toggleSidebar}
-                {...menu}
+        } h-screen duration-300 rounded-none z-30`}>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Image
+                className="rounded-md"
+                src="/images/logo/logo.png"
+                width={40}
+                height={40}
+                alt="Company Logo"
               />
-            ))}
+              <p className="text-lg font-light">Elysium</p>
+            </div>
+            <SidebarToggle>
+              <X className="h-[22px]" />
+            </SidebarToggle>
           </div>
-        </div>
-      </div>
+        </CardHeader>
+        <CardContent>
+          <Searchbar />
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { StructureProps } from "@/types/layout";
 import React from "react";
 import type { Session } from "next-auth";
 import { ChevronsDown, ChevronsUp } from "lucide-react";
-import { getQuote } from "@/lib/fmp";
+import { getQuote } from "@/lib/fmp/quote";
 import { StockImage } from "./shared/stock-image";
 import { Stock } from "@prisma/client";
 import { db } from "@/lib/db";

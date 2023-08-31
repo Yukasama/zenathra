@@ -23,11 +23,14 @@ import { toast } from "@/hooks/use-toast";
 import { UploadStockProps, UploadStockSchema } from "@/lib/validators/stock";
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Slider } from "./ui/slider";
 import { Upload } from "lucide-react";
+import { useCustomToasts } from "@/hooks/use-custom-toasts";
 
 export default function AdminAddStocks() {
+  const { loginToast } = useCustomToasts();
+
   const form = useForm({
     resolver: zodResolver(UploadStockSchema),
   });
@@ -36,7 +39,22 @@ export default function AdminAddStocks() {
     mutationFn: async (payload: UploadStockProps) => {
       await axios.post("/api/stock/upload", payload);
     },
-    onError: () => {
+    onError: (err) => {
+      if (err instanceof AxiosError) {
+        if (err.response?.status === 401) {
+          return loginToast();
+        }
+      }
+      if (err instanceof AxiosError) {
+        if (err.response?.status === 403) {
+          return toast({
+            title: "This action is forbidden.",
+            description: `We will trace your ip if you try that again.`,
+            variant: "destructive",
+          });
+        }
+      }
+
       toast({
         title: "Oops! Something went wrong.",
         description: `Stocks could not be uploaded.`,

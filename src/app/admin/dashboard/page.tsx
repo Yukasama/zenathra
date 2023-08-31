@@ -1,7 +1,8 @@
 import AdminAddStocks from "@/components/admin-add-stocks";
-import Error from "next/error";
+import PageLayout from "@/components/shared/page-layout";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
 
 export default async function page() {
   const session = await getAuthSession();
@@ -10,11 +11,11 @@ export default async function page() {
     where: { id: session?.user.id },
   });
 
-  if (user?.role !== "admin") return Error;
+  //if (!user || user.role !== "admin") return redirect("/");
 
   return (
-    <div className="flex gap-5 p-3 px-6">
+    <PageLayout>
       <AdminAddStocks />
-    </div>
+    </PageLayout>
   );
 }

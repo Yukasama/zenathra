@@ -18,6 +18,9 @@ export const env = createEnv({
     FMP_API_KEY: z.string(),
     GMAIL_EMAIL_ADDRESS: z.string().email(),
     GMAIL_APP_PASSWORD: z.string().nonempty(),
+    STRIPE_API_KEY: z.string().min(1),
+    STRIPE_WEBHOOK_SECRET: z.string().min(1),
+    STRIPE_PRO_MONTHLY_PLAN_ID: z.string().min(1),
   },
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
@@ -32,5 +35,8 @@ export const env = createEnv({
     FMP_API_KEY: process.env.FMP_API_KEY,
     GMAIL_EMAIL_ADDRESS: process.env.GMAIL_EMAIL_ADDRESS,
     GMAIL_APP_PASSWORD: process.env.GMAIL_APP_PASSWORD,
+    STRIPE_API_KEY: process.env.STRIPE_API_KEY,
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+    STRIPE_PRO_MONTHLY_PLAN_ID: process.env.STRIPE_PRO_MONTHLY_PLAN_ID,
   },
 });

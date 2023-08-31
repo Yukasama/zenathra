@@ -1,18 +1,34 @@
+import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import AuthSignUp from "@/components/auth-sign-up";
-import CloseModal from "@/components/close-modal";
 
 export default function page() {
   return (
-    <div className="fixed inset-0 bg-zinc-900/20 z-10">
-      <div className="container flex items-center h-full max-w-lg mx-auto">
-        <div className="relative bg-white w-full h-fit py-20 px-2 rounded-lg">
-          <div className="absolute top-4 right-4">
-            <CloseModal />
-          </div>
-
-          <AuthSignUp />
+    <Card className="p-2">
+      <CardHeader>
+        <CardTitle>Sign Up</CardTitle>
+        <CardDescription>Create Your Personal Account</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <AuthSignUp />
+      </CardContent>
+      <CardFooter>
+        <div className="f-box mt-2 gap-1">
+          <p className="text-sm">Already signed up?</p>
+          <Link
+            href="/sign-in"
+            className="rounded-md p-1 px-1.5 text-sm font-medium text-blue-500 hover:bg-slate-300 dark:hover:bg-zinc-200">
+            Sign In.
+          </Link>
         </div>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 }

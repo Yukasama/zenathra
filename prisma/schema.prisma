@@ -53,7 +53,7 @@ model User {
   email          String?   @unique
   emailVerified  DateTime?
   image          String?
-  hashedPassword String
+  hashedPassword String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
@@ -114,7 +114,7 @@ model Portfolio {
 model StockInPortfolio {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   portfolioId String
   stockId     String
   portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
@@ -143,7 +143,7 @@ model Stock {
   exchangeShortName                         String
   industry                                  String
   website                                   String
-  description                               String
+  description                               String @db.Text
   ceo                                       String
   sector                                    String
   country                                   String
@@ -273,13 +273,10 @@ model Stock {
   targetMedian                              Float?
   createdAt                                 DateTime @default(now())
   updatedAt                                 DateTime @updatedAt
+  peersList                                 String?
 
   portfolios StockInPortfolio[]
   financials Financials[]
-
-  peerId String?
-  peer   Stock?  @relation("Peers", fields: [peerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  peers  Stock[] @relation("Peers")
 
   creatorId String?
   creator   User?   @relation(fields: [creatorId], references: [id])

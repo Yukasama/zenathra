@@ -1,5 +1,5 @@
 import StockPrice from "./stock-price";
-import { getQuote } from "@/lib/fmp";
+import { getQuote } from "@/lib/fmp/quote";
 import { db } from "@/lib/db";
 import { StockImage } from "./shared/stock-image";
 import axios from "axios";

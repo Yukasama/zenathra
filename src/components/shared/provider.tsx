@@ -26,7 +26,7 @@ export default function Provider({ children }: Props) {
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider enableSystem attribute="class">
+        <ThemeProvider attribute="class">
           <SidebarProvider>{children}</SidebarProvider>
         </ThemeProvider>
       </QueryClientProvider>

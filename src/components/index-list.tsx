@@ -1,4 +1,4 @@
-import { getIndexQuotes } from "@/lib/fmp";
+import { getIndexQuotes } from "@/lib/fmp/quote";
 import StockPrice from "./stock-price";
 import {
   Card,

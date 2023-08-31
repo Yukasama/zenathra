@@ -41,11 +41,11 @@ export default function StockCard({ quote, image, className }: Props) {
 
         <CardContent className="flex gap-3">
           <div
-            className={cn(buttonVariants({ variant: "subtle", size: "sm" }))}>
+            className={cn(buttonVariants({ variant: "subtle", size: "xs" }))}>
             Technology
           </div>
           <div
-            className={cn(buttonVariants({ variant: "subtle", size: "sm" }))}>
+            className={cn(buttonVariants({ variant: "subtle", size: "xs" }))}>
             Computer Devices
           </div>
         </CardContent>

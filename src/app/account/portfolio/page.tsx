@@ -2,6 +2,7 @@ import PortfolioCard from "@/components/portfolio-card";
 import PortfolioCreateCard from "@/components/portfolio-create-card";
 import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
+import PageLayout from "@/components/shared/page-layout";
 
 export default async function page() {
   const session = await getAuthSession();
@@ -21,7 +22,7 @@ export default async function page() {
   );
 
   return (
-    <div className="f-col gap-8 xl:gap-10 p-4 lg:p-8 xl:p-12 xl:grid xl:grid-cols-3">
+    <PageLayout className="f-col gap-8 xl:gap-10 xl:grid xl:grid-cols-3">
       {flattenedPortfolios.map((portfolio) => (
         <PortfolioCard
           key={portfolio.id}
@@ -34,6 +35,6 @@ export default async function page() {
         />
       ))}
       {portfolios.length < 6 && <PortfolioCreateCard />}
-    </div>
+    </PageLayout>
   );
 }

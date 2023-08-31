@@ -4,8 +4,8 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
-import { Icons } from "./shared/icons";
+import { Button } from "../ui/button";
+import { Icons } from "./icons";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   provider: "google" | "facebook" | "github";

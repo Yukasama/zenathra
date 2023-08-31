@@ -7,6 +7,7 @@ import { historyTimes } from "@/config/fmp";
 import { z } from "zod";
 import axios from "axios";
 import { StockHistorySchema } from "@/lib/validators/stock";
+import { TimeFrame } from "@/types/stock";
 
 export async function POST(req: Request) {
   try {
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
       return new Response(JSON.stringify(await fetchHistory(symbol)));
     } else {
       const { data } = await axios.get(
-        historyUrls(symbol, historyTimes[range][0])
+        historyUrls(symbol as string, historyTimes[range][0])
       );
 
       const history: History[] =

@@ -6,16 +6,7 @@ import Searchbar from "./searchbar";
 import { UserAccountNav } from "./user-account-nav";
 import SidebarToggle from "./sidebar-toggle";
 import { buttonVariants } from "../ui/button";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
 import React from "react";
-import { cn } from "@/lib/utils";
 import NavbarMenu from "./navbar-menu";
 
 export default async function Navbar() {

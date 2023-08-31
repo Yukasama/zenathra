@@ -29,10 +29,10 @@ const components: { title: string; href: string; description: string }[] = [
       "For sighted users to preview content available behind a link.",
   },
   {
-    title: "Progress",
-    href: "/docs/primitives/progress",
+    title: "Screener",
+    href: "/screener",
     description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
+      "Allows you to research the stock market beyond your limits.",
   },
   {
     title: "Scroll-area",

@@ -16,13 +16,13 @@ import {
 import { Screener } from "@/types/stock";
 import { Prisma, Stock } from "@prisma/client";
 import { Button } from "@/components/ui/button";
-import Heading from "@/components/ui/heading";
 import SelectInput from "@/components/ui/select-input";
 import { StructureProps } from "@/types/layout";
 import { BarChart2, FileText, Layers, RotateCcw } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import debounce from "lodash.debounce";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Page() {
   const [active, setActive] = useState<string>("Descriptive");
@@ -204,120 +204,25 @@ export default function Page() {
 
   return (
     <div className="grid h-full grid-cols-8">
-      <div className="col-span-4 f-col h-full overflow-hidden shadow-md dark:bg-zinc-400/30 lg:col-span-3 xl:col-span-2">
-        <div className="hidden-scrollbar f-col mt-[2px] h-full overflow-y-auto">
-          <div className="sticky top-0 z-10 flex bg-zinc-300">
-            {Object.keys(ratings).map((rating) => (
-              <button
-                key={rating}
-                onClick={() => setActive(rating)}
-                className={`${
-                  active === rating &&
-                  "border-b border-b-blue-500 bg-slate-200 dark:bg-zinc-200"
-                } f-box flex-1 cursor-pointer bg-slate-100 p-3 px-5 font-medium hover:bg-slate-200 dark:bg-zinc-400/70 dark:hover:bg-zinc-200`}>
-                <p className="hidden font-light lg:flex">{rating}</p>
-                <div className="flex lg:hidden">{ratings[rating]}</div>
-              </button>
-            ))}
+      <Tabs defaultValue="descriptive" className="w-[400px]">
+      <TabsList className="grid w-full grid-cols-2">
+        <TabsTrigger value="descriptive">Descriptive</TabsTrigger>
+        <TabsTrigger value="fundamental">Fundamental</TabsTrigger>
+        <TabsTrigger value="technical">Technical</TabsTrigger>
+      </TabsList>
+      <TabsContent value="descriptive">
+        {descriptive.map((filter) => (
+          <div key={filter.id} className="mb-4">
+            <SelectInput
+              label={filter.label}
+              options={filter.options}
+              setOption={filter.setOption}
+              resetCounter={resetCounter}
+            />
           </div>
-          <div
-            className={`${
-              active !== "Descriptive" && "hidden"
-            } f-col gap-4 p-5`}>
-            {descriptive.map((item) => (
-              <SelectInput
-                key={item.id}
-                label={item.label}
-                options={item.options}
-                onChange={item.setOption}
-                reset={resetCounter}
-                relative
-              />
-            ))}
-          </div>
-          <div
-            className={`${
-              active !== "Fundamental" && "hidden"
-            } f-col gap-4 p-5`}>
-            {fundamental.map((item) => (
-              <>
-                {item.type === "single" ? (
-                  <SelectInput
-                    key={item.id}
-                    label={item.label}
-                    options={item.options}
-                    onChange={item.setOption}
-                    reset={resetCounter}
-                    relative
-                  />
-                ) : (
-                  <div key={item.id} className="f-col gap-1">
-                    <p className="font-medium">{item.label}</p>
-                    <div className="flex justify-between gap-3">
-                      <SelectInput
-                        options={item.options}
-                        onChange={item.setOption}
-                        reset={resetCounter}
-                        relative
-                      />
-                      <div className="f-box mt-2 h-8 w-8 rounded-md border border-slate-200 p-2 text-lg font-semibold dark:border-zinc-100">
-                        <p className="mb-0.5">&gt;</p>
-                      </div>
-                      <SelectInput
-                        options={item.options}
-                        onChange={item.setOption2!}
-                        reset={resetCounter}
-                        relative
-                      />
-                    </div>
-                  </div>
-                )}
-              </>
-            ))}
-          </div>
-          <div
-            className={`${active !== "Technical" && "hidden"} f-col gap-4 p-5`}>
-            {technical.map((item) => (
-              <>
-                {item.type === "single" ? (
-                  <SelectInput
-                    key={item.id}
-                    label={item.label}
-                    options={item.options}
-                    onChange={item.setOption}
-                    reset={resetCounter}
-                    relative
-                  />
-                ) : (
-                  <div key={item.id} className="f-col gap-1">
-                    <p className="font-medium">{item.label}</p>
-                    <div className="flex justify-between gap-3">
-                      <SelectInput
-                        options={item.options}
-                        onChange={item.setOption}
-                        reset={resetCounter}
-                        relative
-                      />
-                      <div className="f-box mt-2 h-8 w-8 rounded-md border border-slate-200 p-2 text-lg font-semibold dark:border-zinc-100">
-                        <p className="mb-0.5">&gt;</p>
-                      </div>
-                      <SelectInput
-                        options={item.options}
-                        onChange={item.setOption2!}
-                        reset={resetCounter}
-                        relative
-                      />
-                    </div>
-                  </div>
-                )}
-              </>
-            ))}
-          </div>
-          <div className="absolute bottom-10 right-5">
-            <Button onClick={resetFilters}>Reset Filters</Button>
-          </div>
-        </div>
-      </div>
+        ))}
+      </TabsContent>
+      </Tabs>
       <div className="col-span-4 overflow-auto lg:col-span-5 xl:col-span-6">
         <div>
           <div className="sticky top-0 mb-0.5 grid grid-cols-10 gap-4 bg-slate-100/80 p-3 px-8 dark:bg-zinc-300/80">
@@ -342,12 +247,7 @@ export default function Page() {
                 ))}
               </>
             ) : isFetched && !results?.length ? (
-              <Heading
-                header="No Stocks matching the query."
-                subHeader="Maybe try another one"
-                className="mt-10"
-                center
-              />
+              <p>No Stocks matching the query</p>
             ) : (
               <div className="f-col hidden-scrollbar h-[800px] gap-2 overflow-scroll">
                 {results?.map((stock: Stock) => (

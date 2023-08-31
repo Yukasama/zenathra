@@ -4,19 +4,22 @@ import { useState } from "react";
 import PortfolioCreateModal from "./portfolio-create-modal";
 import ModalForm from "./ui/modal-form";
 import { Plus } from "lucide-react";
+import { Card } from "./ui/card";
+import { buttonVariants } from "./ui/button";
+import { cn } from "@/lib/utils";
 
 export default function PortfolioCreateCard() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <div
+      <Card
         onClick={() => setIsOpen(true)}
-        className="relative group f-box h-full min-h-[300px] gap-4 p-5 box hover:bg-slate-200 dark:hover:bg-zinc-800 cursor-pointer">
-        <div className="f-box h-10 w-10 rounded-full bg-blue-500 group-hover:bg-blue-500/80">
-          <Plus className="h-7 w-7 text-white" />
+        className="f-box min-h-[300px] cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-900">
+        <div className={cn(buttonVariants({size: "sm"}), "bg-primary")}>
+          <Plus />
         </div>
-      </div>
+      </Card>
       <ModalForm
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}

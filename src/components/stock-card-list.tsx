@@ -1,5 +1,5 @@
 import StockCard from "./stock-card";
-import { getQuotes } from "@/lib/fmp";
+import { getQuotes } from "@/lib/fmp/quote";
 import { StructureProps } from "@/types/layout";
 import { db } from "@/lib/db";
 import {

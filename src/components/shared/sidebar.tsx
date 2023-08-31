@@ -4,7 +4,7 @@ import { Menu } from "lucide-react";
 
 export default async function Sidebar() {
   return (
-    <Card className="rounded-none border-y-0 f-col p-3.5">
+    <Card className="hidden md:flex rounded-none border-y-0 f-col p-3.5">
       <SidebarToggle>
         <Menu className="h-[18px]" />
       </SidebarToggle>

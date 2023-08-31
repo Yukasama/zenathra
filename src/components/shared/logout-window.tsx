@@ -2,7 +2,7 @@
 
 import { signOut } from "next-auth/react";
 import { FormEvent } from "react";
-import CustomButton from "../ui/custom-button";
+import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { toast } from "@/hooks/use-toast";
 import { LogOut, SkipBack } from "lucide-react";
@@ -33,18 +33,14 @@ export default function LogoutWindow({ setShow }: Props) {
         <p>Keep me logged in on this device.</p>
       </Checkbox>
       <div className="pt-16 flex w-full justify-end gap-5">
-        <CustomButton
-          onClick={() => setShow(false)}
-          label="Cancel"
-          color="blue"
-          icon={<SkipBack className="h-4 w-4" />}
-        />
-        <CustomButton
-          onClick={handleLogout}
-          label="Logout"
-          color="red"
-          icon={<LogOut className="h-4 w-4" />}
-        />
+        <Button onClick={() => setShow(false)}>
+          <SkipBack className="h-4 w-4" />
+          Cancel
+        </Button>
+        <Button variant="destructive" onClick={handleLogout}>
+          <LogOut className="h-4 w-4" />
+          Logout
+        </Button>
       </div>
     </div>
   );

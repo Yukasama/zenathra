@@ -1,6 +1,6 @@
 "use client";
 
-import OAuth from "./oauth";
+import OAuth from "./shared/oauth";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "./ui/input";
 import axios from "axios";
+import { Card } from "./ui/card";
 
 const RegisterSchema = z
   .object({
@@ -72,11 +73,11 @@ export default function AuthSignUp() {
   }
 
   return (
-    <>
+    <Card className="w-[400px] z-10 f-col border-none rounded-none">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-2/3 space-y-6">
+          className="space-y-3 f-col">
           <FormField
             control={form.control}
             name="email"
@@ -90,9 +91,6 @@ export default function AuthSignUp() {
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>
-                  This is the email you used to sign up.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -119,7 +117,7 @@ export default function AuthSignUp() {
             name="confpassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
@@ -135,34 +133,35 @@ export default function AuthSignUp() {
             control={form.control}
             name="remember"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormItem className="flex items-center gap-2">
                 <FormControl>
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />
                 </FormControl>
-                <div className="space-y-1 leading-none">
+                <div className="space-y-1 leading-none mt-5">
                   <FormLabel>Remember Me</FormLabel>
-                  <FormDescription>
-                    Keep me logged in on this device
+                  <FormDescription className="text-[13px]">
+                    Keep me logged in
                   </FormDescription>
                 </div>
               </FormItem>
             )}
           />
-          <Button isLoading={isLoading}>
-            <LogIn className="h-4 w-4" />
+          <Button variant="subtle" isLoading={isLoading}>
+            <LogIn className="h-4" />
             Sign Up
           </Button>
         </form>
       </Form>
-      <div className="flex items-center">
-        <div className="h-[1px] flex-1 bg-slate-400/60 dark:bg-zinc-100"></div>
-        <div className="f-box h-10 w-10 rounded-full border border-slate-400/60 text-[12px] text-slate-400 dark:border-zinc-100">
+
+      <div className="flex items-center my-3">
+        <div className="flex-1 border"></div>
+        <div className="f-box h-10 w-10 rounded-full border text-[12px] text-slate-400 ">
           OR
         </div>
-        <div className="h-[1px] flex-1 bg-slate-400/60 dark:bg-zinc-100"></div>
+        <div className="flex-1 border"></div>
       </div>
 
       <div className="f-col gap-2">
@@ -170,6 +169,6 @@ export default function AuthSignUp() {
         <OAuth provider="facebook" />
         <OAuth provider="github" />
       </div>
-    </>
+    </Card>
   );
 }

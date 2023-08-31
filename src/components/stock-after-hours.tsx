@@ -1,7 +1,7 @@
 import { Stock } from "@prisma/client";
 import { StructureProps } from "@/types/layout";
 import { ChevronsUp, ChevronsDown } from "lucide-react";
-import { getQuote } from "@/lib/fmp";
+import { getQuote } from "@/lib/fmp/quote";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   stock: Stock;

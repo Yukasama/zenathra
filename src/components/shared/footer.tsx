@@ -33,7 +33,7 @@ export default function Footer() {
                     <Link
                       key={`${link.name}-${i}`}
                       href={link.link}
-                      className="text-sm">
+                      className={"text-sm hover:underline"}>
                       {link.name}
                     </Link>
                   ))}

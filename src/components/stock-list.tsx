@@ -2,7 +2,7 @@ import StockListItem, { StockListItemLoading } from "./stock-list-item";
 import { StructureProps } from "@/types/layout";
 import React from "react";
 import { db } from "@/lib/db";
-import { getQuotes } from "@/lib/fmp";
+import { getQuotes } from "@/lib/fmp/quote";
 
 interface ListStructureProps extends StructureProps {
   title?: string;

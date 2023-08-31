@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     const session = await getAuthSession();
     if (!session?.user) return new UnauthorizedResponse();
 
-    const { symbol, skip, clean, pullTimes } = UploadStockSchema.parse(
+    const { stock, skip, clean, pullTimes } = UploadStockSchema.parse(
       await req.json()
     );
 
@@ -38,9 +38,9 @@ export async function POST(req: Request) {
       alreadySymbols = allStocks.map((stock) => stock.symbol);
     }
 
-    if (symbol === "All" || symbol === "US500") {
+    if (stock === "All" || stock === "US500") {
       const { data } = await axios.post("/api/stocks/symbols", {
-        symbolSet: symbol,
+        symbolSet: stock,
         pullTimes: pullTimes || 1,
       });
       const symbolArray: string[][] = data;
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
         if (currentIteration !== totalIterations)
           await Timeout(Number(fmpConfig.timeout));
       }
-    } else await uploadStocks([symbol]);
+    } else await uploadStocks([stock]);
 
     if (clean) await axios.post("/api/admin/clean");
 
@@ -102,7 +102,7 @@ function MergeArrays(arrays: Record<string, any>[][]): Record<string, any>[] {
   return result;
 }
 
-export default async function uploadStocks(symbols: string[]): Promise<void> {
+async function uploadStocks(symbols: string[]): Promise<void> {
   if (!symbols.length) throw new Error("ArgumentError: No symbols provided");
 
   const financialUrls = symbols.map((symbol) => [
@@ -176,6 +176,7 @@ export default async function uploadStocks(symbols: string[]): Promise<void> {
       createdAt: new Date(),
       updatedAt: new Date(),
       pegRatioTTM: Math.abs(stocks[index].peRatioTTM),
+      peersList: stocks[index].peersList.join(","),
     };
 
     const existingStock = await db.stock.findUnique({

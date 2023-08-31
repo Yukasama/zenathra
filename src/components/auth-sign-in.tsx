@@ -5,7 +5,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, buttonVariants } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
-import OAuth from "./oauth";
+import OAuth from "./shared/oauth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
@@ -56,8 +56,7 @@ export default function AuthSignIn() {
   }
 
   return (
-    <Card className="w-[400px] p-10 z-10 f-col">
-      <h3 className="text-center text-xl">Sign In</h3>
+    <Card className="w-[400px] z-10 f-col border-none rounded-none">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -119,7 +118,7 @@ export default function AuthSignIn() {
             </Link>
           </div>
 
-          <Button className="mt-1" variant="subtle" isLoading={isLoading}>
+          <Button className="mt-4" variant="subtle" isLoading={isLoading}>
             <LogIn className="h-4" />
             Sign In
           </Button>
