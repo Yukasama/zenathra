@@ -1,4 +1,3 @@
-import { Screener } from "@/types/stock";
 import { db } from "@/lib/db";
 import { buildFilter } from "@/config/screener";
 import { StockScreenerSchema } from "@/lib/validators/stock";
@@ -8,11 +7,11 @@ import {
   UnprocessableEntityResponse,
 } from "@/lib/response";
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   try {
-    const { screener } = StockScreenerSchema.parse(await req.json());
+    const screener = StockScreenerSchema.parse(await req.json());
 
-    const filter = buildFilter(JSON.parse(screener) as Screener);
+    const filter = buildFilter(screener);
 
     const stocks = await db.stock.findMany({
       where: filter,

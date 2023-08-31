@@ -9,6 +9,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import * as Command from "@/components/ui/command";
 import { useOnClickOutside } from "@/hooks/use-on-click-outside";
 import Link from "next/link";
+import { StockImage } from "./stock-image";
 
 export default function Searchbar() {
   const [input, setInput] = useState<string>("");
@@ -91,7 +92,15 @@ export default function Searchbar() {
                   }}
                   key={stock.id}
                   value={stock.companyName}>
-                  <Link href={`/stocks/${stock.symbol}`}>{stock.symbol}</Link>
+                  <Link
+                    className="flex items-center gap-3"
+                    href={`/stocks/${stock.symbol}`}>
+                    <StockImage src={stock.image} px={25} />
+                    <div>
+                      <p className="font-medium">{stock.symbol}</p>
+                      <p className="text-[12px] text-slate-500 truncate w-[150px]">{stock.companyName}</p>
+                    </div>
+                  </Link>
                 </Command.CommandItem>
               ))}
             </Command.CommandGroup>

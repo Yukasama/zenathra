@@ -10,7 +10,14 @@ export const UploadStockSchema = z.object({
 });
 
 export const StockScreenerSchema = z.object({
-  screener: z.string().nonempty(),
+  exchange: z.string(),
+  sector: z.string(),
+  industry: z.string(),
+  country: z.string(),
+  earningsDate: z.string(),
+  peRatio: z.tuple([z.string(), z.string()]),
+  pegRatio: z.tuple([z.string(), z.string()]),
+  marketCap: z.string(),
 });
 
 export const SearchStocksSchema = z.object({

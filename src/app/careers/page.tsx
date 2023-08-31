@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { ColorTheme } from "react-ts-tradingview-widgets";

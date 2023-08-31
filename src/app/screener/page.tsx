@@ -24,11 +24,11 @@ import debounce from "lodash.debounce";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
+  SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SelectContent } from "@radix-ui/react-select";
 import {
   Card,
   CardContent,
@@ -36,10 +36,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import PageLayout from "@/components/shared/page-layout";
+import { StockImage } from "@/components/shared/stock-image";
 
 export default function Page() {
-  const [active, setActive] = useState<string>("Descriptive");
-
   const [resetCounter, setResetCounter] = useState(0);
 
   const [exchange, setExchange] = useState<string>("Any");
@@ -77,11 +77,12 @@ export default function Page() {
         marketCap: marketCap,
       };
 
-      const { data } = await axios.get(`/api/stock/query/${payload}`);
+      const { data } = await axios.post("/api/stock/query", payload);
       return data as (Stock & {
         _count: Prisma.StockCountOutputType;
       })[];
     },
+    queryKey: ["screener-query"],
     enabled: false,
   });
 
@@ -195,33 +196,19 @@ export default function Page() {
     },
   ];
 
-  function ScreenerItemStructure({ isLoading, children }: StructureProps) {
-    return (
-      <div
-        className={`${isLoading && "animate-pulse-right"} grid h-[60px] 
-    animate-appear-up grid-cols-10 items-center gap-4 rounded-md bg-slate-200 px-4 dark:bg-zinc-200 dark:hover:bg-zinc-400`}>
-        {children}
-      </div>
-    );
-  }
-
-  function ScreenerItemLoading() {
-    return <ScreenerItemStructure isLoading />;
-  }
-
   return (
-    <div className="flex">
+    <PageLayout className="flex">
       <Tabs defaultValue="descriptive">
         <TabsList>
-          <TabsTrigger value="descriptive">
+          <TabsTrigger className="flex gap-1" value="descriptive">
             <FileText />
             Descriptive
           </TabsTrigger>
-          <TabsTrigger value="fundamental">
+          <TabsTrigger className="flex gap-1" value="fundamental">
             <Layers />
             Fundamental
           </TabsTrigger>
-          <TabsTrigger value="technical">
+          <TabsTrigger className="flex gap-1" value="technical">
             <BarChart2 />
             Technical
           </TabsTrigger>
@@ -231,6 +218,64 @@ export default function Page() {
             <CardHeader>
               <CardTitle>Descriptive</CardTitle>
               <CardDescription>Filters that describe the stock</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {descriptive.map((filter) => (
+                <Select key={filter.id}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Any" />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[216px]">
+                    {filter.options.map((option) => (
+                      <SelectItem
+                        key={option}
+                        value={option}
+                        onChange={() => filter.setOption(option)}>
+                        <p className="truncate w-[270px]">{option}</p>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="fundamental">
+          <Card>
+            <CardHeader>
+              <CardTitle>Fundamental</CardTitle>
+              <CardDescription>
+                Filters based on financial statements
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="f-col gap-4">
+              {fundamental.map((filter) => (
+                <Select key={filter.id}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Any" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {filter.options.map((option) => (
+                      <SelectItem
+                        key={option}
+                        value={option}
+                        onChange={() => filter.setOption(option)}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="technical">
+          <Card>
+            <CardHeader>
+              <CardTitle>Technical</CardTitle>
+              <CardDescription>
+                Filters based on the stock&apos;s chart
+              </CardDescription>
             </CardHeader>
             <CardContent className="f-col gap-4">
               {descriptive.map((filter) => (
@@ -254,11 +299,11 @@ export default function Page() {
           </Card>
         </TabsContent>
       </Tabs>
-      <div className="f-col mb-5 mt-1 gap-2 px-1 lg:px-8">
+      <div className="f-col mb-5 mt-1 gap-2 px-1 lg:px-8 w-full">
         {isFetching ? (
           <>
             {[...Array(15)].map((_, i) => (
-              <ScreenerItemLoading key={i} />
+              <Card key={i} className="bg-red-500" />
             ))}
           </>
         ) : isFetched && !results?.length ? (
@@ -267,44 +312,22 @@ export default function Page() {
           <div className="f-col hidden-scrollbar h-[800px] gap-2 overflow-scroll">
             {results?.map((stock: Stock) => (
               <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
-                <ScreenerItemStructure>
+                <Card className="flex p-2 px-4 hover:bg-slate-100 dark:hover:bg-slate-900">
                   <div className="col-span-3 flex items-center gap-4">
-                    <div className="f-box h-10 w-10 rounded-sm dark:bg-white">
-                      <Image
-                        src={stock.image || "/images/stock.jpg"}
-                        className="max-h-10 w-10 rounded-md p-1 dark:bg-white"
-                        height={30}
-                        width={30}
-                        alt="Logo"
-                        loading="lazy"
-                      />
-                    </div>
+                    <StockImage src={stock.image} px={30} />
                     <div className="f-col">
                       <p className="font-medium">{stock.symbol}</p>
-                      <p className="text-sm text-slate-700">
+                      <p className="text-sm text-slate-500">
                         {stock.companyName}
                       </p>
                     </div>
                   </div>
-                  <div
-                    className={`p-1.5 ${
-                      Number(stock.changes) > 0
-                        ? "text-green-400"
-                        : "text-red-400"
-                    }  col-span-1 font-medium`}>
-                    {Number(stock.changes) > 0 && "+"}
-                    {stock.changes}
-                  </div>
-                  <div className="col-span-1 p-1.5">
-                    {stock.peRatioTTM ? stock.peRatioTTM.toFixed(2) : 0}
-                  </div>
-                  <div className="col-span-2 p-1.5">{stock.sector}</div>
-                </ScreenerItemStructure>
+                </Card>
               </Link>
             ))}
           </div>
         )}
       </div>
-    </div>
+    </PageLayout>
   );
 }
