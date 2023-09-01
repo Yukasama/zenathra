@@ -92,10 +92,10 @@ export default function StockPriceChart({
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex justify-between">
+          <div className="space-y-1.5">
             <CardTitle>{title}</CardTitle>
-            <CardDescription>{description}</CardDescription>
+            <CardDescription className="truncate w-[280px]">{description}</CardDescription>
           </div>
           <Tabs defaultValue="1D">
             <TabsList>

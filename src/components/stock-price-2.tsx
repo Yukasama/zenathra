@@ -52,31 +52,35 @@ export default async function StockPrice2({ session, stock }: Props) {
     quote && quote.change ? (quote.change > 0 ? true : false) : true;
 
   return (
-    <Card className="flex p-3 gap-3 items-center">
-      <Link href={stock.website ?? null} prefetch={false} target="_blank">
-        <StockImage src={stock.image} px={45} />
-      </Link>
-      <div className="f-col">
-        <p className="mr-10 w-[200px] truncate text-[19px] font-medium">
-          {stock.companyName}
-        </p>
-        <div className="flex items-center gap-1 mt-1">
-          <p className="text-lg">${quote?.price.toFixed(2) ?? "N/A"}</p>
-          {positive ? (
-            <ChevronsUp className="h-5 w-5 text-green-500" />
-          ) : (
-            <ChevronsDown className="h-5 w-5 text-red-500" />
-          )}
-          <p
-            className={`text-lg ${
-              positive ? "text-green-500" : "text-red-500"
-            }`}>
-            ({positive && "+"}
-            {quote?.changesPercentage.toFixed(2) + "%" ?? "N/A"})
+    <Card className="f-col p-3 pb-1.5 gap-1">
+      <div className="flex gap-2">
+        <Link href={stock.website ?? null} prefetch={false} target="_blank">
+          <StockImage src={stock.image} px={40} />
+        </Link>
+        <div className="-space-y-1">
+          <p className="mr-10 w-[200px] truncate text-[17px] font-medium">
+            {stock.symbol}
           </p>
+          <p className="text-slate-400 text-[13px]">{stock.companyName}</p>
         </div>
       </div>
-      <div className="absolute right-2.5 top-2.5 flex">
+      <div className="flex items-center gap-1 px-2">
+        <span className="text-lg">$</span>
+        <p className="text-[26px]">{quote?.price.toFixed(2) ?? "N/A"}</p>
+        {positive ? (
+          <ChevronsUp className="h-5 w-5 mt-1 text-green-500" />
+        ) : (
+          <ChevronsDown className="h-5 w-5 mt-1 text-red-500" />
+        )}
+        <p
+          className={`text-lg mt-1.5 ${
+            positive ? "text-green-500" : "text-red-500"
+          }`}>
+          ({positive && "+"}
+          {quote?.changesPercentage.toFixed(2) + "%" ?? "N/A"})
+        </p>
+      </div>
+      <div className="absolute right-3 top-3 flex">
         <StockPortfolioAddButton
           session={session}
           symbolId={stock.id}

@@ -1,6 +1,5 @@
 import { Portfolio } from "@prisma/client";
 import Link from "next/link";
-import PortfolioDeleteButton from "./portfolio-delete-button";
 import StockList, { StockListLoading } from "./stock-list";
 import { Suspense } from "react";
 import {
@@ -11,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import PortfolioDeleteModal from "./portfolio-delete-modal";
 
 interface Props {
   portfolio: Pick<Portfolio, "id" | "title" | "public">;
@@ -39,7 +39,7 @@ export default function PortfolioCard({ portfolio, stockIds }: Props) {
         </CardContent>
       </Link>
       <CardFooter>
-        <PortfolioDeleteButton
+        <PortfolioDeleteModal
           portfolio={{
             id: portfolio.id,
             title: portfolio.title,

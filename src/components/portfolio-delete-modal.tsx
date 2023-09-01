@@ -9,12 +9,23 @@ import { toast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { DeletePortfolioProps } from "@/lib/validators/portfolio";
 import { Trash } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
 
 type Props = {
   portfolio: Pick<Portfolio, "id" | "title">;
 };
 
-export default function PortfolioDeleteButton({ portfolio }: Props) {
+export default function PortfolioDeleteModal({ portfolio }: Props) {
   const router = useRouter();
 
   const { mutate: deletePortfolio, isLoading } = useMutation({
@@ -45,12 +56,34 @@ export default function PortfolioDeleteButton({ portfolio }: Props) {
   });
 
   return (
-    <Button
-      isLoading={isLoading}
-      variant="destructive"
-      onClick={() => deletePortfolio()}>
-      <Trash className="h-4 w-4" />
-      Delete
-    </Button>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="destructive">
+          <Trash className="h-4 w-4" />
+          Delete
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Delete Portfolio?</DialogTitle>
+          <DialogDescription>This action cannot be undone.</DialogDescription>
+        </DialogHeader>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="name" className="text-right">
+            Name
+          </Label>
+          <Input id="name" value="Pedro Duarte" className="col-span-3" />
+        </div>
+        <DialogFooter>
+          <Button
+            type="submit"
+            variant="destructive"
+            isLoading={isLoading}
+            onClick={() => deletePortfolio()}>
+            Delete Portfolio
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

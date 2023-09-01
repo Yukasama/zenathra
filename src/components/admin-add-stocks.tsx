@@ -54,7 +54,6 @@ export default function AdminAddStocks() {
           });
         }
       }
-
       toast({
         title: "Oops! Something went wrong.",
         description: `Stocks could not be uploaded.`,
@@ -76,7 +75,6 @@ export default function AdminAddStocks() {
       skip: data.skip,
       pullTimes: data.pullTimes,
     };
-
     uploadStocks(payload);
   }
 
@@ -88,7 +86,7 @@ export default function AdminAddStocks() {
           name="stock"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Symbols</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -99,6 +97,7 @@ export default function AdminAddStocks() {
                   <SelectItem value="All">All</SelectItem>
                   <SelectItem value="AAPL">AAPL</SelectItem>
                   <SelectItem value="MSFT">MSFT</SelectItem>
+                  <SelectItem value="SQ">SQ</SelectItem>
                 </SelectContent>
               </Select>
               <FormDescription>

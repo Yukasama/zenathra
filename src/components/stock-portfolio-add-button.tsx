@@ -56,9 +56,9 @@ export default function StockPortfolioAddButton({
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Add {symbol}</DialogTitle>
+              <DialogTitle>Toggle {symbol}</DialogTitle>
               <DialogDescription>
-                Add {symbol} stock to any of your portfolios
+                Manage {symbol} stock in your portfolios
               </DialogDescription>
             </DialogHeader>
             <div className="f-col gap-2.5">
