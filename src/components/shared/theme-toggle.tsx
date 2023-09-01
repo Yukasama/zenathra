@@ -4,8 +4,11 @@ import { Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
 
-export default function ThemeToggle() {
+interface Props extends React.HTMLAttributes<HTMLButtonElement> {}
+
+export default function ThemeToggle({ className }: Props) {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -14,7 +17,7 @@ export default function ThemeToggle() {
   }, []);
 
   return (
-    <>
+    <div className={cn(className)}>
       {!mounted ? (
         <Button
           variant="link"
@@ -38,6 +41,6 @@ export default function ThemeToggle() {
           )}
         </Button>
       )}
-    </>
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Quote, TimeFrame } from "@/types/stock";
+import { Quote } from "@/types/stock";
 import { env } from "@/env.mjs";
 
 export const fmpConfig = {

@@ -1,21 +1,10 @@
 "use client";
 
-import SidebarItem from "./sidebar-item";
 import Searchbar from "./searchbar";
 import SidebarToggle from "./sidebar-toggle";
-import { Menu } from "@/types/layout";
 import { useSidebar } from "@/components/shared/sidebar-provider";
 import { useEffect } from "react";
-import Image from "next/image";
-import {
-  Home,
-  BarChart2,
-  Filter,
-  BookOpen,
-  Settings,
-  LogIn,
-  X,
-} from "lucide-react";
+import { X } from "lucide-react";
 import type { Session } from "next-auth";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import CompanyLogo from "./company-logo";

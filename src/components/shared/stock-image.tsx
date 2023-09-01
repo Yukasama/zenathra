@@ -7,15 +7,21 @@ interface Props extends React.HTMLAttributes<HTMLImageElement> {
   priority?: boolean;
 }
 
-export function StockImage({ px, src, className, priority = false }: Props) {
+export function StockImage({
+  px,
+  src,
+  className,
+  priority = false,
+  ...props
+}: Props) {
   return (
-    <div className="f-box rounded-full">
+    <div className={cn("f-box rounded-full", className)} {...props}>
       <Image
-        className={cn(className, "p-1")}
+        className="p-1"
         src={src ?? "/images/stock.jpg"}
         height={px}
         width={px}
-        alt="Company Logo"
+        alt="Stock Logo"
         loading={`${priority ? "eager" : "lazy"}`}
         priority={priority}
       />

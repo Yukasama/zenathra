@@ -8,7 +8,11 @@ interface Props extends React.HTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
 }
 
-export default function SidebarToggle({ children, className }: Props) {
+export default function SidebarToggle({
+  children,
+  className,
+  ...props
+}: Props) {
   const { toggleSidebar } = useSidebar();
 
   return (
@@ -16,7 +20,8 @@ export default function SidebarToggle({ children, className }: Props) {
       size="xs"
       variant="subtle"
       className={cn(className)}
-      onClick={() => toggleSidebar()}>
+      onClick={() => toggleSidebar()}
+      {...props}>
       {children}
     </Button>
   );

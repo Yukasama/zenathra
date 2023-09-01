@@ -9,9 +9,11 @@ import {
 } from "@/config/fmp";
 import { env } from "@/env.mjs";
 import axios from "axios";
-import { Quote, StockAction } from "@/types/stock";
+import { Quote } from "@/types/stock";
 
-async function getDailys(action: StockAction): Promise<string[] | null> {
+async function getDailys(
+  action: "actives" | "winners" | "losers"
+): Promise<string[] | null> {
   try {
     if (fmpConfig.simulation) return ["AAPL", "MSFT", "GOOG", "TSLA", "NVDA"];
 
@@ -84,7 +86,7 @@ async function getQuotes(symbols: string[]): Promise<Quote[] | null> {
 }
 
 async function getSymbols(
-  symbolSet: string,
+  symbolSet: "All" | "US500",
   pullTimes = 1
 ): Promise<string[][] | null> {
   try {

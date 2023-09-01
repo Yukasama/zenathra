@@ -98,7 +98,9 @@ export default function Searchbar() {
                     <StockImage src={stock.image} px={25} />
                     <div>
                       <p className="font-medium">{stock.symbol}</p>
-                      <p className="text-[12px] text-slate-500 truncate w-[150px]">{stock.companyName}</p>
+                      <p className="text-[12px] text-slate-500 truncate w-[150px]">
+                        {stock.companyName}
+                      </p>
                     </div>
                   </Link>
                 </Command.CommandItem>

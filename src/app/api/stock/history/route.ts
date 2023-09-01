@@ -22,13 +22,17 @@ export async function POST(req: Request) {
       return new Response(JSON.stringify(await fetchHistory(symbol)));
     } else {
       const { data } = await axios.get(
-        historyUrls(symbol as string, historyTimes[range][0])
+        historyUrls(symbol as string, historyTimes[range][0] as string)
       );
 
       const history: History[] =
         historyTimes[range][0] === "day1" ? data.historical : data;
 
-      return history.slice(0, historyTimes[range][1]).reverse();
+      return new Response(
+        JSON.stringify(
+          history.slice(0, historyTimes[range][1] as number).reverse()
+        )
+      );
     }
   } catch (error) {
     if (error instanceof z.ZodError)
@@ -48,13 +52,13 @@ async function fetchHistory(symbol: string) {
   );
 
   return {
-    "1D": fetches[0].slice(0, historyTimes["1D"][1]).reverse(),
-    "5D": fetches[1].slice(0, historyTimes["5D"][1]).reverse(),
-    "1M": fetches[2].slice(0, historyTimes["1M"][1]).reverse(),
-    "6M": fetches[3].slice(0, historyTimes["6M"][1]).reverse(),
-    "1Y": fetches[3].slice(0, historyTimes["1Y"][1]).reverse(),
-    "5Y": fetches[3].slice(0, historyTimes["5Y"][1]).reverse(),
-    ALL: fetches[3].slice(0, historyTimes["ALL"][1]).reverse(),
+    "1D": fetches[0].slice(0, historyTimes["1D"][1] as number).reverse(),
+    "5D": fetches[1].slice(0, historyTimes["5D"][1] as number).reverse(),
+    "1M": fetches[2].slice(0, historyTimes["1M"][1] as number).reverse(),
+    "6M": fetches[3].slice(0, historyTimes["6M"][1] as number).reverse(),
+    "1Y": fetches[3].slice(0, historyTimes["1Y"][1] as number).reverse(),
+    "5Y": fetches[3].slice(0, historyTimes["5Y"][1] as number).reverse(),
+    ALL: fetches[3].slice(0, historyTimes["ALL"][1] as number).reverse(),
   };
 }
 

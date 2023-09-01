@@ -1,14 +1,22 @@
 "use client";
 
 import { Button } from "./ui/button";
-import ModalForm from "./ui/modal-form";
 import { useState } from "react";
-import StockPortfolioAddModal from "./stock-portfolio-add-modal";
 import type { Session } from "next-auth";
 import { Plus } from "lucide-react";
 import { useCustomToasts } from "@/hooks/use-custom-toasts";
 import { toast } from "@/hooks/use-toast";
 import { PortfolioWithStocks } from "@/types/db";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "./ui/dialog";
+import StockPortfolioModifier from "./stock-portfolio-modifier";
 
 interface Props {
   session: Session | null;
@@ -25,33 +33,46 @@ export default function StockPortfolioAddButton({
   portfolios,
   className,
 }: Props) {
-  const [open, setOpen] = useState(false);
   const { loginToast } = useCustomToasts();
 
   const handleClick = () => {
     if (!session) return loginToast();
     if (!portfolios || portfolios.length === 0)
       return toast({ description: "You have to create a portfolio first." });
-
-    setOpen(true);
   };
 
   return (
-    <div className={className}>
-      <Button variant="subtle" size="xs" onClick={handleClick}>
-        <Plus className="h-4" />
-      </Button>
-      {portfolios && session?.user && (
-        <ModalForm
-          title={`Add '${symbol}' to portfolios`}
-          isOpen={open}
-          onClose={() => setOpen(false)}>
-          <StockPortfolioAddModal
-            portfolios={portfolios}
-            symbolId={symbolId}
-          />
-        </ModalForm>
+    <>
+      {!session?.user ? (
+        <Button variant="subtle" size="xs" onClick={handleClick}>
+          <Plus className="h-4" />
+        </Button>
+      ) : (
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="subtle" size="xs">
+              <Plus className="h-4" />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Add {symbol}</DialogTitle>
+              <DialogDescription>
+                Add {symbol} stock to any of your portfolios
+              </DialogDescription>
+            </DialogHeader>
+            <div className="f-col gap-2.5">
+              {portfolios?.map((portfolio) => (
+                <StockPortfolioModifier
+                  key={portfolio.id}
+                  portfolio={portfolio}
+                  symbolId={symbolId}
+                />
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
       )}
-    </div>
+    </>
   );
 }

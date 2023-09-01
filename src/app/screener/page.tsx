@@ -91,7 +91,6 @@ export default function Page() {
       })[];
     },
     queryKey: ["screener-query"],
-    enabled: false,
   });
 
   useEffect(() => {

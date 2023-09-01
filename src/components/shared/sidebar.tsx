@@ -18,7 +18,7 @@ export default async function Sidebar() {
       <SidebarToggle>
         <Menu className="h-[18px]" />
       </SidebarToggle>
-      
+
       {portfolios.map((portfolio) => (
         <Link
           href={`/p/${portfolio.id}`}

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { User } from "next-auth";
 import { signOut } from "next-auth/react";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "@/components/shared/user-avatar";
 
-interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
+interface UserAccountNavProps {
   user: Pick<User, "name" | "image" | "email">;
 }
 

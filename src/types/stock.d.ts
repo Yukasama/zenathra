@@ -45,11 +45,3 @@ export interface ChartProps {
   data: {}[];
   size?: "sm" | "md" | "lg";
 }
-
-export type StockAction = "actives" | "winners" | "losers";
-
-export type TimeFrame = "1D" | "5D" | "1M" | "6M" | "1Y" | "5Y" | "ALL";
-
-export interface AllHistory {
-  [key in TimeFrame]: History[] | null;
-}

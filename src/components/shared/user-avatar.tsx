@@ -4,14 +4,15 @@ import { AvatarProps } from "@radix-ui/react-avatar";
 import { Icons } from "./icons";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 interface UserAvatarProps extends AvatarProps {
   user: Pick<User, "image" | "name">;
 }
 
-export function UserAvatar({ user, ...props }: UserAvatarProps) {
+export function UserAvatar({ user, className, ...props }: UserAvatarProps) {
   return (
-    <Avatar {...props}>
+    <Avatar className={cn(className)} {...props}>
       {user.image ? (
         <div className="essential relative aspect-square h-full w-full">
           <Image

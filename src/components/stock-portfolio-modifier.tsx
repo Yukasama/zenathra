@@ -86,10 +86,11 @@ export default function StockPortfolioModifier({ portfolio, symbolId }: Props) {
       ) : (
         <Button
           onClick={() => addToPortfolio()}
+          variant="success"
           isLoading={isAddLoading}
           className={`w-full h-full absolute top-0 left-0 ${
-            !isAddLoading ? "opacity-0" : "opacity-50"
-          } hover:opacity-50`}>
+            !isAddLoading ? "opacity-0" : "opacity-20 dark:opacity-30"
+          } opacity-20 dark:opacity-30`}>
           <Plus className="h-6" color="white" />
         </Button>
       )}

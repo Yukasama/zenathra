@@ -12,6 +12,7 @@ import axios from "axios";
 import { getAuthSession } from "@/lib/auth";
 import { UploadStockSchema } from "@/lib/validators/stock";
 import { env } from "@/env.mjs";
+import { getSymbols } from "@/lib/fmp/quote";
 
 export async function POST(req: Request) {
   try {
@@ -39,11 +40,7 @@ export async function POST(req: Request) {
     }
 
     if (stock === "All" || stock === "US500") {
-      const { data } = await axios.post("/api/stocks/symbols", {
-        symbolSet: stock,
-        pullTimes: pullTimes || 1,
-      });
-      const symbolArray: string[][] = data;
+      const symbolArray = await getSymbols(stock, pullTimes);
 
       if (!symbolArray)
         return new InternalServerErrorResponse("Symbols could not be fetched");

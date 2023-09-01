@@ -61,9 +61,13 @@ export default async function page({ params: { symbol } }: Props) {
           <StockEye stock={stock} session={session} />
         </div>
         <Separator />
-        <div className="flex items-center gap-5">
+        <div className="flex gap-5">
           <Suspense fallback={<p>Loading...</p>}>
-            <StockPriceChart symbol={symbol} />
+            <StockPriceChart
+              symbol={symbol}
+              title={`${symbol} Chart`}
+              description={`Price Chart of ${stock.companyName}`}
+            />
           </Suspense>
           <Suspense fallback={<Card />}>
             <StockList

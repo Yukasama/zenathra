@@ -81,6 +81,11 @@ export default async function page({ params: { id } }: Props) {
   if (!portfolio.public && !session?.user)
     return <p>This Portfolio is private.</p>;
 
+  const symbols = await db.stock.findMany({
+    select: { symbol: true },
+    where: { id: { in: stockIds.map((s) => s.stockId) } },
+  });
+
   return (
     <div className="p-5">
       <div className="p-2 pb-4 px-1">
@@ -94,7 +99,7 @@ export default async function page({ params: { id } }: Props) {
       {stockIds ? (
         <div className="flex gap-4">
           <Suspense fallback={<StockChartLoading />}>
-            <PortfolioChart stockIds={stockIds.map((s) => s.stockId)} />
+            <PortfolioChart symbols={symbols.map((s) => s.symbol)} />
           </Suspense>
           <Suspense
             fallback={
@@ -104,7 +109,7 @@ export default async function page({ params: { id } }: Props) {
               />
             }>
             <StockList
-              stockIds={stockIds.map((s) => s.stockId)}
+              symbols={symbols.map((s) => s.symbol)}
               title="Portfolio Positions"
               error="No Positions found"
               className="wrapper"
