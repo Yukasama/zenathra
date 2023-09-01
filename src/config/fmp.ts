@@ -1,21 +1,15 @@
 import { Quote, TimeFrame } from "@/types/stock";
 import { env } from "@/env.mjs";
 
-interface FmpConfig {
-  timeout: number;
-  docsPerPull: number;
-  simulation?: boolean;
-}
-
-export const fmpConfig: FmpConfig = {
+export const fmpConfig = {
   timeout: 60,
   docsPerPull: 33,
-  simulation: true,
+  simulation: false,
 };
 
-export const FMP_API_URL: string = "https://financialmodelingprep.com/api/";
+export const FMP_API_URL = "https://financialmodelingprep.com/api/";
 
-export const fmpUrls: { [key: string]: string } = {
+export const fmpUrls = {
   All: `${FMP_API_URL}v3/stock/list?apikey=${env.FMP_API_KEY}`,
   US500: `${FMP_API_URL}v3/sp500_constituent?apikey=${env.FMP_API_KEY}`,
 
@@ -25,7 +19,7 @@ export const fmpUrls: { [key: string]: string } = {
   indexQuotes: `${FMP_API_URL}v3/quotes/index?apikey=${env.FMP_API_KEY}`,
 };
 
-export const historyTimes: Record<TimeFrame, [string, number]> = {
+export const historyTimes = {
   "1D": ["min1", 391],
   "5D": ["min5", 420],
   "1M": ["min30", 420],
@@ -35,7 +29,7 @@ export const historyTimes: Record<TimeFrame, [string, number]> = {
   ALL: ["day1", 1550],
 };
 
-export const historyUrls = (symbol: string, timeFrame: TimeFrame) => {
+export const historyUrls = (symbol: string, timeFrame: string) => {
   const urls: any = {
     min1: `${FMP_API_URL}v3/historical-chart/1min/${symbol}?apikey=${env.FMP_API_KEY}`,
     min5: `${FMP_API_URL}v3/historical-chart/5min/${symbol}?apikey=${env.FMP_API_KEY}`,

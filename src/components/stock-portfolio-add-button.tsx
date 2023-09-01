@@ -38,7 +38,7 @@ export default function StockPortfolioAddButton({
 
   return (
     <div className={className}>
-      <Button onClick={handleClick}>
+      <Button variant="subtle" size="xs" onClick={handleClick}>
         <Plus className="h-4" />
       </Button>
       {portfolios && session?.user && (

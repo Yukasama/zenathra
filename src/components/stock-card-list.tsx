@@ -27,7 +27,7 @@ function Structure({ className, isLoading, children }: StructureProps) {
 
 export const StockCardListLoading = () => {
   return (
-    <div className="flex min-h-[100px] justify-evenly gap-4 border-y border-slate-200 py-3 dark:border-zinc-200">
+    <div className="flex">
       <StockCard quote={null} image={undefined} />
       <StockCard quote={null} image={undefined} />
       <StockCard quote={null} image={undefined} />
@@ -50,7 +50,7 @@ export default async function StockCardList({
     );
   symbols = symbols.slice(0, 5);
 
-  let [quotes, images] = await Promise.all([
+  let [quotes, stocks] = await Promise.all([
     getQuotes(symbols),
     db.stock.findMany({
       select: { symbol: true, image: true },
@@ -58,9 +58,9 @@ export default async function StockCardList({
     }),
   ]);
 
-  if (!quotes || quotes.length < 5) return <StockCardListLoading />;
+  if (!quotes) return <StockCardListLoading />;
 
-  if (!Array.isArray(images) && images) images = [images];
+  if (!Array.isArray(stocks) && stocks) stocks = [stocks];
 
   return (
     <Card className="border-none">
@@ -69,13 +69,11 @@ export default async function StockCardList({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="flex justify-between gap-4">
-        {quotes.map((quote, i) => (
+        {quotes.map((quote) => (
           <StockCard
-            key={i}
+            key={quote.symbol}
             quote={quote}
-            image={
-              images && images.find((s) => s.symbol === quote.symbol)?.image
-            }
+            image={stocks.find((s) => s.symbol === quote.symbol)?.image}
           />
         ))}
       </CardContent>

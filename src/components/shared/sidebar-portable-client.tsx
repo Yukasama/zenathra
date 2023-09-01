@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import type { Session } from "next-auth";
 import { Card, CardContent, CardHeader } from "../ui/card";
+import CompanyLogo from "./company-logo";
 
 interface Props {
   session: Session | null;
@@ -50,17 +51,11 @@ export default function SidebarPortableClient({ session }: Props) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Image
-                className="rounded-md"
-                src="/images/logo/logo.png"
-                width={40}
-                height={40}
-                alt="Company Logo"
-              />
-              <p className="text-lg font-light">Elysium</p>
+              <CompanyLogo px={35} />
+              <p className="text-lg">Elysium</p>
             </div>
             <SidebarToggle>
-              <X className="h-[22px]" />
+              <X className="h-5" />
             </SidebarToggle>
           </div>
         </CardHeader>

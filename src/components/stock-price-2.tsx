@@ -8,6 +8,7 @@ import { getQuote } from "@/lib/fmp/quote";
 import { StockImage } from "./shared/stock-image";
 import { Stock } from "@prisma/client";
 import { db } from "@/lib/db";
+import { Card } from "./ui/card";
 
 function Structure({ className, isLoading, children }: StructureProps) {
   return (
@@ -51,42 +52,28 @@ export default async function StockPrice2({ session, stock }: Props) {
     quote && quote.change ? (quote.change > 0 ? true : false) : true;
 
   return (
-    <Structure>
-      <div className="image h-[50px] w-[50px]">
-        <Link prefetch={false} href={stock.website || ""} target="_blank">
-          <StockImage src={stock.image} px={50} />
-        </Link>
-      </div>
+    <Card className="flex p-3 gap-3 items-center">
+      <Link href={stock.website ?? null} prefetch={false} target="_blank">
+        <StockImage src={stock.image} px={45} />
+      </Link>
       <div className="f-col">
-        <p className="mr-10 w-[200px] truncate text-[22px] font-medium">
+        <p className="mr-10 w-[200px] truncate text-[19px] font-medium">
           {stock.companyName}
         </p>
-        <div className="flex items-end gap-1">
-          <p className="text-[20px]">
-            ${quote && quote.price ? quote.price.toFixed(2) : "N/A"}
-          </p>
-          <p
-            className={`text-[17px] ${
-              positive ? "text-green-500" : "text-red-500"
-            }`}>
-            {positive ? "+" : ""}
-            {quote && quote.change ? quote.change.toFixed(2) : "N/A"}
-          </p>
-          <p
-            className={`text-[17px] ${
-              positive ? "text-green-500" : "text-red-500"
-            }`}>
-            (
-            {quote && quote.changesPercentage
-              ? quote.changesPercentage.toFixed(2) + "%"
-              : "N/A"}
-            )
-          </p>
+        <div className="flex items-center gap-1 mt-1">
+          <p className="text-lg">${quote?.price.toFixed(2) ?? "N/A"}</p>
           {positive ? (
-            <ChevronsUp className="mt-1 h-6 w-6 text-green-500" />
+            <ChevronsUp className="h-5 w-5 text-green-500" />
           ) : (
-            <ChevronsDown className="mt-2 h-6 w-6 text-red-500" />
+            <ChevronsDown className="h-5 w-5 text-red-500" />
           )}
+          <p
+            className={`text-lg ${
+              positive ? "text-green-500" : "text-red-500"
+            }`}>
+            ({positive && "+"}
+            {quote?.changesPercentage.toFixed(2) + "%" ?? "N/A"})
+          </p>
         </div>
       </div>
       <div className="absolute right-2.5 top-2.5 flex">
@@ -97,6 +84,6 @@ export default async function StockPrice2({ session, stock }: Props) {
           portfolios={flattenedPortfolios}
         />
       </div>
-    </Structure>
+    </Card>
   );
 }

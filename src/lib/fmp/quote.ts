@@ -59,7 +59,7 @@ async function getQuote(symbol: string): Promise<Quote | null> {
 
     const { data } = await axios.get(url);
 
-    return data;
+    return data[0];
   } catch {
     return null;
   }
@@ -77,7 +77,7 @@ async function getQuotes(symbols: string[]): Promise<Quote[] | null> {
 
     const { data } = await axios.get(url);
 
-    return [data];
+    return data;
   } catch {
     return null;
   }

@@ -6,7 +6,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 
 export default function PageLayout({ children, className, ...props }: Props) {
   return (
-    <div className={cn("p-4 md:p-7", className)} {...props}>
+    <div className={cn("p-4 lg:p-7", className)} {...props}>
       {children}
     </div>
   );

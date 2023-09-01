@@ -1,13 +1,4 @@
-interface SiteProps {
-  name: string;
-  description: string;
-  url: string;
-  links: { [key: string]: string };
-  keywords: string[];
-  creator: string;
-}
-
-export const site: SiteProps = {
+export const site = {
   name: "Elysium",
   description:
     "A stock market analysis tool that provides a visual representation of the market's performance.",

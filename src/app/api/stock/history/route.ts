@@ -7,7 +7,6 @@ import { historyTimes } from "@/config/fmp";
 import { z } from "zod";
 import axios from "axios";
 import { StockHistorySchema } from "@/lib/validators/stock";
-import { TimeFrame } from "@/types/stock";
 
 export async function POST(req: Request) {
   try {

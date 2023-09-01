@@ -86,8 +86,8 @@ export default function Searchbar() {
             <Command.CommandGroup heading="Stocks">
               {queryResults?.map((stock) => (
                 <Command.CommandItem
-                  onSelect={(e) => {
-                    router.push(`/r/${e}`);
+                  onSelect={() => {
+                    router.push(`/stocks/${stock.symbol}`);
                     router.refresh();
                   }}
                   key={stock.id}

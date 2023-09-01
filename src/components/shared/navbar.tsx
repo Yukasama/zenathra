@@ -8,30 +8,32 @@ import SidebarToggle from "./sidebar-toggle";
 import { buttonVariants } from "../ui/button";
 import React from "react";
 import NavbarMenu from "./navbar-menu";
+import { cn } from "@/lib/utils";
 
 export default async function Navbar() {
   const session = await getAuthSession();
 
   return (
-    <div className="sticky top-0 z-20 flex w-full justify-between gap-4 p-2 px-4">
+    <div className="sticky top-0 z-20 flex w-full items-center justify-between gap-4 p-2 px-4">
       <div className="hidden md:flex">
         <Searchbar />
       </div>
-      <SidebarToggle className="box flex p-2 md:hidden">
-        <Menu />
+      <SidebarToggle className="md:hidden">
+        <Menu className="h-5" />
       </SidebarToggle>
 
       <NavbarMenu />
 
-      <div className="flex px-2 gap-2 items-center">
+      <div className="flex items-center gap-3">
         {!session?.user && (
-          <div className="hidden items-center gap-3 lg:flex">
-            <Link
-              href="/sign-in"
-              className={buttonVariants({ variant: "subtle" })}>
-              Sign In
-            </Link>
-          </div>
+          <Link
+            href="/sign-in"
+            className={cn(
+              buttonVariants({ variant: "subtle" }),
+              "hidden lg:flex"
+            )}>
+            Sign In
+          </Link>
         )}
         <ThemeToggle />
         {session?.user && <UserAccountNav user={session.user} />}

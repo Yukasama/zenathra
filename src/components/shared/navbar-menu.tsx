@@ -55,7 +55,7 @@ const components: { title: string; href: string; description: string }[] = [
 
 export default function NavbarMenu() {
   return (
-    <NavigationMenu>
+    <NavigationMenu className="hidden lg:flex">
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>

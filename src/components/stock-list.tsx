@@ -1,97 +1,63 @@
-import StockListItem, { StockListItemLoading } from "./stock-list-item";
-import { StructureProps } from "@/types/layout";
+import StockListItem from "./stock-list-item";
 import React from "react";
 import { db } from "@/lib/db";
 import { getQuotes } from "@/lib/fmp/quote";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { cn } from "@/lib/utils";
 
-interface ListStructureProps extends StructureProps {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
-}
-
-interface SharedProps extends React.HTMLAttributes<HTMLDivElement> {
-  title?: string;
+  description?: string;
   limit?: number;
-}
-
-function Structure({
-  title,
-  children,
-  isLoading,
-  className,
-}: ListStructureProps) {
-  return (
-    <div
-      className={`f-col min-w-[300px] gap-[3px] ${title && "p-5 py-4"} ${
-        isLoading && "animate-pulse-right"
-      } ${className}`}>
-      <p className="text-[19px] font-medium mb-1.5">{title}</p>
-      {children}
-    </div>
-  );
-}
-
-export function StockListLoading({ title, limit = 5, className }: SharedProps) {
-  return (
-    <Structure title={title} className={className}>
-      {[...Array(limit)].map((_, i) => (
-        <StockListItemLoading key={i} />
-      ))}
-    </Structure>
-  );
-}
-
-interface Props extends SharedProps {
-  stockIds: string[] | undefined;
+  symbols: string[] | null | undefined;
   error?: string;
 }
 
 export default async function StockList({
-  stockIds,
-  title = "",
+  symbols,
+  title,
+  description,
   error,
   limit = 5,
   className,
 }: Props) {
-  if (!stockIds?.length)
+  if (!symbols?.length)
     return (
       <p className="text-xl text-center font-medium text-slate-600">{error}</p>
     );
 
-  const idsToFetch = stockIds.slice(0, Math.min(stockIds.length, limit));
+  const symbolsToFetch = symbols.slice(0, Math.min(symbols.length, limit));
 
   let stocks = await db.stock.findMany({
-    select: { id: true, symbol: true, image: true },
-    where: { id: { in: idsToFetch } },
+    select: { symbol: true, image: true },
+    where: { symbol: { in: symbolsToFetch } },
   });
 
-  const quotes = await getQuotes(stocks.map((s) => s.symbol));
+  const quotes = await getQuotes(symbolsToFetch);
 
   if (!Array.isArray(stocks)) stocks = [stocks];
 
   return (
-    <Structure title={title} className={className}>
-      {stockIds.map((stockId) => {
-        const stockItem = stocks?.find((s) => stockId === s.id);
-
-        return (
+    <Card className={cn(className)}>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {quotes?.map((quote) => (
           <StockListItem
-            key={stockId}
-            stock={
-              stockItem
-                ? {
-                    symbol: stockItem.symbol,
-                    image: stockItem.image,
-                  }
-                : null
-            }
-            quote={
-              quotes?.find(
-                (q) => stocks.find((s) => stockId === s.id)?.symbol === q.symbol
-              ) ?? null
-            }
+            key={quote.symbol}
+            stock={stocks.find((s) => s.symbol === quote.symbol)}
+            quote={quote}
           />
-        );
-      })}
-    </Structure>
+        ))}
+      </CardContent>
+    </Card>
   );
 }

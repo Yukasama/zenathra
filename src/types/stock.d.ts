@@ -14,17 +14,6 @@ export interface History {
   changeOverTime: number;
 }
 
-export interface Screener {
-  exchange: string;
-  sector: string;
-  industry: string;
-  country: string;
-  earningsDate: string;
-  marketCap: string;
-  peRatio: [string, string];
-  pegRatio: [string, string];
-}
-
 export interface Quote {
   symbol: string;
   name: string;
