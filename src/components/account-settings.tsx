@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import { useState } from "react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import {
@@ -24,8 +22,8 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import PageLayout from "./page-layout";
 import { Separator } from "./ui/separator";
+import { UserAvatar } from "./shared/user-avatar";
 
 interface Props {
   session: Session | null;
@@ -60,30 +58,28 @@ export default function AccountSettings({ session }: Props) {
     },
   ];
 
-  const personalInfo = [
+  const personal = [
     {
       title: "Picture",
       value: (
-        <Image
-          src={session?.user.image || "/images/unknown-user.png"}
-          className="h-12 w-12 rounded-full border text-center"
-          height={48}
-          width={48}
-          alt="Edit User Logo"
+        <UserAvatar
+          user={{
+            name: session?.user.name || null,
+            image: session?.user.image || null,
+          }}
+          className="h-8 w-8"
         />
       ),
       link: "/account/settings/edit/change-picture",
     },
     {
       title: "Name",
-      value: (
-        <p className="flex-1 text-center">{session?.user.name || "Guest"}</p>
-      ),
+      value: session?.user.name || null,
       link: "/account/settings/edit/change-username",
     },
     {
       title: "E-Mail",
-      value: <p className="flex-1 text-center">{session?.user.email}</p>,
+      value: session?.user.email || null,
       link: "/account/settings/edit/change-email",
     },
   ];
@@ -91,107 +87,117 @@ export default function AccountSettings({ session }: Props) {
   const security = [
     {
       title: "Password",
-      value: <p className="flex-1 text-center">***********</p>,
+      value: "*********",
       link: "/account/settings/edit/change-password",
     },
   ];
 
   return (
-    <PageLayout>
-      <Tabs defaultValue="personal" className="flex gap-5">
-        <Card className="pr-8">
+    <Tabs defaultValue="personal" className="flex gap-4 h-full p-4">
+      <Card className="pr-8 h-[600px]">
+        <CardHeader>
+          <CardTitle>Settings</CardTitle>
+          <CardDescription>Manage your account settings</CardDescription>
+        </CardHeader>
+        <TabsList className="f-col bg-transparent f-col items-start gap-1 pl-3">
+          {tabs.map((tab) => (
+            <TabsTrigger
+              key={tab.id}
+              value={tab.id}
+              className="text-md flex gap-3">
+              {tab.icon}
+              {tab.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Card>
+      <TabsContent value="personal" className="m-0">
+        <Card className="border-none">
           <CardHeader>
-            <CardTitle>Settings</CardTitle>
-            <CardDescription>Manage your account settings</CardDescription>
+            <CardTitle>General Information</CardTitle>
+            <CardDescription>Manage your personal details</CardDescription>
           </CardHeader>
-          <TabsList className="f-col bg-transparent f-col items-start gap-1 pl-3">
-            {tabs.map((tab) => (
-              <TabsTrigger
-                key={tab.id}
-                value={tab.id}
-                className="text-md flex gap-3">
-                {tab.icon}
-                {tab.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Card>
-        <TabsContent value="personal">
-          <Card>
-            <CardHeader>
-              <CardTitle>General Information</CardTitle>
-              <CardDescription>Manage your personal details</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {personalInfo.map((info) => (
-                <>
-                  <Link
-                    key={info.title}
-                    href={info.link}
-                    className="h-20 flex justify-between items-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 px-3">
-                    <p className="w-[50px] font-light text-slate-400">
-                      {info.title}
-                    </p>
-                    {info.value}
-                    <ChevronRight className="h-5 w-5" />
-                  </Link>
-                  {info.title !== "E-Mail" && <Separator className="my-1" />}
-                </>
-              ))}
-            </CardContent>
-            <CardFooter>
-              <div className="mt-2 flex gap-5">
-                <Button variant="subtle">
-                  <Layers className="h-4 w-4" />
-                  Export Data
-                </Button>
-                <Button variant="destructive">
-                  <Trash2 className="h-4 w-4" />
-                  Delete Account
-                </Button>
-              </div>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-        <TabsContent value="portfolio">
-          <div className="mt-52 text-center text-3xl font-thin">
-            Coming soon...
-          </div>
-        </TabsContent>
-        <TabsContent value="security">
-          <Card>
-            <CardHeader>
-              <CardTitle>General Information</CardTitle>
-              <CardDescription>Manage your personal details</CardDescription>
-            </CardHeader>
-            {security.map((info) => (
+          <CardContent>
+            {personal.map((section) => (
               <>
                 <Link
-                  key={info.title}
-                  href={info.link}
-                  className="h-20 flex justify-between items-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 px-3">
-                  <p className="w-[50px] font-light text-slate-400">
-                    {info.title}
+                  key={section.title}
+                  href={section.link}
+                  className="h-20 flex items-center rounded-md hover:bg-slate-100 dark:hover:bg-slate-900 px-3 gap-6">
+                  <p className="w-[80px] font-light text-slate-400">
+                    {section.title}
                   </p>
-                  {info.value}
+                  <div className="w-[200px] truncate">{section.value}</div>
                   <ChevronRight className="h-5 w-5" />
                 </Link>
-                {info.title !== "E-Mail" && <Separator className="my-1" />}
+                {section.title !== "E-Mail" && <Separator className="my-1" />}
               </>
             ))}
-          </Card>
-        </TabsContent>
-        <TabsContent value="notifications">
-          <div className="mt-52 text-center text-3xl font-thin">
-            Coming soon...
-          </div>
-        </TabsContent>
-        <TabsContent value="billing">
-          <div className="mt-52 text-center text-3xl font-thin">
-            Coming soon...
-          </div>
-        </TabsContent>
-      </Tabs>
-    </PageLayout>
+          </CardContent>
+          <CardFooter className="flex items-center justify-between">
+            <Button variant="subtle">
+              <Layers className="h-4 w-4" />
+              Export Data
+            </Button>
+            <Button variant="destructive">
+              <Trash2 className="h-4 w-4" />
+              Delete Account
+            </Button>
+          </CardFooter>
+        </Card>
+      </TabsContent>
+      <TabsContent value="portfolio" className="m-0">
+        <Card className="border-none">
+          <CardHeader>
+            <CardTitle>Portfolio Settings</CardTitle>
+            <CardDescription>Manage your portfolio settings</CardDescription>
+          </CardHeader>
+          <CardContent></CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="security" className="m-0">
+        <Card className="border-none">
+          <CardHeader>
+            <CardTitle>Security Information</CardTitle>
+            <CardDescription>Manage your security procedures</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {security.map((section) => (
+              <>
+                <Link
+                  key={section.title}
+                  href={section.link}
+                  className="h-20 flex items-center rounded-md hover:bg-slate-100 dark:hover:bg-slate-900 px-3 gap-6">
+                  <p className="w-[80px] font-light text-slate-400">
+                    {section.title}
+                  </p>
+                  <div className="w-[200px] truncate">{section.value}</div>
+                  <ChevronRight className="h-5 w-5" />
+                </Link>
+                {section.title !== "E-Mail" && <Separator className="my-1" />}
+              </>
+            ))}
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="notifications" className="m-0">
+        <Card className="border-none">
+          <CardHeader>
+            <CardTitle>Notification Settings</CardTitle>
+            <CardDescription>Manage your notification settings</CardDescription>
+          </CardHeader>
+          <CardContent></CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="billing" className="m-0">
+        <Card className="border-none">
+          <CardHeader>
+            <CardTitle>Billing Information</CardTitle>
+            <CardDescription>Manage your billing information</CardDescription>
+          </CardHeader>
+          <CardContent></CardContent>
+        </Card>
+      </TabsContent>
+    </Tabs>
   );
 }

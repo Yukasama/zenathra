@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
-import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
 import { LogIn } from "lucide-react";
 import { UserSignUpProps } from "@/lib/validators/user";

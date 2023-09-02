@@ -8,7 +8,7 @@ interface Props {
 
 export default function Layout({ children }: Props) {
   return (
-    <div className="f-box fixed left-0 top-0 z-30 h-screen w-screen bg-slate-300 dark:bg-slate-950">
+    <div className="f-box fixed left-0 top-0 z-30 h-screen w-screen bg-slate-100 dark:bg-slate-950">
       <div className="absolute left-7 top-3.5">
         <Link href="/">
           <Button>

@@ -33,7 +33,7 @@ export default function StockCard({ quote, image, className }: Props) {
               <StockImage src={image} px={40} priority />
               <div className="f-col gap-1">
                 <CardTitle>{quote.symbol}</CardTitle>
-                <CardDescription>{quote?.name}</CardDescription>
+                <CardDescription className="w-[190px] truncate">{quote?.name}</CardDescription>
               </div>
             </div>
           </div>

@@ -4,7 +4,7 @@ import { UserSendMailSchema } from "@/lib/validators/user";
 import nodemailer from "nodemailer";
 import { z } from "zod";
 
-export async function POST(req: Response) {
+export async function POST(req: Request) {
   try {
     const { email, subject, message } = UserSendMailSchema.parse(await req.json());
 

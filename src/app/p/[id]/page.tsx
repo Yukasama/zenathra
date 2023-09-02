@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import Image from "next/image";
 import PortfolioAddModal from "@/components/portfolio-add-modal";
-import PortfolioAddButton from "@/components/portfolio-add-button";
 import PortfolioChart from "@/components/portfolio-chart";
 import StockList from "@/components/stock-list";
 import { getAuthSession } from "@/lib/auth";
@@ -110,7 +109,7 @@ export default async function page({ params: { id } }: Props) {
             />
           </Suspense>
           {session?.user && (
-            <PortfolioAddButton
+            <PortfolioAddModal
               portfolio={portfolio}
               stockIds={stockIds.map((s) => s.stockId)}
             />

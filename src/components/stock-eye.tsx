@@ -5,11 +5,11 @@ import { Card } from "./ui/card";
 
 interface Props {
   session: Session | null;
-  stock: Stock | null;
+  eye: number | null;
 }
 
-export default function StockEye({ session, stock }: Props) {
-  const value = stock?.eye || 78;
+export default function StockEye({ session, eye }: Props) {
+  const value = eye || 78;
   const dashArray = 2 * Math.PI * 54;
   const dashOffset = (1 - value / 165) * dashArray;
 

@@ -11,7 +11,6 @@ import {
 } from "recharts";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -70,7 +69,7 @@ export default function StockPriceChart({
   } = useQuery({
     queryFn: async () => {
       const payload: StockHistoryProps = {
-        symbols,
+        symbol: symbols,
         range: "Everything",
       };
 

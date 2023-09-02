@@ -1,3 +1,5 @@
+"use client";
+
 import {
   BarChart,
   Bar,
@@ -6,69 +8,30 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
 } from "recharts";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ChartProps } from "@/types/stock";
+import { useEffect, useState } from "react";
 
-const data = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
+export default function ChartBar({
+  title,
+  description,
+  data,
+  height = 300,
+  width = 500,
+}: ChartProps) {
+  const [mounted, setMounted] = useState<boolean>(false);
 
-interface Props {
-  title?: string;
-  description?: string;
-  data: { name: string; uv: number; pv: number; amt: number }[];
-}
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-export default function ChartBar({ title, description, data }: Props) {
   return (
     <Card>
       <CardHeader>
@@ -76,10 +39,10 @@ export default function ChartBar({ title, description, data }: Props) {
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height="100%">
+        {mounted ? (
           <BarChart
-            width={500}
-            height={300}
+            width={width}
+            height={height}
             data={data}
             margin={{
               top: 5,
@@ -87,7 +50,7 @@ export default function ChartBar({ title, description, data }: Props) {
               left: 20,
               bottom: 5,
             }}>
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
@@ -95,7 +58,9 @@ export default function ChartBar({ title, description, data }: Props) {
             <Bar dataKey="pv" fill="#8884d8" />
             <Bar dataKey="uv" fill="#82ca9d" />
           </BarChart>
-        </ResponsiveContainer>
+        ) : (
+          <p>Loading...</p>
+        )}
       </CardContent>
     </Card>
   );

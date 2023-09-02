@@ -3,7 +3,7 @@
 import { Portfolio } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
-import { startTransition } from "react";
+import { startTransition, useState } from "react";
 import axios from "axios";
 import { toast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
@@ -20,16 +20,25 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import { CardDescription } from "./ui/card";
 
 type Props = {
   portfolio: Pick<Portfolio, "id" | "title">;
 };
 
 export default function PortfolioDeleteModal({ portfolio }: Props) {
+  const [title, setTitle] = useState<string>();
+
   const router = useRouter();
 
   const { mutate: deletePortfolio, isLoading } = useMutation({
     mutationFn: async () => {
+      if (title !== portfolio.title)
+        return toast({
+          title: "Oops! Something went wrong.",
+          description: "Please enter the correct title.",
+        });
+        
       const payload: DeletePortfolioProps = {
         portfolioId: portfolio.id,
       };
@@ -68,11 +77,16 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
           <DialogTitle>Delete Portfolio?</DialogTitle>
           <DialogDescription>This action cannot be undone.</DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="name" className="text-right">
-            Name
-          </Label>
-          <Input id="name" value="Pedro Duarte" className="col-span-3" />
+        <div className="grid w-full max-w-sm items-center gap-1.5">
+          <Label htmlFor="name">Title</Label>
+          <Input
+            id="name"
+            placeholder={portfolio.title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <CardDescription>
+            Enter the portfolio title to continue
+          </CardDescription>
         </div>
         <DialogFooter>
           <Button

@@ -17,7 +17,7 @@ export default async function page() {
 
   return (
     <PageLayout className="f-col gap-4 md:gap-7">
-      <div className="f-col md:flex-row items-center gap-4 md:gap-7">
+      <div className="f-col md:flex-row gap-4 md:gap-7">
         <Suspense fallback={<StockHighlightLoading />}>
           {/* @ts-expect-error Server Component */}
           <StockHighlight symbol={actives?.[0] ?? null} />

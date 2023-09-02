@@ -12,6 +12,7 @@ import { Plus, Trash } from "lucide-react";
 import debounce from "lodash.debounce";
 import { StockImage } from "./stock-image";
 import * as Command from "@/components/ui/command";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 
 interface Props {
   portfolio: Portfolio;
@@ -90,76 +91,90 @@ export default function PortfolioAddModal({
   });
 
   return (
-    <Command.Command className="relative rounded-lg border max-w-lg z-50 overflow-visible">
-      <Command.CommandInput
-        isLoading={isFetching}
-        onValueChange={(text) => {
-          setSearch(text);
-          debounceRequest();
-        }}
-        value={search}
-        className="outline-none border-none focus:border-none focus:outline-none ring-0"
-        placeholder="Search stocks..."
-      />
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="subtle">
+          <Trash className="h-4 w-4" />
+          Add
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Modify Stock Portfolio</DialogTitle>
+          <DialogDescription>Here, you can add or remove stocks</DialogDescription>
+        </DialogHeader>
+        <Command.Command className="relative rounded-lg border max-w-lg z-50 overflow-visible">
+          <Command.CommandInput
+            isLoading={isFetching}
+            onValueChange={(text) => {
+              setSearch(text);
+              debounceRequest();
+            }}
+            value={search}
+            className="outline-none border-none focus:border-none focus:outline-none ring-0"
+            placeholder="Search stocks..."
+          />
 
-      {search.length > 0 && (
-        <Command.CommandList className="absolute bg-white top-full inset-x-0 shadow rounded-b-md">
-          {isFetched && (
-            <Command.CommandEmpty>No results found.</Command.CommandEmpty>
+          {search.length > 0 && (
+            <Command.CommandList className="absolute bg-white top-full inset-x-0 shadow rounded-b-md">
+              {isFetched && (
+                <Command.CommandEmpty>No results found.</Command.CommandEmpty>
+              )}
+              {(queryResults?.length ?? 0) > 0 ? (
+                <Command.CommandGroup heading="Stocks">
+                  {queryResults?.map((result) => (
+                    <Command.CommandItem
+                      className="flex items-center justify-between rounded-md bg-zinc-400 p-1 px-2 h-12"
+                      key={result.symbol}>
+                      <div className="flex items-center gap-2">
+                        <StockImage src={result.image} px={30} />
+                        <div className="f-col">
+                          <p className="text-sm font-medium">{result.symbol}</p>
+                          <p className="w-[250px] text-[12px] text-slate-600">
+                            {result.companyName}
+                          </p>
+                        </div>
+                      </div>
+                      <div>
+                        {selected.includes(result.symbol) ? (
+                          <Button
+                            onClick={() =>
+                              setSelected(
+                                selected.filter((s) => s !== result.symbol)
+                              )
+                            }>
+                            <Trash className="h-4 w-4" />
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={() =>
+                              setSelected([...selected, result.symbol])
+                            }>
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                    </Command.CommandItem>
+                  ))}
+                </Command.CommandGroup>
+              ) : (
+                <>
+                  {[...Array(4)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="animate-pulse-right h-12 rounded-md p-1 px-2"
+                    />
+                  ))}
+                </>
+              )}
+            </Command.CommandList>
           )}
-          {(queryResults?.length ?? 0) > 0 ? (
-            <Command.CommandGroup heading="Stocks">
-              {queryResults?.map((result) => (
-                <Command.CommandItem
-                  className="flex items-center justify-between rounded-md bg-zinc-400 p-1 px-2 h-12"
-                  key={result.symbol}>
-                  <div className="flex items-center gap-2">
-                    <StockImage src={result.image} px={30} />
-                    <div className="f-col">
-                      <p className="text-sm font-medium">{result.symbol}</p>
-                      <p className="w-[250px] text-[12px] text-slate-600">
-                        {result.companyName}
-                      </p>
-                    </div>
-                  </div>
-                  <div>
-                    {selected.includes(result.symbol) ? (
-                      <Button
-                        onClick={() =>
-                          setSelected(
-                            selected.filter((s) => s !== result.symbol)
-                          )
-                        }>
-                        <Trash className="h-4 w-4" />
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() =>
-                          setSelected([...selected, result.symbol])
-                        }>
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-                </Command.CommandItem>
-              ))}
-            </Command.CommandGroup>
-          ) : (
-            <>
-              {[...Array(4)].map((_, i) => (
-                <div
-                  key={i}
-                  className="animate-pulse-right h-12 rounded-md p-1 px-2"
-                />
-              ))}
-            </>
-          )}
-        </Command.CommandList>
-      )}
-      <Button isLoading={isLoading} onClick={() => addToPortfolio()}>
-        <Plus className="h-4 w-4" />
-        Add to Portfolio
-      </Button>
-    </Command.Command>
+          <Button isLoading={isLoading} onClick={() => addToPortfolio()}>
+            <Plus className="h-4 w-4" />
+            Add to Portfolio
+          </Button>
+        </Command.Command>
+      </DialogContent>
+    </Dialog>
   );
 }

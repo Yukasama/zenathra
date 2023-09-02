@@ -35,6 +35,10 @@ export const UserSendMailSchema = z.object({
   message: z.string().nonempty(),
 });
 
+export const UserForgotPasswordSchema = z.object({
+  email: z.string().email("Please enter a valid email."),
+});
+
 export type UserSignInProps = z.infer<typeof UserSignInSchema>;
 
 export type UserSignUpProps = z.infer<typeof UserSignUpSchema>;
@@ -46,6 +50,8 @@ export type UserUpdateEmailProps = z.infer<typeof UserUpdateEmailSchema>;
 export type UserUpdatePasswordProps = z.infer<typeof UserUpdatePasswordSchema>;
 
 export type UserSendMailProps = z.infer<typeof UserSendMailSchema>;
+
+export type UserForgotPasswordProps = z.infer<typeof UserForgotPasswordSchema>;
 
 // Password Strength Validator
 type Strength = "Weak" | "Medium" | "Strong" | "Ultra" | "Insane";

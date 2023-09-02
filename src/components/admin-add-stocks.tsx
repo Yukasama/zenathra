@@ -21,12 +21,19 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { UploadStockProps, UploadStockSchema } from "@/lib/validators/stock";
-import { Checkbox } from "@radix-ui/react-checkbox";
+import { Checkbox } from "./ui/checkbox";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { Slider } from "./ui/slider";
 import { Upload } from "lucide-react";
 import { useCustomToasts } from "@/hooks/use-custom-toasts";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 export default function AdminAddStocks() {
   const { loginToast } = useCustomToasts();
@@ -79,82 +86,114 @@ export default function AdminAddStocks() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-        <FormField
-          control={form.control}
-          name="stock"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Symbols</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a stock to upload" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="All">All</SelectItem>
-                  <SelectItem value="AAPL">AAPL</SelectItem>
-                  <SelectItem value="MSFT">MSFT</SelectItem>
-                  <SelectItem value="SQ">SQ</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                You can start a queue of stocks to upload by selecting All
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="skip"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Use different settings for my mobile devices
-                </FormLabel>
-                <FormDescription>
-                  You can manage your mobile notifications in the
-                </FormDescription>
-              </div>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="clean"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Clean Database</FormLabel>
-                <FormDescription>
-                  Cleans the database of empty records
-                </FormDescription>
-              </div>
-            </FormItem>
-          )}
-        />
-        <Slider name="pullTimes" defaultValue={[1]} max={100} step={1} />
-        <Button isLoading={isLoading}>
-          <Upload className="h-4 w-4" />
-          Upload
-        </Button>
-      </form>
-    </Form>
+    <Card className="sm:w-full max-w-[500px]">
+      <CardHeader>
+        <CardTitle>Upload Stocks</CardTitle>
+        <CardDescription>Upload stock data to the database</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="stock"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Symbols</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a stock to upload" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="All">All</SelectItem>
+                      <SelectItem value="AAPL">AAPL</SelectItem>
+                      <SelectItem value="MSFT">MSFT</SelectItem>
+                      <SelectItem value="SQ">SQ</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Start a uploading queue by selecting All
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="skip"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Skip Stocks</FormLabel>
+                    <FormDescription>
+                      This will skip stocks that already exist in the database
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="clean"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Clean Database</FormLabel>
+                    <FormDescription>
+                      Cleans the database of empty records
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="pullTimes"
+              render={({ field }) => (
+                <FormItem className="f-col items-start space-y-3 rounded-md border p-4">
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Pull Times</FormLabel>
+                    <FormDescription>
+                      How many batches of data to pull (30 stocks/batch)
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Slider
+                      name="pullTimes"
+                      defaultValue={[1]}
+                      value={field.value}
+                      max={100}
+                      step={1}
+                      onChange={field.onChange}>
+                      {field.value}
+                    </Slider>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <Button variant="subtle" isLoading={isLoading}>
+              <Upload className="h-4 w-4" />
+              Upload
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }

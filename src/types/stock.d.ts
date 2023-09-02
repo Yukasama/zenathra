@@ -42,6 +42,12 @@ export interface Quote {
 export interface ChartProps {
   title?: string;
   description?: string;
-  data: {}[];
-  size?: "sm" | "md" | "lg";
+  data: {
+    name: string;
+    uv: (number | null);
+    pv?: (number | null);
+    fv?: (number | null);
+  }[];
+  height?: number;
+  width?: number;
 }

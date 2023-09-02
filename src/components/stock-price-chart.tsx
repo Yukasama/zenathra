@@ -11,7 +11,6 @@ import {
 } from "recharts";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -22,38 +21,29 @@ import axios from "axios";
 import { StockHistoryProps } from "@/lib/validators/stock";
 import { History } from "@/types/stock";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { cn } from "@/lib/utils";
+import { StockImage } from "./stock-image";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
   description?: string;
   symbol: string;
+  image?: string;
+  showImage?: boolean;
+  height?: number;
+  width?: number;
+  showTimeFrames?: boolean;
 }
-
-const CustomTooltip = ({
-  active,
-  payload,
-  label,
-}: {
-  active: any;
-  payload: any;
-  label: any;
-}) => {
-  if (active && payload && payload.length) {
-    return (
-      <Card className="p-2">
-        <p className="text-[15px]">{label}</p>
-        <p className="text-sm text-[#19E363]">${payload[0].value}</p>
-      </Card>
-    );
-  }
-
-  return null;
-};
 
 export default function StockPriceChart({
   title,
   description,
   symbol,
+  image,
+  showImage = false,
+  height = 300,
+  width = 600,
+  showTimeFrames = false,
   className,
 }: Props) {
   const [mounted, setMounted] = useState<boolean>(false);
@@ -86,34 +76,65 @@ export default function StockPriceChart({
     queryKey: ["history-query"],
   });
 
-  let pos = null;
+  let pos = true;
   if (isFetched) pos = results[results.length - 1].uv > results[0].uv;
 
+  const CustomTooltip = ({
+    active,
+    payload,
+    label,
+  }: {
+    active: any;
+    payload: any;
+    label: any;
+  }) => {
+    if (active && payload && payload.length) {
+      return (
+        <Card className="p-2">
+          <p className="text-[15px]">{label}</p>
+          <p
+            className="text-sm text-[#19E363]"
+            style={{ color: pos ? "#19E363" : "#ff0000" }}>
+            ${payload[0].value}
+          </p>
+        </Card>
+      );
+    }
+    return null;
+  };
+
   return (
-    <Card>
+    <Card className={cn(className)}>
       <CardHeader>
         <div className="flex justify-between">
-          <div className="space-y-1.5">
-            <CardTitle>{title}</CardTitle>
-            <CardDescription className="truncate w-[280px]">{description}</CardDescription>
+          <div className="flex items-center gap-3">
+            {showImage && <StockImage src={image} px={45} />}
+            <div className="space-y-1.5">
+              <CardTitle>{title}</CardTitle>
+              <CardDescription className="truncate w-[280px]">
+                {description}
+              </CardDescription>
+            </div>
           </div>
-          <Tabs defaultValue="1D">
-            <TabsList>
-              <TabsTrigger value="1m">1m</TabsTrigger>
-              <TabsTrigger value="30m">30m</TabsTrigger>
-              <TabsTrigger value="1h">1h</TabsTrigger>
-              <TabsTrigger value="4h">4h</TabsTrigger>
-              <TabsTrigger value="1D">1D</TabsTrigger>
-              <TabsTrigger value="1M">1M</TabsTrigger>
-            </TabsList>
-          </Tabs>
+          {showTimeFrames && (
+            <Tabs defaultValue="1D">
+              <TabsList>
+                <TabsTrigger value="1m">1m</TabsTrigger>
+                <TabsTrigger value="30m">30m</TabsTrigger>
+                <TabsTrigger value="1h">1h</TabsTrigger>
+                <TabsTrigger value="4h">4h</TabsTrigger>
+                <TabsTrigger value="1D">1D</TabsTrigger>
+                <TabsTrigger value="1M">1M</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          )}
         </div>
       </CardHeader>
       <div className="pr-10 pb-3">
         {mounted ? (
           <AreaChart
-            width={600}
-            height={300}
+            width={width}
+            height={height}
             data={results}
             margin={{
               top: 5,

@@ -36,9 +36,16 @@ export default function OAuth({ provider, className, ...props }: Props) {
     <div className={cn("flex justify-center", className)} {...props}>
       <Button
         isLoading={isLoading}
+        variant="subtle"
         className="w-full border"
         onClick={onSubmit}>
-        {!isLoading && <Icons.google className="h-4 w-4 mr-2" />}
+        {provider === "google" ? (
+          <Icons.google className="h-[18px] mr-1" />
+        ) : provider === "facebook" ? (
+          <Icons.facebook className="h-[18px] mr-1" />
+        ) : (
+          <Icons.github className="dark:invert h-[18px] mr-1" />
+        )}
         {provider[0].toUpperCase() + provider.slice(1)}
       </Button>
     </div>

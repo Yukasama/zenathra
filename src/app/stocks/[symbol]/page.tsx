@@ -13,6 +13,7 @@ import { Card } from "@/components/ui/card";
 import StockPriceChart from "@/components/stock-price-chart";
 import { Separator } from "@/components/ui/separator";
 import PageLayout from "@/components/page-layout";
+import StockStatistics from "@/components/stock-statistics";
 
 // export async function generateStaticParams() {
 //   const symbols = await db.stock.findMany({
@@ -59,7 +60,7 @@ export default async function page({ params: { symbol } }: Props) {
             </Suspense>
           </div>
           <StockMetrics stock={stock} />
-          <StockEye stock={stock} session={session} />
+          <StockEye eye={stock.eye} session={session} />
         </div>
         <Separator />
         <div className="flex gap-5">
@@ -81,6 +82,10 @@ export default async function page({ params: { symbol } }: Props) {
           </Suspense>
         </div>
         <Separator />
+        <Suspense fallback={<p>Loading...</p>}>
+          {/* @ts-expect-error Server Component */}
+          <StockStatistics symbol={symbol} />
+        </Suspense>
       </div>
     </PageLayout>
   );

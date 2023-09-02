@@ -148,7 +148,7 @@ export default function PortfolioCreateCard({
                 </Form.FormItem>
               )}
             />
-            <Button isLoading={isLoading}>
+            <Button variant="subtle" isLoading={isLoading}>
               <Plus className="h-4 w-4" />
               Create Portfolio
             </Button>

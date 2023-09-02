@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "./ui/button";
-import { useState } from "react";
 import type { Session } from "next-auth";
 import { Plus } from "lucide-react";
 import { useCustomToasts } from "@/hooks/use-custom-toasts";
@@ -14,7 +13,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
 } from "./ui/dialog";
 import StockPortfolioModifier from "./stock-portfolio-modifier";
 
@@ -26,7 +24,7 @@ interface Props {
   className?: string;
 }
 
-export default function StockPortfolioAddButton({
+export default function StockPortfolioAddModal({
   session,
   symbolId,
   symbol,

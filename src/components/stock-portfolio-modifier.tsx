@@ -73,7 +73,7 @@ export default function StockPortfolioModifier({ portfolio, symbolId }: Props) {
       <p className="text-slate-400 text-[13px]">
         {portfolio.public ? "Public" : "Private"}
       </p>
-      {portfolio.stockIds.map((s) => s.stockId).includes(symbolId) ? (
+      {portfolio.stockIds.includes(symbolId) ? (
         <Button
           onClick={() => removeFromPortfolio()}
           variant="destructive"

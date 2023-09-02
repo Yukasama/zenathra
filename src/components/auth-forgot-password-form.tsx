@@ -1,62 +1,90 @@
 "use client";
 
-import { useState } from "react";
+import { startTransition, useState } from "react";
 import Link from "next/link";
-import AuthInput from "./ui/auth-input";
 import { Button } from "./ui/button";
-import { z } from "zod";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightCircle } from "lucide-react";
-
-const Schema = z.object({
-  email: z.string().email("Please enter a valid email."),
-});
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
+import { Input } from "./ui/input";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "@/hooks/use-toast";
+import {
+  UserForgotPasswordProps,
+  UserForgotPasswordSchema,
+} from "@/lib/validators/user";
 
 export default function AuthForgotPasswordForm() {
-  const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FieldValues>({
-    resolver: zodResolver(Schema),
-    defaultValues: {
-      email: "",
+  const form = useForm({
+    resolver: zodResolver(UserForgotPasswordSchema),
+  });
+
+  const { mutate: login, isLoading } = useMutation({
+    mutationFn: async (data: UserForgotPasswordProps) => {},
+    onError: () => {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: `Please check your credentials and try again.`,
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      startTransition(() => router.refresh());
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    setLoading(true);
-
-    setLoading(false);
-  };
+  function onSubmit(data: FieldValues) {
+    const payload: UserForgotPasswordProps = {
+      email: data.email,
+    };
+    login(payload);
+  }
 
   return (
     <>
       {!sent ? (
-        <form onSubmit={handleSubmit(onSubmit)} className="f-col gap-2.5">
-          <AuthInput
-            id="email"
-            type="email"
-            label="E-Mail"
-            register={register}
-            errors={errors}
-          />
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-3 f-col">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>E-Mail</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your E-Mail" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <Button isLoading={loading}>
-            <ArrowRightCircle className="h-4 w-4" />
-            Reset Password
-          </Button>
-        </form>
+            <Button isLoading={isLoading}>
+              <ArrowRightCircle className="h-4 w-4" />
+              Reset Password
+            </Button>
+          </form>
+        </Form>
       ) : (
         <div className="flex items-center gap-1">
           <p>Password successfully changed?</p>
           <Link
             href="/sign-in"
-            className="rounded-md p-1 px-1.5 font-medium text-blue-500 hover:bg-slate-300 dark:hover:bg-zinc-200">
+            className="rounded-md p-1 px-1.5 text-sm font-medium text-blue-500 hover:bg-slate-100 dark:hover:bg-slate-900">
             Head to Login.
           </Link>
         </div>

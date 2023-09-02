@@ -1,5 +1,4 @@
 import Link from "next/link";
-import StockPortfolioAddButton from "./stock-portfolio-add-button";
 import { StructureProps } from "@/types/layout";
 import React from "react";
 import type { Session } from "next-auth";
@@ -9,6 +8,7 @@ import { StockImage } from "./stock-image";
 import { Stock } from "@prisma/client";
 import { db } from "@/lib/db";
 import { Card } from "./ui/card";
+import StockPortfolioAddModal from "./stock-portfolio-add-modal";
 
 function Structure({ className, isLoading, children }: StructureProps) {
   return (
@@ -88,7 +88,7 @@ export default async function StockPrice2({ session, stock }: Props) {
         </p>
       </div>
       <div className="absolute right-3 top-3 flex">
-        <StockPortfolioAddButton
+        <StockPortfolioAddModal
           session={session}
           symbolId={stock.id}
           symbol={stock.symbol}

@@ -1,13 +1,13 @@
-import ChartLine from "./chart-line";
 import ChartBar from "./chart-bar";
 import { Financials } from "@prisma/client";
 import { Years } from "@/lib/utils";
 import { StructureProps } from "@/types/layout";
-import axios from "axios";
+import ChartArea from "./chart-area";
+import React from "react";
+import { db } from "@/lib/db";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
-interface SharedProps {
-  className?: string;
-}
+interface SharedProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 interface Props extends SharedProps {
   symbol: string;
@@ -15,7 +15,7 @@ interface Props extends SharedProps {
 
 function Structure({ className, children }: StructureProps) {
   return (
-    <div className={`f-col gap-4 lg:flex-row ${className}`}>{children}</div>
+    <div className={`f-col gap-5 lg:flex-row ${className}`}>{children}</div>
   );
 }
 
@@ -30,87 +30,52 @@ export function StockStatisticsLoading({ className }: SharedProps) {
 }
 
 export default async function StockStatistics({ symbol, className }: Props) {
-  const fin = (await axios.post("/api/stock/financials", {
-    symbol,
-  })) as Financials[];
+  const fin = await db.financials.findMany({
+    where: { symbol: symbol },
+    orderBy: { date: "asc" },
+  });
+
   if (!fin) return null;
 
-  const startYear = 2015;
-  const labels = Years(startYear);
+  const startYear = new Date().getFullYear() - fin.length;
+  const labels = Years(startYear < 2015 ? 2015 : startYear);
 
-  const statConfig = [
-    {
-      name: "P/E Ratio",
-      uv: fin.map((financials: Financials) => financials.peRatio),
-      pv: labels,
-    },
-    {
-      name: "EPS",
-      uv: fin.map((financials: Financials) => financials.eps),
-      pv: labels,
-    },
-    {
-      name: "P/B Ratio",
-      uv: fin.map((financials: Financials) => financials.pbRatio),
-      pv: labels,
-    },
-  ];
+  const statConfig = labels.map((label, index) => ({
+    name: label,
+    uv: fin[fin.length - 1 - index].peRatio,
+    pv: fin[fin.length - 1 - index].eps,
+    fv: fin[fin.length - 1 - index].pbRatio,
+  }));
 
-  const marginConfig = [
-    {
-      name: "Gross Margin",
-      uv: fin.map((financials: Financials) => financials.grossProfitMargin),
-      pv: labels,
-    },
-    {
-      name: "Operating Margin",
-      uv: fin.map((financials: Financials) => financials.operatingProfitMargin),
-      pv: labels,
-    },
-    {
-      name: "Profit Margin",
-      uv: fin.map((financials: Financials) => financials.netProfitMargin),
-      pv: labels,
-    },
-  ];
+  const marginConfig = labels.map((label, index) => ({
+    name: label,
+    uv: fin[fin.length - 1 - index].grossProfitMargin,
+    pv: fin[fin.length - 1 - index].operatingProfitMargin,
+    fv: fin[fin.length - 1 - index].netProfitMargin,
+  }));
 
-  const dividendConfig = [
-    {
-      name: "Dividend %",
-      uv: fin.map((financials: Financials) => financials.dividendYield),
-      pv: labels,
-    },
-  ];
+  const dividendConfig = labels.map((label, index) => ({
+    name: label,
+    uv: fin[fin.length - 1 - index].dividendYield,
+  }));
 
   return (
     <Structure className={className}>
-      <ChartLine title="Statistics" labels={labels} data={statConfig} />
-      <ChartBar
-        title="Margins"
-        labels={labels}
-        data={marginConfig}
-        labelType="percent"
-      />
-      {/* If company never payed dividends */}
-      {fin
-        .map((financials: Financials) => financials.dividendYield)
-        .filter((d) => d !== 0 && d !== undefined && d !== null).length ===
-      0 ? (
-        <div className="h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-slate-200 p-3 px-6 dark:bg-zinc-400">
-          <p className="mb-1 text-[19px] font-medium">Dividends</p>
-          <div className="f-box ml-0.5 h-4/5 gap-4">
-            <p className="text-xl text-gray-400 dark:text-gray-600 font-medium">
+      <ChartArea title="Statistics" data={statConfig} height={230} />
+      <ChartBar title="Margins" data={marginConfig} height={230} />
+      {dividendConfig.some((d) => d.uv !== 0) ? (
+        <Card className="w-[500px] flex-1">
+          <CardHeader>
+            <CardTitle>Dividends</CardTitle>
+          </CardHeader>
+          <CardContent className="f-box">
+            <p className="text-xl text-slate-400 font-medium mt-20">
               Never Payed Dividends
             </p>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       ) : (
-        <StockLineChart
-          title="Dividend"
-          labels={labels}
-          data={dividendConfig}
-          labelType="percent"
-        />
+        <ChartArea title="Dividend" data={dividendConfig} height={230} />
       )}
     </Structure>
   );

@@ -36,6 +36,7 @@ export default async function PortfolioCard({ portfolio }: Props) {
         </CardHeader>
         <CardContent>
           <Suspense fallback={<p>Loading...</p>}>
+            {/* @ts-expect-error Server Component */}
             <StockList
               symbols={symbols.map((s) => s.symbol)}
               error="No Stocks in this Portfolio"
