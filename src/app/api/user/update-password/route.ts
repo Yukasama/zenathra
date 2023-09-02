@@ -39,6 +39,8 @@ export async function POST(req: Request) {
       await req.json()
     );
 
+    if(!user.hashedPassword) return new InternalServerErrorResponse();
+
     if (!(await bcrypt.compare(oldPassword, user.hashedPassword)))
       return new ForbiddenResponse("Old password is incorrect");
 

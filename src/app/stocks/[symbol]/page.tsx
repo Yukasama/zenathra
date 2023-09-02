@@ -10,10 +10,9 @@ import { getAuthSession } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { Card } from "@/components/ui/card";
-import StockChartLoader from "@/components/stock-chart-loader";
 import StockPriceChart from "@/components/stock-price-chart";
 import { Separator } from "@/components/ui/separator";
-import PageLayout from "@/components/shared/page-layout";
+import PageLayout from "@/components/page-layout";
 
 // export async function generateStaticParams() {
 //   const symbols = await db.stock.findMany({
@@ -51,9 +50,11 @@ export default async function page({ params: { symbol } }: Props) {
         <div className="flex gap-5">
           <div className="relative f-col gap-2">
             <Suspense fallback={<StockPrice2Loading />}>
+              {/* @ts-expect-error Server Component */}
               <StockPrice2 session={session} stock={stock} />
             </Suspense>
             <Suspense fallback={<StockAfterHoursLoading />}>
+              {/* @ts-expect-error Server Component */}
               <StockAfterHours stock={stock} />
             </Suspense>
           </div>
@@ -70,6 +71,7 @@ export default async function page({ params: { symbol } }: Props) {
             />
           </Suspense>
           <Suspense fallback={<Card />}>
+            {/* @ts-expect-error Server Component */}
             <StockList
               symbols={stock?.peersList?.split(",")}
               title="Peers"

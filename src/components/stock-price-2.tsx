@@ -5,7 +5,7 @@ import React from "react";
 import type { Session } from "next-auth";
 import { ChevronsDown, ChevronsUp } from "lucide-react";
 import { getQuote } from "@/lib/fmp/quote";
-import { StockImage } from "./shared/stock-image";
+import { StockImage } from "./stock-image";
 import { Stock } from "@prisma/client";
 import { db } from "@/lib/db";
 import { Card } from "./ui/card";
@@ -38,7 +38,7 @@ export default async function StockPrice2({ session, stock }: Props) {
     }),
   ]);
 
-  const flattenedPortfolios = await Promise.all(
+  const portfoliosWithStocks = await Promise.all(
     portfolios.map(async (portfolio) => ({
       ...portfolio,
       stockIds: await db.stockInPortfolio.findMany({
@@ -47,6 +47,11 @@ export default async function StockPrice2({ session, stock }: Props) {
       }),
     }))
   );
+
+  const flattenedPortfolios = portfoliosWithStocks.map((portfolio) => ({
+    ...portfolio,
+    stockIds: portfolio.stockIds.map((stock) => stock.stockId),
+  }));
 
   const positive =
     quote && quote.change ? (quote.change > 0 ? true : false) : true;
@@ -65,8 +70,10 @@ export default async function StockPrice2({ session, stock }: Props) {
         </div>
       </div>
       <div className="flex items-center gap-1 px-2">
-        <span className="text-lg">$</span>
-        <p className="text-[26px]">{quote?.price.toFixed(2) ?? "N/A"}</p>
+        <div className="flex items-center gap-[1px]">
+          <span className="text-lg mb-[1px]">$</span>
+          <p className="text-[26px]">{quote?.price.toFixed(2) ?? "N/A"}</p>
+        </div>
         {positive ? (
           <ChevronsUp className="h-5 w-5 mt-1 text-green-500" />
         ) : (

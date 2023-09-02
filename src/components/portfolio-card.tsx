@@ -1,6 +1,5 @@
-import { Portfolio } from "@prisma/client";
 import Link from "next/link";
-import StockList, { StockListLoading } from "./stock-list";
+import StockList from "./stock-list";
 import { Suspense } from "react";
 import {
   Card,
@@ -11,13 +10,21 @@ import {
   CardTitle,
 } from "./ui/card";
 import PortfolioDeleteModal from "./portfolio-delete-modal";
+import { PortfolioWithStocks } from "@/types/db";
+import { db } from "@/lib/db";
 
 interface Props {
-  portfolio: Pick<Portfolio, "id" | "title" | "public">;
-  stockIds: string[];
+  portfolio: Pick<PortfolioWithStocks, "id" | "title" | "public" | "stockIds">;
 }
 
-export default function PortfolioCard({ portfolio, stockIds }: Props) {
+export default async function PortfolioCard({ portfolio }: Props) {
+  const symbols = await db.stock.findMany({
+    select: { symbol: true },
+    where: {
+      id: { in: portfolio.stockIds },
+    },
+  });
+
   return (
     <Card className="relative f-col justify-between hover:bg-slate-100 dark:hover:bg-slate-900">
       <Link href={`/portfolios/${portfolio.id}`}>
@@ -28,9 +35,9 @@ export default function PortfolioCard({ portfolio, stockIds }: Props) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Suspense fallback={<StockListLoading limit={3} />}>
+          <Suspense fallback={<p>Loading...</p>}>
             <StockList
-              stockIds={stockIds}
+              symbols={symbols.map((s) => s.symbol)}
               error="No Stocks in this Portfolio"
               className="group-hover:scale-[1.01] duration-300"
               limit={3}

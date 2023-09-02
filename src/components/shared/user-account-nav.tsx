@@ -41,11 +41,11 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
           <DropdownMenuItem>My Portfolios</DropdownMenuItem>
         </Link>
 
-        <Link href="/settings">
+        <Link href="/account/settings">
           <DropdownMenuItem>Settings</DropdownMenuItem>
         </Link>
 
-        <Link href="/settings">
+        <Link href="/account/settings">
           <DropdownMenuItem>Help</DropdownMenuItem>
         </Link>
         <DropdownMenuSeparator />

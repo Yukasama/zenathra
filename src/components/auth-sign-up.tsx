@@ -1,6 +1,6 @@
 "use client";
 
-import OAuth from "./shared/oauth";
+import OAuth from "./oauth";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";

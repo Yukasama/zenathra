@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { X } from "lucide-react";
 import type { Session } from "next-auth";
 import { Card, CardContent, CardHeader } from "../ui/card";
-import CompanyLogo from "./company-logo";
+import CompanyLogo from "../company-logo";
 
 interface Props {
   session: Session | null;

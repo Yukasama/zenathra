@@ -10,7 +10,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Plus, Trash } from "lucide-react";
 import debounce from "lodash.debounce";
-import { StockImage } from "./shared/stock-image";
+import { StockImage } from "./stock-image";
 import * as Command from "@/components/ui/command";
 
 interface Props {

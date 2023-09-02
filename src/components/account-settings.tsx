@@ -15,14 +15,23 @@ import {
   LockIcon,
 } from "lucide-react";
 import type { Session } from "next-auth";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import PageLayout from "./page-layout";
+import { Separator } from "./ui/separator";
 
 interface Props {
   session: Session | null;
 }
 
 export default function AccountSettings({ session }: Props) {
-  const [active, setActive] = useState("personal");
-
   const tabs = [
     {
       id: "personal",
@@ -88,137 +97,101 @@ export default function AccountSettings({ session }: Props) {
   ];
 
   return (
-    <div className="grid min-h-screen grid-cols-7">
-      <div className="col-span-2 bg-slate-200/50 p-10 dark:bg-zinc-400/30">
-        <p className="mb-3 p-1 text-[30px] font-semibold">Settings</p>
-
-        <div className="f-col gap-2">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActive(tab.id)}
-              className={`p-3 shadow-sm ${
-                active === tab.id
-                  ? "bg-blue-500"
-                  : "hover:bg-slate-300/50 hover:dark:bg-zinc-200"
-              } flex gap-2 rounded-lg`}>
-              <p className={`${active === tab.id && "text-white"}`}>
+    <PageLayout>
+      <Tabs defaultValue="personal" className="flex gap-5">
+        <Card className="pr-8">
+          <CardHeader>
+            <CardTitle>Settings</CardTitle>
+            <CardDescription>Manage your account settings</CardDescription>
+          </CardHeader>
+          <TabsList className="f-col bg-transparent f-col items-start gap-1 pl-3">
+            {tabs.map((tab) => (
+              <TabsTrigger
+                key={tab.id}
+                value={tab.id}
+                className="text-md flex gap-3">
                 {tab.icon}
-              </p>
-              <p className={`${active === tab.id && "text-white"}`}>
                 {tab.label}
-              </p>
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="col-span-5 f-col w-full items-center gap-8 p-32 py-20">
-        {active === "personal" ? (
-          <>
-            <div className="f-col items-center gap-4">
-              <Image
-                className="h-20 w-20 rounded-full"
-                src={session?.user.image || "/images/unknown-user.png"}
-                height={80}
-                width={80}
-                alt="User Logo"
-              />
-              <div className="f-col items-center">
-                <h2 className="text-3xl font-thin">Personal Information</h2>
-                <p className="text-md font-thin text-slate-600">
-                  Personal details linked to my account
-                </p>
-              </div>
-            </div>
-
-            <div className="flex w-full flex-col gap-2 rounded-lg border border-slate-300 p-3 px-5 dark:border-zinc-100">
-              <h2 className="p-3 text-xl font-light">General Information</h2>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Card>
+        <TabsContent value="personal">
+          <Card>
+            <CardHeader>
+              <CardTitle>General Information</CardTitle>
+              <CardDescription>Manage your personal details</CardDescription>
+            </CardHeader>
+            <CardContent>
               {personalInfo.map((info) => (
-                <div className="f-col gap-2" key={info.title}>
+                <>
                   <Link
+                    key={info.title}
                     href={info.link}
-                    className="flex justify-between items-center w-full rounded-lg p-5 hover:bg-slate-200 dark:hover:bg-zinc-200">
-                    <p className="w-[50px] font-light text-slate-600">
+                    className="h-20 flex justify-between items-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 px-3">
+                    <p className="w-[50px] font-light text-slate-400">
                       {info.title}
                     </p>
                     {info.value}
-                    <div className="f-box h-9 w-9 rounded-md ">
-                      <ChevronRight className="h-5 w-5" />
-                    </div>
+                    <ChevronRight className="h-5 w-5" />
                   </Link>
-                  {info.title !== "E-Mail" && (
-                    <div className="mx-auto h-[1px] w-[97%] bg-slate-300 dark:bg-zinc-100"></div>
-                  )}
-                </div>
+                  {info.title !== "E-Mail" && <Separator className="my-1" />}
+                </>
               ))}
-            </div>
-            <div className="mt-2 flex gap-5">
-              <Button>
-                <Layers className="h-4 w-4" />
-                Export Data
-              </Button>
-              <Button variant="destructive">
-                <Trash2 className="h-4 w-4" />
-                Delete Account
-              </Button>
-            </div>
-          </>
-        ) : active === "portfolio" ? (
-          <div className="mt-52 text-center text-3xl font-thin">
-            Coming soon...
-          </div>
-        ) : active === "security" ? (
-          <>
-            <div className="f-col items-center gap-4">
-              <Image
-                className="h-20 w-20 rounded-full"
-                src={session?.user.image || "/images/unknown-user.png"}
-                height={80}
-                width={80}
-                alt="User Logo"
-              />
-              <div className="f-col items-center">
-                <h2 className="text-3xl font-thin">Account Security</h2>
-                <p className="text-md font-thin text-slate-600">
-                  Security procedures linked to my account
-                </p>
+            </CardContent>
+            <CardFooter>
+              <div className="mt-2 flex gap-5">
+                <Button variant="subtle">
+                  <Layers className="h-4 w-4" />
+                  Export Data
+                </Button>
+                <Button variant="destructive">
+                  <Trash2 className="h-4 w-4" />
+                  Delete Account
+                </Button>
               </div>
-            </div>
-
-            <div className="f-col w-full gap-2 rounded-lg border border-slate-300 p-3 px-5 dark:border-zinc-100">
-              <h2 className="p-3 text-xl font-light">Authentication</h2>
-              {security.map((info) => (
-                <div className="f-col gap-2" key={info.title}>
-                  <Link
-                    href={info.link}
-                    className="flex justify-between items-center w-full rounded-lg p-5 hover:bg-slate-200 dark:hover:bg-zinc-200">
-                    <p className="w-[50px] font-light text-slate-600">
-                      {info.title}
-                    </p>
-                    {info.value}
-                    <div className="f-box h-9 w-9 rounded-md ">
-                      <ChevronRight className="h-5 w-5" />
-                    </div>
-                  </Link>
-                  {info.title !== "E-Mail" && (
-                    <div className="mx-auto h-[1px] w-[97%] bg-slate-300 dark:bg-zinc-100"></div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </>
-        ) : active === "notifications" ? (
+            </CardFooter>
+          </Card>
+        </TabsContent>
+        <TabsContent value="portfolio">
           <div className="mt-52 text-center text-3xl font-thin">
             Coming soon...
           </div>
-        ) : (
-          active === "billing" && (
-            <div className="mt-52 text-center text-3xl font-thin">
-              Coming soon...
-            </div>
-          )
-        )}
-      </div>
-    </div>
+        </TabsContent>
+        <TabsContent value="security">
+          <Card>
+            <CardHeader>
+              <CardTitle>General Information</CardTitle>
+              <CardDescription>Manage your personal details</CardDescription>
+            </CardHeader>
+            {security.map((info) => (
+              <>
+                <Link
+                  key={info.title}
+                  href={info.link}
+                  className="h-20 flex justify-between items-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 px-3">
+                  <p className="w-[50px] font-light text-slate-400">
+                    {info.title}
+                  </p>
+                  {info.value}
+                  <ChevronRight className="h-5 w-5" />
+                </Link>
+                {info.title !== "E-Mail" && <Separator className="my-1" />}
+              </>
+            ))}
+          </Card>
+        </TabsContent>
+        <TabsContent value="notifications">
+          <div className="mt-52 text-center text-3xl font-thin">
+            Coming soon...
+          </div>
+        </TabsContent>
+        <TabsContent value="billing">
+          <div className="mt-52 text-center text-3xl font-thin">
+            Coming soon...
+          </div>
+        </TabsContent>
+      </Tabs>
+    </PageLayout>
   );
 }

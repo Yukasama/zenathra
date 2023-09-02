@@ -1,19 +1,26 @@
 "use client";
 
 import { startTransition } from "react";
-import AuthInput from "@/components/ui/auth-input";
 import { Button } from "@/components/ui/button";
-import FormWrapper from "@/components/ui/form-wrapper";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signOut } from "next-auth/react";
 import { ArrowRightCircle } from "lucide-react";
-import axios, { AxiosError } from "axios";
-import { UserUpdatePasswordProps } from "@/lib/validators/user";
 import { useMutation } from "@tanstack/react-query";
+import { UserUpdatePasswordProps } from "@/lib/validators/user";
+import axios, { AxiosError } from "axios";
 import { toast } from "@/hooks/use-toast";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 const Schema = z
   .object({
@@ -31,17 +38,8 @@ const Schema = z
 export default function Page() {
   const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FieldValues>({
+  const form = useForm<FieldValues>({
     resolver: zodResolver(Schema),
-    defaultValues: {
-      oldPassword: "",
-      password: "",
-      confPassword: "",
-    },
   });
 
   const { mutate: updateEmail, isLoading } = useMutation({
@@ -88,35 +86,52 @@ export default function Page() {
   }
 
   return (
-    <FormWrapper title="Change Your Password" onSubmit={handleSubmit(onSubmit)}>
-      <AuthInput
-        id="oldPassword"
-        type="password"
-        label="Old Password"
-        register={register}
-        errors={errors}
-      />
-
-      <AuthInput
-        id="password"
-        type="password"
-        label="Password"
-        register={register}
-        errors={errors}
-      />
-
-      <AuthInput
-        id="confPassword"
-        type="password"
-        label="Confirm Password"
-        register={register}
-        errors={errors}
-      />
-
-      <Button isLoading={isLoading}>
-        Change Password
-        <ArrowRightCircle className="h-4 w-4" />
-      </Button>
-    </FormWrapper>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 f-col">
+        <FormField
+          control={form.control}
+          name="oldPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Old Password</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your old Password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>New Password</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your new Password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="confPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>New Password</FormLabel>
+              <FormControl>
+                <Input placeholder="Confirm your new Password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button className="mt-4" variant="subtle" isLoading={isLoading}>
+          <ArrowRightCircle className="h-4" />
+          Change Password
+        </Button>
+      </form>
+    </Form>
   );
 }

@@ -9,7 +9,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import * as Command from "@/components/ui/command";
 import { useOnClickOutside } from "@/hooks/use-on-click-outside";
 import Link from "next/link";
-import { StockImage } from "./stock-image";
+import { StockImage } from "../stock-image";
 
 export default function Searchbar() {
   const [input, setInput] = useState<string>("");

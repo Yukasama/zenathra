@@ -1,7 +1,7 @@
 import StockPrice from "./stock-price";
 import { getQuote } from "@/lib/fmp/quote";
 import { db } from "@/lib/db";
-import { StockImage } from "./shared/stock-image";
+import { StockImage } from "./stock-image";
 import axios from "axios";
 import { StockHistoryProps } from "@/lib/validators/stock";
 import { StructureProps } from "@/types/layout";

@@ -6,7 +6,7 @@ import { IndexListLoading } from "@/components/index-list";
 import { StockCardListLoading } from "@/components/stock-card-list";
 import { StockHighlightLoading } from "@/components/stock-highlight";
 import { Suspense } from "react";
-import PageLayout from "@/components/shared/page-layout";
+import PageLayout from "@/components/page-layout";
 
 export default async function page() {
   const [actives, winners, losers] = await Promise.all([

@@ -61,7 +61,7 @@ export default function ChartArea({ data, size = "md" }: ChartProps) {
           </defs>
           <XAxis dataKey="name" fontSize={12} />
           <YAxis fontSize={12} />
-          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+          <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
           {/* @ts-ignore */}
           <Tooltip content={<CustomTooltip />} />
           <Area

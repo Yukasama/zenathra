@@ -10,9 +10,7 @@ export type User = Omit<
 };
 
 export type PortfolioWithStocks = {
-  stockIds: {
-    stockId: string;
-  }[];
+  stockIds: string[];
   title: string;
   image: string | null;
   id: string;

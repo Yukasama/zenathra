@@ -1,9 +1,7 @@
 "use client";
 
 import { startTransition } from "react";
-import AuthInput from "@/components/ui/auth-input";
 import { Button } from "@/components/ui/button";
-import FormWrapper from "@/components/ui/form-wrapper";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { FieldValues, useForm } from "react-hook-form";
@@ -14,6 +12,15 @@ import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { ArrowRightCircle } from "lucide-react";
 import { signOut } from "next-auth/react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 const Schema = z
   .object({
@@ -28,16 +35,8 @@ const Schema = z
 export default function Page() {
   const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FieldValues>({
+  const form = useForm<FieldValues>({
     resolver: zodResolver(Schema),
-    defaultValues: {
-      username: "",
-      confUsername: "",
-    },
   });
 
   const { mutate: updateEmail, isLoading } = useMutation({
@@ -83,27 +82,39 @@ export default function Page() {
   }
 
   return (
-    <FormWrapper title="Change Your Username" onSubmit={handleSubmit(onSubmit)}>
-      <AuthInput
-        id="username"
-        type="text"
-        label="Username"
-        register={register}
-        errors={errors}
-      />
-
-      <AuthInput
-        id="confUsername"
-        type="text"
-        label="Confirm Username"
-        register={register}
-        errors={errors}
-      />
-
-      <Button isLoading={isLoading}>
-        <ArrowRightCircle className="h-4 w-4" />
-        Change Username
-      </Button>
-    </FormWrapper>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 f-col">
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your Username" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="confUsername"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm Username</FormLabel>
+              <FormControl>
+                <Input placeholder="Confirm your Username" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button className="mt-4" variant="subtle" isLoading={isLoading}>
+          <ArrowRightCircle className="h-4" />
+          Change Username
+        </Button>
+      </form>
+    </Form>
   );
 }

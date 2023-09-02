@@ -5,7 +5,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, buttonVariants } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
-import OAuth from "./shared/oauth";
+import OAuth from "./oauth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "@/hooks/use-toast";

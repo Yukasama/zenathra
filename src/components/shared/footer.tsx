@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { footerLinks, site } from "@/config/site";
-import CompanyLogo from "./company-logo";
+import CompanyLogo from "../company-logo";
 import {
   Card,
   CardContent,

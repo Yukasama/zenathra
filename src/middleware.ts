@@ -7,11 +7,13 @@ export default withAuth(
     const path = req.nextUrl.pathname;
 
     const token = await getToken({ req });
+
     const isAuth = !!token;
 
     const isAuthPage = ["/sign-in", "/sign-up", "/forgot-password"];
-    const userRoutes = ["/account/:path*"];
-    const adminRoutes = ["/admin/:path*", "/api/admin/:path*"];
+
+    const userRoutes = [/^\/account(\/.*)?$/];
+    const adminRoutes = [/^\/admin(\/.*)?$/, /^\/api\/admin(\/.*)?$/];
 
     if (isAuthPage.includes(path)) {
       if (isAuth) return NextResponse.redirect(new URL("/", req.url));
@@ -20,31 +22,14 @@ export default withAuth(
 
     if (
       !isAuth &&
-      (adminRoutes.some((route) => path.startsWith(route)) ||
-        userRoutes.some((route) => path.startsWith(route)))
+      (adminRoutes.some((route) => route.test(path)) ||
+        userRoutes.some((route) => route.test(path)))
     ) {
       let from = path;
-      if (req.nextUrl.search) {
-        from += req.nextUrl.search;
-      }
+      if (req.nextUrl.search) from += req.nextUrl.search;
 
       return NextResponse.redirect(
         new URL(`/sign-in?from=${encodeURIComponent(from)}`, req.url)
-      );
-    }
-
-    if (
-      isAuth &&
-      token.role !== "admin" &&
-      adminRoutes.some((route) => path.startsWith(route))
-    ) {
-      let from = path;
-      if (req.nextUrl.search) {
-        from += req.nextUrl.search;
-      }
-
-      return NextResponse.redirect(
-        new URL(`/?from=${encodeURIComponent(from)}`, req.url)
       );
     }
 
@@ -59,13 +44,3 @@ export default withAuth(
     },
   }
 );
-
-export const config = {
-  matcher: [
-    "/sign-in",
-    "/sign-up",
-    "/forgot-password",
-    "/admin/:path*",
-    "/account/:path*",
-  ],
-};

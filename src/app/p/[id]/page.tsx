@@ -3,8 +3,7 @@ import Image from "next/image";
 import PortfolioAddModal from "@/components/portfolio-add-modal";
 import PortfolioAddButton from "@/components/portfolio-add-button";
 import PortfolioChart from "@/components/portfolio-chart";
-import { StockChartLoading } from "@/components/chart-line";
-import StockList, { StockListLoading } from "@/components/stock-list";
+import StockList from "@/components/stock-list";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
@@ -98,16 +97,11 @@ export default async function page({ params: { id } }: Props) {
       </div>
       {stockIds ? (
         <div className="flex gap-4">
-          <Suspense fallback={<StockChartLoading />}>
+          <Suspense fallback={<p>Loading...</p>}>
             <PortfolioChart symbols={symbols.map((s) => s.symbol)} />
           </Suspense>
-          <Suspense
-            fallback={
-              <StockListLoading
-                title="Portfolio Positions"
-                className="wrapper"
-              />
-            }>
+          <Suspense fallback={<p>Loading...</p>}>
+            {/* @ts-expect-error Server Component */}
             <StockList
               symbols={symbols.map((s) => s.symbol)}
               title="Portfolio Positions"

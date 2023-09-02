@@ -1,9 +1,7 @@
 "use client";
 
 import { startTransition } from "react";
-import AuthInput from "@/components/ui/auth-input";
 import { Button } from "@/components/ui/button";
-import FormWrapper from "@/components/ui/form-wrapper";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { FieldValues, useForm } from "react-hook-form";
@@ -14,6 +12,15 @@ import { useMutation } from "@tanstack/react-query";
 import { UserUpdateEmailProps } from "@/lib/validators/user";
 import axios, { AxiosError } from "axios";
 import { toast } from "@/hooks/use-toast";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 const Schema = z
   .object({
@@ -28,16 +35,8 @@ const Schema = z
 export default function Page() {
   const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FieldValues>({
+  const form = useForm<FieldValues>({
     resolver: zodResolver(Schema),
-    defaultValues: {
-      email: "",
-      confEmail: "",
-    },
   });
 
   const { mutate: updateEmail, isLoading } = useMutation({
@@ -81,27 +80,39 @@ export default function Page() {
   }
 
   return (
-    <FormWrapper title="Change Your E-Mail" onSubmit={handleSubmit(onSubmit)}>
-      <AuthInput
-        id="email"
-        type="email"
-        label="E-Mail"
-        register={register}
-        errors={errors}
-      />
-
-      <AuthInput
-        id="confEmail"
-        type="confEmail"
-        label="Confirm E-Mail"
-        register={register}
-        errors={errors}
-      />
-
-      <Button isLoading={isLoading}>
-        Change Email
-        <ArrowRightCircle className="h-4 w-4" />
-      </Button>
-    </FormWrapper>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 f-col">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>E-Mail</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your E-Mail" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="confemail"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm E-Mail</FormLabel>
+              <FormControl>
+                <Input placeholder="Confirm your E-Mail" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button className="mt-4" variant="subtle" isLoading={isLoading}>
+          <ArrowRightCircle className="h-4" />
+          Change E-Mail
+        </Button>
+      </form>
+    </Form>
   );
 }
