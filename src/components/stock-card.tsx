@@ -33,7 +33,9 @@ export default function StockCard({ quote, image, className }: Props) {
               <StockImage src={image} px={40} priority />
               <div className="f-col gap-1">
                 <CardTitle>{quote.symbol}</CardTitle>
-                <CardDescription className="w-[190px] truncate">{quote?.name}</CardDescription>
+                <CardDescription className="w-[190px] truncate">
+                  {quote?.name}
+                </CardDescription>
               </div>
             </div>
           </div>
@@ -41,11 +43,17 @@ export default function StockCard({ quote, image, className }: Props) {
 
         <CardContent className="flex gap-3">
           <div
-            className={cn(buttonVariants({ variant: "subtle", size: "xs" }))}>
+            className={cn(
+              buttonVariants({ size: "xs" }),
+              "text-blue-500 bg-slate-900"
+            )}>
             Technology
           </div>
           <div
-            className={cn(buttonVariants({ variant: "subtle", size: "xs" }))}>
+            className={cn(
+              buttonVariants({ size: "xs" }),
+              "text-blue-500 bg-slate-900"
+            )}>
             Computer Devices
           </div>
         </CardContent>
