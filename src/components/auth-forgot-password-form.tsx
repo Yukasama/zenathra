@@ -22,6 +22,7 @@ import {
   UserForgotPasswordProps,
   UserForgotPasswordSchema,
 } from "@/lib/validators/user";
+import axios from "axios";
 
 export default function AuthForgotPasswordForm() {
   const [sent, setSent] = useState(false);
@@ -32,7 +33,10 @@ export default function AuthForgotPasswordForm() {
   });
 
   const { mutate: login, isLoading } = useMutation({
-    mutationFn: async (data: UserForgotPasswordProps) => {},
+    mutationFn: async (data: UserForgotPasswordProps) => {
+      await axios.post("/api/auth/send-verification-mail", data);
+      setSent(true);
+    },
     onError: () => {
       toast({
         title: "Oops! Something went wrong.",

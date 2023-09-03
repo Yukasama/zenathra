@@ -1,4 +1,3 @@
-import { Stock } from "@prisma/client";
 import { Lock } from "lucide-react";
 import type { Session } from "next-auth";
 import { Card } from "./ui/card";

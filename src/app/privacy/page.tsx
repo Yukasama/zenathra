@@ -1,5 +1,3 @@
-import PageLayout from "@/components/page-layout";
-
 export default function page() {
   return (
     <div className="px-10 md:px-20 lg:px-48 xl:px-80 py-10">

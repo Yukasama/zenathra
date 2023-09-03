@@ -21,7 +21,6 @@ interface Props {
   symbolId: string;
   symbol: string;
   portfolios: PortfolioWithStocks[] | null;
-  className?: string;
 }
 
 export default function StockPortfolioAddModal({
@@ -29,7 +28,6 @@ export default function StockPortfolioAddModal({
   symbolId,
   symbol,
   portfolios,
-  className,
 }: Props) {
   const { loginToast } = useCustomToasts();
 
