@@ -97,7 +97,7 @@ export default function PortfolioCreateCard({
           </div>
         </Card>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-[375px]">
         <DialogHeader>
           <DialogTitle>Create Portfolio</DialogTitle>
           <DialogDescription>
@@ -105,9 +105,7 @@ export default function PortfolioCreateCard({
           </DialogDescription>
         </DialogHeader>
         <Form.Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="w-2/3 space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <Form.FormField
               control={form.control}
               name="title"

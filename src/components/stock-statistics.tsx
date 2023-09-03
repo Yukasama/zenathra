@@ -1,16 +1,22 @@
 import ChartBar from "./chart-bar";
-import { Financials } from "@prisma/client";
+import { Financials, Stock } from "@prisma/client";
 import { Years } from "@/lib/utils";
 import { StructureProps } from "@/types/layout";
 import ChartArea from "./chart-area";
 import React from "react";
 import { db } from "@/lib/db";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 interface SharedProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 interface Props extends SharedProps {
-  symbol: string;
+  stock: Pick<Stock, "symbol" | "companyName">;
 }
 
 function Structure({ className, children }: StructureProps) {
@@ -29,9 +35,9 @@ export function StockStatisticsLoading({ className }: SharedProps) {
   );
 }
 
-export default async function StockStatistics({ symbol, className }: Props) {
+export default async function StockStatistics({ stock, className }: Props) {
   const fin = await db.financials.findMany({
-    where: { symbol: symbol },
+    where: { symbol: stock.symbol },
     orderBy: { date: "asc" },
   });
 
@@ -61,12 +67,25 @@ export default async function StockStatistics({ symbol, className }: Props) {
 
   return (
     <Structure className={className}>
-      <ChartArea title="Statistics" data={statConfig} height={230} />
-      <ChartBar title="Margins" data={marginConfig} height={230} />
+      <ChartArea
+        title="Key Ratios"
+        description={`Important Metrics for ${stock.companyName}`}
+        data={statConfig}
+        height={230}
+      />
+      <ChartBar
+        title="Margins"
+        description={`Margin Data for ${stock.companyName}`}
+        data={marginConfig}
+        height={230}
+      />
       {dividendConfig.some((d) => d.uv !== 0) ? (
         <Card className="w-[500px] flex-1">
           <CardHeader>
             <CardTitle>Dividends</CardTitle>
+            <CardDescription>
+              Dividend Data for {stock.companyName}
+            </CardDescription>
           </CardHeader>
           <CardContent className="f-box">
             <p className="text-xl text-slate-400 font-medium mt-20">
@@ -75,7 +94,12 @@ export default async function StockStatistics({ symbol, className }: Props) {
           </CardContent>
         </Card>
       ) : (
-        <ChartArea title="Dividend" data={dividendConfig} height={230} />
+        <ChartArea
+          title="Dividend"
+          description={`Dividend Data for ${stock.companyName}`}
+          data={dividendConfig}
+          height={230}
+        />
       )}
     </Structure>
   );

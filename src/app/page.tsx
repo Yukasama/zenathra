@@ -28,7 +28,7 @@ export default async function page() {
         </Suspense>
       </div>
 
-      <Suspense fallback={<StockCardListLoading />}>
+      <Suspense fallback={<div className="animate-pulse-right"></div>}>
         {/* @ts-expect-error Server Component */}
         <StockCardList
           symbols={actives}

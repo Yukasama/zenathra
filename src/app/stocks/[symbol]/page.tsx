@@ -84,7 +84,10 @@ export default async function page({ params: { symbol } }: Props) {
         <Separator />
         <Suspense fallback={<p>Loading...</p>}>
           {/* @ts-expect-error Server Component */}
-          <StockStatistics symbol={symbol} />
+          <StockStatistics stock={{
+            symbol: stock.symbol,
+            companyName: stock.companyName,
+          }} />
         </Suspense>
       </div>
     </PageLayout>

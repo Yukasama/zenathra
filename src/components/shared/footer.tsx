@@ -13,34 +13,32 @@ import { Separator } from "../ui/separator";
 
 export default function Footer() {
   return (
-    <Card className="bg-slate-50 dark:bg-slate-900 border-none rounded-none px-20 w-full">
-      <CardHeader>
+    <Card className="bg-slate-50 dark:bg-slate-900 border-none rounded-none px-10 lg:px-20 w-full">
+      <CardHeader className="pl-10 md:pl-0">
         <div className="flex items-center gap-3">
           <CompanyLogo px={40} />
           <CardTitle>Elysium</CardTitle>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="f-col gap-6 px-3">
-          <div className="grid grid-cols-2 lg:flex gap-5 lg:gap-16">
-            {footerLinks.map((footerLink, i) => (
-              <div key={`${footerLink.title}-${i}`} className="w-20">
-                <h2 className="mb-2 uppercase tracking-widest text-slate-500">
-                  {footerLink.title}
-                </h2>
-                <div className="f-col gap-1.5">
-                  {footerLink.links.map((link, i) => (
-                    <Link
-                      key={`${link.name}-${i}`}
-                      href={link.link}
-                      className={"text-sm hover:underline"}>
-                      {link.name}
-                    </Link>
-                  ))}
-                </div>
+      <CardContent className="f-col gap-6 px-3 items-center md:items-start">
+        <div className="grid grid-cols-2 md:flex gap-5 gap-x-24">
+          {footerLinks.map((footerLink, i) => (
+            <div key={`${footerLink.title}-${i}`} className="w-20">
+              <h2 className="mb-2 uppercase tracking-widest text-slate-400">
+                {footerLink.title}
+              </h2>
+              <div className="f-col gap-1.5">
+                {footerLink.links.map((link, i) => (
+                  <Link
+                    key={`${link.name}-${i}`}
+                    href={link.link}
+                    className={"text-sm hover:underline"}>
+                    {link.name}
+                  </Link>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </CardContent>
 

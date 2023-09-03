@@ -20,7 +20,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export default function StockCard({ quote, image, className }: Props) {
-  if (!quote) return <div className="flex">Stock could not be loaded</div>;
+  if (!quote) return <div className="animate-pulse-right h-40 w-80"></div>;
 
   return (
     <Link

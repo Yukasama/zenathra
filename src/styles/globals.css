@@ -50,13 +50,13 @@
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-zinc-300;
+  @apply bg-slate-100;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-primary;
+  @apply bg-slate-300;
 }
 .hidden-scrollbar {
   -ms-overflow-style: none;

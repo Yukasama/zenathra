@@ -8,6 +8,7 @@ import {
   Legend,
   AreaChart,
   Area,
+  ResponsiveContainer,
 } from "recharts";
 import {
   Card,
@@ -94,7 +95,7 @@ export default function StockPriceChart({
           <p className="text-[15px]">{label}</p>
           <p
             className="text-sm text-[#19E363]"
-            style={{ color: pos ? "#19E363" : "#ff0000" }}>
+            style={{ color: pos ? "#19E363" : "#e6221e" }}>
             ${payload[0].value}
           </p>
         </Card>
@@ -146,12 +147,12 @@ export default function StockPriceChart({
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor={pos ? "#19E363" : "#ff0000"}
+                  stopColor={pos ? "#19E363" : "#e6221e"}
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor={pos ? "#19E363" : "#ff0000"}
+                  stopColor={pos ? "#19E363" : "#e6221e"}
                   stopOpacity={0}
                 />
               </linearGradient>
@@ -165,14 +166,16 @@ export default function StockPriceChart({
             <Area
               type="monotone"
               dataKey="uv"
-              stroke={pos ? "#19E363" : "#ff0000"}
+              stroke={pos ? "#19E363" : "#e6221e"}
               fillOpacity={1}
               fill="url(#colorUv)"
               name="Price"
             />
           </AreaChart>
         ) : (
-          <div className="h-[300px] w-[540px] animate-pulse-right ml-10 mb-10"></div>
+          <div
+            className="animate-pulse-right ml-10 mb-10"
+            style={{ width: width - 60, height: height - 20 }}></div>
         )}
       </div>
     </Card>
