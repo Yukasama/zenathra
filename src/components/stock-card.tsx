@@ -42,6 +42,15 @@ export default function StockCard({ quote, image, className }: Props) {
         </CardHeader>
 
         <CardContent className="flex gap-3">
+          {quote.symbol === "NVOS" && (
+            <div
+              className={cn(
+                buttonVariants({ size: "xs" }),
+                "text-blue-400 bg-gradient-radial from-blue-500/30 to-slate-900"
+              )}>
+              SOtd
+            </div>
+          )}
           <div
             className={cn(
               buttonVariants({ size: "xs" }),

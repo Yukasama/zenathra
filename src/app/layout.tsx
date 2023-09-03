@@ -5,7 +5,7 @@ import SidebarPortable from "@/components/shared/sidebar-portable";
 import Provider from "@/components/shared/provider";
 import { Metadata } from "next";
 import { cn } from "@/lib/utils";
-import { Inter } from "next/font/google";
+import { K2D } from "next/font/google";
 import { site } from "@/config/site";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   creator: site.creator,
 };
 
-const inter = Inter({ subsets: ["latin"] });
+const k2d = K2D({ subsets: ["latin"], weight: ["400", "500", "600"] });
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -30,7 +30,7 @@ export default async function RootLayout({ children, authModal }: LayoutProps) {
   return (
     <html
       lang="en"
-      className={cn("text-slate-900 antialiased light", inter.className)}
+      className={cn("text-slate-900 antialiased light", k2d.className)}
       suppressHydrationWarning>
       <body className="w-screen h-screen flex overflow-hidden">
         <Provider>
