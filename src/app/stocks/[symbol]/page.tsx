@@ -15,21 +15,15 @@ import { Separator } from "@/components/ui/separator";
 import PageLayout from "@/components/page-layout";
 import StockStatistics from "@/components/stock-statistics";
 
-// export async function generateStaticParams() {
-//   const symbols = await db.stock.findMany({
-//     select: {
-//       symbol: true,
-//     },
-//   });
+export async function generateStaticParams() {
+  const data = await db.stock.findMany({
+    select: {
+      symbol: true,
+    },
+  });
 
-//   return symbols.map((symbol) => {
-//     return {
-//       params: {
-//         symbol: symbol,
-//       },
-//     };
-//   });
-// }
+  return data.map((stock) => ({ symbol: stock.symbol }));
+}
 
 interface Props {
   params: { symbol: string };
@@ -84,10 +78,12 @@ export default async function page({ params: { symbol } }: Props) {
         <Separator />
         <Suspense fallback={<p>Loading...</p>}>
           {/* @ts-expect-error Server Component */}
-          <StockStatistics stock={{
-            symbol: stock.symbol,
-            companyName: stock.companyName,
-          }} />
+          <StockStatistics
+            stock={{
+              symbol: stock.symbol,
+              companyName: stock.companyName,
+            }}
+          />
         </Suspense>
       </div>
     </PageLayout>

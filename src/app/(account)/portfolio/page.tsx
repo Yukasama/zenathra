@@ -22,7 +22,7 @@ export default async function page() {
   );
 
   return (
-    <PageLayout className="f-col gap-8 xl:gap-10 xl:grid xl:grid-cols-3">
+    <PageLayout className="f-col gap-6 md:grid md:grid-cols-2 xl:gap-8 xl:grid-cols-3">
       {flattenedPortfolios.map((portfolio) => (
         <>
           {/* @ts-expect-error Server Component */}
@@ -37,7 +37,9 @@ export default async function page() {
           />
         </>
       ))}
-      {portfolios.length < 6 && <PortfolioCreateCard />}
+      {portfolios.length < 6 && (
+        <PortfolioCreateCard numberOfPortfolios={portfolios.length} />
+      )}
     </PageLayout>
   );
 }

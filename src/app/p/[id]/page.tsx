@@ -11,6 +11,14 @@ interface Props {
   params: { id: string };
 }
 
+export async function generateStaticParams() {
+  const data = await db.portfolio.findMany({
+    select: { id: true },
+  });
+
+  return data.map((portfolio) => ({ id: portfolio.id }));
+}
+
 export async function generateMetadata({ params: { id } }: Props) {
   const [session, portfolio] = await Promise.all([
     getAuthSession(),
@@ -33,12 +41,6 @@ export async function generateMetadata({ params: { id } }: Props) {
     title: portfolio.title,
   };
 }
-
-// export async function generateStaticParams() {
-//   const { data, error } = await request("/api/portfolios/getAll");
-
-//   return data.map((portfolio) => ({ id: portfolio.id }));
-// }
 
 export default async function page({ params: { id } }: Props) {
   const [session, portfolio, stockIds] = await Promise.all([

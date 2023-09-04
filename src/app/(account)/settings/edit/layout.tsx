@@ -10,7 +10,7 @@ export default function Layout({ children }: Props) {
   return (
     <div className="f-box fixed left-0 top-0 z-30 h-screen w-screen bg-zinc-300">
       <div className="absolute left-7 top-3.5">
-        <Link href="/account/settings">
+        <Link href="/settings">
           <Button>
             <ArrowLeft className="h-5 w-5" />
             Back

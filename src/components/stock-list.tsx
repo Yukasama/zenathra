@@ -44,20 +44,34 @@ export default async function StockList({
   if (!Array.isArray(stocks)) stocks = [stocks];
 
   return (
-    <Card className={cn(className)}>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        {quotes?.map((quote) => (
-          <StockListItem
-            key={quote.symbol}
-            stock={stocks.find((s) => s.symbol === quote.symbol)}
-            quote={quote}
-          />
-        ))}
-      </CardContent>
-    </Card>
+    <>
+      {!title && !description ? (
+        <div className="space-y-2">
+          {quotes?.map((quote) => (
+            <StockListItem
+              key={quote.symbol}
+              stock={stocks.find((s) => s.symbol === quote.symbol)}
+              quote={quote}
+            />
+          ))}
+        </div>
+      ) : (
+        <Card className={cn(className)}>
+          <CardHeader>
+            <CardTitle>{title}</CardTitle>
+            <CardDescription>{description}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {quotes?.map((quote) => (
+              <StockListItem
+                key={quote.symbol}
+                stock={stocks.find((s) => s.symbol === quote.symbol)}
+                quote={quote}
+              />
+            ))}
+          </CardContent>
+        </Card>
+      )}
+    </>
   );
 }

@@ -70,17 +70,17 @@ export default function AccountSettings({ session }: Props) {
           className="h-8 w-8"
         />
       ),
-      link: "/account/settings/edit/change-picture",
+      link: "/settings/edit/change-picture",
     },
     {
       title: "Name",
       value: session?.user.name || null,
-      link: "/account/settings/edit/change-username",
+      link: "/settings/edit/change-username",
     },
     {
       title: "E-Mail",
       value: session?.user.email || null,
-      link: "/account/settings/edit/change-email",
+      link: "/settings/edit/change-email",
     },
   ];
 
@@ -88,7 +88,7 @@ export default function AccountSettings({ session }: Props) {
     {
       title: "Password",
       value: "*********",
-      link: "/account/settings/edit/change-password",
+      link: "/settings/edit/change-password",
     },
   ];
 

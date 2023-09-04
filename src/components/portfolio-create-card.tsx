@@ -15,7 +15,6 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as Form from "./ui/form";
 import { cn } from "@/lib/utils";
 import {
   Dialog,
@@ -26,20 +25,29 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Card } from "./ui/card";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+} from "./ui/form";
 
 interface Props {
   numberOfPortfolios?: number;
-  onClose?: any;
 }
 
-export default function PortfolioCreateCard({
-  numberOfPortfolios = 0,
-  onClose,
-}: Props) {
+export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
   const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(CreatePortfolioSchema),
+    defaultValues: {
+      title: "",
+      publicPortfolio: false,
+    },
   });
 
   const { mutate: createPortfolio, isLoading } = useMutation({
@@ -71,7 +79,6 @@ export default function PortfolioCreateCard({
     },
     onSuccess: () => {
       startTransition(() => router.refresh());
-      onClose();
 
       toast({
         description: `Portfolio successfully created.`,
@@ -91,7 +98,7 @@ export default function PortfolioCreateCard({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Card className="f-box min-h-[300px] cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-900">
+        <Card className="f-box cursor-pointer min-h-[240px] hover:bg-slate-100 dark:hover:bg-slate-900">
           <div className={cn(buttonVariants({ size: "sm" }), "bg-primary")}>
             <Plus />
           </div>
@@ -101,49 +108,49 @@ export default function PortfolioCreateCard({
         <DialogHeader>
           <DialogTitle>Create Portfolio</DialogTitle>
           <DialogDescription>
-            Create your personal portfolio to track your stocks.
+            Create a personal portfolio to track your stocks.
           </DialogDescription>
         </DialogHeader>
-        <Form.Form {...form}>
+        <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <Form.FormField
+            <FormField
               control={form.control}
               name="title"
               render={({ field }) => (
-                <Form.FormItem>
-                  <Form.FormLabel>Title</Form.FormLabel>
-                  <Form.FormControl>
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
                     <Input
-                      placeholder="Choose your name..."
+                      placeholder="Choose your title..."
                       {...field}
                       required
                     />
-                  </Form.FormControl>
-                  <Form.FormDescription>
+                  </FormControl>
+                  <FormDescription>
                     This is what your portfolio will be called.
-                  </Form.FormDescription>
-                  <Form.FormMessage />
-                </Form.FormItem>
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
               )}
             />
-            <Form.FormField
+            <FormField
               control={form.control}
               name="publicPortfolio"
               render={({ field }) => (
-                <Form.FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                  <Form.FormControl>
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
                     />
-                  </Form.FormControl>
+                  </FormControl>
                   <div className="space-y-1 leading-none">
-                    <Form.FormLabel>Make public</Form.FormLabel>
-                    <Form.FormDescription>
+                    <FormLabel>Make public</FormLabel>
+                    <FormDescription>
                       Display portfolio publicly?
-                    </Form.FormDescription>
+                    </FormDescription>
                   </div>
-                </Form.FormItem>
+                </FormItem>
               )}
             />
             <Button variant="subtle" isLoading={isLoading}>
@@ -151,7 +158,7 @@ export default function PortfolioCreateCard({
               Create Portfolio
             </Button>
           </form>
-        </Form.Form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

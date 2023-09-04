@@ -12,6 +12,8 @@ import {
 import PortfolioDeleteModal from "./portfolio-delete-modal";
 import { PortfolioWithStocks } from "@/types/db";
 import { db } from "@/lib/db";
+import { buttonVariants } from "./ui/button";
+import { BarChart } from "lucide-react";
 
 interface Props {
   portfolio: Pick<PortfolioWithStocks, "id" | "title" | "public" | "stockIds">;
@@ -26,27 +28,31 @@ export default async function PortfolioCard({ portfolio }: Props) {
   });
 
   return (
-    <Card className="relative f-col justify-between hover:bg-slate-100 dark:hover:bg-slate-900">
-      <Link href={`/portfolios/${portfolio.id}`}>
-        <CardHeader>
-          <CardTitle>{portfolio.title}</CardTitle>
-          <CardDescription>
-            {portfolio.public ? "Public" : "Private"}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Suspense fallback={<p>Loading...</p>}>
-            {/* @ts-expect-error Server Component */}
-            <StockList
-              symbols={symbols.map((s) => s.symbol)}
-              error="No Stocks in this Portfolio"
-              className="group-hover:scale-[1.01] duration-300"
-              limit={3}
-            />
-          </Suspense>
-        </CardContent>
-      </Link>
-      <CardFooter>
+    <Card className="f-col justify-between">
+      <CardHeader>
+        <CardTitle>{portfolio.title}</CardTitle>
+        <CardDescription>
+          {portfolio.public ? "Public" : "Private"}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Suspense fallback={<p>Loading...</p>}>
+          {/* @ts-expect-error Server Component */}
+          <StockList
+            symbols={symbols.map((s) => s.symbol)}
+            error="No Stocks in this Portfolio"
+            className="group-hover:scale-[1.01] duration-300 border-none"
+            limit={3}
+          />
+        </Suspense>
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <Link
+          href={`/portfolios/${portfolio.id}`}
+          className={buttonVariants({ variant: "subtle" })}>
+          <BarChart className="h-4" />
+          View
+        </Link>
         <PortfolioDeleteModal
           portfolio={{
             id: portfolio.id,
