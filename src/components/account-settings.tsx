@@ -36,6 +36,13 @@ import {
 } from "./ui/sheet";
 import { Label } from "recharts";
 import { Input } from "./ui/input";
+import dynamic from "next/dynamic";
+
+const ChangeEmail = dynamic(() => import("./change-email"), { ssr: false });
+
+const ChangePassword = dynamic(() => import("./change-password"), {
+  ssr: false,
+});
 
 interface Props {
   session: Session | null;
@@ -82,17 +89,17 @@ export default function AccountSettings({ session }: Props) {
           className="h-8 w-8"
         />
       ),
-      link: "/settings/edit/change-picture",
+      form: <ChangeEmail />,
     },
     {
       title: "Name",
       value: session?.user.name || null,
-      link: "/settings/edit/change-username",
+      form: <ChangePassword />,
     },
     {
       title: "E-Mail",
       value: session?.user.email || null,
-      link: "/settings/edit/change-email",
+      form: <ChangeEmail />,
     },
   ];
 
@@ -140,42 +147,7 @@ export default function AccountSettings({ session }: Props) {
                   <ChevronRight className="h-5 w-5" />
                 </SheetTrigger>
                 {section.title !== "E-Mail" && <Separator className="my-1" />}
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle>Edit profile</SheetTitle>
-                    <SheetDescription>
-                      Make changes to your profile here. Click save when youre
-                      done.
-                    </SheetDescription>
-                  </SheetHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label className="text-right">
-                        Name
-                      </Label>
-                      <Input
-                        id="name"
-                        value="Pedro Duarte"
-                        className="col-span-3"
-                      />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label className="text-right">
-                        Username
-                      </Label>
-                      <Input
-                        id="username"
-                        value="@peduarte"
-                        className="col-span-3"
-                      />
-                    </div>
-                  </div>
-                  <SheetFooter>
-                    <SheetClose asChild>
-                      <Button type="submit">Save changes</Button>
-                    </SheetClose>
-                  </SheetFooter>
-                </SheetContent>
+                <SheetContent>{section.form}</SheetContent>
               </Sheet>
             ))}
           </CardContent>
