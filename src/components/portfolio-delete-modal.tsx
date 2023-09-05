@@ -33,12 +33,6 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
 
   const { mutate: deletePortfolio, isLoading } = useMutation({
     mutationFn: async () => {
-      if (title !== portfolio.title)
-        return toast({
-          title: "Oops! Something went wrong.",
-          description: "Please enter the correct title.",
-        });
-        
       const payload: DeletePortfolioProps = {
         portfolioId: portfolio.id,
       };
@@ -64,6 +58,16 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
     },
   });
 
+  function onSubmit() {
+    if (title !== `Delete ${portfolio.title}`)
+      return toast({
+        title: "Oops! Something went wrong.",
+        description: "Please enter the correct title.",
+      });
+
+    deletePortfolio();
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -72,16 +76,20 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
           Delete
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-w-[375px]">
         <DialogHeader>
-          <DialogTitle>Delete Portfolio?</DialogTitle>
+          <DialogTitle>
+            <p className="w-54 truncate">
+              Delete Portfolio {portfolio.title}?
+            </p>
+          </DialogTitle>
           <DialogDescription>This action cannot be undone.</DialogDescription>
         </DialogHeader>
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Title</Label>
           <Input
             id="name"
-            placeholder={portfolio.title}
+            placeholder={`Delete ${portfolio.title}`}
             onChange={(e) => setTitle(e.target.value)}
           />
           <CardDescription>
@@ -93,7 +101,7 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
             type="submit"
             variant="destructive"
             isLoading={isLoading}
-            onClick={() => deletePortfolio()}>
+            onClick={onSubmit}>
             Delete Portfolio
           </Button>
         </DialogFooter>

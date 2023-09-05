@@ -1,6 +1,6 @@
 "use client";
 
-import { ChartProps } from "@/types/stock";
+import { Chart } from "@/types/stock";
 import { useEffect, useState } from "react";
 import {
   Area,
@@ -47,7 +47,7 @@ export default function ChartArea({
   data,
   height = 300,
   width = 500,
-}: ChartProps) {
+}: Chart) {
   const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {

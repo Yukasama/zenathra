@@ -39,14 +39,14 @@ export interface Quote {
   timestamp: number;
 }
 
-export interface ChartProps {
+export interface Chart {
   title?: string;
   description?: string;
   data: {
     name: string;
-    uv: (number | null);
-    pv?: (number | null);
-    fv?: (number | null);
+    uv: number | null;
+    pv?: number | null;
+    fv?: number | null;
   }[];
   height?: number;
   width?: number;

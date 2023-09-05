@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ChartProps } from "@/types/stock";
+import { Chart } from "@/types/stock";
 import { useEffect, useState } from "react";
 
 export default function ChartLine({
@@ -23,7 +23,7 @@ export default function ChartLine({
   data,
   height = 300,
   width = 500,
-}: ChartProps) {
+}: Chart) {
   const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {

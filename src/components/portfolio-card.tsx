@@ -48,7 +48,7 @@ export default async function PortfolioCard({ portfolio }: Props) {
       </CardContent>
       <CardFooter className="flex justify-between">
         <Link
-          href={`/portfolios/${portfolio.id}`}
+          href={`/p/${portfolio.id}`}
           className={buttonVariants({ variant: "subtle" })}>
           <BarChart className="h-4" />
           View
