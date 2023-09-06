@@ -9,9 +9,15 @@ import { buttonVariants } from "../ui/button";
 import React from "react";
 import NavbarMenu from "./navbar-menu";
 import { cn } from "@/lib/utils";
+import { db } from "@/lib/db";
 
 export default async function Navbar() {
   const session = await getAuthSession();
+
+  const user = await db.user.findFirst({
+    select: { role: true },
+    where: { id: session?.user?.id },
+  });
 
   return (
     <div className="sticky top-0 z-20 flex w-full items-center justify-between gap-4 p-2 px-4">
@@ -36,7 +42,12 @@ export default async function Navbar() {
           </Link>
         )}
         <ThemeToggle />
-        {session?.user && <UserAccountNav user={session.user} />}
+        {session?.user && (
+          <UserAccountNav
+            user={session.user}
+            isAdmin={user?.role === "admin"}
+          />
+        )}
       </div>
     </div>
   );

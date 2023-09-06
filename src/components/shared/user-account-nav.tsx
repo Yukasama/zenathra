@@ -14,9 +14,10 @@ import { UserAvatar } from "@/components/shared/user-avatar";
 
 interface UserAccountNavProps {
   user: User;
+  isAdmin?: boolean;
 }
 
-export function UserAccountNav({ user }: UserAccountNavProps) {
+export function UserAccountNav({ user, isAdmin }: UserAccountNavProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -37,9 +38,16 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
           </div>
         </div>
         <DropdownMenuSeparator />
+
         <Link href={`/u/${user.id}`}>
           <DropdownMenuItem>Profile</DropdownMenuItem>
         </Link>
+
+        {isAdmin && (
+          <Link href="/admin/dashboard">
+            <DropdownMenuItem>Stock Dashboard</DropdownMenuItem>
+          </Link>
+        )}
 
         <Link href="/portfolio">
           <DropdownMenuItem>My Portfolios</DropdownMenuItem>

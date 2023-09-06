@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     );
 
     let portfolio = await db.portfolio.findFirst({
+      select: { id: true },
       where: {
         id: portfolioId,
         creatorId: session.user.id,
@@ -29,23 +30,15 @@ export async function POST(req: Request) {
       return new NotFoundResponse("Portfolio not found or not owned");
 
     const stocksInDatabase = await db.stock.findMany({
-      select: {
-        id: true,
-      },
+      select: { id: true },
       where: {
-        id: {
-          in: stockIds,
-        },
+        id: { in: stockIds },
       },
     });
 
     const portfolioStocks = await db.stockInPortfolio.findMany({
-      where: {
-        portfolioId: portfolioId,
-      },
-      select: {
-        stockId: true,
-      },
+      select: { stockId: true },
+      where: { portfolioId: portfolioId },
     });
 
     const portfolioStockIds = portfolioStocks.map((stock) => stock.stockId);

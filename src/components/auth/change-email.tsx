@@ -32,11 +32,15 @@ const Schema = z
     path: ["confEmail"],
   });
 
-export default function Page() {
+export default function ChangeEmail() {
   const router = useRouter();
 
   const form = useForm<FieldValues>({
     resolver: zodResolver(Schema),
+    defaultValues: {
+      email: "",
+      confEmail: "",
+    },
   });
 
   const { mutate: updateEmail, isLoading } = useMutation({
@@ -62,11 +66,9 @@ export default function Page() {
     },
     onSuccess: () => {
       startTransition(() => router.refresh());
-
       toast({
         description: "Email updated successfully.",
       });
-
       signOut();
     },
   });
@@ -80,39 +82,49 @@ export default function Page() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 f-col">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>E-Mail</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your E-Mail" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="confemail"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm E-Mail</FormLabel>
-              <FormControl>
-                <Input placeholder="Confirm your E-Mail" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button className="mt-4" variant="subtle" isLoading={isLoading}>
-          <ArrowRightCircle className="h-4" />
-          Change E-Mail
-        </Button>
-      </form>
-    </Form>
+    <div className="f-col gap-5">
+      <div className="f-col gap-0.5">
+        <h2 className="font-medium text-lg">Change Email</h2>
+        <p className="text-sm text-slate-400">You can change your Email here</p>
+      </div>
+      <div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 f-col">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>E-Mail</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your E-Mail" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confemail"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm E-Mail</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Confirm your E-Mail" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button variant="subtle" isLoading={isLoading}>
+              <ArrowRightCircle className="h-4" />
+              Change Email
+            </Button>
+          </form>
+        </Form>
+      </div>
+    </div>
   );
 }

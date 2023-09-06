@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Separator } from "../ui/separator";
+import { Icons } from "../icons";
 
 export default function Footer() {
   return (
@@ -67,13 +68,17 @@ export default function Footer() {
                   key={name}
                   href={url}
                   className="f-box h-10 w-10 rounded-md">
-                  <Image
-                    className={`${name === "github" && "dark:invert"}`}
-                    src={`/images/oauth/${name}.png`}
-                    height={20}
-                    width={20}
-                    alt={name[0].toUpperCase() + name.slice(1)}
-                  />
+                  {name === "github" ? (
+                    <Icons.github className="h-6 dark:invert" />
+                  ) : name === "instagram" ? (
+                    <Icons.instagram className="h-6" />
+                  ) : name === "twitter" ? (
+                    <Icons.twitter className="h-6" />
+                  ) : name === "youtube" ? (
+                    <Icons.youtube className="h-6" />
+                  ) : (
+                    name === "linkedin" && <Icons.linkedin className="h-6" />
+                  )}
                 </Link>
               ))}
             </div>

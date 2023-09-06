@@ -17,7 +17,11 @@ export async function POST(req: Request) {
 
     const { email, password } = UserSignUpSchema.parse(await req.json());
 
-    const existingUser = await db.user.findFirst({ where: { email } });
+    const existingUser = await db.user.findFirst({
+      select: { id: true },
+      where: { email },
+    });
+
     if (existingUser)
       return new UnprocessableEntityResponse("Email is already registered");
 

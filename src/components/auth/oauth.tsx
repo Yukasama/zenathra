@@ -4,8 +4,8 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
-import { Icons } from "./icons";
+import { Button } from "../ui/button";
+import { Icons } from "../icons";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   provider: "google" | "facebook" | "github";
@@ -36,8 +36,7 @@ export default function OAuth({ provider, className, ...props }: Props) {
     <div className={cn("flex justify-center", className)} {...props}>
       <Button
         isLoading={isLoading}
-        variant="subtle"
-        className="w-full border"
+        className="w-full bg-slate-900 hover:bg-slate-900/70 border"
         onClick={onSubmit}>
         {provider === "google" ? (
           <Icons.google className="h-[18px] mr-1" />

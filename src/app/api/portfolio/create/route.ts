@@ -19,17 +19,15 @@ export async function POST(req: Request) {
     );
 
     const portfolios = await db.portfolio.findMany({
-      where: {
-        creatorId: session.user.id,
-      },
+      select: { id: true },
+      where: { creatorId: session.user.id },
     });
 
     const subscription = await db.userSubscription.findFirst({
+      select: { id: true },
       where: {
         id: session.user.id,
-        endDate: {
-          gt: new Date(),
-        },
+        endDate: { gt: new Date() },
       },
     });
 
@@ -52,7 +50,7 @@ export async function POST(req: Request) {
       });
     }
 
-    return new Response(newPortfolio.id);
+    return new Response("OK");
   } catch (error) {
     if (error instanceof z.ZodError)
       return new UnprocessableEntityResponse(error.message);

@@ -35,11 +35,16 @@ const Schema = z
     path: ["confPassword"],
   });
 
-export default function Page() {
+export default function ChangePassword() {
   const router = useRouter();
 
   const form = useForm<FieldValues>({
     resolver: zodResolver(Schema),
+    defaultValues: {
+      oldPassword: "",
+      password: "",
+      confPassword: "",
+    },
   });
 
   const { mutate: updateEmail, isLoading } = useMutation({
@@ -67,11 +72,9 @@ export default function Page() {
       startTransition(() => {
         router.refresh();
       });
-
       toast({
         description: "Password updated successfully.",
       });
-
       signOut();
     },
   });
@@ -86,52 +89,64 @@ export default function Page() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 f-col">
-        <FormField
-          control={form.control}
-          name="oldPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Old Password</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your old Password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>New Password</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your new Password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="confPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>New Password</FormLabel>
-              <FormControl>
-                <Input placeholder="Confirm your new Password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button className="mt-4" variant="subtle" isLoading={isLoading}>
-          <ArrowRightCircle className="h-4" />
-          Change Password
-        </Button>
-      </form>
-    </Form>
+    <div className="f-col gap-5">
+      <div className="f-col gap-0.5">
+        <h2 className="font-medium text-lg">Change Password</h2>
+        <p className="text-sm text-slate-400">
+          You can change your Password here
+        </p>
+      </div>
+      <div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 f-col">
+            <FormField
+              control={form.control}
+              name="oldPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Old Password</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your old Password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>New Password</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your new Password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>New Password</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Confirm your new Password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button className="mt-4" variant="subtle" isLoading={isLoading}>
+              <ArrowRightCircle className="h-4" />
+              Change Password
+            </Button>
+          </form>
+        </Form>
+      </div>
+    </div>
   );
 }

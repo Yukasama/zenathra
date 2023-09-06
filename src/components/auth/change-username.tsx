@@ -32,14 +32,18 @@ const Schema = z
     path: ["confUsername"],
   });
 
-export default function Page() {
+export default function ChangeUsername() {
   const router = useRouter();
 
   const form = useForm<FieldValues>({
     resolver: zodResolver(Schema),
+    defaultValues: {
+      username: "",
+      confUsername: "",
+    },
   });
 
-  const { mutate: updateEmail, isLoading } = useMutation({
+  const { mutate: updateUsername, isLoading } = useMutation({
     mutationFn: async (payload: UserUpdateUsernameProps) => {
       const { data } = await axios.post("/api/user/update-password", payload);
       return data as string;
@@ -64,11 +68,9 @@ export default function Page() {
       startTransition(() => {
         router.refresh();
       });
-
       toast({
         description: "Username updated successfully.",
       });
-
       signOut();
     },
   });
@@ -78,43 +80,55 @@ export default function Page() {
       username: data.username,
     };
 
-    updateEmail(payload);
+    updateUsername(payload);
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 f-col">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your Username" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="confUsername"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm Username</FormLabel>
-              <FormControl>
-                <Input placeholder="Confirm your Username" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button className="mt-4" variant="subtle" isLoading={isLoading}>
-          <ArrowRightCircle className="h-4" />
-          Change Username
-        </Button>
-      </form>
-    </Form>
+    <div className="f-col gap-5">
+      <div className="f-col gap-0.5">
+        <h2 className="font-medium text-lg">Change Username</h2>
+        <p className="text-sm text-slate-400">
+          You can change your Username here
+        </p>
+      </div>
+      <div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 f-col">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your Username" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confUsername"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Confirm your Username" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button className="mt-4" variant="subtle" isLoading={isLoading}>
+              <ArrowRightCircle className="h-4" />
+              Change Username
+            </Button>
+          </form>
+        </Form>
+      </div>
+    </div>
   );
 }

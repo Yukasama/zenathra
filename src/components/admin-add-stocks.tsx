@@ -40,6 +40,12 @@ export default function AdminAddStocks() {
 
   const form = useForm({
     resolver: zodResolver(UploadStockSchema),
+    defaultValues: {
+      stock: "AAPL",
+      clean: true,
+      skip: false,
+      pullTimes: 1,
+    },
   });
 
   const { mutate: uploadStocks, isLoading } = useMutation({
@@ -56,7 +62,7 @@ export default function AdminAddStocks() {
         if (err.response?.status === 403) {
           return toast({
             title: "This action is forbidden.",
-            description: `We will trace your ip if you try that again.`,
+            description: "We will trace your ip if you try that again.",
             variant: "destructive",
           });
         }
@@ -86,7 +92,7 @@ export default function AdminAddStocks() {
   }
 
   return (
-    <Card className="sm:w-full max-w-[500px]">
+    <Card className="w-[400px] md:w-[500px]">
       <CardHeader>
         <CardTitle>Upload Stocks</CardTitle>
         <CardDescription>Upload stock data to the database</CardDescription>
@@ -176,8 +182,6 @@ export default function AdminAddStocks() {
                   <FormControl>
                     <Slider
                       name="pullTimes"
-                      defaultValue={[1]}
-                      value={field.value}
                       max={100}
                       step={1}
                       onChange={field.onChange}>

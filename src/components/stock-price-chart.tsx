@@ -62,7 +62,7 @@ export default function StockPriceChart({
     queryFn: async () => {
       const payload: StockHistoryProps = {
         symbol,
-        range: "ALL",
+        range: "1D",
       };
 
       const { data } = await axios.post("/api/stock/history", payload);

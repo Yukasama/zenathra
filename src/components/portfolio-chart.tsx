@@ -21,6 +21,7 @@ import axios from "axios";
 import { StockHistoryProps } from "@/lib/validators/stock";
 import { History } from "@/types/stock";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { cn } from "@/lib/utils";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
@@ -85,11 +86,11 @@ export default function StockPriceChart({
     queryKey: ["portfolio-history-query"],
   });
 
-  let pos = null;
+  let pos = true;
   if (isFetched) pos = results[results.length - 1].uv > results[0].uv;
 
   return (
-    <Card>
+    <Card className={cn(className)}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>

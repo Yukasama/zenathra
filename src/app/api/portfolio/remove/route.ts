@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     );
 
     let portfolio = await db.portfolio.findFirst({
+      select: { id: true },
       where: {
         id: portfolioId,
         creatorId: session.user.id,

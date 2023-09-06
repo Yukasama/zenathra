@@ -17,20 +17,18 @@ export async function POST(req: Request) {
     if (!session?.user) return new UnauthorizedResponse();
 
     const user = await db.user.findFirst({
-      where: {
-        id: session.user.id,
-      },
+      select: { id: true, hashedPassword: true },
+      where: { id: session.user.id },
     });
 
     if (!user) return new UnauthorizedResponse();
 
     const accounts = await db.account.findMany({
-      where: {
-        userId: user.id,
-      },
+      select: { id: true },
+      where: { userId: user.id },
     });
 
-    if (accounts.length > 0)
+    if (accounts.length > 1)
       throw new ConflictResponse(
         "Change not possible since you have multiple linked accounts to your mail"
       );
@@ -39,7 +37,7 @@ export async function POST(req: Request) {
       await req.json()
     );
 
-    if(!user.hashedPassword) return new InternalServerErrorResponse();
+    if (!user.hashedPassword) return new InternalServerErrorResponse();
 
     if (!(await bcrypt.compare(oldPassword, user.hashedPassword)))
       return new ForbiddenResponse("Old password is incorrect");
@@ -47,12 +45,8 @@ export async function POST(req: Request) {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     await db.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        hashedPassword: hashedPassword,
-      },
+      where: { id: user.id },
+      data: { hashedPassword: hashedPassword },
     });
 
     return new Response("OK");

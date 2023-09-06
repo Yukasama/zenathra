@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "./ui/button";
-import Link from "next/link";
 import {
   UserIcon,
   Grid,
@@ -24,29 +23,25 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Separator } from "./ui/separator";
 import { UserAvatar } from "./shared/user-avatar";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "./ui/sheet";
-import { Label } from "recharts";
-import { Input } from "./ui/input";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import dynamic from "next/dynamic";
-
-const ChangeEmail = dynamic(() => import("./change-email"), { ssr: false });
-
-const ChangePassword = dynamic(() => import("./change-password"), {
-  ssr: false,
-});
 
 interface Props {
   session: Session | null;
 }
+
+// Dynamically importing forms to avoid client overload
+const ChangeEmail = dynamic(() => import("./auth/change-email"), {
+  ssr: false,
+});
+
+const ChangePassword = dynamic(() => import("./auth/change-password"), {
+  ssr: false,
+});
+
+const ChangeUsername = dynamic(() => import("./auth/change-username"), {
+  ssr: false,
+});
 
 export default function AccountSettings({ session }: Props) {
   const tabs = [
@@ -94,7 +89,7 @@ export default function AccountSettings({ session }: Props) {
     {
       title: "Name",
       value: session?.user.name || null,
-      form: <ChangePassword />,
+      form: <ChangeUsername />,
     },
     {
       title: "E-Mail",
@@ -107,31 +102,33 @@ export default function AccountSettings({ session }: Props) {
     {
       title: "Password",
       value: "*********",
-      link: "/settings/edit/change-password",
+      form: <ChangePassword />,
     },
   ];
 
   return (
-    <Tabs defaultValue="personal" className="flex gap-4 h-full p-4">
-      <Card className="pr-8 h-[600px]">
-        <CardHeader>
+    <Tabs
+      defaultValue="personal"
+      className="flex f-col md:flex-row gap-4 h-full p-4">
+      <Card className="md:pr-8 md:h-[600px]">
+        <CardHeader className="hidden md:inline-block">
           <CardTitle>Settings</CardTitle>
           <CardDescription>Manage your account settings</CardDescription>
         </CardHeader>
-        <TabsList className="f-col bg-transparent f-col items-start gap-1 pl-3">
+        <TabsList className="flex md:pt-[85px] md:f-col md:bg-transparent md:items-start gap-1 md:pl-3">
           {tabs.map((tab) => (
             <TabsTrigger
               key={tab.id}
               value={tab.id}
               className="text-md flex gap-3">
               {tab.icon}
-              {tab.label}
+              <p className="hidden md:inline-block">{tab.label}</p>
             </TabsTrigger>
           ))}
         </TabsList>
       </Card>
       <TabsContent value="personal" className="m-0">
-        <Card className="border-none">
+        <Card className="border-none md:w-[450px]">
           <CardHeader>
             <CardTitle>General Information</CardTitle>
             <CardDescription>Manage your personal details</CardDescription>
@@ -139,11 +136,13 @@ export default function AccountSettings({ session }: Props) {
           <CardContent>
             {personal.map((section) => (
               <Sheet key={section.title}>
-                <SheetTrigger className="h-20 flex items-center rounded-md hover:bg-slate-100 dark:hover:bg-slate-900 px-3 gap-6">
-                  <p className="w-[80px] font-light text-slate-400">
+                <SheetTrigger className="h-20 flex items-center justify-between rounded-md w-full hover:bg-slate-100 dark:hover:bg-slate-900 px-3 gap-6">
+                  <div className="w-[60px] text-start font-light text-slate-400">
                     {section.title}
-                  </p>
-                  <div className="w-[200px] truncate">{section.value}</div>
+                  </div>
+                  <div className="w-[200px] text-start sm:max-w-[250px] truncate">
+                    {section.value}
+                  </div>
                   <ChevronRight className="h-5 w-5" />
                 </SheetTrigger>
                 {section.title !== "E-Mail" && <Separator className="my-1" />}
@@ -164,7 +163,7 @@ export default function AccountSettings({ session }: Props) {
         </Card>
       </TabsContent>
       <TabsContent value="portfolio" className="m-0">
-        <Card className="border-none">
+        <Card className="border-none md:w-[450px]">
           <CardHeader>
             <CardTitle>Portfolio Settings</CardTitle>
             <CardDescription>Manage your portfolio settings</CardDescription>
@@ -173,32 +172,32 @@ export default function AccountSettings({ session }: Props) {
         </Card>
       </TabsContent>
       <TabsContent value="security" className="m-0">
-        <Card className="border-none">
+        <Card className="border-none md:w-[450px]">
           <CardHeader>
             <CardTitle>Security Information</CardTitle>
             <CardDescription>Manage your security procedures</CardDescription>
           </CardHeader>
           <CardContent>
             {security.map((section) => (
-              <>
-                <Link
-                  key={section.title}
-                  href={section.link}
-                  className="h-20 flex items-center rounded-md hover:bg-slate-100 dark:hover:bg-slate-900 px-3 gap-6">
-                  <p className="w-[80px] font-light text-slate-400">
+              <Sheet key={section.title}>
+                <SheetTrigger className="h-20 flex items-center justify-between rounded-md w-full hover:bg-slate-100 dark:hover:bg-slate-900 px-3 gap-6">
+                  <div className="w-[60px] text-start font-light text-slate-400">
                     {section.title}
-                  </p>
-                  <div className="w-[200px] truncate">{section.value}</div>
+                  </div>
+                  <div className="w-[200px] text-start sm:max-w-[250px] truncate">
+                    {section.value}
+                  </div>
                   <ChevronRight className="h-5 w-5" />
-                </Link>
+                </SheetTrigger>
                 {section.title !== "E-Mail" && <Separator className="my-1" />}
-              </>
+                <SheetContent>{section.form}</SheetContent>
+              </Sheet>
             ))}
           </CardContent>
         </Card>
       </TabsContent>
       <TabsContent value="notifications" className="m-0">
-        <Card className="border-none">
+        <Card className="border-none md:w-[450px]">
           <CardHeader>
             <CardTitle>Notification Settings</CardTitle>
             <CardDescription>Manage your notification settings</CardDescription>
@@ -207,7 +206,7 @@ export default function AccountSettings({ session }: Props) {
         </Card>
       </TabsContent>
       <TabsContent value="billing" className="m-0">
-        <Card className="border-none">
+        <Card className="border-none md:w-[450px]">
           <CardHeader>
             <CardTitle>Billing Information</CardTitle>
             <CardDescription>Manage your billing information</CardDescription>

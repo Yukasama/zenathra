@@ -16,27 +16,27 @@ export async function POST(req: Request) {
 
     const { email } = UserUpdateEmailSchema.parse(await req.json());
 
-    if (await db.user.findFirst({ where: { email } }))
+    if (
+      await db.user.findFirst({
+        select: { id: true },
+        where: { email },
+      })
+    )
       throw new UnprocessableEntityResponse("Email is already registered");
 
     const accounts = await db.account.findMany({
-      where: {
-        userId: session.user.id,
-      },
+      select: { id: true },
+      where: { userId: session.user.id },
     });
 
-    if (accounts.length > 0)
+    if (accounts.length > 1)
       throw new ConflictResponse(
         "Email change not possible since you have linked accounts to your mail"
       );
 
     await db.user.update({
-      where: {
-        id: session.user.id,
-      },
-      data: {
-        email: email,
-      },
+      where: { id: session.user.id },
+      data: { email: email },
     });
 
     return new Response("OK");

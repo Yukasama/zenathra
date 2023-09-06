@@ -20,23 +20,18 @@ export async function POST(req: Request) {
       throw new UnprocessableEntityResponse("Username already taken");
 
     const accounts = await db.account.findMany({
-      where: {
-        userId: session.user.id,
-      },
+      select: { id: true },
+      where: { userId: session.user.id },
     });
 
-    if (accounts.length > 0)
+    if (accounts.length > 1)
       throw new ConflictResponse(
         "Email change not possible since you have linked accounts to your mail"
       );
 
     await db.user.update({
-      where: {
-        id: session.user.id,
-      },
-      data: {
-        username: username,
-      },
+      where: { id: session.user.id },
+      data: { username: username },
     });
 
     return new Response("OK");

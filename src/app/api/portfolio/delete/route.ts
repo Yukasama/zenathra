@@ -16,6 +16,7 @@ export async function POST(req: Request) {
     const { portfolioId } = DeletePortfolioSchema.parse(await req.json());
 
     let portfolio = await db.portfolio.findFirst({
+      select: { id: true },
       where: {
         id: portfolioId,
         creatorId: session.user.id,

@@ -10,6 +10,7 @@ export default async function page() {
 
   const [portfolios, subscription] = await Promise.all([
     db.portfolio.findMany({
+      select: { id: true, title: true, public: true },
       where: { creatorId: session?.user.id },
     }),
     db.userSubscription.findFirst({
