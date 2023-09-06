@@ -11,6 +11,7 @@ import bcrypt from "bcryptjs";
 import { env } from "@/env.mjs";
 import Google from "next-auth/providers/google";
 import { nanoid } from "nanoid";
+import { redirect } from "next/navigation";
 
 //const postmarkClient = new Client(config.postmark.apiToken!);
 
@@ -156,4 +157,9 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-export const getAuthSession = () => getServerSession(authOptions);
+export const getAuthSession = async () => await getServerSession(authOptions);
+
+export const checkAuth = async () => {
+  const session = await getAuthSession();
+  if (!session) redirect("/api/auth/signin");
+};

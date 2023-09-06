@@ -1,5 +1,5 @@
-import { router } from "./trpc";
-import { portfolioRouter } from "./routers/portfolio";
+import { router } from "../trpc";
+import { portfolioRouter } from "./portfolio";
 
 export const appRouter = router({
   portfolio: portfolioRouter,
