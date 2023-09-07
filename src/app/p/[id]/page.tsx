@@ -17,7 +17,6 @@ export async function generateStaticParams() {
   const data = await db.portfolio.findMany({
     select: { id: true },
   });
-
   return data.map((portfolio) => ({ id: portfolio.id }));
 }
 
@@ -29,19 +28,12 @@ export async function generateMetadata({ params: { id } }: Props) {
     }),
   ]);
 
-  if (!portfolio)
-    return {
-      title: "Portfolio not found",
-    };
+  if (!portfolio) return { title: "Portfolio not found" };
 
   if (!portfolio.public && session?.user.id !== portfolio.creatorId)
-    return {
-      title: "This portfolio is private",
-    };
+    return { title: "This portfolio is private" };
 
-  return {
-    title: portfolio.title,
-  };
+  return { title: portfolio.title };
 }
 
 interface NoStockProps {

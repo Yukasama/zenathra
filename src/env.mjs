@@ -21,7 +21,7 @@ export const env = createEnv({
     GMAIL_APP_PASSWORD: z.string().nonempty(),
     STRIPE_API_KEY: z.string().min(1),
     STRIPE_WEBHOOK_SECRET: z.string().min(1),
-    STRIPE_PRO_MONTHLY_PLAN_ID: z.string().min(1),
+    //STRIPE_PRO_MONTHLY_PLAN_ID: z.string().min(1),
   },
   runtimeEnv: {
     VERCEL_URL: process.env.VERCEL_URL,
@@ -39,6 +39,6 @@ export const env = createEnv({
     GMAIL_APP_PASSWORD: process.env.GMAIL_APP_PASSWORD,
     STRIPE_API_KEY: process.env.STRIPE_API_KEY,
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
-    STRIPE_PRO_MONTHLY_PLAN_ID: process.env.STRIPE_PRO_MONTHLY_PLAN_ID,
+    //STRIPE_PRO_MONTHLY_PLAN_ID: process.env.STRIPE_PRO_MONTHLY_PLAN_ID,
   },
 });

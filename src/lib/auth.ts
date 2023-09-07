@@ -50,7 +50,6 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid email or password");
 
         const user = await db.user.findUnique({
-          select: { id: true, hashedPassword: true },
           where: { email: credentials.email },
         });
 
@@ -116,14 +115,18 @@ export const authOptions: NextAuthOptions = {
         session.user.image = token.picture;
         session.user.username = token.username;
       }
-
       return session;
     },
     async jwt({ token, user }) {
       const dbUser = await db.user.findFirst({
-        where: {
-          email: token.email,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+          username: true,
         },
+        where: { email: token.email },
       });
 
       if (!dbUser) {
@@ -133,12 +136,8 @@ export const authOptions: NextAuthOptions = {
 
       if (!dbUser.username) {
         await db.user.update({
-          where: {
-            id: dbUser.id,
-          },
-          data: {
-            username: nanoid(10),
-          },
+          where: { id: dbUser.id },
+          data: { username: nanoid(10) },
         });
       }
 
