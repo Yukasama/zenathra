@@ -3,7 +3,7 @@
 import { User } from "@prisma/client";
 import { AvatarProps } from "@radix-ui/react-avatar";
 
-import { Icons } from "../icons";
+import { Icons } from "./icons";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -20,6 +20,7 @@ export function UserAvatar({ user, className, ...props }: UserAvatarProps) {
           <Image
             fill
             src={user.image}
+            sizes="100%"
             alt="profile picture"
             referrerPolicy="no-referrer"
           />

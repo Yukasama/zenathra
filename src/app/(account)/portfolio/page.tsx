@@ -2,7 +2,7 @@ import PortfolioCard from "@/components/portfolio-card";
 import PortfolioCreateCard from "@/components/portfolio-create-card";
 import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
-import PageLayout from "@/components/page-layout";
+import PageLayout from "@/components/shared/page-layout";
 import { noSub } from "@/config/subscription";
 
 export default async function page() {

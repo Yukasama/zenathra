@@ -32,7 +32,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import PageLayout from "@/components/page-layout";
+import PageLayout from "@/components/shared/page-layout";
 import { StockImage } from "@/components/stock-image";
 import { StockScreenerProps } from "@/lib/validators/stock";
 

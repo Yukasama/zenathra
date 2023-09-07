@@ -8,7 +8,6 @@ import {
   Legend,
   AreaChart,
   Area,
-  ResponsiveContainer,
 } from "recharts";
 import {
   Card,

@@ -1,17 +1,17 @@
 export interface History {
   date: string;
-  open: number;
-  high: number;
-  low: number;
+  open?: number;
+  high?: number;
+  low?: number;
   close: number;
-  adjClose: number;
-  volume: number;
-  unadjustedVolume: number;
-  change: number;
-  changePercent: number;
-  vwap: number;
-  label: string;
-  changeOverTime: number;
+  adjClose?: number;
+  volume?: number;
+  unadjustedVolume?: number;
+  change?: number;
+  changePercent?: number;
+  vwap?: number;
+  label?: string;
+  changeOverTime?: number;
 }
 
 export interface Quote {
@@ -50,4 +50,14 @@ export interface Chart {
   }[];
   height?: number;
   width?: number;
+}
+
+export interface AllHistory {
+  "1D": History[];
+  "5D": History[];
+  "1M": History[];
+  "6M": History[];
+  "1Y": History[];
+  "5Y": History[];
+  ALL: History[];
 }

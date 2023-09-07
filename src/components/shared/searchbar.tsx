@@ -6,10 +6,17 @@ import axios from "axios";
 import debounce from "lodash.debounce";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import * as Command from "@/components/ui/command";
 import { useOnClickOutside } from "@/hooks/use-on-click-outside";
 import Link from "next/link";
 import { StockImage } from "../stock-image";
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "../ui/command";
 
 export default function Searchbar() {
   const [input, setInput] = useState<string>("");
@@ -53,10 +60,10 @@ export default function Searchbar() {
   }, [pathname]);
 
   return (
-    <Command.Command
+    <Command
       ref={commandRef}
       className="relative rounded-md border max-w-lg z-50 overflow-visible">
-      <Command.CommandInput
+      <CommandInput
         isLoading={isFetching}
         onValueChange={(text) => {
           setInput(text);
@@ -68,24 +75,22 @@ export default function Searchbar() {
       />
 
       {input.length > 0 && (
-        <Command.CommandList className="absolute top-full border bg-card inset-x-0 shadow rounded-b-md">
-          {isFetched && (
-            <Command.CommandEmpty>No results found.</Command.CommandEmpty>
-          )}
+        <CommandList className="absolute top-full border bg-card inset-x-0 shadow rounded-b-md">
+          {isFetched && <CommandEmpty>No results found.</CommandEmpty>}
           {isFetching && (
-            <Command.CommandEmpty>
+            <CommandEmpty>
               {[...Array(4)].map((_, i) => (
                 <div
                   key={i}
                   className="animate-pulse-right h-12 rounded-md p-1 px-2"
                 />
               ))}
-            </Command.CommandEmpty>
+            </CommandEmpty>
           )}
           {(queryResults?.length ?? 0) > 0 && (
-            <Command.CommandGroup heading="Stocks">
+            <CommandGroup heading="Stocks">
               {queryResults?.map((stock) => (
-                <Command.CommandItem
+                <CommandItem
                   onSelect={() => {
                     router.push(`/stocks/${stock.symbol}`);
                     router.refresh();
@@ -103,12 +108,12 @@ export default function Searchbar() {
                       </p>
                     </div>
                   </Link>
-                </Command.CommandItem>
+                </CommandItem>
               ))}
-            </Command.CommandGroup>
+            </CommandGroup>
           )}
-        </Command.CommandList>
+        </CommandList>
       )}
-    </Command.Command>
+    </Command>
   );
 }

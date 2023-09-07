@@ -1,4 +1,4 @@
-import PageLayout from "@/components/page-layout";
+import PageLayout from "@/components/shared/page-layout";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
-import { Icons } from "../icons";
+import { Icons } from "../shared/icons";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   provider: "google" | "facebook" | "github";

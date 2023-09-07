@@ -1,12 +1,12 @@
 import { Suspense } from "react";
 import Image from "next/image";
 import PortfolioAddModal from "@/components/portfolio-add-modal";
-import PortfolioChart from "@/components/portfolio-chart";
+import PortfolioChart from "@/components/charts/portfolio-chart";
 import StockList from "@/components/stock-list";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
-import PageLayout from "@/components/page-layout";
+import PageLayout from "@/components/shared/page-layout";
 import { Portfolio } from "@prisma/client";
 
 interface Props {
@@ -110,6 +110,7 @@ export default async function page({ params: { id } }: Props) {
             <StockList
               symbols={symbols.map((s) => s.symbol)}
               title="Portfolio Positions"
+              description="Here are the stocks in this portfolio."
               error="No Positions found"
               className="wrapper"
             />

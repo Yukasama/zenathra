@@ -1,5 +1,5 @@
 import AdminAddStocks from "@/components/admin-add-stocks";
-import PageLayout from "@/components/page-layout";
+import PageLayout from "@/components/shared/page-layout";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";

@@ -12,7 +12,7 @@ import { db } from "@/lib/db";
 import { Card } from "@/components/ui/card";
 import StockPriceChart from "@/components/stock-price-chart";
 import { Separator } from "@/components/ui/separator";
-import PageLayout from "@/components/page-layout";
+import PageLayout from "@/components/shared/page-layout";
 import StockStatistics from "@/components/stock-statistics";
 
 export async function generateStaticParams() {

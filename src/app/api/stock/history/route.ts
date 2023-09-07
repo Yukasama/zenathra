@@ -63,7 +63,8 @@ async function fetchHistory(symbol: string) {
 }
 
 async function getAverageClose(data: any) {
-  const result = data.forEach((symbolData: any) => {
+  let result: any = {};
+  data.forEach((symbolData: any) => {
     Object.keys(symbolData).forEach((range) => {
       if (!result[range]) result[range] = [];
 

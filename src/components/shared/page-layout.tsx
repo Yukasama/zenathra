@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { CardDescription, CardTitle } from "./ui/card";
+import { CardDescription, CardTitle } from "../ui/card";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;

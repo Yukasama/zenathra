@@ -19,13 +19,11 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { StockHistoryProps } from "@/lib/validators/stock";
-import { History } from "@/types/stock";
-import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { AllHistory, History } from "@/types/stock";
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { cn } from "@/lib/utils";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  title?: string;
-  description?: string;
   symbols: string[];
 }
 
@@ -50,12 +48,7 @@ const CustomTooltip = ({
   return null;
 };
 
-export default function StockPriceChart({
-  title,
-  description,
-  symbols,
-  className,
-}: Props) {
+export default function StockPriceChart({ symbols, className }: Props) {
   const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
@@ -76,10 +69,10 @@ export default function StockPriceChart({
 
       const { data } = await axios.post("/api/stock/history", payload);
 
-      return data.map((d: History) => {
+      return data["1D"].map((d: History) => {
         return {
           name: d.date,
-          uv: d.close,
+          uv: d.close.toFixed(2),
         };
       });
     },
@@ -94,8 +87,10 @@ export default function StockPriceChart({
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>{title}</CardTitle>
-            <CardDescription>{description}</CardDescription>
+            <CardTitle>Portfolio Chart</CardTitle>
+            <CardDescription>
+              Chart of all portfolio positions summed up
+            </CardDescription>
           </div>
           <Tabs defaultValue="1D">
             <TabsList>
@@ -137,7 +132,7 @@ export default function StockPriceChart({
             </defs>
             <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
             <XAxis dataKey="name" fontSize={12} />
-            <YAxis fontSize={12} />
+            <YAxis domain={["dataMin", "dataMax"]} fontSize={12} />
             {/* @ts-ignore */}
             <Tooltip content={<CustomTooltip />} />
             <Legend />

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { footerLinks, site } from "@/config/site";
 import CompanyLogo from "../company-logo";
@@ -10,7 +9,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Separator } from "../ui/separator";
-import { Icons } from "../icons";
+import { Icons } from "./icons";
 
 export default function Footer() {
   return (

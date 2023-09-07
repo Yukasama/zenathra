@@ -12,7 +12,15 @@ import { Plus, Trash } from "lucide-react";
 import debounce from "lodash.debounce";
 import { StockImage } from "./stock-image";
 import * as Command from "@/components/ui/command";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Card } from "./ui/card";
 
 interface Props {
   portfolio: Portfolio;
@@ -42,31 +50,24 @@ export default function PortfolioAddModal({
 
   const {
     isFetching,
-    data: queryResults,
+    data: results,
     refetch,
     isFetched,
   } = useQuery({
     queryFn: async () => {
       if (!search) return [];
-      const { data } = await axios.get(`/api/search?q=${search}`);
+      const { data } = await axios.get(`/api/stock/search?q=${search}`);
       const results = data as (Stock & {
         _count: Prisma.StockCountOutputType;
       })[];
-      return results.filter((r) => {
-        !stockIds.includes(r.id);
-      });
+      return results.filter((r) => !stockIds.includes(r.id));
     },
-    queryKey: ["search-query"],
+    queryKey: ["portfolio-search-query"],
     enabled: false,
   });
 
   const { mutate: addToPortfolio, isLoading } = useMutation({
     mutationFn: async () => {
-      if (selected.length < 1)
-        return toast({ description: "Please select atleast one stock." });
-      if (selected.length >= 20)
-        return toast({ description: "You can only add 20 stocks at a time." });
-
       const payload: ModifySymbolsPortfolioProps = {
         portfolioId: portfolio.id,
         stockIds: selected,
@@ -76,19 +77,25 @@ export default function PortfolioAddModal({
     onError: () => {
       toast({
         title: "Oops! Something went wrong.",
-        description: `Failed to add stocks to portfolio.`,
+        description: "Failed to add stocks to portfolio.",
         variant: "destructive",
       });
     },
     onSuccess: () => {
       startTransition(() => router.refresh());
       onClose();
-
-      toast({
-        description: `Added stocks to portfolio.`,
-      });
+      toast({ description: "Added stocks to portfolio." });
     },
   });
+
+  function onSubmit() {
+    if (selected.length < 1)
+      return toast({ description: "Please select atleast one stock." });
+    if (selected.length >= 20)
+      return toast({ description: "You can only add 20 stocks at a time." });
+
+    addToPortfolio();
+  }
 
   return (
     <Dialog>
@@ -98,12 +105,14 @@ export default function PortfolioAddModal({
           Add
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-w-[375px] rounded-md">
         <DialogHeader>
           <DialogTitle>Modify Stock Portfolio</DialogTitle>
-          <DialogDescription>Here, you can add or remove stocks</DialogDescription>
+          <DialogDescription>
+            Here you can add or remove stocks
+          </DialogDescription>
         </DialogHeader>
-        <Command.Command className="relative rounded-lg border max-w-lg z-50 overflow-visible">
+        <Command.Command className="relative rounded-lg max-w-lg z-50 overflow-visible">
           <Command.CommandInput
             isLoading={isFetching}
             onValueChange={(text) => {
@@ -116,16 +125,24 @@ export default function PortfolioAddModal({
           />
 
           {search.length > 0 && (
-            <Command.CommandList className="absolute bg-white top-full inset-x-0 shadow rounded-b-md">
+            <Command.CommandList className="top-full border bg-card inset-x-0 shadow rounded-b-md">
               {isFetched && (
                 <Command.CommandEmpty>No results found.</Command.CommandEmpty>
               )}
-              {(queryResults?.length ?? 0) > 0 ? (
+              {isFetching && (
+                <Command.CommandEmpty>
+                  {[...Array(4)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="animate-pulse-right h-12 rounded-md p-1 px-2"
+                    />
+                  ))}
+                </Command.CommandEmpty>
+              )}
+              {(results?.length ?? 0) > 0 && (
                 <Command.CommandGroup heading="Stocks">
-                  {queryResults?.map((result) => (
-                    <Command.CommandItem
-                      className="flex items-center justify-between rounded-md bg-zinc-400 p-1 px-2 h-12"
-                      key={result.symbol}>
+                  {results?.map((result) => (
+                    <Command.CommandItem key={result.symbol}>
                       <div className="flex items-center gap-2">
                         <StockImage src={result.image} px={30} />
                         <div className="f-col">
@@ -138,6 +155,8 @@ export default function PortfolioAddModal({
                       <div>
                         {selected.includes(result.symbol) ? (
                           <Button
+                            variant="destructive"
+                            size="xs"
                             onClick={() =>
                               setSelected(
                                 selected.filter((s) => s !== result.symbol)
@@ -147,6 +166,8 @@ export default function PortfolioAddModal({
                           </Button>
                         ) : (
                           <Button
+                            variant="subtle"
+                            size="xs"
                             onClick={() =>
                               setSelected([...selected, result.symbol])
                             }>
@@ -157,19 +178,14 @@ export default function PortfolioAddModal({
                     </Command.CommandItem>
                   ))}
                 </Command.CommandGroup>
-              ) : (
-                <>
-                  {[...Array(4)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="animate-pulse-right h-12 rounded-md p-1 px-2"
-                    />
-                  ))}
-                </>
               )}
             </Command.CommandList>
           )}
-          <Button isLoading={isLoading} onClick={() => addToPortfolio()}>
+          <Button
+            className="mt-3"
+            variant="subtle"
+            isLoading={isLoading}
+            onClick={onSubmit}>
             <Plus className="h-4 w-4" />
             Add to Portfolio
           </Button>
