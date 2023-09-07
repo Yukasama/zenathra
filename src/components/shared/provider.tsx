@@ -3,6 +3,7 @@
 import { ThemeProvider } from "next-themes";
 import { SidebarProvider } from "./sidebar-provider";
 import TrpcProvider from "@/lib/trpc/Provider";
+import { NextUIProvider } from "@nextui-org/system";
 
 interface Props {
   children: React.ReactNode;

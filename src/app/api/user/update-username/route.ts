@@ -16,7 +16,12 @@ export async function POST(req: Request) {
 
     const { username } = UserUpdateUsernameSchema.parse(await req.json());
 
-    if (await db.user.findFirst({ where: { username } }))
+    if (
+      await db.user.findFirst({
+        select: { id: true },
+        where: { username },
+      })
+    )
       throw new UnprocessableEntityResponse("Username already taken");
 
     const accounts = await db.account.findMany({

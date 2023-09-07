@@ -1,9 +1,14 @@
 const { fontFamily } = require("tailwindcss/defaultTheme");
+const { nextui } = require("@nextui-org/theme");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
-  content: ["./src/app/**/*.{ts,tsx}", "./src/components/**/*.{ts,tsx}"],
+  content: [
+    "./src/app/**/*.{ts,tsx}",
+    "./src/components/**/*.{ts,tsx}",
+    './node_modules/@nextui-org/theme/dist/components/(checkbox|skeleton).js'
+  ],
   mode: "jit",
   theme: {
     container: {
@@ -98,5 +103,9 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [
+    nextui(),
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+  ],
 };

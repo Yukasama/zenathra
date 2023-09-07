@@ -40,7 +40,7 @@ export default function Searchbar() {
 
   const {
     isFetching,
-    data: queryResults,
+    data: results,
     refetch,
     isFetched,
   } = useQuery({
@@ -87,9 +87,9 @@ export default function Searchbar() {
               ))}
             </CommandEmpty>
           )}
-          {(queryResults?.length ?? 0) > 0 && (
+          {(results?.length ?? 0) > 0 && (
             <CommandGroup heading="Stocks">
-              {queryResults?.map((stock) => (
+              {results?.map((stock) => (
                 <CommandItem
                   onSelect={() => {
                     router.push(`/stocks/${stock.symbol}`);

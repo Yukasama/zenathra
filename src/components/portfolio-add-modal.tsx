@@ -3,12 +3,12 @@
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { startTransition, useCallback, useState } from "react";
-import { Portfolio, Prisma, Stock } from "@prisma/client";
+import { Prisma, Stock } from "@prisma/client";
 import { toast } from "@/hooks/use-toast";
 import { ModifySymbolsPortfolioProps } from "@/lib/validators/portfolio";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Plus, Trash } from "lucide-react";
+import { Pencil, Plus, Trash } from "lucide-react";
 import debounce from "lodash.debounce";
 import { StockImage } from "./stock-image";
 import * as Command from "@/components/ui/command";
@@ -20,19 +20,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { Card } from "./ui/card";
+import { PortfolioWithStocks } from "@/types/db";
 
 interface Props {
-  portfolio: Portfolio;
-  stockIds: string[];
+  portfolio: PortfolioWithStocks;
   onClose?: any;
 }
 
-export default function PortfolioAddModal({
-  portfolio,
-  stockIds,
-  onClose,
-}: Props) {
+export default function PortfolioAddModal({ portfolio, onClose }: Props) {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -60,7 +55,7 @@ export default function PortfolioAddModal({
       const results = data as (Stock & {
         _count: Prisma.StockCountOutputType;
       })[];
-      return results.filter((r) => !stockIds.includes(r.id));
+      return results.filter((r) => !portfolio.stockIds.includes(r.id));
     },
     queryKey: ["portfolio-search-query"],
     enabled: false,
@@ -101,8 +96,8 @@ export default function PortfolioAddModal({
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="subtle">
-          <Trash className="h-4 w-4" />
-          Add
+          <Pencil className="h-4 w-4" />
+          Edit
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[375px] rounded-md">
@@ -156,7 +151,7 @@ export default function PortfolioAddModal({
                         {selected.includes(result.symbol) ? (
                           <Button
                             variant="destructive"
-                            size="xs"
+                            size="sm"
                             onClick={() =>
                               setSelected(
                                 selected.filter((s) => s !== result.symbol)
@@ -167,7 +162,7 @@ export default function PortfolioAddModal({
                         ) : (
                           <Button
                             variant="subtle"
-                            size="xs"
+                            size="sm"
                             onClick={() =>
                               setSelected([...selected, result.symbol])
                             }>

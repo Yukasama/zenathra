@@ -24,6 +24,7 @@ export async function POST(req: Request) {
     );
 
     const user = await db.user.findFirst({
+      select: { role: true },
       where: { id: session.user.id },
     });
 

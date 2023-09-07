@@ -50,9 +50,8 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid email or password");
 
         const user = await db.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
+          select: { id: true, hashedPassword: true },
+          where: { email: credentials.email },
         });
 
         if (!user || !user?.hashedPassword)

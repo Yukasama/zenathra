@@ -50,6 +50,7 @@ const CustomTooltip = ({
 
 export default function StockPriceChart({ symbols, className }: Props) {
   const [mounted, setMounted] = useState<boolean>(false);
+  const [timeFrame, setTimeFrame] = useState<string>("1D");
 
   useEffect(() => {
     setMounted(true);
@@ -69,12 +70,18 @@ export default function StockPriceChart({ symbols, className }: Props) {
 
       const { data } = await axios.post("/api/stock/history", payload);
 
-      return data["1D"].map((d: History) => {
-        return {
-          name: d.date,
-          uv: d.close.toFixed(2),
-        };
-      });
+      const newData: any = {};
+
+      for (const key in data) {
+        newData[key] = data[key].map((item: any) => ({
+          name: item.date,
+          uv: item.close,
+        }));
+      }
+
+      console.log(newData);
+
+      return newData;
     },
     queryKey: ["portfolio-history-query"],
   });
@@ -94,11 +101,15 @@ export default function StockPriceChart({ symbols, className }: Props) {
           </div>
           <Tabs defaultValue="1D">
             <TabsList>
-              <TabsTrigger value="1m">1m</TabsTrigger>
+              <TabsTrigger onClick={() => setTimeFrame("1D")} value="1m">
+                1m
+              </TabsTrigger>
               <TabsTrigger value="30m">30m</TabsTrigger>
               <TabsTrigger value="1h">1h</TabsTrigger>
               <TabsTrigger value="4h">4h</TabsTrigger>
-              <TabsTrigger value="1D">1D</TabsTrigger>
+              <TabsTrigger onClick={() => setTimeFrame("1D")} value="1D">
+                1D
+              </TabsTrigger>
               <TabsTrigger value="1M">1M</TabsTrigger>
             </TabsList>
           </Tabs>
@@ -109,7 +120,7 @@ export default function StockPriceChart({ symbols, className }: Props) {
           <AreaChart
             width={600}
             height={300}
-            data={results}
+            data={results[timeFrame]}
             margin={{
               top: 5,
               right: 30,

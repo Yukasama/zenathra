@@ -2,12 +2,12 @@ import { Suspense } from "react";
 import Image from "next/image";
 import PortfolioAddModal from "@/components/portfolio-add-modal";
 import PortfolioChart from "@/components/charts/portfolio-chart";
-import StockList from "@/components/stock-list";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import PageLayout from "@/components/shared/page-layout";
-import { Portfolio } from "@prisma/client";
+import PortfolioAssets from "@/components/portfolio-assets";
+import { PortfolioWithStocks } from "@/types/db";
 
 interface Props {
   params: { id: string };
@@ -45,11 +45,10 @@ export async function generateMetadata({ params: { id } }: Props) {
 }
 
 interface NoStockProps {
-  portfolio: Portfolio;
-  stockIds: { stockId: string }[];
+  portfolio: PortfolioWithStocks;
 }
 
-function NoStocks({ portfolio, stockIds }: NoStockProps) {
+function NoStocks({ portfolio }: NoStockProps) {
   return (
     <div>
       <div>
@@ -60,10 +59,7 @@ function NoStocks({ portfolio, stockIds }: NoStockProps) {
           alt="No Stocks"
         />
       </div>
-      <PortfolioAddModal
-        portfolio={portfolio}
-        stockIds={stockIds.map((s) => s.stockId)}
-      />
+      <PortfolioAddModal portfolio={portfolio} />
     </div>
   );
 }
@@ -87,7 +83,14 @@ export default async function page({ params: { id } }: Props) {
     return <p>This Portfolio is private.</p>;
 
   if (session?.user.id === portfolio.creatorId && !stockIds.length)
-    return <NoStocks portfolio={portfolio} stockIds={stockIds} />;
+    return (
+      <NoStocks
+        portfolio={{
+          ...portfolio,
+          stockIds: stockIds.map((s) => s.stockId),
+        }}
+      />
+    );
 
   const symbols = await db.stock.findMany({
     select: { symbol: true },
@@ -101,26 +104,20 @@ export default async function page({ params: { id } }: Props) {
         .toISOString()
         .split(",")}`}>
       {stockIds.length ? (
-        <div className="flex gap-4">
+        <div className="f-col gap-4">
           <Suspense fallback={<p>Loading...</p>}>
             <PortfolioChart symbols={symbols.map((s) => s.symbol)} />
           </Suspense>
           <Suspense fallback={<p>Loading...</p>}>
             {/* @ts-expect-error Server Component */}
-            <StockList
+            <PortfolioAssets
+              portfolio={{
+                ...portfolio,
+                stockIds: stockIds.map((s) => s.stockId),
+              }}
               symbols={symbols.map((s) => s.symbol)}
-              title="Portfolio Positions"
-              description="Here are the stocks in this portfolio."
-              error="No Positions found"
-              className="wrapper"
             />
           </Suspense>
-          {session?.user && (
-            <PortfolioAddModal
-              portfolio={portfolio}
-              stockIds={stockIds.map((s) => s.stockId)}
-            />
-          )}
         </div>
       ) : (
         <h2>There are no stocks in this portfolio.</h2>
