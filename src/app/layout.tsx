@@ -32,18 +32,20 @@ export default async function RootLayout({ children, authModal }: LayoutProps) {
       lang="en"
       className={cn("text-slate-900 antialiased light", k2d.className)}
       suppressHydrationWarning>
-      <body className="w-screen h-screen flex overflow-hidden">
+      <body>
         <Provider>
-          {/* @ts-expect-error Server Component */}
-          <Sidebar />
-          {/* @ts-expect-error Server Component */}
-          <SidebarPortable />
-          {authModal}
-          <div className="w-full overflow-auto">
+          <div className="w-screen h-screen flex overflow-hidden">
             {/* @ts-expect-error Server Component */}
-            <Navbar />
-            <main className="min-h-full">{children}</main>
-            <Footer />
+            <Sidebar />
+            {/* @ts-expect-error Server Component */}
+            <SidebarPortable />
+            {authModal}
+            <div className="w-full overflow-auto">
+              {/* @ts-expect-error Server Component */}
+              <Navbar />
+              <main className="min-h-full">{children}</main>
+              <Footer />
+            </div>
           </div>
         </Provider>
         <Toaster />

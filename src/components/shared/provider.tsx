@@ -11,10 +11,12 @@ interface Props {
 
 export default function Provider({ children }: Props) {
   return (
-    <TrpcProvider>
-      <ThemeProvider attribute="class">
-        <SidebarProvider>{children}</SidebarProvider>
-      </ThemeProvider>
-    </TrpcProvider>
+    <NextUIProvider>
+      <TrpcProvider>
+        <ThemeProvider attribute="class">
+          <SidebarProvider>{children}</SidebarProvider>
+        </ThemeProvider>
+      </TrpcProvider>
+    </NextUIProvider>
   );
 }
