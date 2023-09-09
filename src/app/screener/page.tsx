@@ -34,25 +34,9 @@ import {
 } from "@/components/ui/card";
 import PageLayout from "@/components/shared/page-layout";
 import { StockImage } from "@/components/stock-image";
-import { StockScreenerProps, StockScreenerSchema } from "@/lib/validators/stock";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { StockScreenerProps } from "@/lib/validators/stock";
 
 export default function Page() {
-  const form = useForm({
-    resolver: zodResolver(StockScreenerSchema),
-    defaultValues: {
-      exchange: "Any",
-      sector: "Any",
-      industry: "Any",
-      country: "Any",
-      earningsDate: "Any",
-      peRatio: ["Any (Maximum)", "Any (Minimum)"],
-      pegRatio: ["Any (Maximum)", "Any (Minimum)"],
-      marketCap: "Any",
-    },
-  })
-
   const [resetCounter, setResetCounter] = useState(0);
 
   const [exchange, setExchange] = useState<string>("Any");
@@ -62,10 +46,10 @@ export default function Page() {
   const [earningsDate, setEarningsDate] = useState<string>("Any");
   const [marketCap, setMarketCap] = useState<string>("Any");
 
-  const [peRatio1, setPeRatio1] = useState<string>("Any");
-  const [peRatio2, setPeRatio2] = useState<string>("Any");
-  const [pegRatio1, setPegRatio1] = useState<string>("Any");
-  const [pegRatio2, setPegRatio2] = useState<string>("Any");
+  const [peRatio1, setPeRatio1] = useState<string>("Any (Maximum)");
+  const [peRatio2, setPeRatio2] = useState<string>("Any (Minimum)");
+  const [pegRatio1, setPegRatio1] = useState<string>("Any (Maximum)");
+  const [pegRatio2, setPegRatio2] = useState<string>("Any (Minimum)");
 
   // Set all filters on "Any" on reset button click
   const resetFilters = () => {
@@ -101,16 +85,13 @@ export default function Page() {
         marketCap: marketCap,
       };
 
-      console.log(payload);
-
       const { data } = await axios.post("/api/stock/query", payload);
       return data as (Stock & {
         _count: Prisma.StockCountOutputType;
       })[];
     },
-    queryKey: ["screener-query", exchange],
+    queryKey: ["screener-query"],
   });
-  console.log(exchange);
 
   useEffect(() => {
     refetch();
@@ -239,16 +220,13 @@ export default function Page() {
                   <p className="font-medium text-sm m-1 text-slate-400">
                     {filter.label}
                   </p>
-                  <Select>
+                  <Select onValueChange={(e) => filter.setOption(e)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Any" />
                     </SelectTrigger>
                     <SelectContent className="max-h-[216px]">
                       {filter.options.map((option) => (
-                        <SelectItem
-                          key={option + resetCounter}
-                          value={option}
-                          onChange={() => filter.setOption(option)}>
+                        <SelectItem key={option + resetCounter} value={option}>
                           {option}
                         </SelectItem>
                       ))}
@@ -275,16 +253,13 @@ export default function Page() {
                     {filter.label}
                   </p>
                   <div className="flex gap-4">
-                    <Select>
+                    <Select onValueChange={(e) => filter.setOption(e)}>
                       <SelectTrigger>
                         <SelectValue placeholder="Any (Maximum)" />
                       </SelectTrigger>
                       <SelectContent>
                         {filter.options.map((option) => (
-                          <SelectItem
-                            key={option}
-                            value={option}
-                            onChange={() => filter.setOption(option)}>
+                          <SelectItem key={option} value={option}>
                             {option}
                           </SelectItem>
                         ))}
