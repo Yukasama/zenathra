@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Stock } from "@prisma/client";
 
@@ -20,9 +20,7 @@ const BASE_COLORS = [
 
 function generateColors(num: number): string[] {
   let colors: string[] = [];
-  while (colors.length < num) {
-    colors = colors.concat(BASE_COLORS);
-  }
+  while (colors.length < num) colors = colors.concat(BASE_COLORS);
   return colors.slice(0, num);
 }
 
@@ -48,34 +46,36 @@ export default function PortfolioAllocation({ stocks }: Props) {
   }));
 
   const colors = generateColors(data.length);
-
-  const renderCustomLabel = (entry: any) => {
-    return entry.name; // Return the name property of the data entry
-  };
+  const renderCustomLabel = (entry: any) => entry.name;
 
   return (
-    <Card>
+    <Card className="w-full max-w-[600px] h-[400px]">
       <CardHeader>
         <CardTitle>Portfolio Allocation</CardTitle>
         <CardDescription>Sector allocation of your portfolio</CardDescription>
       </CardHeader>
       {mounted && (
-        <PieChart
-          width={600}
-          height={310}
-          margin={{ top: 10, right: 0, bottom: 50, left: 0 }}>
-          <Pie
-            data={data}
-            innerRadius={75}
-            outerRadius={100}
-            paddingAngle={5}
-            dataKey="value"
-            label={renderCustomLabel}>
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={colors[index]} />
-            ))}
-          </Pie>
-        </PieChart>
+        <div className="relative w-full">
+          <ResponsiveContainer width="100%" height={250}>
+            <PieChart
+              height={300}
+              width={600}
+              className="scale-80 sm:scale-100">
+              <Pie
+                data={data}
+                innerRadius={65}
+                outerRadius={90}
+                paddingAngle={5}
+                dataKey="value"
+                fontSize={15}
+                label={renderCustomLabel}>
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={colors[index]} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
       )}
     </Card>
   );

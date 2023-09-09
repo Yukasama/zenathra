@@ -34,9 +34,25 @@ import {
 } from "@/components/ui/card";
 import PageLayout from "@/components/shared/page-layout";
 import { StockImage } from "@/components/stock-image";
-import { StockScreenerProps } from "@/lib/validators/stock";
+import { StockScreenerProps, StockScreenerSchema } from "@/lib/validators/stock";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function Page() {
+  const form = useForm({
+    resolver: zodResolver(StockScreenerSchema),
+    defaultValues: {
+      exchange: "Any",
+      sector: "Any",
+      industry: "Any",
+      country: "Any",
+      earningsDate: "Any",
+      peRatio: ["Any (Maximum)", "Any (Minimum)"],
+      pegRatio: ["Any (Maximum)", "Any (Minimum)"],
+      marketCap: "Any",
+    },
+  })
+
   const [resetCounter, setResetCounter] = useState(0);
 
   const [exchange, setExchange] = useState<string>("Any");
@@ -85,13 +101,16 @@ export default function Page() {
         marketCap: marketCap,
       };
 
+      console.log(payload);
+
       const { data } = await axios.post("/api/stock/query", payload);
       return data as (Stock & {
         _count: Prisma.StockCountOutputType;
       })[];
     },
-    queryKey: ["screener-query"],
+    queryKey: ["screener-query", exchange],
   });
+  console.log(exchange);
 
   useEffect(() => {
     refetch();

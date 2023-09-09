@@ -97,7 +97,7 @@ export default async function page({ params: { id } }: Props) {
         .split(",")}`}>
       {stockIds.length ? (
         <div className="f-col gap-4">
-          <div className="flex gap-4">
+          <div className="flex f-col items-start lg:flex-row gap-4">
             <Suspense fallback={<p>Loading...</p>}>
               <PortfolioChart stocks={stocks} />
             </Suspense>

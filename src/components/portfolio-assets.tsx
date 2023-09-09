@@ -44,7 +44,7 @@ export default async function PortfolioAssets({
       ...stock,
       ...quotes?.find((q) => q.symbol === stock.symbol),
     }))
-    .slice(0, 4);
+    .slice(0, 3);
 
   return (
     <Card>
@@ -62,8 +62,8 @@ export default async function PortfolioAssets({
           <TableCaption>A list of your current positions.</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[120px]">Symbol</TableHead>
-              <TableHead className="w-[110px] text-center">
+              <TableHead className="w-[120px] lg:w-[160px]">Symbol</TableHead>
+              <TableHead className="w-[110px] lg:w-[130px] text-center">
                 Price (24h)
               </TableHead>
               <TableHead className="text-right">P/E (ttm)</TableHead>
@@ -77,7 +77,7 @@ export default async function PortfolioAssets({
                     <StockImage src={stock.image} px={30} />
                     <div className="f-col">
                       <p className="font-medium">{stock.symbol}</p>
-                      <p className="text-[13px] w-[80px] truncate text-slate-400">
+                      <p className="text-[13px] w-[80px] lg:w-[120px] truncate text-slate-400">
                         {stock.companyName}
                       </p>
                     </div>

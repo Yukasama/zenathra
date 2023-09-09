@@ -36,8 +36,8 @@ export function buildFilter(screener: StockScreenerProps): Prisma.StockWhereInpu
     else if (right === ">50") peRatioFilter = { gt: 50 };
     else if (left !== "Any" && right !== "Any")
       peRatioFilter = {
-        lte: Number(left),
-        gte: Number(right),
+        lte: parseFloat(left),
+        gte: parseFloat(right),
       };
     else if (left !== "Any") peRatioFilter = { lte: Number(left) };
     else if (right !== "Any") peRatioFilter = { gte: Number(right) };

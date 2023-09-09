@@ -8,6 +8,7 @@ import {
   Legend,
   AreaChart,
   Area,
+  ResponsiveContainer,
 } from "recharts";
 import {
   Card,
@@ -60,13 +61,11 @@ export default function StockPriceChart({ stocks, className }: Props) {
 
   let [minDomain, maxDomain] = [0, 0];
   let pos = true;
+
   if (isFetched) {
     pos =
-      results[timeFrame][results[timeFrame].length - 1].uv >
-      results[timeFrame][0].uv;
-
-    // For some reason, the data is reversed for the ALL timeframe
-    pos = timeFrame === "ALL" ? !pos : pos;
+      Number(results[timeFrame][0].uv) <
+      Number(results[timeFrame][results[timeFrame].length - 1].uv);
     [minDomain, maxDomain] = computeDomain(results[timeFrame]);
   }
 
@@ -86,7 +85,17 @@ export default function StockPriceChart({ stocks, className }: Props) {
           <p
             className="text-sm text-[#19E363]"
             style={{ color: pos ? "#19E363" : "#e6221e" }}>
-            ${payload[0].value}
+            ${payload[0].value} (
+            <span className="text-[12px]">
+              {(payload[0].value / Number(results[timeFrame][0].uv)) * 100 -
+                100 >
+                0 && "+"}
+              {(
+                (payload[0].value / Number(results[timeFrame][0].uv)) * 100 -
+                100
+              ).toFixed(2)}
+              %)
+            </span>
           </p>
         </Card>
       );
@@ -97,15 +106,17 @@ export default function StockPriceChart({ stocks, className }: Props) {
   const timeFrames = ["1D", "5D", "1M", "6M", "1Y", "ALL"];
 
   return (
-    <Card className={cn(className)}>
+    <Card className={cn(className, "w-full max-w-[600px] h-[400px]")}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="f-col gap-1">
             <Skeleton isLoaded={isFetched} className="rounded-md">
-              <CardTitle className="bg-card">Portfolio Chart</CardTitle>
+              <CardTitle className="bg-card hidden md:flex">
+                Portfolio Chart
+              </CardTitle>
             </Skeleton>
             <Skeleton isLoaded={isFetched} className="rounded-md">
-              <CardDescription className="bg-card">
+              <CardDescription className="bg-card hidden md:flex">
                 Chart of all portfolio positions summed up
               </CardDescription>
             </Skeleton>
@@ -128,50 +139,52 @@ export default function StockPriceChart({ stocks, className }: Props) {
       </CardHeader>
       <div className="">
         <Skeleton isLoaded={isFetched} className="rounded-md">
-          {mounted ? (
-            <AreaChart
-              className="bg-card"
-              width={600}
-              height={300}
-              data={results && results[timeFrame]}
-              margin={{
-                top: 5,
-                right: 60,
-                left: 20,
-                bottom: 5,
-              }}>
-              <defs>
-                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="5%"
-                    stopColor={pos ? "#19E363" : "#e6221e"}
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor={pos ? "#19E363" : "#e6221e"}
-                    stopOpacity={0}
-                  />
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="name" fontSize={12} />
-              <YAxis domain={[minDomain, maxDomain]} fontSize={12} />
-              {/* @ts-ignore */}
-              <Tooltip content={<CustomTooltip />} />
-              <Legend />
-              <Area
-                type="monotone"
-                dataKey="uv"
-                stroke={pos ? "#19E363" : "#e6221e"}
-                fillOpacity={1}
-                fill="url(#colorUv)"
-                name="Price"
-                animationDuration={500}
-              />
-            </AreaChart>
-          ) : (
-            <div className="h-[300px] w-[540px] animate-pulse-right ml-10 mb-10"></div>
-          )}
+          <ResponsiveContainer width="100%" height={300}>
+            {mounted ? (
+              <AreaChart
+                className="bg-card"
+                width={600}
+                height={300}
+                data={results && results[timeFrame]}
+                margin={{
+                  top: 5,
+                  right: 60,
+                  left: 20,
+                  bottom: 5,
+                }}>
+                <defs>
+                  <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor={pos ? "#19E363" : "#e6221e"}
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor={pos ? "#19E363" : "#e6221e"}
+                      stopOpacity={0}
+                    />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="name" fontSize={12} />
+                <YAxis domain={[minDomain, maxDomain]} fontSize={12} />
+                {/* @ts-ignore */}
+                <Tooltip content={<CustomTooltip />} />
+                <Legend />
+                <Area
+                  type="monotone"
+                  dataKey="uv"
+                  stroke={pos ? "#19E363" : "#e6221e"}
+                  fillOpacity={1}
+                  fill="url(#colorUv)"
+                  name="Price"
+                  animationDuration={500}
+                />
+              </AreaChart>
+            ) : (
+              <div className="h-[300px] w-[540px] animate-pulse-right ml-10 mb-10"></div>
+            )}
+          </ResponsiveContainer>
         </Skeleton>
       </div>
     </Card>
