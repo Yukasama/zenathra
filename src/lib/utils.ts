@@ -40,3 +40,15 @@ export function Years(startYear: number) {
 export async function Timeout(ms: number) {
   return await new Promise((resolve) => setTimeout(resolve, Number(ms)));
 }
+
+export function computeDomain(data: any[]) {
+  const values = data.map((item) => parseFloat(item.uv));
+  const dataMax = Math.max(...values);
+  const dataMin = Math.min(...values);
+  const padding = (dataMax - dataMin) * 0.05; // 5% padding
+
+  return [
+    Number((dataMin - padding).toFixed(2)),
+    Number((dataMax + padding).toFixed(2)),
+  ];
+}

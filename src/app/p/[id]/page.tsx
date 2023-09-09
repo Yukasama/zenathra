@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 import PageLayout from "@/components/shared/page-layout";
 import PortfolioAssets from "@/components/portfolio-assets";
 import { PortfolioWithStocks } from "@/types/db";
+import PortfolioAllocation from "@/components/charts/portfolio-allocation";
 
 interface Props {
   params: { id: string };
@@ -84,8 +85,7 @@ export default async function page({ params: { id } }: Props) {
       />
     );
 
-  const symbols = await db.stock.findMany({
-    select: { symbol: true },
+  const stocks = await db.stock.findMany({
     where: { id: { in: stockIds.map((s) => s.stockId) } },
   });
 
@@ -97,19 +97,24 @@ export default async function page({ params: { id } }: Props) {
         .split(",")}`}>
       {stockIds.length ? (
         <div className="f-col gap-4">
-          <Suspense fallback={<p>Loading...</p>}>
-            <PortfolioChart symbols={symbols.map((s) => s.symbol)} />
-          </Suspense>
-          <Suspense fallback={<p>Loading...</p>}>
-            {/* @ts-expect-error Server Component */}
-            <PortfolioAssets
-              portfolio={{
-                ...portfolio,
-                stockIds: stockIds.map((s) => s.stockId),
-              }}
-              symbols={symbols.map((s) => s.symbol)}
-            />
-          </Suspense>
+          <div className="flex gap-4">
+            <Suspense fallback={<p>Loading...</p>}>
+              <PortfolioChart stocks={stocks} />
+            </Suspense>
+            <PortfolioAllocation stocks={stocks} />
+          </div>
+          <div className="flex">
+            <Suspense fallback={<p>Loading...</p>}>
+              {/* @ts-expect-error Server Component */}
+              <PortfolioAssets
+                portfolio={{
+                  ...portfolio,
+                  stockIds: stockIds.map((s) => s.stockId),
+                }}
+                symbols={stocks.map((s) => s.symbol)}
+              />
+            </Suspense>
+          </div>
         </div>
       ) : (
         <h2>There are no stocks in this portfolio.</h2>

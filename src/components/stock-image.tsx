@@ -15,7 +15,13 @@ export function StockImage({
   ...props
 }: Props) {
   return (
-    <div className={cn("f-box rounded-full", className)} {...props}>
+    <div
+      className={cn("f-box rounded-full", className)}
+      style={{
+        width: px,
+        height: px,
+      }}
+      {...props}>
       <Image
         className="p-1"
         src={src ?? "/images/stock.jpg"}

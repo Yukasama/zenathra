@@ -19,38 +19,16 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { StockHistoryProps } from "@/lib/validators/stock";
-import { AllHistory, History } from "@/types/stock";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
-import { cn } from "@/lib/utils";
+import { cn, computeDomain } from "@/lib/utils";
 import { Skeleton } from "@nextui-org/skeleton";
-import { time } from "console";
+import { Stock } from "@prisma/client";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  symbols: string[];
+  stocks: Stock[];
 }
 
-const CustomTooltip = ({
-  active,
-  payload,
-  label,
-}: {
-  active: any;
-  payload: any;
-  label: any;
-}) => {
-  if (active && payload && payload.length) {
-    return (
-      <Card className="p-2">
-        <p className="text-[15px]">{label}</p>
-        <p className="text-sm text-[#19E363]">${payload[0].value}</p>
-      </Card>
-    );
-  }
-
-  return null;
-};
-
-export default function StockPriceChart({ symbols, className }: Props) {
+export default function StockPriceChart({ stocks, className }: Props) {
   const [mounted, setMounted] = useState<boolean>(false);
   const [timeFrame, setTimeFrame] = useState<string>("1D");
 
@@ -61,7 +39,7 @@ export default function StockPriceChart({ symbols, className }: Props) {
   const { data: results, isFetched } = useQuery({
     queryFn: async () => {
       const payload: StockHistoryProps = {
-        symbol: symbols,
+        symbol: stocks.map((s) => s.symbol),
         range: "Everything",
       };
 
@@ -70,27 +48,15 @@ export default function StockPriceChart({ symbols, className }: Props) {
       const newData: any = {};
       for (const key in data) {
         newData[key] = data[key].map((item: any) => ({
-          name: item.date,
+          name:
+            key === "1D" ? item.date.split(" ")[1] : item.date.split(" ")[0],
           uv: item.close.toFixed(2),
         }));
       }
-      console.log(newData);
       return newData;
     },
     queryKey: ["portfolio-history-query"],
   });
-
-  const computeDomain = (data: any[]) => {
-    const values = data.map((item) => parseFloat(item.uv));
-    const dataMax = Math.max(...values);
-    const dataMin = Math.min(...values);
-    const padding = (dataMax - dataMin) * 0.05; // 5% padding
-
-    return [
-      Number((dataMin - padding).toFixed(2)),
-      Number((dataMax + padding).toFixed(2)),
-    ];
-  };
 
   let [minDomain, maxDomain] = [0, 0];
   let pos = true;
@@ -98,22 +64,53 @@ export default function StockPriceChart({ symbols, className }: Props) {
     pos =
       results[timeFrame][results[timeFrame].length - 1].uv >
       results[timeFrame][0].uv;
+
+    // For some reason, the data is reversed for the ALL timeframe
+    pos = timeFrame === "ALL" ? !pos : pos;
     [minDomain, maxDomain] = computeDomain(results[timeFrame]);
   }
+
+  const CustomTooltip = ({
+    active,
+    payload,
+    label,
+  }: {
+    active: any;
+    payload: any;
+    label: any;
+  }) => {
+    if (active && payload && payload.length) {
+      return (
+        <Card className="p-2">
+          <p className="text-[15px]">{label}</p>
+          <p
+            className="text-sm text-[#19E363]"
+            style={{ color: pos ? "#19E363" : "#e6221e" }}>
+            ${payload[0].value}
+          </p>
+        </Card>
+      );
+    }
+    return null;
+  };
 
   const timeFrames = ["1D", "5D", "1M", "6M", "1Y", "ALL"];
 
   return (
-    <Skeleton isLoaded={isFetched}>
-      <Card className={cn(className)}>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Portfolio Chart</CardTitle>
-              <CardDescription>
+    <Card className={cn(className)}>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div className="f-col gap-1">
+            <Skeleton isLoaded={isFetched} className="rounded-md">
+              <CardTitle className="bg-card">Portfolio Chart</CardTitle>
+            </Skeleton>
+            <Skeleton isLoaded={isFetched} className="rounded-md">
+              <CardDescription className="bg-card">
                 Chart of all portfolio positions summed up
               </CardDescription>
-            </div>
+            </Skeleton>
+          </div>
+          <Skeleton isLoaded={isFetched} className="rounded-md">
             <Tabs defaultValue="1D">
               <TabsList>
                 {timeFrames.map((timeFrame) => (
@@ -126,17 +123,20 @@ export default function StockPriceChart({ symbols, className }: Props) {
                 ))}
               </TabsList>
             </Tabs>
-          </div>
-        </CardHeader>
-        <div className="pr-10 pb-3">
+          </Skeleton>
+        </div>
+      </CardHeader>
+      <div className="">
+        <Skeleton isLoaded={isFetched} className="rounded-md">
           {mounted ? (
             <AreaChart
+              className="bg-card"
               width={600}
               height={300}
               data={results && results[timeFrame]}
               margin={{
                 top: 5,
-                right: 30,
+                right: 60,
                 left: 20,
                 bottom: 5,
               }}>
@@ -144,17 +144,16 @@ export default function StockPriceChart({ symbols, className }: Props) {
                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                   <stop
                     offset="5%"
-                    stopColor={pos ? "#19E363" : "#ff0000"}
+                    stopColor={pos ? "#19E363" : "#e6221e"}
                     stopOpacity={0.8}
                   />
                   <stop
                     offset="95%"
-                    stopColor={pos ? "#19E363" : "#ff0000"}
+                    stopColor={pos ? "#19E363" : "#e6221e"}
                     stopOpacity={0}
                   />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
               <XAxis dataKey="name" fontSize={12} />
               <YAxis domain={[minDomain, maxDomain]} fontSize={12} />
               {/* @ts-ignore */}
@@ -163,17 +162,18 @@ export default function StockPriceChart({ symbols, className }: Props) {
               <Area
                 type="monotone"
                 dataKey="uv"
-                stroke={pos ? "#19E363" : "#ff0000"}
+                stroke={pos ? "#19E363" : "#e6221e"}
                 fillOpacity={1}
                 fill="url(#colorUv)"
                 name="Price"
+                animationDuration={500}
               />
             </AreaChart>
           ) : (
             <div className="h-[300px] w-[540px] animate-pulse-right ml-10 mb-10"></div>
           )}
-        </div>
-      </Card>
-    </Skeleton>
+        </Skeleton>
+      </div>
+    </Card>
   );
 }

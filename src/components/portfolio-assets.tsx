@@ -39,10 +39,12 @@ export default async function PortfolioAssets({
     getQuotes(symbols),
   ]);
 
-  const results = stocks.map((stock) => ({
-    ...stock,
-    ...quotes?.find((q) => q.symbol === stock.symbol),
-  }));
+  const results = stocks
+    .map((stock) => ({
+      ...stock,
+      ...quotes?.find((q) => q.symbol === stock.symbol),
+    }))
+    .slice(0, 4);
 
   return (
     <Card>
@@ -60,17 +62,18 @@ export default async function PortfolioAssets({
           <TableCaption>A list of your current positions.</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[150px]">Symbol</TableHead>
-              <TableHead className="w-[120px]">Price (24h)</TableHead>
-              <TableHead className="w-[120px]">Sector</TableHead>
-              <TableHead className="text-right">P/E Ratio</TableHead>
+              <TableHead className="w-[120px]">Symbol</TableHead>
+              <TableHead className="w-[110px] text-center">
+                Price (24h)
+              </TableHead>
+              <TableHead className="text-right">P/E (ttm)</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {results.map((stock) => (
               <TableRow key={stock.symbol}>
                 <TableCell className="font-medium">
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-2">
                     <StockImage src={stock.image} px={30} />
                     <div className="f-col">
                       <p className="font-medium">{stock.symbol}</p>
@@ -89,11 +92,11 @@ export default async function PortfolioAssets({
                           ? "text-green-500"
                           : "text-red-500"
                       }`}>
+                      {stock.changesPercentage! > 0 && "+"}
                       {stock.changesPercentage?.toFixed(2)}%
                     </p>
                   </div>
                 </TableCell>
-                <TableCell>{stock.sector}</TableCell>
                 <TableCell className="text-right">
                   {stock.peRatioTTM.toFixed(2)}
                 </TableCell>

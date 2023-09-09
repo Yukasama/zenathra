@@ -42,12 +42,7 @@ export interface Quote {
 export interface Chart {
   title?: string;
   description?: string;
-  data: {
-    name: string;
-    uv: number | null;
-    pv?: number | null;
-    fv?: number | null;
-  }[];
+  data: any[] | undefined;
   height?: number;
   width?: number;
 }

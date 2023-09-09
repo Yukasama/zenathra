@@ -24,10 +24,9 @@ import { PortfolioWithStocks } from "@/types/db";
 
 interface Props {
   portfolio: PortfolioWithStocks;
-  onClose?: any;
 }
 
-export default function PortfolioAddModal({ portfolio, onClose }: Props) {
+export default function PortfolioAddModal({ portfolio }: Props) {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -78,7 +77,6 @@ export default function PortfolioAddModal({ portfolio, onClose }: Props) {
     },
     onSuccess: () => {
       startTransition(() => router.refresh());
-      onClose();
       toast({ description: "Added stocks to portfolio." });
     },
   });
