@@ -10,10 +10,10 @@ import { getAuthSession } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { Card } from "@/components/ui/card";
-import StockPriceChart from "@/components/stock-price-chart";
 import { Separator } from "@/components/ui/separator";
 import PageLayout from "@/components/shared/page-layout";
 import StockStatistics from "@/components/stock-statistics";
+import PriceChart from "@/components/charts/price-chart";
 
 export async function generateStaticParams() {
   const data = await db.stock.findMany({
@@ -58,13 +58,12 @@ export default async function page({ params: { symbol } }: Props) {
         </div>
         <Separator />
         <div className="flex gap-5">
-          <Suspense fallback={<p>Loading...</p>}>
-            <StockPriceChart
-              symbol={symbol}
-              title={`${symbol} Chart`}
-              description={`Price Chart of ${stock.companyName}`}
-            />
-          </Suspense>
+          <PriceChart
+            symbols={symbol}
+            title={`${symbol} Chart`}
+            description={`Price Chart of ${stock.companyName}`}
+            image={stock.image}
+          />
           <Suspense fallback={<Card />}>
             {/* @ts-expect-error Server Component */}
             <StockList
@@ -72,6 +71,7 @@ export default async function page({ params: { symbol } }: Props) {
               title="Peers"
               description="Companies in the same industry"
               error="No Peers found"
+              limit={4}
             />
           </Suspense>
         </div>

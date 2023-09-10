@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Image from "next/image";
 import PortfolioAddModal from "@/components/portfolio-add-modal";
-import PortfolioChart from "@/components/charts/portfolio-chart";
+import PriceChart from "@/components/charts/price-chart";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
@@ -92,15 +92,17 @@ export default async function page({ params: { id } }: Props) {
   return (
     <PageLayout
       title={portfolio.title}
-      description={`Created on ${portfolio.createdAt
-        .toISOString()
-        .split(",")}`}>
+      description={`Created on ${
+        portfolio.createdAt.toISOString().split(".")[0].split("T")[0]
+      }`}>
       {stockIds.length ? (
         <div className="f-col gap-4">
           <div className="flex f-col items-start lg:flex-row gap-4">
-            <Suspense fallback={<p>Loading...</p>}>
-              <PortfolioChart stocks={stocks} />
-            </Suspense>
+            <PriceChart
+              symbols={stocks.map((s) => s.symbol)}
+              title="Portfolio Chart"
+              description="Chart of all portfolio positions"
+            />
             <PortfolioAllocation stocks={stocks} />
           </div>
           <div className="flex">

@@ -1,12 +1,12 @@
 import { getDailys } from "@/lib/fmp/quote";
-import StockHighlight from "@/components/stock-highlight";
 import StockCardList from "@/components/stock-card-list";
 import IndexList from "@/components/index-list";
 import { IndexListLoading } from "@/components/index-list";
 import { StockCardListLoading } from "@/components/stock-card-list";
-import { StockHighlightLoading } from "@/components/stock-highlight";
 import { Suspense } from "react";
 import PageLayout from "@/components/shared/page-layout";
+import { db } from "@/lib/db";
+import PriceChart from "@/components/charts/price-chart";
 
 export default async function page() {
   const [actives, winners, losers] = await Promise.all([
@@ -15,13 +15,22 @@ export default async function page() {
     getDailys("losers"),
   ]);
 
+  const highlight = await db.stock.findFirst({
+    select: { symbol: true, image: true, companyName: true },
+    where: { symbol: actives?.[0] ?? undefined },
+  });
+
   return (
     <PageLayout className="f-col gap-4 md:gap-7">
       <div className="f-col md:flex-row gap-4 md:gap-7">
-        <Suspense fallback={<StockHighlightLoading />}>
-          {/* @ts-expect-error Server Component */}
-          <StockHighlight symbol={actives?.[0] ?? null} />
-        </Suspense>
+        {highlight && (
+          <PriceChart
+            symbols={highlight.symbol}
+            title={highlight.symbol}
+            description={`Price Chart of ${highlight?.companyName}`}
+            image={highlight?.image}
+          />
+        )}
         <Suspense fallback={<IndexListLoading />}>
           {/* @ts-expect-error Server Component */}
           <IndexList />

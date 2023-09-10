@@ -3,9 +3,7 @@
 import {
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
-  Legend,
   AreaChart,
   Area,
   ResponsiveContainer,
@@ -23,13 +21,26 @@ import { StockHistoryProps } from "@/lib/validators/stock";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { cn, computeDomain } from "@/lib/utils";
 import { Skeleton } from "@nextui-org/skeleton";
-import { Stock } from "@prisma/client";
+import { StockImage } from "../stock-image";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  stocks: Stock[];
+  title?: string;
+  description?: string;
+  symbols: string | string[];
+  image?: string;
+  height?: number;
+  width?: number;
 }
 
-export default function StockPriceChart({ stocks, className }: Props) {
+export default function PriceChart({
+  title,
+  description,
+  symbols,
+  image,
+  height,
+  width,
+  className,
+}: Props) {
   const [mounted, setMounted] = useState<boolean>(false);
   const [timeFrame, setTimeFrame] = useState<string>("1D");
 
@@ -40,7 +51,7 @@ export default function StockPriceChart({ stocks, className }: Props) {
   const { data: results, isFetched } = useQuery({
     queryFn: async () => {
       const payload: StockHistoryProps = {
-        symbol: stocks.map((s) => s.symbol),
+        symbol: symbols,
         range: "Everything",
       };
 
@@ -56,7 +67,7 @@ export default function StockPriceChart({ stocks, className }: Props) {
       }
       return newData;
     },
-    queryKey: ["portfolio-history-query"],
+    queryKey: ["stock-query"],
   });
 
   let [minDomain, maxDomain] = [0, 0];
@@ -106,20 +117,27 @@ export default function StockPriceChart({ stocks, className }: Props) {
   const timeFrames = ["1D", "5D", "1M", "6M", "1Y", "ALL"];
 
   return (
-    <Card className={cn(className, "w-full max-w-[600px] h-[400px]")}>
+    <Card
+      className={cn(className, "w-full max-w-[600px]")}
+      style={{
+        height: (height || 250) + 100,
+      }}>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <div className="f-col gap-1">
-            <Skeleton isLoaded={isFetched} className="rounded-md">
-              <CardTitle className="bg-card hidden md:flex">
-                Portfolio Chart
-              </CardTitle>
-            </Skeleton>
-            <Skeleton isLoaded={isFetched} className="rounded-md">
-              <CardDescription className="bg-card hidden md:flex">
-                Chart of all portfolio positions summed up
-              </CardDescription>
-            </Skeleton>
+          <div className="flex items-center gap-2">
+            <StockImage src={image} px={40} />
+            <div className="f-col gap-1">
+              <Skeleton isLoaded={isFetched} className="rounded-md">
+                <CardTitle className="bg-card hidden md:flex">
+                  {title}
+                </CardTitle>
+              </Skeleton>
+              <Skeleton isLoaded={isFetched} className="rounded-md">
+                <CardDescription className="bg-card hidden md:flex">
+                  {description}
+                </CardDescription>
+              </Skeleton>
+            </div>
           </div>
           <Skeleton isLoaded={isFetched} className="rounded-md">
             <Tabs defaultValue="1D">
@@ -138,13 +156,13 @@ export default function StockPriceChart({ stocks, className }: Props) {
         </div>
       </CardHeader>
       <div className="">
-        <Skeleton isLoaded={isFetched} className="rounded-md">
-          <ResponsiveContainer width="100%" height={300}>
-            {mounted ? (
+        {mounted && (
+          <Skeleton isLoaded={isFetched} className="rounded-md">
+            <ResponsiveContainer width="100%" height={height || 250}>
               <AreaChart
                 className="bg-card"
-                width={600}
-                height={300}
+                width={width || 500}
+                height={height || 250}
                 data={results && results[timeFrame]}
                 margin={{
                   top: 5,
@@ -170,7 +188,6 @@ export default function StockPriceChart({ stocks, className }: Props) {
                 <YAxis domain={[minDomain, maxDomain]} fontSize={12} />
                 {/* @ts-ignore */}
                 <Tooltip content={<CustomTooltip />} />
-                <Legend />
                 <Area
                   type="monotone"
                   dataKey="uv"
@@ -181,11 +198,9 @@ export default function StockPriceChart({ stocks, className }: Props) {
                   animationDuration={500}
                 />
               </AreaChart>
-            ) : (
-              <div className="h-[300px] w-[540px] animate-pulse-right ml-10 mb-10"></div>
-            )}
-          </ResponsiveContainer>
-        </Skeleton>
+            </ResponsiveContainer>
+          </Skeleton>
+        )}
       </div>
     </Card>
   );

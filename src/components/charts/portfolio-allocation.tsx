@@ -1,7 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { useEffect, useState, useMemo } from "react";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Stock } from "@prisma/client";
 
@@ -24,6 +31,10 @@ function generateColors(num: number): string[] {
   return colors.slice(0, num);
 }
 
+function getPercentage(count: number, total: number): string {
+  return `${((count / total) * 100).toFixed(2)}%`;
+}
+
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   stocks: Stock[];
 }
@@ -35,44 +46,74 @@ export default function PortfolioAllocation({ stocks }: Props) {
     setMounted(true);
   }, []);
 
-  const sectorCount: { [key: string]: number } = {};
-  stocks.forEach((stock) => {
-    sectorCount[stock.sector] = (sectorCount[stock.sector] || 0) + 1;
-  });
+  const sectorCount = useMemo(() => {
+    const count: { [key: string]: number } = {};
+    stocks.forEach((stock) => {
+      count[stock.sector] = (count[stock.sector] || 0) + 1;
+    });
+    return count;
+  }, [stocks]);
 
-  const data = Object.entries(sectorCount).map(([name, value]) => ({
-    name,
-    value,
-  }));
+  const sortedData = useMemo(() => {
+    const unsorted = Object.entries(sectorCount).map(([name, value]) => ({
+      name,
+      value,
+    }));
+    return unsorted.sort((a, b) => b.value - a.value);
+  }, [sectorCount]);
 
-  const colors = generateColors(data.length);
-  const renderCustomLabel = (entry: any) => entry.name;
+  const colors = useMemo(() => generateColors(sortedData.length), [sortedData]);
+
+  const totalStocks = stocks.length;
+
+  const renderCustomLabel = ({ value }: { value: number }) => {
+    const percentage = getPercentage(value, totalStocks);
+    return `${percentage}`;
+  };
 
   return (
-    <Card className="w-full max-w-[600px] h-[400px]">
+    <Card className="w-full max-w-[500px] h-[370px] sm:h-[350px] shadow-lg">
       <CardHeader>
         <CardTitle>Portfolio Allocation</CardTitle>
         <CardDescription>Sector allocation of your portfolio</CardDescription>
       </CardHeader>
       {mounted && (
         <div className="relative w-full">
-          <ResponsiveContainer width="100%" height={250}>
-            <PieChart
-              height={300}
-              width={600}
-              className="scale-80 sm:scale-100">
+          <ResponsiveContainer width="100%" height={220}>
+            <PieChart margin={{ top: -20, bottom: 30 }}>
               <Pie
-                data={data}
-                innerRadius={65}
-                outerRadius={90}
-                paddingAngle={5}
+                data={sortedData}
+                startAngle={180}
+                endAngle={-180}
+                innerRadius={45}
+                outerRadius={70}
+                paddingAngle={2}
                 dataKey="value"
-                fontSize={15}
+                fontSize={14}
                 label={renderCustomLabel}>
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={colors[index]} />
+                {sortedData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={colors[index]}
+                    stroke={colors[index]}
+                    strokeWidth={0.6}
+                    onMouseEnter={() => {}}
+                  />
                 ))}
               </Pie>
+              <Tooltip
+                cursor={{ fill: "transparent" }}
+                contentStyle={{
+                  border: "none",
+                  borderRadius: "5px",
+                }}
+                wrapperStyle={{ zIndex: 100 }}
+              />
+              <Legend
+                wrapperStyle={{ fontSize: "14px" }}
+                verticalAlign="bottom"
+                height={1}
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>

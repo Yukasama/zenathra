@@ -20,8 +20,8 @@ export default function StockEye({ session, eye }: Props) {
       : "Good Score";
 
   return (
-    <Card className="px-4">
-      <div className="relative h-[130px] w-[130px] translate-y-2.5 rounded-full">
+    <Card className="px-4 overflow-hidden">
+      <div className="relative h-[150px] w-[150px] translate-y-2.5 rounded-full">
         <svg
           className="absolute left-0 top-0 h-full w-full rotate-[160deg]"
           viewBox="0 0 120 120">
@@ -44,10 +44,10 @@ export default function StockEye({ session, eye }: Props) {
           />
         </svg>
         <div className="f-box relative h-[90%] w-full flex-col">
-          <p className="text-center text-2xl font-medium">
+          <p className="text-center text-[27px] font-thin">
             {session?.user ? value : <Lock className="mb-1.5 h-6" />}
           </p>
-          <p className="text-center text-[12px] font-light text-blue-500">
+          <p className="text-center text-[13px] font-light text-blue-500">
             {session?.user ? score : "Locked"}
           </p>
         </div>
