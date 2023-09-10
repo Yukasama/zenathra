@@ -114,37 +114,42 @@ export default function Page() {
     {
       id: "exchange",
       label: "Exchange",
+      value: exchange,
       options: exchanges,
       setOption: setExchange,
     },
     {
       id: "sector",
       label: "Sector",
+      value: sector,
       options: sectors,
       setOption: setSector,
     },
     {
       id: "industry",
       label: "Industry",
+      value: industry,
       options: industries,
       setOption: setIndustry,
     },
     {
       id: "country",
       label: "Country",
+      value: country,
       options: countries,
       setOption: setCountry,
     },
     {
       id: "earningsDate",
       label: "Earnings Date",
+      value: earningsDate,
       options: earningsDates,
       setOption: setEarningsDate,
     },
     {
       id: "marketCap",
-      type: "single",
       label: "Market Cap",
+      value: marketCap,
       options: marketCaps,
       setOption: setMarketCap,
     },
@@ -154,6 +159,8 @@ export default function Page() {
     {
       id: "peRatio",
       label: "P/E Ratio",
+      value: peRatio1,
+      value2: peRatio2,
       options: peRatios,
       setOption: setPeRatio1,
       setOption2: setPeRatio2,
@@ -161,6 +168,8 @@ export default function Page() {
     {
       id: "pegRatio",
       label: "PEG Ratio",
+      value: pegRatio1,
+      value2: pegRatio2,
       options: pegRatios,
       setOption: setPegRatio1,
       setOption2: setPegRatio2,
@@ -171,6 +180,8 @@ export default function Page() {
     {
       id: "peRatio",
       label: "P/E Ratio",
+      value: peRatio1,
+      value2: peRatio2,
       options: peRatios,
       setOption: setPeRatio1,
       setOption2: setPeRatio2,
@@ -178,6 +189,8 @@ export default function Page() {
     {
       id: "pegRatio",
       label: "PEG Ratio",
+      value: pegRatio1,
+      value2: pegRatio2,
       options: pegRatios,
       setOption: setPegRatio1,
       setOption2: setPegRatio2,
@@ -216,17 +229,21 @@ export default function Page() {
             </CardHeader>
             <CardContent className="space-y-3">
               {descriptive.map((filter) => (
-                <div className="f-col" key={filter.id}>
+                <div className="f-col" key={filter.id + resetCounter}>
                   <p className="font-medium text-sm m-1 text-slate-400">
                     {filter.label}
                   </p>
-                  <Select onValueChange={(e) => filter.setOption(e)}>
+                  <Select
+                    onValueChange={(e) => filter.setOption(e)}
+                    value={filter.value}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Any" />
+                      <SelectValue placeholder="Any (Maximum)">
+                        {filter.value}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent className="max-h-[216px]">
                       {filter.options.map((option) => (
-                        <SelectItem key={option + resetCounter} value={option}>
+                        <SelectItem key={option} value={option}>
                           {option}
                         </SelectItem>
                       ))}
@@ -248,14 +265,18 @@ export default function Page() {
             </CardHeader>
             <CardContent className="f-col gap-4">
               {fundamental.map((filter) => (
-                <div className="f-col" key={filter.id}>
+                <div className="f-col" key={filter.id + resetCounter}>
                   <p className="font-medium text-sm m-1 text-slate-400">
                     {filter.label}
                   </p>
                   <div className="flex gap-4">
-                    <Select onValueChange={(e) => filter.setOption(e)}>
+                    <Select
+                      onValueChange={(e) => filter.setOption(e)}
+                      value={filter.value}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Any (Maximum)" />
+                        <SelectValue placeholder="Any (Maximum)">
+                          {filter.value}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {filter.options.map((option) => (
@@ -265,16 +286,17 @@ export default function Page() {
                         ))}
                       </SelectContent>
                     </Select>
-                    <Select>
+                    <Select
+                      onValueChange={(e) => filter.setOption(e)}
+                      value={filter.value2}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Any (Minimum)" />
+                        <SelectValue placeholder="Any (Maximum)">
+                          {filter.value2}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {filter.options.map((option) => (
-                          <SelectItem
-                            key={option}
-                            value={option}
-                            onChange={() => filter.setOption2(option)}>
+                          <SelectItem key={option} value={option}>
                             {option}
                           </SelectItem>
                         ))}
@@ -297,36 +319,38 @@ export default function Page() {
             </CardHeader>
             <CardContent className="f-col gap-4">
               {technical.map((filter) => (
-                <div className="f-col" key={filter.id}>
+                <div className="f-col" key={filter.id + resetCounter}>
                   <p className="font-medium text-sm m-1 text-slate-400">
                     {filter.label}
                   </p>
                   <div className="flex gap-4">
-                    <Select>
+                    <Select
+                      onValueChange={(e) => filter.setOption(e)}
+                      value={filter.value}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Any (Maximum)" />
+                        <SelectValue placeholder="Any (Maximum)">
+                          {filter.value}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {filter.options.map((option) => (
-                          <SelectItem
-                            key={option}
-                            value={option}
-                            onChange={() => filter.setOption(option)}>
+                          <SelectItem key={option} value={option}>
                             {option}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
-                    <Select>
+                    <Select
+                      onValueChange={(e) => filter.setOption(e)}
+                      value={filter.value2}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Any (Minimum)" />
+                        <SelectValue placeholder="Any (Maximum)">
+                          {filter.value2}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {filter.options.map((option) => (
-                          <SelectItem
-                            key={option}
-                            value={option}
-                            onChange={() => filter.setOption2(option)}>
+                          <SelectItem key={option} value={option}>
                             {option}
                           </SelectItem>
                         ))}
@@ -363,7 +387,14 @@ export default function Page() {
               ))}
             </div>
           ) : isFetched && !results?.length ? (
-            <p>No Stocks matching the query</p>
+            <div className="mt-16">
+              <h3 className="font-medium text-center text-lg">
+                No Stocks matching the query
+              </h3>
+              <p className="text-sm text-center text-slate-400">
+                Please select a combination of other filters
+              </p>
+            </div>
           ) : (
             <>
               <TabsContent value="descriptive">

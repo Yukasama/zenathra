@@ -1,7 +1,9 @@
 import { Prisma } from "@prisma/client";
 import { StockScreenerProps } from "@/lib/validators/stock";
 
-export function buildFilter(screener: StockScreenerProps): Prisma.StockWhereInput {
+export function buildFilter(
+  screener: StockScreenerProps
+): Prisma.StockWhereInput {
   const filter: Prisma.StockWhereInput = {};
 
   if (screener.exchange && screener.exchange !== "Any")
@@ -27,40 +29,42 @@ export function buildFilter(screener: StockScreenerProps): Prisma.StockWhereInpu
 
   if (
     screener.peRatio ||
-    (screener.peRatio[0] === "Any" && screener.peRatio[1] === "Any")
+    (screener.peRatio[0] === "Any (Maximum)" &&
+      screener.peRatio[1] === "Any (Minimum)")
   ) {
     const [left, right] = screener.peRatio;
     let peRatioFilter: Prisma.FloatFilter | undefined;
 
     if (left === ">50") peRatioFilter = { lt: 50 };
     else if (right === ">50") peRatioFilter = { gt: 50 };
-    else if (left !== "Any" && right !== "Any")
+    else if (left !== "Any (Maximum)" && right !== "Any (Minimum)")
       peRatioFilter = {
         lte: parseFloat(left),
         gte: parseFloat(right),
       };
-    else if (left !== "Any") peRatioFilter = { lte: Number(left) };
-    else if (right !== "Any") peRatioFilter = { gte: Number(right) };
+    else if (left !== "Any (Maximum)") peRatioFilter = { lte: Number(left) };
+    else if (right !== "Any (Minimum)") peRatioFilter = { gte: Number(right) };
 
     if (peRatioFilter) filter.peRatioTTM = peRatioFilter;
   }
 
   if (
     screener.pegRatio ||
-    (screener.pegRatio[0] === "Any" && screener.pegRatio[1] === "Any")
+    (screener.pegRatio[0] === "Any (Maximum)" &&
+      screener.pegRatio[1] === "Any (Minimum)")
   ) {
     const [left, right] = screener.pegRatio;
     let pegRatioFilter: Prisma.FloatFilter | undefined;
 
     if (left === ">10") pegRatioFilter = { lt: 10 };
     else if (right === ">10") pegRatioFilter = { gt: 10 };
-    else if (left !== "Any" && right !== "Any")
+    else if (left !== "Any (Maximum)" && right !== "Any (Maximum)")
       pegRatioFilter = {
         lte: Number(left),
         gte: Number(right),
       };
-    else if (left !== "Any") pegRatioFilter = { lte: Number(left) };
-    else if (right !== "Any") pegRatioFilter = { gte: Number(right) };
+    else if (left !== "Any (Maximum)") pegRatioFilter = { lte: Number(left) };
+    else if (right !== "Any (Minimum)") pegRatioFilter = { gte: Number(right) };
 
     if (pegRatioFilter) filter.pegRatioTTM = pegRatioFilter;
   }
