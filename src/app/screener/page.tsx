@@ -14,7 +14,7 @@ import {
 } from "@/config/screener";
 import { Prisma, Stock } from "@prisma/client";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { BarChart2, FileText, Layers, RotateCcw } from "lucide-react";
+import { BarChart2, FileText, Layers, RotateCcw, Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -40,29 +40,36 @@ export default function Page() {
   const [resetCounter, setResetCounter] = useState(0);
 
   const [exchange, setExchange] = useState<string>("Any");
+  const [ticker, setTicker] = useState<string>("");
   const [sector, setSector] = useState<string>("Any");
   const [industry, setIndustry] = useState<string>("Any");
   const [country, setCountry] = useState<string>("Any");
   const [earningsDate, setEarningsDate] = useState<string>("Any");
   const [marketCap, setMarketCap] = useState<string>("Any");
 
-  const [peRatio1, setPeRatio1] = useState<string>("Any (Maximum)");
-  const [peRatio2, setPeRatio2] = useState<string>("Any (Minimum)");
-  const [pegRatio1, setPegRatio1] = useState<string>("Any (Maximum)");
-  const [pegRatio2, setPegRatio2] = useState<string>("Any (Minimum)");
+  const [peRatio1, setPeRatio1] = useState<string>("Any");
+  const [peRatio2, setPeRatio2] = useState<string>("Any");
+  const [pegRatio1, setPegRatio1] = useState<string>("Any");
+  const [pegRatio2, setPegRatio2] = useState<string>("Any");
+
+  const [sma50, setSma50] = useState<string>("Any");
+  const [sma502, setSma502] = useState<string>("Any");
 
   // Set all filters on "Any" on reset button click
   const resetFilters = () => {
     setExchange("Any");
+    setTicker("");
     setSector("Any");
     setIndustry("Any");
     setCountry("Any");
     setEarningsDate("Any");
     setMarketCap("Any");
-    setPeRatio1("Any (Maximum)");
-    setPeRatio2("Any (Minimum)");
-    setPegRatio1("Any (Maximum)");
-    setPegRatio2("Any (Minimum)");
+    setPeRatio1("Any");
+    setPeRatio2("Any");
+    setPegRatio1("Any");
+    setPegRatio2("Any");
+    setSma50("Any");
+    setSma502("Any");
 
     setResetCounter((prevCounter) => prevCounter + 1);
   };
@@ -76,6 +83,7 @@ export default function Page() {
     queryFn: async () => {
       const payload: StockScreenerProps = {
         exchange: exchange,
+        ticker: ticker,
         sector: sector,
         industry: industry,
         country: country,
@@ -99,6 +107,7 @@ export default function Page() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     exchange,
+    ticker,
     sector,
     industry,
     country,
@@ -178,22 +187,13 @@ export default function Page() {
 
   const technical = [
     {
-      id: "peRatio",
-      label: "P/E Ratio",
-      value: peRatio1,
-      value2: peRatio2,
-      options: peRatios,
-      setOption: setPeRatio1,
-      setOption2: setPeRatio2,
-    },
-    {
-      id: "pegRatio",
-      label: "PEG Ratio",
-      value: pegRatio1,
-      value2: pegRatio2,
-      options: pegRatios,
-      setOption: setPegRatio1,
-      setOption2: setPegRatio2,
+      id: "sma",
+      label: "SMA",
+      value: sma50,
+      value2: sma502,
+      options: ["50"],
+      setOption: setSma50,
+      setOption2: setSma502,
     },
   ];
 
@@ -237,7 +237,7 @@ export default function Page() {
                     onValueChange={(e) => filter.setOption(e)}
                     value={filter.value}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Any (Maximum)">
+                      <SelectValue placeholder="Any">
                         {filter.value}
                       </SelectValue>
                     </SelectTrigger>
@@ -270,38 +270,48 @@ export default function Page() {
                     {filter.label}
                   </p>
                   <div className="flex gap-4">
-                    <Select
-                      onValueChange={(e) => filter.setOption(e)}
-                      value={filter.value}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Any (Maximum)">
-                          {filter.value}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        {filter.options.map((option) => (
-                          <SelectItem key={option} value={option}>
-                            {option}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Select
-                      onValueChange={(e) => filter.setOption(e)}
-                      value={filter.value2}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Any (Maximum)">
-                          {filter.value2}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        {filter.options.map((option) => (
-                          <SelectItem key={option} value={option}>
-                            {option}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="w-full">
+                      <Select
+                        onValueChange={(e) => filter.setOption(e)}
+                        value={filter.value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Any">
+                            {filter.value}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {filter.options.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <CardDescription className="ml-1 text-[13px]">
+                        Maximum Value
+                      </CardDescription>
+                    </div>
+                    <div className="w-full">
+                      <Select
+                        onValueChange={(e) => filter.setOption2(e)}
+                        value={filter.value2}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Any">
+                            {filter.value2}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {filter.options.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <CardDescription className="ml-1 text-[13px]">
+                        Minimum Value
+                      </CardDescription>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -324,38 +334,48 @@ export default function Page() {
                     {filter.label}
                   </p>
                   <div className="flex gap-4">
-                    <Select
-                      onValueChange={(e) => filter.setOption(e)}
-                      value={filter.value}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Any (Maximum)">
-                          {filter.value}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        {filter.options.map((option) => (
-                          <SelectItem key={option} value={option}>
-                            {option}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Select
-                      onValueChange={(e) => filter.setOption(e)}
-                      value={filter.value2}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Any (Maximum)">
-                          {filter.value2}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        {filter.options.map((option) => (
-                          <SelectItem key={option} value={option}>
-                            {option}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="w-full">
+                      <Select
+                        onValueChange={(e) => filter.setOption(e)}
+                        value={filter.value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Any">
+                            {filter.value}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {filter.options.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <CardDescription className="ml-1 text-[13px]">
+                        Maximum Value
+                      </CardDescription>
+                    </div>
+                    <div className="w-full">
+                      <Select
+                        onValueChange={(e) => filter.setOption2(e)}
+                        value={filter.value2}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Any">
+                            {filter.value2}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {filter.options.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <CardDescription className="ml-1 text-[13px]">
+                        Minimum Value
+                      </CardDescription>
+                    </div>
                   </div>
                 </div>
               ))}

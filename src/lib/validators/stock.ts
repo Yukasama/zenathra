@@ -11,6 +11,7 @@ export const UploadStockSchema = z.object({
 
 export const StockScreenerSchema = z.object({
   exchange: z.string(),
+  ticker: z.string(),
   sector: z.string(),
   industry: z.string(),
   country: z.string(),
