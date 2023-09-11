@@ -53,8 +53,9 @@ async function getIndexQuotes(): Promise<Quote[] | null> {
   }
 }
 
-async function getQuote(symbol: string): Promise<Quote | null> {
+async function getQuote(symbol: string | undefined): Promise<Quote | null> {
   try {
+    if (!symbol) return null;
     if (fmpConfig.simulation) return quote;
 
     const url = `${FMP_API_URL}v3/quote/${symbol}?apikey=${env.FMP_API_KEY}`;

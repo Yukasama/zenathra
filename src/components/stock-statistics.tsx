@@ -1,4 +1,4 @@
-import ChartBar from "./chart-bar";
+import ChartBar from "./charts/stock-margin-chart";
 import { Financials, Stock } from "@prisma/client";
 import { Years } from "@/lib/utils";
 import { StructureProps } from "@/types/layout";

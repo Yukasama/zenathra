@@ -1,4 +1,4 @@
-import { getDailys } from "@/lib/fmp/quote";
+import { getDailys, getQuote } from "@/lib/fmp/quote";
 import StockCardList from "@/components/stock-card-list";
 import IndexList from "@/components/index-list";
 import { IndexListLoading } from "@/components/index-list";
@@ -15,19 +15,22 @@ export default async function page() {
     getDailys("losers"),
   ]);
 
-  const highlight = await db.stock.findFirst({
-    select: { symbol: true, image: true, companyName: true },
-    where: { symbol: actives?.[0] ?? undefined },
-  });
+  const [quote, highlight] = await Promise.all([
+    getQuote(actives?.[0]),
+    db.stock.findFirst({
+      select: { image: true },
+      where: { symbol: actives?.[0] },
+    }),
+  ]);
 
   return (
     <PageLayout className="f-col gap-4 md:gap-7">
       <div className="f-col md:flex-row gap-4 md:gap-7">
-        {highlight && (
+        {quote && (
           <PriceChart
-            symbols={highlight.symbol}
-            title={highlight.symbol}
-            description={`Price Chart of ${highlight?.companyName}`}
+            symbols={quote.symbol}
+            title={quote.symbol}
+            description={`Price Chart of ${quote?.name}`}
             image={highlight?.image}
           />
         )}

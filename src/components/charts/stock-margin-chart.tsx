@@ -19,7 +19,7 @@ import {
 import { Chart } from "@/types/stock";
 import { useEffect, useState } from "react";
 
-export default function ChartBar({
+export default function StockMarginChart({
   title,
   description,
   data,
@@ -55,7 +55,7 @@ export default function ChartBar({
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="pv" fill="#8884d8" />
+            <Bar dataKey="pv" fill="#8884d8" label="Gross Margin" />
             <Bar dataKey="uv" fill="#82ca9d" />
           </BarChart>
         ) : (
