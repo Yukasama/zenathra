@@ -6,7 +6,6 @@ import Searchbar from "./searchbar";
 import { UserAccountNav } from "./user-account-nav";
 import SidebarToggle from "./sidebar-toggle";
 import { buttonVariants } from "../ui/button";
-import React from "react";
 import NavbarMenu from "./navbar-menu";
 import { cn } from "@/lib/utils";
 import { db } from "@/lib/db";
