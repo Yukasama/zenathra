@@ -104,7 +104,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
           </div>
         </Card>
       </DialogTrigger>
-      <DialogContent className="max-w-[375px]">
+      <DialogContent className="max-w-[375px] rounded-md">
         <DialogHeader>
           <DialogTitle>Create Portfolio</DialogTitle>
           <DialogDescription>

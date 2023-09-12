@@ -20,7 +20,7 @@ export const env = createEnv({
     GMAIL_EMAIL_ADDRESS: z.string().email(),
     GMAIL_APP_PASSWORD: z.string().nonempty(),
     SMTP_HOST: z.string().nonempty(),
-    SMTP_PORT: z.number().nonempty(),
+    SMTP_PORT: z.string().nonempty(),
     MAILTRAP_USER: z.string().nonempty(),
     MAILTRAP_PASSWORD: z.string().nonempty(),
     STRIPE_API_KEY: z.string().min(1),

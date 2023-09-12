@@ -7,7 +7,7 @@ import { db } from "./db";
 
 const transporter = nodemailer.createTransport({
   host: env.SMTP_HOST,
-  port: env.SMTP_PORT,
+  port: Number(env.SMTP_PORT),
   secure: true,
   auth: {
     user: env.MAILTRAP_USER,

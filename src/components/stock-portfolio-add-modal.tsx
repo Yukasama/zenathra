@@ -50,7 +50,7 @@ export default function StockPortfolioAddModal({
               <Plus className="h-4" />
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-[375px]">
+          <DialogContent className="rounded-md max-w-[375px]">
             <DialogHeader>
               <DialogTitle>Toggle {symbol}</DialogTitle>
               <DialogDescription>

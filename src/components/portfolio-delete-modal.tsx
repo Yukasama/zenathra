@@ -76,7 +76,7 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
           Delete
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[375px]">
+      <DialogContent className="max-w-[375px] rounded-md">
         <DialogHeader>
           <DialogTitle>
             <p className="w-54 truncate">

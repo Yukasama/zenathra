@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface History {
   date: string;
   open?: number;
@@ -39,7 +41,7 @@ export interface Quote {
   timestamp: number;
 }
 
-export interface Chart {
+export interface Chart extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
   description?: string;
   data: any[] | undefined;
