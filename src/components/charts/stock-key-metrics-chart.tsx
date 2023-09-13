@@ -1,14 +1,14 @@
 "use client";
 
 import {
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
+  LineChart,
+  Line,
 } from "recharts";
 import {
   Card,
@@ -34,15 +34,9 @@ const CustomTooltip = ({
     return (
       <Card className="p-2">
         <p className="text-[15px]">{label}</p>
-        <p className="text-sm text-[#19E363]">
-          {(payload[0].value * 100).toFixed(2)}%
-        </p>
-        <p className="text-sm text-[#2891e0]">
-          {(payload[1].value * 100).toFixed(2)}%
-        </p>
-        <p className="text-sm text-[#893ade]">
-          {(payload[2].value * 100).toFixed(2)}%
-        </p>
+        <p className="text-sm text-[#19E363]">{payload[0].value.toFixed(3)}</p>
+        <p className="text-sm text-[#2891e0]">{payload[1].value.toFixed(3)}</p>
+        <p className="text-sm text-[#893ade]">{payload[2].value.toFixed(3)}</p>
       </Card>
     );
   }
@@ -54,7 +48,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   companyName: string;
 }
 
-export default function StockMarginChart({
+export default function StockKeyMetricsChart({
   data,
   companyName,
   className,
@@ -72,14 +66,14 @@ export default function StockMarginChart({
         height: 350,
       }}>
       <CardHeader>
-        <CardTitle>Margins</CardTitle>
-        <CardDescription>Margin Data for {companyName}</CardDescription>
+        <CardTitle>Key Ratios</CardTitle>
+        <CardDescription>Important Metrics for {companyName}</CardDescription>
       </CardHeader>
       <CardContent>
         <Skeleton isLoaded={mounted} className="rounded-md">
           {mounted && (
             <ResponsiveContainer width="100%" height={250}>
-              <BarChart
+              <LineChart
                 width={500}
                 height={250}
                 data={data}
@@ -92,21 +86,34 @@ export default function StockMarginChart({
                 }}>
                 <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
                 <XAxis dataKey="name" fontSize={12} />
-                <YAxis
-                  fontSize={12}
-                  tickFormatter={(value) => `${(value * 100).toFixed(1)}%`}
-                />
+                <YAxis fontSize={12} />
                 {/* @ts-ignore */}
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="pv" fill="#27cc53" name="Gross M." />
-                <Bar dataKey="uv" fill="#2891e0" name="Operating M." />
-                <Bar dataKey="fv" fill="#893ade" name="Profit M." />
+                <Line
+                  type="monotone"
+                  dataKey="pv"
+                  stroke="#19E363"
+                  name="P/E Ratio"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="uv"
+                  stroke="#2891e0"
+                  name="EPS"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="fv"
+                  stroke="#893ade"
+                  name="P/B Ratio"
+                  dot
+                />
                 <Legend
                   height={32}
                   margin={{ left: 20 }}
                   wrapperStyle={{ fontSize: "14px" }}
                 />
-              </BarChart>
+              </LineChart>
             </ResponsiveContainer>
           )}
         </Skeleton>

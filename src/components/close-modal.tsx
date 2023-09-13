@@ -9,8 +9,8 @@ export default function CloseModal() {
 
   return (
     <Button
-      variant="ghost"
-      className="h-6 w-6 p-0 rounded-md"
+      variant="link"
+      size="xs"
       onClick={() => router.back()}
       aria-label="close-modal">
       <X className="w-4 h-4" />

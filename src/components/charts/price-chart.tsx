@@ -118,7 +118,7 @@ export default function PriceChart({
 
   return (
     <Card
-      className={cn(className, "w-full max-w-[600px]")}
+      className={cn(className, "w-full md:max-w-[600px]")}
       style={{
         height: (height || 250) + 100,
       }}>
@@ -194,7 +194,6 @@ export default function PriceChart({
                   stroke={pos ? "#19E363" : "#e6221e"}
                   fillOpacity={1}
                   fill="url(#colorUv)"
-                  name="Price"
                   animationDuration={500}
                 />
               </AreaChart>

@@ -9,6 +9,7 @@ import { startTransition } from "react";
 import { Button } from "./ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import { PortfolioWithStocks } from "@/types/db";
+import { Card } from "./ui/card";
 
 interface Props {
   portfolio: PortfolioWithStocks;
@@ -68,7 +69,7 @@ export default function StockPortfolioModifier({ portfolio, symbolId }: Props) {
     });
 
   return (
-    <div className="relative p-4 px-5 box">
+    <Card className="relative p-4 px-5">
       <p className="w-[250px] truncate font-semibold">{portfolio.title}</p>
       <p className="text-slate-400 text-[13px]">
         {portfolio.public ? "Public" : "Private"}
@@ -94,6 +95,6 @@ export default function StockPortfolioModifier({ portfolio, symbolId }: Props) {
           <Plus className="h-6" color="white" />
         </Button>
       )}
-    </div>
+    </Card>
   );
 }

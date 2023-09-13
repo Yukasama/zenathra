@@ -42,7 +42,7 @@ export default async function page({ params: { symbol } }: Props) {
   return (
     <PageLayout>
       <div className="w-full f-col gap-3">
-        <div className="flex gap-5">
+        <div className="flex f-col md:flex-row gap-5">
           <div className="relative f-col gap-2">
             <Suspense fallback={<StockPrice2Loading />}>
               {/* @ts-expect-error Server Component */}
@@ -57,7 +57,7 @@ export default async function page({ params: { symbol } }: Props) {
           <StockEye eye={stock.eye} session={session} />
         </div>
         <Separator />
-        <div className="flex gap-5">
+        <div className="flex f-col md:flex-row gap-5">
           <PriceChart
             symbols={symbol}
             title={`${symbol} Chart`}
