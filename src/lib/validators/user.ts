@@ -29,10 +29,9 @@ export const UserUpdatePasswordSchema = z.object({
   password: z.string().min(11, "Password must contain 11 or more characters."),
 });
 
-export const UserSendMailSchema = z.object({
+export const UserVerifyMailSchema = z.object({
   email: z.string().email(),
-  subject: z.string().nonempty(),
-  message: z.string().nonempty(),
+  userId: z.string().nonempty(),
 });
 
 export const UserForgotPasswordSchema = z.object({
@@ -49,7 +48,7 @@ export type UserUpdateEmailProps = z.infer<typeof UserUpdateEmailSchema>;
 
 export type UserUpdatePasswordProps = z.infer<typeof UserUpdatePasswordSchema>;
 
-export type UserSendMailProps = z.infer<typeof UserSendMailSchema>;
+export type UserVerifyMailProps = z.infer<typeof UserVerifyMailSchema>;
 
 export type UserForgotPasswordProps = z.infer<typeof UserForgotPasswordSchema>;
 
