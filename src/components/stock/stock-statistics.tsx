@@ -1,11 +1,11 @@
-import StockMarginChart from "./charts/stock-margin-chart";
+import StockMarginChart from "./stock-margin-chart";
 import { Stock } from "@prisma/client";
 import { Years } from "@/lib/utils";
 import { StructureProps } from "@/types/layout";
 import React from "react";
 import { db } from "@/lib/db";
-import StockKeyMetricsChart from "./charts/stock-key-metrics-chart";
-import StockDividendChart from "./charts/stock-dividend-chart";
+import StockKeyMetricsChart from "./stock-key-metrics-chart";
+import StockDividendChart from "./stock-dividend-chart";
 
 interface SharedProps extends React.HTMLAttributes<HTMLDivElement> {}
 

@@ -3,18 +3,21 @@ import { transporter } from "@/lib/mail";
 import {
   BadRequestResponse,
   InternalServerErrorResponse,
+  UnauthorizedResponse,
 } from "@/lib/response";
-import { UserVerifyMailSchema } from "@/lib/validators/user";
+import { UserMailSchema } from "@/lib/validators/user";
 import { z } from "zod";
 import bcryptjs from "bcryptjs";
 import { getAuthSession } from "@/lib/auth";
+import { env } from "@/env.mjs";
+import { tokenConfig } from "@/config/token";
 
 export async function POST(req: Request) {
   try {
     const session = await getAuthSession();
-    if (!session?.user) return new BadRequestResponse();
+    if (!session?.user) return new UnauthorizedResponse();
 
-    const { email, userId } = UserVerifyMailSchema.parse(await req.json());
+    const { email, userId } = UserMailSchema.parse(await req.json());
 
     const hashedToken = await bcryptjs.hash(userId.toString(), 10);
 
@@ -22,7 +25,7 @@ export async function POST(req: Request) {
       where: { id: userId },
       data: {
         verifyToken: hashedToken,
-        verifyTokenExpiry: new Date(Date.now() + 1000 * 60 * 60 * 24),
+        verifyTokenExpiry: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
       },
     });
 
@@ -30,7 +33,7 @@ export async function POST(req: Request) {
       from: "daszehntefragezeichen@gmail.com",
       to: email,
       subject: "Verify your email",
-      html: "Verify your email here",
+      html: `Verify your email here: ${env.VERCEL_URL}/verify-email?token=${hashedToken}`,
     };
 
     await transporter.sendMail(mailOptions);

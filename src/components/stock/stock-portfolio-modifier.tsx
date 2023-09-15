@@ -6,10 +6,10 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { startTransition } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import { PortfolioWithStocks } from "@/types/db";
-import { Card } from "./ui/card";
+import { Card } from "../ui/card";
 
 interface Props {
   portfolio: PortfolioWithStocks;

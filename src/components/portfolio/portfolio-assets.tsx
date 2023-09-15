@@ -5,7 +5,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+} from "../ui/card";
 import {
   Table,
   TableBody,
@@ -14,9 +14,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
+} from "../ui/table";
 import { getQuotes } from "@/lib/fmp/quote";
-import { StockImage } from "./stock-image";
+import { StockImage } from "../stock/stock-image";
 import PortfolioAddModal from "./portfolio-add-modal";
 import { Session } from "next-auth";
 import { PortfolioWithStocks } from "@/types/db";

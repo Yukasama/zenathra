@@ -119,7 +119,7 @@ export default function SignIn() {
                 )}
               />
               <Link
-                href="/auth/forgot-password"
+                href="/forgot-password"
                 className={cn(
                   buttonVariants({ variant: "link" }),
                   "text-[13px]"

@@ -2,7 +2,7 @@ import { Stock } from "@prisma/client";
 import { StructureProps } from "@/types/layout";
 import { ChevronsUp, ChevronsDown } from "lucide-react";
 import { getQuote } from "@/lib/fmp/quote";
-import { Card, CardDescription } from "./ui/card";
+import { Card, CardDescription } from "../ui/card";
 import { cn } from "@/lib/utils";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {

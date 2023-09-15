@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
@@ -50,6 +50,9 @@ dependencies:
   '@nextui-org/skeleton':
     specifier: ^2.0.16
     version: 2.0.16(react@18.2.0)(tailwindcss@3.3.2)
+  '@nextui-org/spinner':
+    specifier: ^2.0.18
+    version: 2.0.18(react@18.2.0)(tailwindcss@3.3.2)
   '@nextui-org/system':
     specifier: ^2.0.7
     version: 2.0.7(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.2)
@@ -705,6 +708,10 @@ packages:
     resolution: {integrity: sha512-BfbrN0/kh7qHoZYAh0bkV1w04Wngm+7K+soTZR4C3eSIxMMeu179CDELW+VCIBwdat4iSQaaJkHZVm8brtueNA==}
     dev: false
 
+  /@nextui-org/react-rsc-utils@2.0.8:
+    resolution: {integrity: sha512-x/yjFrAJX7Ev+OEHEjTEeX7CcdN1xNASFLYj0rtjly9kYf3zjG4lhMGPNXrhtoIsZbMEBJBOc58tk62cFZAUew==}
+    dev: false
+
   /@nextui-org/react-utils@2.0.7(react@18.2.0):
     resolution: {integrity: sha512-dN4vSf3h4BVIN6CVqaSCn2OUyDmGVWORgOsfA1k0z/r1XBwuxlfQIEnj8GTwbltnGkFrgj7PJ2RsuVzUs8Vt3g==}
     peerDependencies:
@@ -715,8 +722,26 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@nextui-org/react-utils@2.0.8(react@18.2.0):
+    resolution: {integrity: sha512-oqOYomtCue5Sg39r2xy7eJlcxDnhtC7/7lDRNDbAQjf0vDQ7mm2hhmo26CZqb9WFQ45hLHgzdzaan5cVW94NDg==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      '@nextui-org/react-rsc-utils': 2.0.8
+      '@nextui-org/shared-utils': 2.0.3(react@18.2.0)
+      react: 18.2.0
+    dev: false
+
   /@nextui-org/shared-utils@2.0.2(react@18.2.0):
     resolution: {integrity: sha512-tqWVoJtxYbd/hd/laHE85GaXP+b3HeE1tXYjnObbwM+JIh4uu2/Do7Av7mzzyXwS7sZvyHxhi3zW12oank2ykA==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      react: 18.2.0
+    dev: false
+
+  /@nextui-org/shared-utils@2.0.3(react@18.2.0):
+    resolution: {integrity: sha512-4Q4RfYU+fRUPbisjq6RYw3+oq4kn9nEp3eP5+0oD+nS9at8uSlovn7Kj3N2iz6clN6vVxxbyXi35DPTs63heRQ==}
     peerDependencies:
       react: '>=18'
     dependencies:
@@ -737,8 +762,34 @@ packages:
       - tailwindcss
     dev: false
 
+  /@nextui-org/spinner@2.0.18(react@18.2.0)(tailwindcss@3.3.2):
+    resolution: {integrity: sha512-Jg9MIuF64DrTjahWaWEQcFjLDzK63P1+Q6nBknEs10neHw+5U04NzSYD3rqe6LLUGVBIdMFjqhYVtPn8+mcdjg==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      '@nextui-org/react-utils': 2.0.8(react@18.2.0)
+      '@nextui-org/shared-utils': 2.0.3(react@18.2.0)
+      '@nextui-org/system-rsc': 2.0.5(react@18.2.0)(tailwindcss@3.3.2)
+      '@nextui-org/theme': 2.1.8(tailwindcss@3.3.2)
+      react: 18.2.0
+    transitivePeerDependencies:
+      - tailwindcss
+    dev: false
+
   /@nextui-org/system-rsc@2.0.4(react@18.2.0)(tailwindcss@3.3.2):
     resolution: {integrity: sha512-qC1AgyFsYizEXTXgrAYGe393FzwkcPmr96F35fKcXtqu9KcIXf4Eac0EpXqu3niYMtfQu1uN7WYGXSQABmoDDw==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      clsx: 1.2.1
+      react: 18.2.0
+      tailwind-variants: 0.1.14(tailwindcss@3.3.2)
+    transitivePeerDependencies:
+      - tailwindcss
+    dev: false
+
+  /@nextui-org/system-rsc@2.0.5(react@18.2.0)(tailwindcss@3.3.2):
+    resolution: {integrity: sha512-z9AM6qUcVa/ZFZn0YAe5WVkn0zQPOd8ido+qqZBUrjfoUcgu974H4tbdN69MCt6btaB7JXrlu3miA95K072LJw==}
     peerDependencies:
       react: '>=18'
     dependencies:
@@ -765,6 +816,31 @@ packages:
 
   /@nextui-org/theme@2.1.6(tailwindcss@3.3.2):
     resolution: {integrity: sha512-8QmH7SpZsSjbjaxkgZ8N6uUjQKOZjT0Vqi2VnPUejLoHGKgfgO+N48WsfXL7zBTYbfGmeOwpNL/68mztxGkwYQ==}
+    peerDependencies:
+      tailwindcss: '*'
+    dependencies:
+      '@types/color': 3.0.4
+      '@types/flat': 5.0.2
+      '@types/lodash.foreach': 4.5.7
+      '@types/lodash.get': 4.4.7
+      '@types/lodash.kebabcase': 4.1.7
+      '@types/lodash.mapkeys': 4.6.7
+      '@types/lodash.omit': 4.5.7
+      color: 4.2.3
+      color2k: 2.0.2
+      deepmerge: 4.3.1
+      flat: 5.0.2
+      lodash.foreach: 4.5.0
+      lodash.get: 4.4.2
+      lodash.kebabcase: 4.1.1
+      lodash.mapkeys: 4.6.0
+      lodash.omit: 4.5.0
+      tailwind-variants: 0.1.14(tailwindcss@3.3.2)
+      tailwindcss: 3.3.2
+    dev: false
+
+  /@nextui-org/theme@2.1.8(tailwindcss@3.3.2):
+    resolution: {integrity: sha512-OP3RVKpONxAYva2mM9EH1KTNBO9kYSuOoZQbUXgvxkb0j5mnJNPgiLQq1CnSjcmLR2SLhxzJdbmUlU7HYuDGdA==}
     peerDependencies:
       tailwindcss: '*'
     dependencies:

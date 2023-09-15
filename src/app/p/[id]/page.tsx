@@ -1,14 +1,14 @@
 import { Suspense } from "react";
 import Image from "next/image";
-import PortfolioAddModal from "@/components/portfolio-add-modal";
-import PriceChart from "@/components/charts/price-chart";
+import PortfolioAddModal from "@/components/portfolio/portfolio-add-modal";
+import PriceChart from "@/components/price-chart";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import PageLayout from "@/components/shared/page-layout";
-import PortfolioAssets from "@/components/portfolio-assets";
+import PortfolioAssets from "@/components/portfolio/portfolio-assets";
 import { PortfolioWithStocks } from "@/types/db";
-import PortfolioAllocation from "@/components/charts/portfolio-allocation";
+import PortfolioAllocation from "@/components/portfolio/portfolio-allocation";
 
 interface Props {
   params: { id: string };

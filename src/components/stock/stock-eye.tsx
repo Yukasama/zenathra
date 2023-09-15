@@ -1,6 +1,6 @@
 import { Lock } from "lucide-react";
 import type { Session } from "next-auth";
-import { Card } from "./ui/card";
+import { Card } from "../ui/card";
 
 interface Props {
   session: Session | null;

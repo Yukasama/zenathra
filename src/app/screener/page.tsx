@@ -33,7 +33,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import PageLayout from "@/components/shared/page-layout";
-import { StockImage } from "@/components/stock-image";
+import { StockImage } from "@/components/stock/stock-image";
 import { StockScreenerProps } from "@/lib/validators/stock";
 
 export default function Page() {

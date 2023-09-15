@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
 import { z } from "zod";
@@ -9,6 +8,10 @@ import {
   UnprocessableEntityResponse,
 } from "@/lib/response";
 import { UserSignUpSchema } from "@/lib/validators/user";
+import bcryptjs from "bcryptjs";
+import { transporter } from "@/lib/mail";
+import { env } from "@/env.mjs";
+import { tokenConfig } from "@/config/token";
 
 export async function POST(req: Request) {
   try {
@@ -25,14 +28,35 @@ export async function POST(req: Request) {
     if (existingUser)
       return new UnprocessableEntityResponse("Email is already registered");
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    // Hash password 12 times
+    const hashedPassword = await bcryptjs.hash(password, 12);
 
-    await db.user.create({
+    const createdUser = await db.user.create({
       data: {
         email,
         hashedPassword,
       },
     });
+
+    // Use the hashed user id as the verify token
+    const hashedToken = await bcryptjs.hash(createdUser.id.toString(), 10);
+
+    await db.user.update({
+      where: { id: createdUser.id },
+      data: {
+        verifyToken: hashedToken,
+        verifyTokenExpiry: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
+      },
+    });
+
+    const mailOptions = {
+      from: "daszehntefragezeichen@gmail.com",
+      to: email,
+      subject: "Verify your email",
+      html: `Verify your email here: ${env.VERCEL_URL}/verify-email?token=${hashedToken}`,
+    };
+
+    await transporter.sendMail(mailOptions);
 
     return new Response("OK");
   } catch (error) {

@@ -45,7 +45,7 @@ export default function ForgotPassword() {
 
   const { mutate: login, isLoading } = useMutation({
     mutationFn: async (data: UserForgotPasswordProps) => {
-      await axios.post("/api/auth/send-verification-mail", data);
+      await axios.post("/api/user/send-verification-mail", data);
       setSent(true);
     },
     onError: () => {

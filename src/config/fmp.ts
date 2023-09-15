@@ -1,3 +1,5 @@
+import "server-only";
+
 import { Quote } from "@/types/stock";
 import { env } from "@/env.mjs";
 

@@ -1,5 +1,5 @@
 import { Stock } from "@prisma/client";
-import { Card } from "./ui/card";
+import { Card } from "../ui/card";
 import { LineChart } from "lucide-react";
 
 interface Props {

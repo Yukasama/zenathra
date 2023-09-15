@@ -18,10 +18,10 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { StockHistoryProps } from "@/lib/validators/stock";
-import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { cn, computeDomain } from "@/lib/utils";
 import { Skeleton } from "@nextui-org/skeleton";
-import { StockImage } from "../stock-image";
+import { StockImage } from "./stock/stock-image";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
@@ -133,7 +133,7 @@ export default function PriceChart({
                 </CardTitle>
               </Skeleton>
               <Skeleton isLoaded={isFetched} className="rounded-md">
-                <CardDescription className="bg-card hidden md:flex">
+                <CardDescription className="bg-card hidden md:flex max-w-[200px] truncate">
                   {description}
                 </CardDescription>
               </Skeleton>

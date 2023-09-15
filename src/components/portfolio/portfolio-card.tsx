@@ -1,5 +1,5 @@
 import Link from "next/link";
-import StockList from "./stock-list";
+import StockList from "../stock/stock-list";
 import { Suspense } from "react";
 import {
   Card,
@@ -8,11 +8,11 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+} from "../ui/card";
 import PortfolioDeleteModal from "./portfolio-delete-modal";
 import { PortfolioWithStocks } from "@/types/db";
 import { db } from "@/lib/db";
-import { buttonVariants } from "./ui/button";
+import { buttonVariants } from "../ui/button";
 import { BarChart } from "lucide-react";
 
 interface Props {

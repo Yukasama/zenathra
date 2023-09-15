@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { startTransition, useCallback, useState } from "react";
 import { Prisma, Stock } from "@prisma/client";
@@ -10,7 +10,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Pencil, Plus, Trash } from "lucide-react";
 import debounce from "lodash.debounce";
-import { StockImage } from "./stock-image";
+import { StockImage } from "../stock/stock-image";
 import * as Command from "@/components/ui/command";
 import {
   Dialog,
@@ -19,7 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
+} from "../ui/dialog";
 import { PortfolioWithStocks } from "@/types/db";
 
 interface Props {

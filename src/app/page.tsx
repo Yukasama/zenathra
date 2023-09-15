@@ -1,12 +1,12 @@
 import { getDailys, getQuote } from "@/lib/fmp/quote";
-import StockCardList from "@/components/stock-card-list";
-import IndexList from "@/components/index-list";
-import { IndexListLoading } from "@/components/index-list";
-import { StockCardListLoading } from "@/components/stock-card-list";
+import StockCardList from "@/components/stock/stock-card-list";
+import IndexList from "@/components/stock/index-list";
+import { IndexListLoading } from "@/components/stock/index-list";
+import { StockCardListLoading } from "@/components/stock/stock-card-list";
 import { Suspense } from "react";
 import PageLayout from "@/components/shared/page-layout";
 import { db } from "@/lib/db";
-import PriceChart from "@/components/charts/price-chart";
+import PriceChart from "@/components/price-chart";
 
 export default async function page() {
   const [actives, winners, losers] = await Promise.all([

@@ -7,7 +7,7 @@ import { getQuote } from "@/lib/fmp/quote";
 import { StockImage } from "./stock-image";
 import { Stock } from "@prisma/client";
 import { db } from "@/lib/db";
-import { Card } from "./ui/card";
+import { Card } from "../ui/card";
 import StockPortfolioAddModal from "./stock-portfolio-add-modal";
 
 function Structure({ className, isLoading, children }: StructureProps) {

@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { startTransition } from "react";
-import { Button, buttonVariants } from "./ui/button";
-import { Checkbox } from "./ui/checkbox";
-import { Input } from "./ui/input";
+import { Button, buttonVariants } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
+import { Input } from "../ui/input";
 import { Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import {
@@ -23,8 +23,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
-import { Card } from "./ui/card";
+} from "../ui/dialog";
+import { Card } from "../ui/card";
 import {
   Form,
   FormField,
@@ -33,7 +33,7 @@ import {
   FormControl,
   FormDescription,
   FormMessage,
-} from "./ui/form";
+} from "../ui/form";
 
 interface Props {
   numberOfPortfolios?: number;
@@ -52,22 +52,6 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
 
   const { mutate: createPortfolio, isLoading } = useMutation({
     mutationFn: async (data: CreatePortfolioProps) => {
-      if (data.title.length < 1)
-        return toast({
-          title: "Oops! Something went wrong.",
-          description: "Please choose a longer title.",
-        });
-      if (data.title.length > 30)
-        return toast({
-          title: "Oops! Something went wrong.",
-          description: "Please choose a shorter title.",
-        });
-      if (numberOfPortfolios >= 3)
-        return toast({
-          title: "Oops! Something went wrong.",
-          description: "Maximum number of portfolios reached.",
-        });
-
       await axios.post("/api/portfolio/create", { ...data });
     },
     onError: () => {
@@ -87,6 +71,22 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
   });
 
   function onSubmit(data: FieldValues) {
+    if (data.title.length < 1)
+      return toast({
+        title: "Oops! Something went wrong.",
+        description: "Please choose a longer title.",
+      });
+    if (data.title.length > 30)
+      return toast({
+        title: "Oops! Something went wrong.",
+        description: "Please choose a shorter title.",
+      });
+    if (numberOfPortfolios >= 3)
+      return toast({
+        title: "Oops! Something went wrong.",
+        description: "Maximum number of portfolios reached.",
+      });
+
     const payload: CreatePortfolioProps = {
       title: data.title,
       publicPortfolio: data.publicPortfolio,

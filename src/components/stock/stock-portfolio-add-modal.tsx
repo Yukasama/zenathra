@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import type { Session } from "next-auth";
 import { Plus } from "lucide-react";
 import { useCustomToasts } from "@/hooks/use-custom-toasts";
@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "./ui/dialog";
+} from "../ui/dialog";
 import StockPortfolioModifier from "./stock-portfolio-modifier";
 
 interface Props {

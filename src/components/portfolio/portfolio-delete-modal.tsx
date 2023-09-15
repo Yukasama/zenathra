@@ -2,7 +2,7 @@
 
 import { Portfolio } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { startTransition, useState } from "react";
 import axios from "axios";
 import { toast } from "@/hooks/use-toast";
@@ -18,9 +18,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import { CardDescription } from "./ui/card";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { CardDescription } from "../ui/card";
 
 type Props = {
   portfolio: Pick<Portfolio, "id" | "title">;
@@ -79,9 +79,7 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
       <DialogContent className="max-w-[375px] rounded-md">
         <DialogHeader>
           <DialogTitle>
-            <p className="w-54 truncate">
-              Delete Portfolio {portfolio.title}?
-            </p>
+            <p className="w-54 truncate">Delete Portfolio {portfolio.title}?</p>
           </DialogTitle>
           <DialogDescription>This action cannot be undone.</DialogDescription>
         </DialogHeader>

@@ -64,7 +64,7 @@ export default function SignUp() {
     mutationFn: async (data: UserSignUpProps) => {
       await axios.post("/api/user/sign-up", { ...data });
     },
-    onError: () => {
+    onError: (err) => {
       toast({
         title: "Oops! Something went wrong.",
         description: `Please check your credentials and try again.`,

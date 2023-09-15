@@ -1,10 +1,12 @@
-import StockList from "@/components/stock-list";
-import StockMetrics from "@/components/stock-metrics";
-import StockEye from "@/components/stock-eye";
+import StockList from "@/components/stock/stock-list";
+import StockMetrics from "@/components/stock/stock-metrics";
+import StockEye from "@/components/stock/stock-eye";
 import StockAfterHours, {
   StockAfterHoursLoading,
-} from "@/components/stock-after-hours";
-import StockPrice2, { StockPrice2Loading } from "@/components/stock-price-2";
+} from "@/components/stock/stock-after-hours";
+import StockPrice2, {
+  StockPrice2Loading,
+} from "@/components/stock/stock-price-2";
 import { Suspense } from "react";
 import { getAuthSession } from "@/lib/auth";
 import { notFound } from "next/navigation";
@@ -12,8 +14,8 @@ import { db } from "@/lib/db";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import PageLayout from "@/components/shared/page-layout";
-import StockStatistics from "@/components/stock-statistics";
-import PriceChart from "@/components/charts/price-chart";
+import StockStatistics from "@/components/stock/stock-statistics";
+import PriceChart from "@/components/price-chart";
 
 export async function generateStaticParams() {
   const data = await db.stock.findMany({

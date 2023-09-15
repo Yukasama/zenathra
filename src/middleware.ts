@@ -10,12 +10,16 @@ export default withAuth(
 
     const isAuth = !!token;
 
-    const isAuthPage = ["/sign-in", "/sign-up", "/forgot-password"];
-
-    const userRoutes = [/^\/account(\/.*)?$/];
+    const authRoutes = [
+      "/sign-in",
+      "/sign-up",
+      "/forgot-password",
+      "/reset-password",
+    ];
+    const userRoutes = ["/portfolio", "/settings"];
     const adminRoutes = [/^\/admin(\/.*)?$/, /^\/api\/admin(\/.*)?$/];
 
-    if (isAuthPage.includes(path)) {
+    if (authRoutes.includes(path)) {
       if (isAuth) return NextResponse.redirect(new URL("/", req.url));
       return null;
     }
@@ -23,7 +27,7 @@ export default withAuth(
     if (
       !isAuth &&
       (adminRoutes.some((route) => route.test(path)) ||
-        userRoutes.some((route) => route.test(path)))
+        userRoutes.includes(path))
     ) {
       let from = path;
       if (req.nextUrl.search) from += req.nextUrl.search;

@@ -6,7 +6,6 @@ import { env } from "@/env.mjs";
 export const transporter = createTransport({
   host: env.SMTP_HOST,
   port: Number(env.SMTP_PORT),
-  secure: true,
   auth: {
     user: env.MAILTRAP_USER,
     pass: env.MAILTRAP_PASSWORD,

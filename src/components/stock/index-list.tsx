@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+} from "../ui/card";
 
 export const IndexListLoading = () => {
   return <div className="animate-pulse-right flex min-h-[450px] flex-1"></div>;

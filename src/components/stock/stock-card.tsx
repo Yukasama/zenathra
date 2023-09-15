@@ -8,10 +8,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+} from "../ui/card";
 import { StockImage } from "./stock-image";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "./ui/button";
+import { buttonVariants } from "../ui/button";
 import React from "react";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {

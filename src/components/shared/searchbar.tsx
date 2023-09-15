@@ -8,7 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useOnClickOutside } from "@/hooks/use-on-click-outside";
 import Link from "next/link";
-import { StockImage } from "../stock-image";
+import { StockImage } from "../stock/stock-image";
 import {
   Command,
   CommandInput,
