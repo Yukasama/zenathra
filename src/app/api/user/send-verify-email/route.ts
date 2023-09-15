@@ -33,7 +33,7 @@ export async function POST(req: Request) {
       from: "daszehntefragezeichen@gmail.com",
       to: email,
       subject: "Verify your email",
-      html: `Verify your email here: ${env.VERCEL_URL}/verify-email?token=${hashedToken}`,
+      html: `Verify your email here: ${env.NEXT_PUBLIC_VERCEL_URL}verify-email?token=${hashedToken}`,
     };
 
     await transporter.sendMail(mailOptions);

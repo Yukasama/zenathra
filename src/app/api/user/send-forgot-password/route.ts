@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       from: "daszehntefragezeichen@gmail.com",
       to: email,
       subject: "Reset your password",
-      html: `Reset your password here: ${env.VERCEL_URL}/reset-password?token=${hashedToken}`,
+      html: `Reset your password here: ${env.NEXT_PUBLIC_VERCEL_URL}reset-password?token=${hashedToken}`,
     };
 
     await transporter.sendMail(mailOptions);
