@@ -18,8 +18,8 @@ import {
 import { getQuotes } from "@/lib/fmp/quote";
 import { StockImage } from "../stock/stock-image";
 import PortfolioAddModal from "./portfolio-add-modal";
-import { Session } from "next-auth";
 import { PortfolioWithStocks } from "@/types/db";
+import { Session } from "next-auth";
 
 interface Props {
   symbols: string[];
@@ -52,7 +52,9 @@ export default async function PortfolioAssets({
             <CardTitle>Assets</CardTitle>
             <CardDescription>Positions in your portfolio</CardDescription>
           </div>
-          <PortfolioAddModal portfolio={portfolio} />
+          {portfolio.creatorId === session?.user.id && (
+            <PortfolioAddModal portfolio={portfolio} />
+          )}
         </div>
       </CardHeader>
       <CardContent>

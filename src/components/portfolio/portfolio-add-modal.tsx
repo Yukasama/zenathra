@@ -120,7 +120,7 @@ export default function PortfolioAddModal({ portfolio }: Props) {
         <Command
           ref={commandRef}
           key={results?.length}
-          className="rounded-lg border">
+          className="rounded-md border">
           <CommandInput
             isLoading={isFetching}
             onValueChange={(text) => {

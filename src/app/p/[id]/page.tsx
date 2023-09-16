@@ -114,6 +114,7 @@ export default async function page({ params: { id } }: Props) {
                   stockIds: stockIds.map((s) => s.stockId),
                 }}
                 symbols={stocks.map((s) => s.symbol)}
+                session={session}
               />
             </Suspense>
           </div>
