@@ -4,6 +4,9 @@ import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
 import PageLayout from "@/components/shared/page-layout";
 import { noSub } from "@/config/subscription";
+import GridLayout from "@/components/shared/grid-layout";
+import { Suspense } from "react";
+import { Card } from "@/components/ui/card";
 
 export default async function page() {
   const session = await getAuthSession();
@@ -30,12 +33,13 @@ export default async function page() {
 
   return (
     <PageLayout title="My Portfolios" description="Manage your portfolios here">
-      <div className="f-col gap-6 md:grid md:grid-cols-2 xl:gap-8 xl:grid-cols-3">
+      <GridLayout>
         {flattenedPortfolios.map((portfolio) => (
-          <>
+          <Suspense
+            key={portfolio.id}
+            fallback={<Card className="animate-pulse-right min-h-72" />}>
             {/* @ts-expect-error Server Component */}
             <PortfolioCard
-              key={portfolio.id}
               portfolio={{
                 title: portfolio.title,
                 id: portfolio.id,
@@ -43,12 +47,12 @@ export default async function page() {
                 stockIds: portfolio.stockIds.map((stock) => stock.stockId),
               }}
             />
-          </>
+          </Suspense>
         ))}
         {(subscription || portfolios.length < noSub.maxPortfolios) && (
           <PortfolioCreateCard numberOfPortfolios={portfolios.length} />
         )}
-      </div>
+      </GridLayout>
     </PageLayout>
   );
 }

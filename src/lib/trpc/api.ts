@@ -13,6 +13,7 @@ export const api = createTRPCNextAppDirServer<typeof appRouter>({
       transformer: SuperJSON,
       links: [
         loggerLink({
+          // eslint-disable-next-line no-unused-vars
           enabled: (op) => true,
         }),
         nextCacheLink({

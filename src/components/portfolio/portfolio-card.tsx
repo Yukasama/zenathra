@@ -14,6 +14,7 @@ import { PortfolioWithStocks } from "@/types/db";
 import { db } from "@/lib/db";
 import { buttonVariants } from "../ui/button";
 import { BarChart } from "lucide-react";
+import PortfolioAddModal from "./portfolio-add-modal";
 
 interface Props {
   portfolio: Pick<PortfolioWithStocks, "id" | "title" | "public" | "stockIds">;
@@ -28,15 +29,23 @@ export default async function PortfolioCard({ portfolio }: Props) {
   });
 
   return (
-    <Card className="f-col justify-between">
+    <Card className="f-col justify-between min-h-72">
       <CardHeader>
-        <CardTitle>{portfolio.title}</CardTitle>
-        <CardDescription>
-          {portfolio.public ? "Public" : "Private"}
-        </CardDescription>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>{portfolio.title}</CardTitle>
+            <CardDescription>
+              {portfolio.public ? "Public" : "Private"}
+            </CardDescription>
+          </div>
+          <PortfolioAddModal portfolio={portfolio} />
+        </div>
       </CardHeader>
       <CardContent>
-        <Suspense fallback={<p>Loading...</p>}>
+        <Suspense
+          fallback={[...Array(3)].map((_, i) => (
+            <Card key={i} className="animate-pulse-right h-12 p-2 mb-2" />
+          ))}>
           {/* @ts-expect-error Server Component */}
           <StockList
             symbols={symbols.map((s) => s.symbol)}

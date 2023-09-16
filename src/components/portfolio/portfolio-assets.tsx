@@ -39,17 +39,15 @@ export default async function PortfolioAssets({
     getQuotes(symbols),
   ]);
 
-  const results = stocks
-    .map((stock) => ({
-      ...stock,
-      ...quotes?.find((q) => q.symbol === stock.symbol),
-    }))
-    .slice(0, 3);
+  const results = stocks.map((stock) => ({
+    ...stock,
+    ...quotes?.find((q) => q.symbol === stock.symbol),
+  }));
 
   return (
-    <Card>
+    <Card className="w-full">
       <CardHeader>
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between">
           <div>
             <CardTitle>Assets</CardTitle>
             <CardDescription>Positions in your portfolio</CardDescription>

@@ -46,7 +46,7 @@ function NoStocks({ portfolio }: NoStockProps) {
     <div>
       <div>
         <Image
-          src="/images/nostocks.png"
+          src="/nostocks.png"
           height={500}
           width={700}
           alt="No Stocks"

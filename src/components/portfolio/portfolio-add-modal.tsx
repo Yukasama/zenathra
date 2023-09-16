@@ -2,16 +2,23 @@
 
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { startTransition, useCallback, useState } from "react";
+import { startTransition, useCallback, useRef, useState } from "react";
 import { Prisma, Stock } from "@prisma/client";
 import { toast } from "@/hooks/use-toast";
 import { ModifySymbolsPortfolioProps } from "@/lib/validators/portfolio";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Pencil, Plus, Trash } from "lucide-react";
+import { ListPlus, ListX, Pencil, Plus } from "lucide-react";
 import debounce from "lodash.debounce";
 import { StockImage } from "../stock/stock-image";
-import * as Command from "@/components/ui/command";
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "@/components/ui/command";
 import {
   Dialog,
   DialogContent,
@@ -23,13 +30,13 @@ import {
 import { PortfolioWithStocks } from "@/types/db";
 
 interface Props {
-  portfolio: PortfolioWithStocks;
+  portfolio: Pick<PortfolioWithStocks, "id" | "title" | "stockIds">;
 }
 
 export default function PortfolioAddModal({ portfolio }: Props) {
-  const [search, setSearch] = useState("");
+  const [input, setInput] = useState<string>("");
+  const commandRef = useRef<HTMLDivElement>(null);
   const [selected, setSelected] = useState<string[]>([]);
-
   const router = useRouter();
 
   const request = debounce(async () => {
@@ -49,8 +56,8 @@ export default function PortfolioAddModal({ portfolio }: Props) {
     isFetched,
   } = useQuery({
     queryFn: async () => {
-      if (!search) return [];
-      const { data } = await axios.get(`/api/stock/search?q=${search}`);
+      if (!input) return [];
+      const { data } = await axios.get(`/api/stock/search?q=${input}`);
       const results = data as (Stock & {
         _count: Prisma.StockCountOutputType;
       })[];
@@ -90,6 +97,11 @@ export default function PortfolioAddModal({ portfolio }: Props) {
     addToPortfolio();
   }
 
+  function modifyPortfolio(id: string) {
+    if (selected.includes(id)) setSelected(selected.filter((s) => s !== id));
+    else setSelected([...selected, id]);
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -100,89 +112,76 @@ export default function PortfolioAddModal({ portfolio }: Props) {
       </DialogTrigger>
       <DialogContent className="max-w-[375px] rounded-md">
         <DialogHeader>
-          <DialogTitle>Modify Stock Portfolio</DialogTitle>
+          <DialogTitle>Modify {portfolio.title}</DialogTitle>
           <DialogDescription>
             Here you can add or remove stocks
           </DialogDescription>
         </DialogHeader>
-        <Command.Command className="relative rounded-lg max-w-lg z-50 overflow-visible">
-          <Command.CommandInput
+        <Command
+          ref={commandRef}
+          key={results?.length}
+          className="rounded-lg border">
+          <CommandInput
             isLoading={isFetching}
             onValueChange={(text) => {
-              setSearch(text);
+              setInput(text);
               debounceRequest();
             }}
-            value={search}
-            className="outline-none border-none focus:border-none focus:outline-none ring-0"
+            value={input}
             placeholder="Search stocks..."
           />
 
-          {search.length > 0 && (
-            <Command.CommandList className="top-full border bg-card inset-x-0 shadow rounded-b-md">
-              {isFetched && (
-                <Command.CommandEmpty>No results found.</Command.CommandEmpty>
-              )}
+          {input.length > 0 && (
+            <CommandList key={results?.length}>
               {isFetching && (
-                <Command.CommandEmpty>
+                <CommandEmpty>
                   {[...Array(4)].map((_, i) => (
                     <div
                       key={i}
                       className="animate-pulse-right h-12 rounded-md p-1 px-2"
                     />
                   ))}
-                </Command.CommandEmpty>
+                </CommandEmpty>
               )}
-              {(results?.length ?? 0) > 0 && (
-                <Command.CommandGroup heading="Stocks">
+              {isFetched && !results?.length && (
+                <CommandEmpty>No results found.</CommandEmpty>
+              )}
+              {isFetched && (results?.length ?? 0) > 0 && (
+                <CommandGroup heading="Stocks">
                   {results?.map((result) => (
-                    <Command.CommandItem key={result.symbol}>
+                    <CommandItem
+                      key={result.id}
+                      onSelect={() => modifyPortfolio(result.id)}
+                      className="flex items-center justify-between cursor-pointer">
                       <div className="flex items-center gap-2">
                         <StockImage src={result.image} px={30} />
                         <div className="f-col">
                           <p className="text-sm font-medium">{result.symbol}</p>
-                          <p className="w-[250px] text-[12px] text-slate-600">
+                          <p className="w-[200px] text-[12px] text-slate-600">
                             {result.companyName}
                           </p>
                         </div>
                       </div>
-                      <div>
-                        {selected.includes(result.symbol) ? (
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() =>
-                              setSelected(
-                                selected.filter((s) => s !== result.symbol)
-                              )
-                            }>
-                            <Trash className="h-4 w-4" />
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="subtle"
-                            size="sm"
-                            onClick={() =>
-                              setSelected([...selected, result.symbol])
-                            }>
-                            <Plus className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </Command.CommandItem>
+                      {selected.includes(result.id) ? (
+                        <div className="h-10 w-10 border bg-card f-box bg-red-500 rounded-md">
+                          <ListX className="h-4 w-4" />
+                        </div>
+                      ) : (
+                        <div className="h-10 w-10 border bg-card f-box bg-green-500 rounded-md">
+                          <ListPlus className="h-4 w-4" />
+                        </div>
+                      )}
+                    </CommandItem>
                   ))}
-                </Command.CommandGroup>
+                </CommandGroup>
               )}
-            </Command.CommandList>
+            </CommandList>
           )}
-          <Button
-            className="mt-3"
-            variant="subtle"
-            isLoading={isLoading}
-            onClick={onSubmit}>
-            <Plus className="h-4 w-4" />
-            Add to Portfolio
-          </Button>
-        </Command.Command>
+        </Command>
+        <Button variant="subtle" isLoading={isLoading} onClick={onSubmit}>
+          <Plus className="h-4 w-4" />
+          Add to Portfolio
+        </Button>
       </DialogContent>
     </Dialog>
   );

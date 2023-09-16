@@ -10,7 +10,7 @@ export default function CompanyLogo({ px, className }: Props) {
   return (
     <Image
       className={cn("rounded-full", className)}
-      src="/images/logo.png"
+      src="/logo.png"
       width={px}
       height={px}
       alt={`${site.name} Logo`}

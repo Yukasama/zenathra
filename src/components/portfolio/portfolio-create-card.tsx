@@ -34,6 +34,8 @@ import {
   FormDescription,
   FormMessage,
 } from "../ui/form";
+import { motion } from "framer-motion";
+import { animationVariants } from "@/config/motion";
 
 interface Props {
   numberOfPortfolios?: number;
@@ -98,11 +100,22 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Card className="f-box cursor-pointer min-h-[240px] hover:bg-slate-100 dark:hover:bg-slate-900">
-          <div className={cn(buttonVariants({ size: "sm" }), "bg-primary")}>
-            <Plus />
-          </div>
-        </Card>
+        <motion.div
+          variants={animationVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          whileTap="tap">
+          <Card className="f-box cursor-pointer min-h-72 hover:bg-slate-100 dark:hover:bg-slate-900">
+            <div
+              className={cn(
+                buttonVariants({ size: "sm" }),
+                "bg-primary hover:bg-primary"
+              )}>
+              <Plus />
+            </div>
+          </Card>
+        </motion.div>
       </DialogTrigger>
       <DialogContent className="max-w-[375px] rounded-md">
         <DialogHeader>

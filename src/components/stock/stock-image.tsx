@@ -24,7 +24,7 @@ export function StockImage({
       {...props}>
       <Image
         className="p-1"
-        src={src ?? "/images/stock.jpg"}
+        src={src ?? "/stock.jpg"}
         height={px}
         width={px}
         alt="Stock Logo"
