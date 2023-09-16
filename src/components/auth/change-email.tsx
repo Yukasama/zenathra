@@ -119,7 +119,7 @@ export default function ChangeEmail() {
               )}
             />
             <Button variant="subtle" isLoading={isLoading}>
-              <ArrowRightCircle className="h-4" />
+              <ArrowRightCircle className="h-4 w-4" />
               Change Email
             </Button>
           </form>

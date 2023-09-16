@@ -25,8 +25,8 @@ export const UserUpdateEmailSchema = z.object({
 });
 
 export const UserUpdatePasswordSchema = z.object({
-  oldPassword: z.string().min(1, "Please enter a valid password."),
   password: z.string().min(11, "Password must contain 11 or more characters."),
+  token: z.string().nonempty(),
 });
 
 export const UserMailSchema = z.object({
@@ -48,7 +48,7 @@ export type UserUpdateEmailProps = z.infer<typeof UserUpdateEmailSchema>;
 
 export type UserUpdatePasswordProps = z.infer<typeof UserUpdatePasswordSchema>;
 
-export type UserVerifyMailProps = z.infer<typeof UserMailSchema>;
+export type UserMailProps = z.infer<typeof UserMailSchema>;
 
 export type UserForgotPasswordProps = z.infer<typeof UserForgotPasswordSchema>;
 

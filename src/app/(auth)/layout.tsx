@@ -16,7 +16,7 @@ export default function Layout({ children }: Props) {
           buttonVariants({ variant: "subtle" }),
           "absolute top-4 left-4"
         )}>
-        <ArrowLeft className="h-4" />
+        <ArrowLeft className="h-4 w-4" />
         Back
       </Link>
       {children}

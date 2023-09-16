@@ -10,6 +10,7 @@ import {
   Layers,
   Trash2,
   LockIcon,
+  Undo2,
 } from "lucide-react";
 import type { Session } from "next-auth";
 import {
@@ -25,6 +26,12 @@ import { Separator } from "./ui/separator";
 import { UserAvatar } from "./shared/user-avatar";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import dynamic from "next/dynamic";
+import { toast } from "@/hooks/use-toast";
+import { UserMailProps } from "@/lib/validators/user";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { startTransition } from "react";
 
 interface Props {
   session: Session | null;
@@ -35,15 +42,33 @@ const ChangeEmail = dynamic(() => import("./auth/change-email"), {
   ssr: false,
 });
 
-const ChangePassword = dynamic(() => import("./auth/change-password"), {
-  ssr: false,
-});
-
 const ChangeUsername = dynamic(() => import("./auth/change-username"), {
   ssr: false,
 });
 
 export default function AccountSettings({ session }: Props) {
+  const router = useRouter();
+
+  const { mutate: sendResetMail, isLoading } = useMutation({
+    mutationFn: async (payload: UserMailProps) => {
+      await axios.post("/api/user/send-reset-password", payload);
+    },
+    onError: () => {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: `Could not send reset password mail.`,
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      startTransition(() => router.refresh());
+
+      toast({
+        description: "Password reset mail sent.",
+      });
+    },
+  });
+
   const tabs = [
     {
       id: "personal",
@@ -95,14 +120,6 @@ export default function AccountSettings({ session }: Props) {
       title: "E-Mail",
       value: session?.user.email || null,
       form: <ChangeEmail />,
-    },
-  ];
-
-  const security = [
-    {
-      title: "Password",
-      value: "*********",
-      form: <ChangePassword />,
     },
   ];
 
@@ -178,21 +195,26 @@ export default function AccountSettings({ session }: Props) {
             <CardDescription>Manage your security procedures</CardDescription>
           </CardHeader>
           <CardContent>
-            {security.map((section) => (
-              <Sheet key={section.title}>
-                <SheetTrigger className="h-20 flex items-center justify-between rounded-md w-full hover:bg-slate-100 dark:hover:bg-slate-900 px-3 gap-6">
-                  <div className="w-[60px] text-start font-light text-slate-400">
-                    {section.title}
-                  </div>
-                  <div className="w-[200px] text-start sm:max-w-[250px] truncate">
-                    {section.value}
-                  </div>
-                  <ChevronRight className="h-5 w-5" />
-                </SheetTrigger>
-                {section.title !== "E-Mail" && <Separator className="my-1" />}
-                <SheetContent>{section.form}</SheetContent>
-              </Sheet>
-            ))}
+            <Card className="h-20 flex items-center justify-between rounded-md w-full px-3 gap-6">
+              <div className="w-[60px] text-start font-light text-slate-400">
+                Password
+              </div>
+              <div className="w-[200px] text-center sm:max-w-[250px] truncate">
+                *********
+              </div>
+              <Button
+                variant="subtle"
+                isLoading={isLoading}
+                onClick={() =>
+                  sendResetMail({
+                    email: session?.user.email!,
+                    userId: session?.user.id!,
+                  })
+                }>
+                <Undo2 className="h-4 w-4" />
+                Reset
+              </Button>
+            </Card>
           </CardContent>
         </Card>
       </TabsContent>

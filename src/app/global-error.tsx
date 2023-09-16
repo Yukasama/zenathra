@@ -20,7 +20,7 @@ export default function GlobalError({ reset }: Props) {
               There was an error on our end.
             </p>
             <Button variant="subtle" onClick={() => reset()}>
-              <RotateCw className="h-4" />
+              <RotateCw className="h-4 w-4" />
               Try again
             </Button>
           </div>

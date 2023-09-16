@@ -34,7 +34,7 @@ export default function SidebarPortableClient({ session }: Props) {
         open ? "opacity-100 z-30" : "-z-20"
       } hiding-sidebar`}>
       <Card
-        className={`sidebar fixed ${
+        className={`sidebar w-80 fixed ${
           open ? "translate-x-0" : "-translate-x-96"
         } h-screen duration-300 rounded-none z-30`}>
         <CardHeader>

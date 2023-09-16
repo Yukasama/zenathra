@@ -64,7 +64,7 @@ export default function SignUp() {
     mutationFn: async (data: UserSignUpProps) => {
       await axios.post("/api/user/sign-up", { ...data });
     },
-    onError: (err) => {
+    onError: () => {
       toast({
         title: "Oops! Something went wrong.",
         description: `Please check your credentials and try again.`,
@@ -168,7 +168,7 @@ export default function SignUp() {
             <Button
               className="bg-primary hover:bg-primary/70 mt-3"
               isLoading={isLoading}>
-              <LogIn className="h-4" />
+              <LogIn className="h-4 w-4" />
               Sign Up
             </Button>
           </form>

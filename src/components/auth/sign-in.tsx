@@ -131,7 +131,7 @@ export default function SignIn() {
             <Button
               className="bg-primary hover:bg-primary/70 mt-3"
               isLoading={isLoading}>
-              <LogIn className="h-4" />
+              <LogIn className="h-4 w-4" />
               Sign In
             </Button>
           </form>

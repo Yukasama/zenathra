@@ -30,7 +30,7 @@ export default function Page() {
     mutationFn: async () => {
       await axios.post("/api/user/verify-email", { token });
     },
-    onError: (err) => {
+    onError: () => {
       toast({
         title: "Oops! Something went wrong.",
         description: `Email verification not found or no longer active.`,

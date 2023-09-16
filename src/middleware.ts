@@ -14,7 +14,6 @@ export default withAuth(
       "/sign-in",
       "/sign-up",
       "/forgot-password",
-      "/reset-password",
     ];
     const userRoutes = ["/portfolio", "/settings"];
     const adminRoutes = [/^\/admin(\/.*)?$/, /^\/api\/admin(\/.*)?$/];

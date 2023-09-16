@@ -50,7 +50,7 @@ export default async function PortfolioCard({ portfolio }: Props) {
         <Link
           href={`/p/${portfolio.id}`}
           className={buttonVariants({ variant: "subtle" })}>
-          <BarChart className="h-4" />
+          <BarChart className="h-4 w-4" />
           View
         </Link>
         <PortfolioDeleteModal

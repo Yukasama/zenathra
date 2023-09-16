@@ -14,7 +14,7 @@ import {
 } from "@/config/screener";
 import { Prisma, Stock } from "@prisma/client";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { BarChart2, FileText, Layers, RotateCcw, Search } from "lucide-react";
+import { BarChart2, FileText, Layers, RotateCcw } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -203,7 +203,7 @@ export default function Page() {
         variant="subtle"
         onClick={() => resetFilters()}
         className="absolute bottom-4 lg:bottom-7">
-        <RotateCcw className="h-4" />
+        <RotateCcw className="h-4 w-4" />
         Reset Filters
       </Button>
       <Tabs defaultValue="descriptive">

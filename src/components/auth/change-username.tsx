@@ -123,7 +123,7 @@ export default function ChangeUsername() {
               )}
             />
             <Button className="mt-4" variant="subtle" isLoading={isLoading}>
-              <ArrowRightCircle className="h-4" />
+              <ArrowRightCircle className="h-4 w-4" />
               Change Username
             </Button>
           </form>
