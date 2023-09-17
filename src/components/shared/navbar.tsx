@@ -9,19 +9,31 @@ import { buttonVariants } from "../ui/button";
 import NavbarMenu from "./navbar-menu";
 import { cn } from "@/lib/utils";
 import { db } from "@/lib/db";
+import _ from "lodash";
 
 export default async function Navbar() {
   const session = await getAuthSession();
 
-  const user = await db.user.findFirst({
-    select: { role: true },
-    where: { id: session?.user?.id },
-  });
+  const [user, recentStocks] = await Promise.all([
+    db.user.findFirst({
+      select: { role: true },
+      where: { id: session?.user?.id },
+    }),
+    db.userRecentStocks.findMany({
+      select: {
+        stock: { select: { symbol: true, image: true, companyName: true } },
+      },
+      where: { userId: session?.user?.id },
+      take: 10,
+    }),
+  ]);
+
+  const uniqueStocks = _.uniqBy(recentStocks, "stock.symbol");
 
   return (
     <div className="sticky top-0 z-20 flex w-full items-center justify-between gap-4 p-2 px-4">
       <div className="hidden md:flex">
-        <Searchbar />
+        <Searchbar recentStocks={uniqueStocks} />
       </div>
       <SidebarToggle className="md:hidden">
         <Menu className="h-5" />

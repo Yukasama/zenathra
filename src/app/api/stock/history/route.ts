@@ -44,7 +44,7 @@ export async function POST(req: Request) {
 
 async function fetchHistory(symbol: string) {
   const fetches: History[][] = await Promise.all(
-    ["min1", "min5", "min30", "day1"].map(async (time) => {
+    ["min1", "min5", "min15", "hour1", "day1"].map(async (time) => {
       const { data } = await axios.get(historyUrls(symbol, time));
       if (time === "day1") return data.historical;
       return data;
@@ -56,9 +56,9 @@ async function fetchHistory(symbol: string) {
     "5D": fetches[1].slice(0, historyTimes["5D"][1] as number).reverse(),
     "1M": fetches[2].slice(0, historyTimes["1M"][1] as number).reverse(),
     "6M": fetches[3].slice(0, historyTimes["6M"][1] as number).reverse(),
-    "1Y": fetches[3].slice(0, historyTimes["1Y"][1] as number).reverse(),
-    "5Y": fetches[3].slice(0, historyTimes["5Y"][1] as number).reverse(),
-    ALL: fetches[3].slice(0, historyTimes["ALL"][1] as number).reverse(),
+    "1Y": fetches[4].slice(0, historyTimes["1Y"][1] as number).reverse(),
+    "5Y": fetches[4].slice(0, historyTimes["5Y"][1] as number).reverse(),
+    ALL: fetches[4].slice(0, historyTimes["ALL"][1] as number).reverse(),
   };
 }
 

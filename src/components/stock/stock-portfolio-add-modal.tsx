@@ -41,13 +41,13 @@ export default function StockPortfolioAddModal({
     <>
       {!session?.user ? (
         <Button variant="subtle" size="xs" onClick={handleClick}>
-          <Plus className="h-4 w-4" />
+          <Plus className="h-4" />
         </Button>
       ) : (
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="subtle" size="xs">
-              <Plus className="h-4 w-4" />
+              <Plus className="h-4" />
             </Button>
           </DialogTrigger>
           <DialogContent className="rounded-md max-w-[375px]">

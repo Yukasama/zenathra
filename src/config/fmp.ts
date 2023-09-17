@@ -24,8 +24,8 @@ export const fmpUrls = {
 export const historyTimes = {
   "1D": ["min1", 391],
   "5D": ["min5", 420],
-  "1M": ["min30", 420],
-  "6M": ["day1", 155],
+  "1M": ["min15", 700],
+  "6M": ["hour1", 800],
   "1Y": ["day1", 310],
   "5Y": ["day1", 1550],
   ALL: ["day1", 1550],
@@ -35,6 +35,7 @@ export const historyUrls = (symbol: string, timeFrame: string) => {
   const urls: any = {
     min1: `${FMP_API_URL}v3/historical-chart/1min/${symbol}?apikey=${env.FMP_API_KEY}`,
     min5: `${FMP_API_URL}v3/historical-chart/5min/${symbol}?apikey=${env.FMP_API_KEY}`,
+    min15: `${FMP_API_URL}v3/historical-chart/15min/${symbol}?apikey=${env.FMP_API_KEY}`,
     min30: `${FMP_API_URL}v3/historical-chart/30min/${symbol}?apikey=${env.FMP_API_KEY}`,
     hour1: `${FMP_API_URL}v3/historical-chart/1hour/${symbol}?apikey=${env.FMP_API_KEY}`,
     hour4: `${FMP_API_URL}v3/historical-chart/4hour/${symbol}?apikey=${env.FMP_API_KEY}`,

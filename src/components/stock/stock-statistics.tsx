@@ -32,7 +32,8 @@ export function StockStatisticsLoading({ className }: SharedProps) {
 export default async function StockStatistics({ stock, className }: Props) {
   const fin = await db.financials.findMany({
     where: { symbol: stock.symbol },
-    orderBy: { date: "asc" },
+    orderBy: { date: "desc" },
+    take: 8,
   });
 
   if (!fin) return null;

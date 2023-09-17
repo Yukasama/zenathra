@@ -41,6 +41,14 @@ export default async function page({ params: { symbol } }: Props) {
 
   if (!stock) return notFound();
 
+  if (session?.user)
+    await db.userRecentStocks.create({
+      data: {
+        userId: session?.user.id,
+        stockId: stock.id,
+      },
+    });
+
   return (
     <PageLayout>
       <div className="w-full f-col gap-3">

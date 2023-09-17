@@ -7,6 +7,7 @@ import {
   AreaChart,
   Area,
   ResponsiveContainer,
+  ReferenceLine,
 } from "recharts";
 import {
   Card,
@@ -30,6 +31,29 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   image?: string;
   height?: number;
   width?: number;
+}
+
+function consolidateData(data: any[]) {
+  const consolidated: any = {};
+
+  data.forEach((entry) => {
+    if (!consolidated[entry.name]) {
+      consolidated[entry.name] = {
+        name: entry.name,
+        uvAbove: entry.uvAbove,
+        uvBelow: entry.uvBelow,
+      };
+    } else {
+      if (entry.uvAbove !== null) {
+        consolidated[entry.name].uvAbove = entry.uvAbove;
+      }
+      if (entry.uvBelow !== null) {
+        consolidated[entry.name].uvBelow = entry.uvBelow;
+      }
+    }
+  });
+
+  return Object.values(consolidated);
 }
 
 export default function PriceChart({
@@ -60,8 +84,7 @@ export default function PriceChart({
       const newData: any = {};
       for (const key in data) {
         newData[key] = data[key].map((item: any) => ({
-          name:
-            key === "1D" ? item.date.split(" ")[1] : item.date.split(" ")[0],
+          name: item.date,
           uv: item.close.toFixed(2),
         }));
       }
@@ -72,13 +95,27 @@ export default function PriceChart({
 
   let [minDomain, maxDomain] = [0, 0];
   let pos = true;
+  let startPrice = 0;
+  let transformedData: any[] = [];
 
   if (isFetched) {
     pos =
       Number(results[timeFrame][0].uv) <
       Number(results[timeFrame][results[timeFrame].length - 1].uv);
     [minDomain, maxDomain] = computeDomain(results[timeFrame]);
+    startPrice = Number(results[timeFrame][0].uv);
+
+    transformedData = results[timeFrame].map((item: any) => {
+      const uv = Number(item.uv);
+      return {
+        name: item.name,
+        uvAbove: uv >= startPrice ? uv : null,
+        uvBelow: uv < startPrice ? uv : null,
+      };
+    });
   }
+
+  console.log(transformedData);
 
   const CustomTooltip = ({
     active,
@@ -163,37 +200,41 @@ export default function PriceChart({
                 className="bg-card"
                 width={width || 500}
                 height={height || 250}
-                data={results && results[timeFrame]}
-                margin={{
-                  top: 5,
-                  right: 60,
-                  left: 20,
-                  bottom: 5,
-                }}>
+                data={transformedData}
+                margin={{ top: 5, right: 60, left: 20, bottom: 5 }}>
                 <defs>
-                  <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                    <stop
-                      offset="5%"
-                      stopColor={pos ? "#19E363" : "#e6221e"}
-                      stopOpacity={0.8}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor={pos ? "#19E363" : "#e6221e"}
-                      stopOpacity={0}
-                    />
+                  <linearGradient id="colorUvAbove" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#19E363" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#19E363" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="colorUvBelow" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#e6221e" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#e6221e" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="name" fontSize={12} />
                 <YAxis domain={[minDomain, maxDomain]} fontSize={12} />
                 {/* @ts-ignore */}
                 <Tooltip content={<CustomTooltip />} />
+                <ReferenceLine
+                  y={startPrice}
+                  strokeDasharray="3 3"
+                  stroke="gray"
+                />
                 <Area
                   type="monotone"
-                  dataKey="uv"
-                  stroke={pos ? "#19E363" : "#e6221e"}
+                  dataKey="uvAbove"
+                  stroke="#19E363"
                   fillOpacity={1}
-                  fill="url(#colorUv)"
+                  fill="url(#colorUvAbove)"
+                  animationDuration={500}
+                />
+                <Area
+                  type="linear"
+                  dataKey="uvBelow"
+                  stroke="#e6221e"
+                  fillOpacity={1}
+                  fill="url(#colorUvBelow)"
                   animationDuration={500}
                 />
               </AreaChart>

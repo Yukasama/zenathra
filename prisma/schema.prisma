@@ -68,12 +68,13 @@ model User {
   subscriptions UserSubscription[]
   portfolios    Portfolio[]        @relation("CreatedBy")
 
-  recentlyViewedStocks Stock[]
+  recentStocks UserRecentStocks[]
 
   stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
   stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
   stripePriceId          String?   @map(name: "stripe_price_id")
   stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+  Stock                  Stock[]
 }
 
 model Subscription {
@@ -126,6 +127,18 @@ model StockInPortfolio {
   stock       Stock     @relation(fields: [stockId], references: [id])
 
   @@id([portfolioId, stockId])
+}
+
+model UserRecentStocks {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  stockId String
+  stock   Stock  @relation(fields: [stockId], references: [id])
 }
 
 model Stock {
@@ -280,8 +293,9 @@ model Stock {
   updatedAt                                 DateTime @updatedAt
   peersList                                 String?
 
-  portfolios StockInPortfolio[]
-  financials Financials[]
+  portfolios  StockInPortfolio[]
+  financials  Financials[]
+  recentUsers UserRecentStocks[]
 
   creatorId String?
   creator   User?   @relation(fields: [creatorId], references: [id])
