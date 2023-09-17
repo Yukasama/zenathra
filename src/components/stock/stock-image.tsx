@@ -23,7 +23,7 @@ export function StockImage({
       }}
       {...props}>
       <Image
-        className="p-1"
+        className={cn("p-1", className)}
         src={src ?? "/stock.jpg"}
         height={px}
         width={px}

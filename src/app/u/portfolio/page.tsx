@@ -13,7 +13,7 @@ export default async function page() {
 
   const [portfolios, subscription] = await Promise.all([
     db.portfolio.findMany({
-      select: { id: true, title: true, public: true },
+      select: { id: true, title: true, public: true, color: true },
       where: { creatorId: session?.user.id },
     }),
     db.userSubscription.findFirst({
@@ -44,6 +44,7 @@ export default async function page() {
                 title: portfolio.title,
                 id: portfolio.id,
                 public: portfolio.public,
+                color: portfolio.color,
                 stockIds: portfolio.stockIds.map((stock) => stock.stockId),
               }}
             />

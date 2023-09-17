@@ -68,18 +68,6 @@ module.exports = {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
       keyframes: {
-        "appear-up": {
-          "100%": { transform: 0, opacity: 1 },
-          "0%": { transform: "translateY(4px)", opacity: 0.5 },
-        },
-        "appear-down": {
-          "100%": { transform: 0, opacity: 1 },
-          "0%": { transform: "translateY(-4px)", opacity: 0.5 },
-        },
-        "appear-left": {
-          "100%": { transform: 0, opacity: 1 },
-          "0%": { transform: "translateX(-10px)", opacity: 0.5 },
-        },
         "accordion-down": {
           from: { height: 0 },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -90,16 +78,8 @@ module.exports = {
         },
       },
       animation: {
-        "appear-up": "appear-up 0.3s ease-in-out",
-        "appear-down": "appear-down 0.3s ease-in-out",
-        "appear-left": "appear-left 0.3s ease-in-out",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-      },
-      transitionProperty: {
-        width: "width",
-        border: "border",
-        z: "z-index",
       },
     },
   },

@@ -49,15 +49,15 @@ export function UserAccountNav({ user, isAdmin }: UserAccountNavProps) {
           </Link>
         )}
 
-        <Link href="/portfolio">
+        <Link href="/u/portfolio">
           <DropdownMenuItem>My Portfolios</DropdownMenuItem>
         </Link>
 
-        <Link href="/settings">
+        <Link href="/u/settings">
           <DropdownMenuItem>Settings</DropdownMenuItem>
         </Link>
 
-        <Link href="/settings">
+        <Link href="/u/settings">
           <DropdownMenuItem>Help</DropdownMenuItem>
         </Link>
         <DropdownMenuSeparator />

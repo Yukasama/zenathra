@@ -17,7 +17,10 @@ import { BarChart } from "lucide-react";
 import PortfolioAddModal from "./portfolio-add-modal";
 
 interface Props {
-  portfolio: Pick<PortfolioWithStocks, "id" | "title" | "public" | "stockIds">;
+  portfolio: Pick<
+    PortfolioWithStocks,
+    "id" | "title" | "public" | "color" | "stockIds"
+  >;
 }
 
 export default async function PortfolioCard({ portfolio }: Props) {
@@ -32,11 +35,20 @@ export default async function PortfolioCard({ portfolio }: Props) {
     <Card className="f-col justify-between min-h-72">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>{portfolio.title}</CardTitle>
-            <CardDescription>
-              {portfolio.public ? "Public" : "Private"}
-            </CardDescription>
+          <div className="flex items-center gap-3">
+            <div
+              className="h-10 w-10 f-box rounded-full border text-lg"
+              style={{
+                backgroundColor: portfolio.color ?? "#000",
+              }}>
+              {portfolio.title[0].toUpperCase()}
+            </div>
+            <div>
+              <CardTitle>{portfolio.title}</CardTitle>
+              <CardDescription>
+                {portfolio.public ? "Public" : "Private"}
+              </CardDescription>
+            </div>
           </div>
           <PortfolioAddModal portfolio={portfolio} />
         </div>

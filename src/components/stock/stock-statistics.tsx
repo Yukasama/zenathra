@@ -22,9 +22,9 @@ function Structure({ className, children }: StructureProps) {
 export function StockStatisticsLoading({ className }: SharedProps) {
   return (
     <Structure className={className}>
-      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-slate-200 p-3 px-6 dark:bg-zinc-400"></div>
-      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-slate-200 p-3 px-6 dark:bg-zinc-400"></div>
-      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 animate-appear-up rounded-lg bg-slate-200 p-3 px-6 dark:bg-zinc-400"></div>
+      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 rounded-lg bg-slate-200 p-3 px-6 dark:bg-zinc-400"></div>
+      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 rounded-lg bg-slate-200 p-3 px-6 dark:bg-zinc-400"></div>
+      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 rounded-lg bg-slate-200 p-3 px-6 dark:bg-zinc-400"></div>
     </Structure>
   );
 }

@@ -106,7 +106,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
           animate="visible"
           exit="exit"
           whileTap="tap">
-          <Card className="f-box cursor-pointer min-h-72 hover:bg-slate-100 dark:hover:bg-slate-900">
+          <Card className="f-box cursor-pointer h-72 hover:bg-slate-100 dark:hover:bg-slate-900">
             <div
               className={cn(
                 buttonVariants({ size: "sm" }),

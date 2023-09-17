@@ -10,6 +10,7 @@ import NavbarMenu from "./navbar-menu";
 import { cn } from "@/lib/utils";
 import { db } from "@/lib/db";
 import _ from "lodash";
+import CompanyLogo from "../company-logo";
 
 export default async function Navbar() {
   const session = await getAuthSession();
@@ -32,7 +33,10 @@ export default async function Navbar() {
 
   return (
     <div className="sticky top-0 z-20 flex w-full items-center justify-between gap-4 p-2 px-4">
-      <div className="hidden md:flex">
+      <div className="hidden md:flex items-center gap-3">
+        <Link href="/">
+          <CompanyLogo px={30} />
+        </Link>
         <Searchbar recentStocks={uniqueStocks} />
       </div>
       <SidebarToggle className="md:hidden">

@@ -21,29 +21,31 @@ export const fmpUrls = {
   indexQuotes: `${FMP_API_URL}v3/quotes/index?apikey=${env.FMP_API_KEY}`,
 };
 
-export const historyTimes = {
-  "1D": ["min1", 391],
-  "5D": ["min5", 420],
-  "1M": ["min15", 700],
-  "6M": ["hour1", 800],
-  "1Y": ["day1", 310],
-  "5Y": ["day1", 1550],
-  ALL: ["day1", 1550],
+export const TIMEFRAMES: Record<
+  string,
+  {
+    url: string;
+    limit: number;
+  }
+> = {
+  "1D": { url: "historical-chart/1min", limit: 392 },
+  "5D": { url: "historical-chart/5min", limit: 395 },
+  "1M": { url: "historical-chart/15min", limit: 625 },
+  "6M": { url: "historical-price-full", limit: 126 },
+  "1Y": { url: "historical-price-full", limit: 252 },
+  "5Y": { url: "historical-price-full", limit: 1500 },
+  ALL: { url: "historical-price-full", limit: 0 },
 };
 
-export const historyUrls = (symbol: string, timeFrame: string) => {
-  const urls: any = {
-    min1: `${FMP_API_URL}v3/historical-chart/1min/${symbol}?apikey=${env.FMP_API_KEY}`,
-    min5: `${FMP_API_URL}v3/historical-chart/5min/${symbol}?apikey=${env.FMP_API_KEY}`,
-    min15: `${FMP_API_URL}v3/historical-chart/15min/${symbol}?apikey=${env.FMP_API_KEY}`,
-    min30: `${FMP_API_URL}v3/historical-chart/30min/${symbol}?apikey=${env.FMP_API_KEY}`,
-    hour1: `${FMP_API_URL}v3/historical-chart/1hour/${symbol}?apikey=${env.FMP_API_KEY}`,
-    hour4: `${FMP_API_URL}v3/historical-chart/4hour/${symbol}?apikey=${env.FMP_API_KEY}`,
-    day1: `${FMP_API_URL}v3/historical-price-full/${symbol}?apikey=${env.FMP_API_KEY}`,
-  };
-
-  return urls[timeFrame];
-};
+export function historyUrls(symbol: string, url: string) {
+  return `${FMP_API_URL}v3/${url}/${symbol}?${
+    url.includes("price-full")
+      ? "from=1975-01-01&"
+      : url.includes("4hour")
+      ? "from=2020-01-01&"
+      : ""
+  }apikey=${process.env.FMP_API_KEY}`;
+}
 
 // Dummy Data
 export const quote: Quote = {

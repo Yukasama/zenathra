@@ -27,7 +27,6 @@ export const SearchStocksSchema = z.object({
 
 export const StockHistorySchema = z.object({
   symbol: z.string().or(z.array(z.string())),
-  range: z.enum(["1D", "5D", "1M", "6M", "1Y", "5Y", "ALL", "Everything"]),
 });
 
 export type UploadStockProps = z.infer<typeof UploadStockSchema>;

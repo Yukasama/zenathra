@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Image from "next/image";
 import PortfolioAddModal from "@/components/portfolio/portfolio-add-modal";
-import PriceChart from "@/components/price-chart";
+import PriceChart from "@/components/stock/price-chart";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
@@ -45,12 +45,7 @@ function NoStocks({ portfolio }: NoStockProps) {
   return (
     <div>
       <div>
-        <Image
-          src="/nostocks.png"
-          height={500}
-          width={700}
-          alt="No Stocks"
-        />
+        <Image src="/nostocks.png" height={500} width={700} alt="No Stocks" />
       </div>
       <PortfolioAddModal portfolio={portfolio} />
     </div>

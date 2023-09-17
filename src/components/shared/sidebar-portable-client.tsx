@@ -5,15 +5,17 @@ import SidebarToggle from "./sidebar-toggle";
 import { useSidebar } from "@/components/shared/sidebar-provider";
 import { useEffect } from "react";
 import { X } from "lucide-react";
-import type { Session } from "next-auth";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import CompanyLogo from "../company-logo";
+import { RecentStocks } from "@/types/db";
+import { User } from "@prisma/client";
 
 interface Props {
-  session: Session | null;
+  user: Pick<User, "role"> | null;
+  recentStocks: RecentStocks;
 }
 
-export default function SidebarPortableClient({ session }: Props) {
+export default function SidebarPortableClient({ user, recentStocks }: Props) {
   const { open, toggleSidebar } = useSidebar();
 
   useEffect(() => {
@@ -49,7 +51,7 @@ export default function SidebarPortableClient({ session }: Props) {
           </div>
         </CardHeader>
         <CardContent>
-          <Searchbar />
+          <Searchbar recentStocks={recentStocks} />
         </CardContent>
       </Card>
     </div>

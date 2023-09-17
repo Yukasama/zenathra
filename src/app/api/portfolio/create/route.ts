@@ -9,6 +9,24 @@ import {
 import { CreatePortfolioSchema } from "@/lib/validators/portfolio";
 import { z } from "zod";
 
+const BASE_COLORS = [
+  "#0088FE",
+  "#00C49F",
+  "#FFBB28",
+  "#FF8042",
+  "#ED261F",
+  "#A463F2",
+  "#FF6F91",
+  "#FFD700",
+  "#20B2AA",
+  "#7C4DFF",
+];
+
+function getRandomColor(): string {
+  const randomIndex = Math.floor(Math.random() * BASE_COLORS.length);
+  return BASE_COLORS[randomIndex];
+}
+
 export async function POST(req: Request) {
   try {
     const session = await getAuthSession();
@@ -38,6 +56,7 @@ export async function POST(req: Request) {
         title: title,
         public: publicPortfolio,
         creatorId: session.user.id,
+        color: getRandomColor(),
       },
     });
 

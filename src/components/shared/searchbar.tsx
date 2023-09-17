@@ -17,17 +17,10 @@ import {
   CommandDialog,
 } from "../ui/command";
 import { Loader, Search } from "lucide-react";
+import { RecentStocks } from "@/types/db";
 
 interface Props {
-  recentStocks:
-    | {
-        stock: {
-          symbol: string;
-          image: string;
-          companyName: string;
-        };
-      }[]
-    | undefined;
+  recentStocks: RecentStocks;
 }
 
 export default function Searchbar({ recentStocks }: Props) {
@@ -121,16 +114,14 @@ export default function Searchbar({ recentStocks }: Props) {
             {(recentlyViewed?.length ?? 0) > 0 && (
               <CommandGroup heading="Recently Viewed">
                 {recentlyViewed?.map((stock) => (
-                  <CommandItem
-                    onSelect={() => {
-                      router.push(`/stocks/${stock.symbol}`);
-                      router.refresh();
-                    }}
-                    key={stock.symbol}
-                    value={stock.companyName}>
-                    <Link
-                      className="flex items-center gap-3 h-9"
-                      href={`/stocks/${stock.symbol}`}>
+                  <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
+                    <CommandItem
+                      onSelect={() => {
+                        router.push(`/stocks/${stock.symbol}`);
+                        router.refresh();
+                      }}
+                      value={stock.companyName}
+                      className="flex items-center gap-3 h-14 cursor-pointer">
                       <StockImage src={stock.image} px={25} />
                       <div>
                         <p className="font-medium">{stock.symbol}</p>
@@ -138,8 +129,8 @@ export default function Searchbar({ recentStocks }: Props) {
                           {stock.companyName}
                         </p>
                       </div>
-                    </Link>
-                  </CommandItem>
+                    </CommandItem>
+                  </Link>
                 ))}
               </CommandGroup>
             )}
@@ -154,16 +145,14 @@ export default function Searchbar({ recentStocks }: Props) {
                 {(results?.length ?? 0) > 0 && (
                   <CommandGroup key={results?.length} heading="Stocks">
                     {results?.map((stock) => (
-                      <CommandItem
-                        onSelect={() => {
-                          router.push(`/stocks/${stock.symbol}`);
-                          router.refresh();
-                        }}
-                        key={stock.id}
-                        value={stock.companyName}>
-                        <Link
-                          className="flex items-center gap-3 h-9"
-                          href={`/stocks/${stock.symbol}`}>
+                      <Link key={stock.id} href={`/stocks/${stock.symbol}`}>
+                        <CommandItem
+                          onSelect={() => {
+                            router.push(`/stocks/${stock.symbol}`);
+                            router.refresh();
+                          }}
+                          value={stock.companyName}
+                          className="flex items-center gap-3 h-14 cursor-pointer">
                           <StockImage src={stock.image} px={25} />
                           <div>
                             <p className="font-medium">{stock.symbol}</p>
@@ -171,8 +160,8 @@ export default function Searchbar({ recentStocks }: Props) {
                               {stock.companyName}
                             </p>
                           </div>
-                        </Link>
-                      </CommandItem>
+                        </CommandItem>
+                      </Link>
                     ))}
                   </CommandGroup>
                 )}

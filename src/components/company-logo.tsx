@@ -6,14 +6,22 @@ interface Props extends React.HTMLAttributes<HTMLImageElement> {
   px: number;
 }
 
-export default function CompanyLogo({ px, className }: Props) {
+export default function CompanyLogo({ px, className, ...props }: Props) {
   return (
-    <Image
-      className={cn("rounded-full", className)}
-      src="/logo.png"
-      width={px}
-      height={px}
-      alt={`${site.name} Logo`}
-    />
+    <div
+      className={cn("f-box rounded-full", className)}
+      style={{
+        width: px,
+        height: px,
+      }}
+      {...props}>
+      <Image
+        className={cn("rounded-full", className)}
+        src="/logo.png"
+        width={px}
+        height={px}
+        alt={`${site.name} Logo`}
+      />
+    </div>
   );
 }

@@ -19,10 +19,10 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { StockHistoryProps } from "@/lib/validators/stock";
-import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { cn, computeDomain } from "@/lib/utils";
 import { Skeleton } from "@nextui-org/skeleton";
-import { StockImage } from "./stock/stock-image";
+import { StockImage } from "./stock-image";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
@@ -31,29 +31,6 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   image?: string;
   height?: number;
   width?: number;
-}
-
-function consolidateData(data: any[]) {
-  const consolidated: any = {};
-
-  data.forEach((entry) => {
-    if (!consolidated[entry.name]) {
-      consolidated[entry.name] = {
-        name: entry.name,
-        uvAbove: entry.uvAbove,
-        uvBelow: entry.uvBelow,
-      };
-    } else {
-      if (entry.uvAbove !== null) {
-        consolidated[entry.name].uvAbove = entry.uvAbove;
-      }
-      if (entry.uvBelow !== null) {
-        consolidated[entry.name].uvBelow = entry.uvBelow;
-      }
-    }
-  });
-
-  return Object.values(consolidated);
 }
 
 export default function PriceChart({
@@ -76,7 +53,6 @@ export default function PriceChart({
     queryFn: async () => {
       const payload: StockHistoryProps = {
         symbol: symbols,
-        range: "Everything",
       };
 
       const { data } = await axios.post("/api/stock/history", payload);
@@ -94,17 +70,12 @@ export default function PriceChart({
   });
 
   let [minDomain, maxDomain] = [0, 0];
-  let pos = true;
   let startPrice = 0;
   let transformedData: any[] = [];
 
   if (isFetched) {
-    pos =
-      Number(results[timeFrame][0].uv) <
-      Number(results[timeFrame][results[timeFrame].length - 1].uv);
     [minDomain, maxDomain] = computeDomain(results[timeFrame]);
     startPrice = Number(results[timeFrame][0].uv);
-
     transformedData = results[timeFrame].map((item: any) => {
       const uv = Number(item.uv);
       return {
@@ -114,8 +85,6 @@ export default function PriceChart({
       };
     });
   }
-
-  console.log(transformedData);
 
   const CustomTooltip = ({
     active,
@@ -132,7 +101,9 @@ export default function PriceChart({
           <p className="text-[15px]">{label}</p>
           <p
             className="text-sm text-[#19E363]"
-            style={{ color: pos ? "#19E363" : "#e6221e" }}>
+            style={{
+              color: payload[0].value >= startPrice ? "#19E363" : "#e6221e",
+            }}>
             ${payload[0].value} (
             <span className="text-[12px]">
               {(payload[0].value / Number(results[timeFrame][0].uv)) * 100 -
@@ -151,7 +122,7 @@ export default function PriceChart({
     return null;
   };
 
-  const timeFrames = ["1D", "5D", "1M", "6M", "1Y", "ALL"];
+  const timeFrames = ["1D", "5D", "1M", "6M", "1Y", "5Y", "ALL"];
 
   return (
     <Card
@@ -162,7 +133,9 @@ export default function PriceChart({
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <StockImage src={image} px={40} />
+            <Skeleton isLoaded={isFetched} className="rounded-md bg-card">
+              <StockImage src={image} px={40} className="bg-card" />
+            </Skeleton>
             <div className="f-col gap-1">
               <Skeleton isLoaded={isFetched} className="rounded-md">
                 <CardTitle className="bg-card hidden md:flex">
@@ -192,56 +165,54 @@ export default function PriceChart({
           </Skeleton>
         </div>
       </CardHeader>
-      <div className="">
-        {mounted && (
-          <Skeleton isLoaded={isFetched} className="rounded-md">
-            <ResponsiveContainer width="100%" height={height || 250}>
-              <AreaChart
-                className="bg-card"
-                width={width || 500}
-                height={height || 250}
-                data={transformedData}
-                margin={{ top: 5, right: 60, left: 20, bottom: 5 }}>
-                <defs>
-                  <linearGradient id="colorUvAbove" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#19E363" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#19E363" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="colorUvBelow" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#e6221e" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#e6221e" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="name" fontSize={12} />
-                <YAxis domain={[minDomain, maxDomain]} fontSize={12} />
-                {/* @ts-ignore */}
-                <Tooltip content={<CustomTooltip />} />
-                <ReferenceLine
-                  y={startPrice}
-                  strokeDasharray="3 3"
-                  stroke="gray"
-                />
-                <Area
-                  type="monotone"
-                  dataKey="uvAbove"
-                  stroke="#19E363"
-                  fillOpacity={1}
-                  fill="url(#colorUvAbove)"
-                  animationDuration={500}
-                />
-                <Area
-                  type="linear"
-                  dataKey="uvBelow"
-                  stroke="#e6221e"
-                  fillOpacity={1}
-                  fill="url(#colorUvBelow)"
-                  animationDuration={500}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </Skeleton>
-        )}
-      </div>
+      {mounted && (
+        <Skeleton isLoaded={isFetched} className="rounded-md">
+          <ResponsiveContainer width="100%" height={height || 250}>
+            <AreaChart
+              className="bg-card"
+              width={width || 500}
+              height={height || 250}
+              data={transformedData}
+              margin={{ top: 5, right: 60, left: 20, bottom: 5 }}>
+              <defs>
+                <linearGradient id="colorUvAbove" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#19E363" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#19E363" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="colorUvBelow" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#e6221e" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#e6221e" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <XAxis dataKey="name" fontSize={12} />
+              <YAxis domain={[minDomain, maxDomain]} fontSize={12} />
+              {/* @ts-ignore */}
+              <Tooltip content={<CustomTooltip />} />
+              <ReferenceLine
+                y={startPrice}
+                strokeDasharray="3 3"
+                stroke="gray"
+              />
+              <Area
+                type="monotone"
+                dataKey="uvAbove"
+                stroke="#19E363"
+                fillOpacity={1}
+                fill="url(#colorUvAbove)"
+                animationDuration={500}
+              />
+              <Area
+                type="linear"
+                dataKey="uvBelow"
+                stroke="#e6221e"
+                fillOpacity={1}
+                fill="url(#colorUvBelow)"
+                animationDuration={500}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </Skeleton>
+      )}
     </Card>
   );
 }
