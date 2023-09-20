@@ -28,6 +28,10 @@ export function UserAccountNav({ user, isAdmin }: UserAccountNavProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <div className="flex items-center justify-start gap-2 p-2">
+        <UserAvatar
+          user={{ name: user.name || null, image: user.image || null }}
+          className="h-8 w-8"
+        />
           <div className="flex flex-col space-y-1 leading-none">
             {user.name && <p className="font-medium">{user.name}</p>}
             {user.email && (

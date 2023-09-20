@@ -21,7 +21,7 @@ import axios from "axios";
 import { StockHistoryProps } from "@/lib/validators/stock";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { cn, computeDomain } from "@/lib/utils";
-import { Skeleton } from "@nextui-org/skeleton";
+import Skeleton from "../ui/skeleton";
 import { StockImage } from "./stock-image";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
@@ -133,23 +133,23 @@ export default function PriceChart({
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Skeleton isLoaded={isFetched} className="rounded-md bg-card">
+            <Skeleton isLoaded={isFetched}>
               <StockImage src={image} px={40} className="bg-card" />
             </Skeleton>
             <div className="f-col gap-1">
-              <Skeleton isLoaded={isFetched} className="rounded-md">
+              <Skeleton isLoaded={isFetched}>
                 <CardTitle className="bg-card hidden md:flex">
                   {title}
                 </CardTitle>
               </Skeleton>
-              <Skeleton isLoaded={isFetched} className="rounded-md">
+              <Skeleton isLoaded={isFetched}>
                 <CardDescription className="bg-card hidden md:flex max-w-[200px] truncate">
                   {description}
                 </CardDescription>
               </Skeleton>
             </div>
           </div>
-          <Skeleton isLoaded={isFetched} className="rounded-md">
+          <Skeleton isLoaded={isFetched}>
             <Tabs defaultValue="1D">
               <TabsList>
                 {timeFrames.map((timeFrame) => (
@@ -166,7 +166,7 @@ export default function PriceChart({
         </div>
       </CardHeader>
       {mounted && (
-        <Skeleton isLoaded={isFetched} className="rounded-md">
+        <Skeleton isLoaded={isFetched}>
           <ResponsiveContainer width="100%" height={height || 250}>
             <AreaChart
               className="bg-card"

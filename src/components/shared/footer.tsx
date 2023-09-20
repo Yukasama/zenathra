@@ -1,89 +1,48 @@
 import Link from "next/link";
 import { footerLinks, site } from "@/config/site";
 import CompanyLogo from "../company-logo";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { Separator } from "../ui/separator";
+import { Card, CardTitle } from "../ui/card";
 import { Icons } from "./icons";
 
 export default function Footer() {
   return (
-    <Card className="bg-slate-50 dark:bg-slate-900 border-none rounded-none px-10 lg:px-20 w-full">
-      <CardHeader className="pl-10 md:pl-0">
-        <div className="flex items-center gap-3">
-          <CompanyLogo px={40} />
-          <CardTitle>Elysium</CardTitle>
+    <Card className="bg-slate-50 dark:bg-slate-900 rounded-none p-6 lg:p-4 px-10 lg:px-20 w-full">
+      <div className="f-col lg:flex-row items-center justify-between gap-1">
+        <div className="flex items-center gap-3 mb-3 lg:mb-0">
+          <CompanyLogo px={30} />
+          <CardTitle className="text-xl">Elysium</CardTitle>
         </div>
-      </CardHeader>
-      <CardContent className="f-col gap-6 px-3 items-center md:items-start">
-        <div className="grid grid-cols-2 md:flex gap-5 gap-x-24">
-          {footerLinks.map((footerLink, i) => (
-            <div key={`${footerLink.title}-${i}`} className="w-20">
-              <h2 className="mb-2 uppercase tracking-widest text-slate-400">
-                {footerLink.title}
-              </h2>
-              <div className="f-col gap-1.5">
-                {footerLink.links.map((link, i) => (
-                  <Link
-                    key={`${link.name}-${i}`}
-                    href={link.link}
-                    className={"text-sm hover:underline"}>
-                    {link.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
+        <div className="flex items-center gap-5">
+          <p className="text-[13px] text-slate-500">
+            &copy; 2023 {site.name[0].toUpperCase() + site.name.slice(1)}
+          </p>
+          {footerLinks.map((link) => (
+            <Link
+              key={link.name}
+              href={link.url}
+              className="text-[13px] text-slate-500 hover:underline">
+              {link.name}
+            </Link>
           ))}
         </div>
-      </CardContent>
-
-      <CardFooter>
-        <div className="f-col gap-3 w-full">
-          <Separator />
-          <div className="mx-2 f-col lg:flex-row flex-col-reverse items-center justify-between">
-            <div className="flex items-center gap-5">
-              <p className="text-[13px] text-slate-500">
-                &copy; 2023 {site.name[0].toUpperCase() + site.name.slice(1)}
-              </p>
-              <Link
-                className="text-[13px] text-slate-500 hover:underline"
-                href="/privacy">
-                Privacy
-              </Link>
-              <Link
-                className="text-sm text-slate-500 hover:underline"
-                href="/terms">
-                Terms
-              </Link>
-            </div>
-            <div className="flex items-center gap-4">
-              {Object.entries(site.links).map(([name, url]) => (
-                <Link
-                  key={name}
-                  href={url}
-                  className="f-box h-10 w-10 rounded-md">
-                  {name === "github" ? (
-                    <Icons.github className="h-6 dark:invert" />
-                  ) : name === "instagram" ? (
-                    <Icons.instagram className="h-6" />
-                  ) : name === "twitter" ? (
-                    <Icons.twitter className="h-6" />
-                  ) : name === "youtube" ? (
-                    <Icons.youtube className="h-6" />
-                  ) : (
-                    name === "linkedin" && <Icons.linkedin className="h-6" />
-                  )}
-                </Link>
-              ))}
-            </div>
-          </div>
+        <div className="flex items-center gap-4">
+          {Object.entries(site.links).map(([name, url]) => (
+            <Link key={name} href={url} className="f-box h-10 w-10 rounded-md">
+              {name === "github" ? (
+                <Icons.github className="h-6 dark:invert" />
+              ) : name === "instagram" ? (
+                <Icons.instagram className="h-6" />
+              ) : name === "twitter" ? (
+                <Icons.twitter className="h-6" />
+              ) : name === "youtube" ? (
+                <Icons.youtube className="h-6" />
+              ) : (
+                name === "linkedin" && <Icons.linkedin className="h-6" />
+              )}
+            </Link>
+          ))}
         </div>
-      </CardFooter>
+      </div>
     </Card>
   );
 }

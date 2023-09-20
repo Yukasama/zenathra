@@ -9,7 +9,7 @@ interface Props {
 
 export default function Layout({ children }: Props) {
   return (
-    <div className="f-box fixed left-0 top-0 z-30 h-screen w-screen bg-slate-100 dark:bg-slate-950">
+    <div className="f-box fixed left-0 top-0 z-20 h-screen w-screen bg-slate-100 dark:bg-slate-950">
       <Link
         href="/"
         className={cn(

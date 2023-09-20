@@ -51,7 +51,7 @@ export default function SidebarPortableClient({ user, recentStocks }: Props) {
           </div>
         </CardHeader>
         <CardContent>
-          <Searchbar recentStocks={recentStocks} />
+          <Searchbar recentStocks={recentStocks} className="w-full" />
         </CardContent>
       </Card>
     </div>

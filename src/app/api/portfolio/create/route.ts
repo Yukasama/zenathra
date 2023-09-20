@@ -12,12 +12,7 @@ import { z } from "zod";
 const BASE_COLORS = [
   "#0088FE",
   "#00C49F",
-  "#FFBB28",
-  "#FF8042",
-  "#ED261F",
   "#A463F2",
-  "#FF6F91",
-  "#FFD700",
   "#20B2AA",
   "#7C4DFF",
 ];

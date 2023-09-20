@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import debounce from "lodash.debounce";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { StockImage } from "../stock/stock-image";
 import {
@@ -18,12 +18,17 @@ import {
 } from "../ui/command";
 import { Loader, Search } from "lucide-react";
 import { RecentStocks } from "@/types/db";
+import { cn } from "@/lib/utils";
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   recentStocks: RecentStocks;
 }
 
-export default function Searchbar({ recentStocks }: Props) {
+export default function Searchbar({
+  recentStocks,
+  className,
+  ...props
+}: Props) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -87,8 +92,12 @@ export default function Searchbar({ recentStocks }: Props) {
   return (
     <>
       <div
-        className="border bg-card text-slate-400 p-2 rounded-md flex items-center justify-between w-60 cursor-pointer"
-        onClick={() => setOpen((prev) => (prev === open ? !open : open))}>
+        className={cn(
+          "border bg-card text-slate-400 p-2 rounded-md flex items-center justify-between w-60 cursor-pointer",
+          className
+        )}
+        onClick={() => setOpen((prev) => (prev === open ? !open : open))}
+        {...props}>
         <div className="flex items-center gap-2">
           <Search className="h-4 w-4" />
           <p className="text-[14px]">Search stocks...</p>

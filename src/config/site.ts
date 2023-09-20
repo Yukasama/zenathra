@@ -60,71 +60,15 @@ export const navLinks = [
 
 export const footerLinks = [
   {
-    title: "Company",
-    links: [
-      {
-        name: "About Us",
-        link: "/about",
-      },
-      {
-        name: "Careers",
-        link: "/careers",
-      },
-      {
-        name: "Contact Us",
-        link: "/contact",
-      },
-    ],
+    name: "Privacy",
+    url: "/privacy",
   },
   {
-    title: "Pricing",
-    links: [
-      {
-        name: "About Us",
-        link: "/about",
-      },
-      {
-        name: "Careers",
-        link: "/careers",
-      },
-      {
-        name: "Contact Us",
-        link: "/contact",
-      },
-    ],
+    name: "Terms",
+    url: "/terms",
   },
   {
-    title: "Company",
-    links: [
-      {
-        name: "About Us",
-        link: "/about",
-      },
-      {
-        name: "Careers",
-        link: "/careers",
-      },
-      {
-        name: "Contact Us",
-        link: "/contact",
-      },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      {
-        name: "About Us",
-        link: "/about",
-      },
-      {
-        name: "Careers",
-        link: "/careers",
-      },
-      {
-        name: "Contact Us",
-        link: "/contact",
-      },
-    ],
+    name: "Contact",
+    url: "/contact",
   },
 ];

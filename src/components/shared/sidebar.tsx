@@ -26,7 +26,10 @@ export default async function Sidebar() {
           <Link
             href={`/p/${portfolio.id}`}
             key={portfolio.id}
-            className="rounded-full border h-10 w-10 f-box hover:bg-slate-100 dark:hover:bg-slate-900">
+            className="rounded-full border h-10 w-10 f-box hover:bg-slate-100 dark:hover:bg-slate-900"
+            style={{
+              backgroundColor: portfolio.color || "#000",
+            }}>
             <p className="font-medium text-lg">
               {portfolio.title[0].toUpperCase()}
             </p>

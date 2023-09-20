@@ -17,6 +17,8 @@ import PageLayout from "@/components/shared/page-layout";
 import StockStatistics from "@/components/stock/stock-statistics";
 import PriceChart from "@/components/stock/price-chart";
 
+export const revalidate = 30;
+
 export async function generateStaticParams() {
   const data = await db.stock.findMany({
     select: {
