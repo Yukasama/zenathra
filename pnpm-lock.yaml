@@ -108,8 +108,8 @@ dependencies:
     specifier: ^1.22.0
     version: 1.22.0
   autoprefixer:
-    specifier: 10.4.14
-    version: 10.4.14(postcss@8.4.23)
+    specifier: 10.4.15
+    version: 10.4.15(postcss@8.4.23)
   axios:
     specifier: ^1.5.0
     version: 1.5.0
@@ -2836,8 +2836,8 @@ packages:
     engines: {node: '>=4'}
     dev: false
 
-  /autoprefixer@10.4.14(postcss@8.4.23):
-    resolution: {integrity: sha512-FQzyfOsTlwVzjHxKEqRIAdJx9niO6VCBCoEwax/VLSoQF29ggECcPuBqUMZ+u8jCZOPSy8b8/8KnuFbp0SaFZQ==}
+  /autoprefixer@10.4.15(postcss@8.4.23):
+    resolution: {integrity: sha512-KCuPB8ZCIqFdA4HwKXsvz7j6gvSDNhDP7WnUjBleRkKjPdvCmHFuQ77ocavI8FT6NdvlBnE2UFr2H4Mycn8Vew==}
     engines: {node: ^10 || ^12 || >=14}
     hasBin: true
     peerDependencies:
