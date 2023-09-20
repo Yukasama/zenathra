@@ -9,13 +9,7 @@ import {
 import { CreatePortfolioSchema } from "@/lib/validators/portfolio";
 import { z } from "zod";
 
-const BASE_COLORS = [
-  "#0088FE",
-  "#00C49F",
-  "#A463F2",
-  "#20B2AA",
-  "#7C4DFF",
-];
+const BASE_COLORS = ["#0088FE", "#00C49F", "#A463F2", "#20B2AA", "#7C4DFF"];
 
 function getRandomColor(): string {
   const randomIndex = Math.floor(Math.random() * BASE_COLORS.length);

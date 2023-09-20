@@ -10,11 +10,7 @@ export default withAuth(
 
     const isAuth = !!token;
 
-    const authRoutes = [
-      "/sign-in",
-      "/sign-up",
-      "/forgot-password",
-    ];
+    const authRoutes = ["/sign-in", "/sign-up", "/forgot-password"];
     const userRoutes = ["/portfolio", "/settings"];
     const adminRoutes = [/^\/admin(\/.*)?$/, /^\/api\/admin(\/.*)?$/];
 
