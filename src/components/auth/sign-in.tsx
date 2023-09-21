@@ -36,22 +36,23 @@ import { cn } from "@/lib/utils";
 export default function SignIn() {
   const router = useRouter();
 
-  const form = useForm({
+  const form = useForm<FieldValues>({
     resolver: zodResolver(UserSignInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
   const { mutate: login, isLoading } = useMutation({
     mutationFn: (data: UserSignInProps) => signIn("credentials", { ...data }),
-    onError: () => {
+    onError: () =>
       toast({
         title: "Oops! Something went wrong.",
         description: `Please check your credentials and try again.`,
         variant: "destructive",
-      });
-    },
-    onSuccess: () => {
-      startTransition(() => router.refresh());
-    },
+      }),
+    onSuccess: () => startTransition(() => router.refresh()),
   });
 
   function onSubmit(data: FieldValues) {
@@ -70,7 +71,7 @@ export default function SignIn() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="gap-2 f-col">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="gap-3 f-col">
             <FormField
               control={form.control}
               name="email"
@@ -78,7 +79,11 @@ export default function SignIn() {
                 <FormItem>
                   <FormLabel>E-Mail</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your E-Mail" {...field} />
+                    <Input
+                      type="email"
+                      placeholder="Enter your E-Mail"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

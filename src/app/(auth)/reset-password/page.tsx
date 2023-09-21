@@ -1,12 +1,10 @@
 "use client";
 
-import { startTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signOut } from "next-auth/react";
 import { ArrowRightCircle } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { UserUpdatePasswordProps } from "@/lib/validators/user";
@@ -28,6 +26,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { startTransition } from "react";
 
 const Schema = z
   .object({
@@ -42,9 +41,8 @@ const Schema = z
   });
 
 export default function Page() {
-  const searchParams = useSearchParams();
   const router = useRouter();
-
+  const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
 
   const form = useForm<FieldValues>({
@@ -56,20 +54,16 @@ export default function Page() {
   });
 
   const { mutate: updatePassword, isLoading } = useMutation({
-    mutationFn: async (payload: UserUpdatePasswordProps) => {
-      const { data } = await axios.post("/api/user/reset-password", payload);
-      return data as string;
-    },
+    mutationFn: async (payload: UserUpdatePasswordProps) =>
+      await axios.post("/api/user/reset-password", payload),
     onError: (err) => {
-      if (err instanceof AxiosError) {
-        if (err.response?.status === 422) {
+      if (err instanceof AxiosError)
+        if (err.response?.status === 401)
           return toast({
-            title: "Incorrect Password provided.",
-            description: "Please enter the correct one or reset your password.",
+            title: "Unauthorized.",
+            description: "You are not authorized to pursue this action.",
             variant: "destructive",
           });
-        }
-      }
       toast({
         title: "Oops! Something went wrong.",
         description: "Password could not be updated.",
@@ -77,13 +71,8 @@ export default function Page() {
       });
     },
     onSuccess: () => {
-      startTransition(() => {
-        router.refresh();
-      });
-      toast({
-        description: "Password updated successfully.",
-      });
-      signOut();
+      startTransition(() => router.push("/"));
+      toast({ description: "Password updated successfully." });
     },
   });
 
@@ -92,7 +81,6 @@ export default function Page() {
       password: data.password,
       token,
     };
-
     updatePassword(payload);
   }
 
@@ -104,19 +92,23 @@ export default function Page() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 f-col">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="gap-3 f-col">
             <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New Password</FormLabel>
+                  <FormLabel className="text-black dark:text-white">
+                    New Password
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your new Password" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="Enter your new Password"
+                      {...field}
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -127,13 +119,19 @@ export default function Page() {
                 <FormItem>
                   <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="Confirm your new Password" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="Confirm your new Password"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button className="mt-4" variant="subtle" isLoading={isLoading}>
+            <Button
+              className="bg-primary hover:bg-primary/70 mt-3"
+              isLoading={isLoading}>
               <ArrowRightCircle className="h-4 w-4" />
               Change Password
             </Button>

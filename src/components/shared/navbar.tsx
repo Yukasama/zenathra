@@ -43,7 +43,7 @@ export default async function Navbar() {
         <Menu className="h-5" />
       </SidebarToggle>
 
-      <NavbarMenu />
+      <NavbarMenu session={session} />
 
       <div className="flex items-center gap-3">
         {!session?.user && (

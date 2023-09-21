@@ -3,13 +3,11 @@ import { z } from "zod";
 export const UserSignInSchema = z.object({
   email: z.string().email("Please enter a valid email."),
   password: z.string().min(1, "Please enter a valid password."),
-  remember: z.boolean().optional(),
 });
 
 export const UserSignUpSchema = z.object({
   email: z.string().email("Please enter a valid email."),
   password: z.string().min(11, "Password must be atleast 11 characters."),
-  remember: z.boolean().optional(),
 });
 
 export const UserUpdateUsernameSchema = z.object({
@@ -30,11 +28,6 @@ export const UserUpdatePasswordSchema = z.object({
 });
 
 export const UserMailSchema = z.object({
-  email: z.string().email(),
-  userId: z.string().nonempty(),
-});
-
-export const UserForgotPasswordSchema = z.object({
   email: z.string().email("Please enter a valid email."),
 });
 
@@ -49,8 +42,6 @@ export type UserUpdateEmailProps = z.infer<typeof UserUpdateEmailSchema>;
 export type UserUpdatePasswordProps = z.infer<typeof UserUpdatePasswordSchema>;
 
 export type UserMailProps = z.infer<typeof UserMailSchema>;
-
-export type UserForgotPasswordProps = z.infer<typeof UserForgotPasswordSchema>;
 
 // Password Strength Validator
 type Strength = "Weak" | "Medium" | "Strong" | "Ultra" | "Insane";

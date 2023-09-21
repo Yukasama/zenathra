@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FieldValues, useForm } from "react-hook-form";
@@ -15,13 +15,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "@/hooks/use-toast";
-import {
-  UserForgotPasswordProps,
-  UserForgotPasswordSchema,
-} from "@/lib/validators/user";
+import { UserMailProps, UserMailSchema } from "@/lib/validators/user";
 import axios from "axios";
 import {
   Card,
@@ -31,64 +26,65 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { toast } from "@/hooks/use-toast";
 
 export default function Page() {
-  const router = useRouter();
-  const [sent, setSent] = useState(false);
+  const [sent, setSent] = useState<boolean>(false);
 
-  const form = useForm({
-    resolver: zodResolver(UserForgotPasswordSchema),
-    defaultValues: {
-      email: "",
-    },
+  const form = useForm<FieldValues>({
+    resolver: zodResolver(UserMailSchema),
+    defaultValues: { email: "" },
   });
 
   const { mutate: login, isLoading } = useMutation({
-    mutationFn: async (data: UserForgotPasswordProps) => {
-      await axios.post("/api/user/send-verification-mail", data);
-      setSent(true);
-    },
-    onError: () => {
+    mutationFn: async (data: UserMailProps) =>
+      await axios.post("/api/user/send-reset-password", data),
+    onError: () =>
       toast({
         title: "Oops! Something went wrong.",
-        description: `Please check your credentials and try again.`,
+        description: "E-Mail could not be sent.",
         variant: "destructive",
-      });
-    },
-    onSuccess: () => {
-      startTransition(() => router.refresh());
-    },
+      }),
+    onSuccess: () => setSent(true),
   });
 
   function onSubmit(data: FieldValues) {
-    const payload: UserForgotPasswordProps = {
-      email: data.email,
-    };
+    const payload: UserMailProps = { email: data.email };
     login(payload);
   }
 
   return (
     <Card className="md:p-2 w-[400px]">
       <CardHeader>
-        <CardTitle>Forgot Your Password?</CardTitle>
-        <CardDescription>Request A Reset Link Here</CardDescription>
+        {!sent && <CardTitle>Forgot Your Password?</CardTitle>}
+        <CardDescription className={`${sent && "text-green-500 text-md"}`}>
+          {!sent
+            ? "Request a reset link here"
+            : "Reset E-Mail successfully sent."}
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        {!sent ? (
+        {!sent && (
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="gap-2 f-col">
+              className="gap-3 f-col">
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>E-Mail</FormLabel>
+                    <FormLabel className="text-black dark:text-white">
+                      E-Mail
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your E-Mail" {...field} />
+                      <Input
+                        type="email"
+                        placeholder="Enter your E-Mail"
+                        {...field}
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
               />
@@ -100,24 +96,17 @@ export default function Page() {
               </Button>
             </form>
           </Form>
-        ) : (
-          <div className="flex items-center gap-1">
-            <p>Password successfully changed?</p>
-            <Link
-              href="/sign-in"
-              className="rounded-md p-1 px-1.5 text-sm font-medium text-blue-500 hover:bg-slate-100 dark:hover:bg-slate-900">
-              Head to Login.
-            </Link>
-          </div>
         )}
       </CardContent>
       <CardFooter>
-        <div className="f-box gap-1">
-          <p className="text-sm">Already signed up?</p>
+        <div className="flex items-center gap-1 text-sm">
+          <p>
+            {!sent ? "Already signed up?" : "Password successfully changed?"}
+          </p>
           <Link
             href="/sign-in"
-            className="rounded-md p-1 px-1.5 text-sm font-medium text-blue-500 hover:bg-slate-100 dark:hover:bg-slate-900">
-            Sign In.
+            className="rounded-md p-1 px-1.5 font-medium text-primary hover:bg-slate-100 dark:hover:bg-slate-900">
+            {!sent ? "Sign In." : "Head to Login."}
           </Link>
         </div>
       </CardFooter>

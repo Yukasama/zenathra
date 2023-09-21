@@ -3,7 +3,6 @@
 import * as React from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Icons } from "@/components/shared/icons";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -14,8 +13,14 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { navLinks } from "@/config/site";
+import { ListFilter } from "lucide-react";
+import { Session } from "next-auth";
 
-export default function NavbarMenu() {
+interface Props {
+  session: Session | null;
+}
+
+export default function NavbarMenu({ session }: Props) {
   return (
     <NavigationMenu className="hidden lg:flex">
       <NavigationMenuList>
@@ -28,31 +33,41 @@ export default function NavbarMenu() {
                   <a
                     className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                     href="/">
-                    <Icons.logo className="h-6 w-6" />
+                    <ListFilter className="h-6 w-6" />
                     <div className="mb-2 mt-4 text-lg font-medium">
-                      shadcn/ui
+                      Stock Screener
                     </div>
                     <p className="text-sm leading-tight text-muted-foreground">
-                      Beautifully designed components built with Radix UI and
-                      Tailwind CSS.
+                      A powerful tool designed to filter and analyze stocks
+                      based on specific criteria.
                     </p>
                   </a>
                 </NavigationMenuLink>
               </li>
-              <ListItem href="/docs" title="Introduction">
-                Re-usable components built using Radix UI and Tailwind CSS.
+              <ListItem href="/u/portfolio" title="Create your first portfolio">
+                Assemble your own collection of stocks and track their
+                performance.
               </ListItem>
-              <ListItem href="/docs/installation" title="Installation">
-                How to install dependencies and structure your app.
-              </ListItem>
-              <ListItem href="/docs/primitives/typography" title="Typography">
-                Styles for headings, paragraphs, lists...etc
+              {session?.user ? (
+                <ListItem
+                  href={`/u/${session?.user.id}`}
+                  title="Customize your profile">
+                  Personalize your profile to reflect your unique style and
+                  preferences.
+                </ListItem>
+              ) : (
+                <ListItem href="/sign-up" title="Create your personal account">
+                  You will be able to manage portfolios and get other benefits.
+                </ListItem>
+              )}
+              <ListItem href="/stocks" title="Explore popular stocks">
+                Take a look the the most popular stocks and their performance.
               </ListItem>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Features</NavigationMenuTrigger>
+          <NavigationMenuTrigger>Highlights</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
               {navLinks.map((link) => (

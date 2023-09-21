@@ -19,5 +19,12 @@ export const useCustomToasts = () => {
     });
   };
 
-  return { loginToast };
+  const defaultError = () =>
+    toast({
+      title: "Oops! Something went wrong.",
+      description: `Please check your credentials and try again.`,
+      variant: "destructive",
+    });
+
+  return { loginToast, defaultError };
 };
