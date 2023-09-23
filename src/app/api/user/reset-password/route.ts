@@ -1,18 +1,16 @@
 import {
   InternalServerErrorResponse,
-  UnauthorizedResponse,
+  NotFoundResponse,
   UnprocessableEntityResponse,
 } from "@/lib/response";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import bcryptjs from "bcryptjs";
-import { UserUpdatePasswordSchema } from "@/lib/validators/user";
+import { ResetPasswordSchema } from "@/lib/validators/user";
 
 export async function POST(req: Request) {
   try {
-    const { password, token } = UserUpdatePasswordSchema.parse(
-      await req.json()
-    );
+    const { password, token } = ResetPasswordSchema.parse(await req.json());
 
     const user = await db.user.findFirst({
       select: { id: true },
@@ -22,7 +20,7 @@ export async function POST(req: Request) {
       },
     });
 
-    if (!user) return new UnauthorizedResponse();
+    if (!user) return new NotFoundResponse();
 
     const hashedPassword = await bcryptjs.hash(password, 12);
 
@@ -39,7 +37,7 @@ export async function POST(req: Request) {
   } catch (error) {
     if (error instanceof z.ZodError)
       return new UnprocessableEntityResponse(error.message);
-    
+
     return new InternalServerErrorResponse();
   }
 }

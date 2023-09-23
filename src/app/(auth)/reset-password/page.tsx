@@ -7,7 +7,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightCircle } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
-import { UserUpdatePasswordProps } from "@/lib/validators/user";
+import { ResetPasswordProps } from "@/lib/validators/user";
 import axios, { AxiosError } from "axios";
 import { toast } from "@/hooks/use-toast";
 import {
@@ -27,8 +27,9 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { startTransition } from "react";
+import { useCustomToasts } from "@/hooks/use-custom-toasts";
 
-const Schema = z
+const ResetPasswordSchema = z
   .object({
     password: z
       .string()
@@ -44,9 +45,10 @@ export default function Page() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
+  const { defaultError } = useCustomToasts();
 
-  const form = useForm<FieldValues>({
-    resolver: zodResolver(Schema),
+  const form = useForm({
+    resolver: zodResolver(ResetPasswordSchema),
     defaultValues: {
       password: "",
       confPassword: "",
@@ -54,7 +56,7 @@ export default function Page() {
   });
 
   const { mutate: updatePassword, isLoading } = useMutation({
-    mutationFn: async (payload: UserUpdatePasswordProps) =>
+    mutationFn: async (payload: ResetPasswordProps) =>
       await axios.post("/api/user/reset-password", payload),
     onError: (err) => {
       if (err instanceof AxiosError && err.response?.status === 401)
@@ -63,11 +65,7 @@ export default function Page() {
           description: "You are not authorized to pursue this action.",
           variant: "destructive",
         });
-      toast({
-        title: "Oops! Something went wrong.",
-        description: "Password could not be updated.",
-        variant: "destructive",
-      });
+      defaultError();
     },
     onSuccess: () => {
       startTransition(() => router.push("/"));
@@ -76,7 +74,7 @@ export default function Page() {
   });
 
   function onSubmit(data: FieldValues) {
-    const payload: UserUpdatePasswordProps = {
+    const payload: ResetPasswordProps = {
       password: data.password,
       token,
     };

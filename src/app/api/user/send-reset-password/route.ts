@@ -14,12 +14,12 @@ export async function POST(req: Request) {
   try {
     const { email } = UserMailSchema.parse(await req.json());
 
-    const token = await createToken();
+    const hashToken = await createToken();
 
     await db.user.update({
       where: { email: email },
       data: {
-        forgotPasswordToken: token,
+        forgotPasswordToken: hashToken,
         forgotPasswordExpiry: new Date(
           Date.now() + tokenConfig.forgotPasswordExpiry
         ),
@@ -27,10 +27,10 @@ export async function POST(req: Request) {
     });
 
     const mailOptions = {
-      from: "daszehntefragezeichen@gmail.com",
+      from: env.SMTP_MAIL,
       to: email,
       subject: "Reset your password",
-      html: `Reset your password here: ${env.NEXT_PUBLIC_VERCEL_URL}/reset-password?token=${token}`,
+      html: `Reset your password here: ${env.NEXT_PUBLIC_VERCEL_URL}/reset-password?token=${hashToken}`,
     };
 
     await transporter.sendMail(mailOptions);
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
   } catch (error) {
     if (error instanceof z.ZodError)
       return new UnprocessableEntityResponse(error.message);
-    
+
     return new InternalServerErrorResponse();
   }
 }

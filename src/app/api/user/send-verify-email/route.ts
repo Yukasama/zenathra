@@ -1,28 +1,24 @@
-import { db } from "@/lib/db";
+import { createToken, db } from "@/lib/db";
 import { transporter } from "@/lib/mail";
 import {
   BadRequestResponse,
   InternalServerErrorResponse,
   UnauthorizedResponse,
 } from "@/lib/response";
-import { UserMailSchema } from "@/lib/validators/user";
 import { z } from "zod";
-import bcryptjs from "bcryptjs";
 import { getAuthSession } from "@/lib/auth";
 import { env } from "@/env.mjs";
 import { tokenConfig } from "@/config/token";
 
-export async function POST(req: Request) {
+export async function GET() {
   try {
     const session = await getAuthSession();
     if (!session?.user) return new UnauthorizedResponse();
 
-    const { email, userId } = UserMailSchema.parse(await req.json());
-
-    const hashedToken = await bcryptjs.hash(userId.toString(), 10);
+    const hashedToken = await createToken();
 
     await db.user.update({
-      where: { id: userId },
+      where: { email: session.user.email! },
       data: {
         verifyToken: hashedToken,
         verifyTokenExpiry: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
@@ -30,10 +26,10 @@ export async function POST(req: Request) {
     });
 
     const mailOptions = {
-      from: "daszehntefragezeichen@gmail.com",
-      to: email,
+      from: env.SMTP_MAIL,
+      to: session.user.email!,
       subject: "Verify your email",
-      html: `Verify your email here: ${env.NEXT_PUBLIC_VERCEL_URL}verify-email?token=${hashedToken}`,
+      html: `Verify your email here: ${env.NEXT_PUBLIC_VERCEL_URL}/verify-email?token=${hashedToken}`,
     };
 
     await transporter.sendMail(mailOptions);

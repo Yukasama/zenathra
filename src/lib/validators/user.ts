@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const UserSignInSchema = z.object({
+export const SignInSchema = z.object({
   email: z.string().email("Please enter a valid email."),
   password: z.string().min(1, "Please enter a valid password."),
 });
@@ -22,7 +22,7 @@ export const UserUpdateEmailSchema = z.object({
   email: z.string().email("Please enter a valid email."),
 });
 
-export const UserUpdatePasswordSchema = z.object({
+export const ResetPasswordSchema = z.object({
   password: z.string().min(11, "Password must contain 11 or more characters."),
   token: z.string().nonempty(),
 });
@@ -31,7 +31,7 @@ export const UserMailSchema = z.object({
   email: z.string().email("Please enter a valid email."),
 });
 
-export type UserSignInProps = z.infer<typeof UserSignInSchema>;
+export type SignInProps = z.infer<typeof SignInSchema>;
 
 export type UserSignUpProps = z.infer<typeof UserSignUpSchema>;
 
@@ -39,7 +39,7 @@ export type UserUpdateUsernameProps = z.infer<typeof UserUpdateUsernameSchema>;
 
 export type UserUpdateEmailProps = z.infer<typeof UserUpdateEmailSchema>;
 
-export type UserUpdatePasswordProps = z.infer<typeof UserUpdatePasswordSchema>;
+export type ResetPasswordProps = z.infer<typeof ResetPasswordSchema>;
 
 export type UserMailProps = z.infer<typeof UserMailSchema>;
 

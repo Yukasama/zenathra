@@ -1,23 +1,18 @@
 import {
   InternalServerErrorResponse,
   NotFoundResponse,
-  UnauthorizedResponse,
   UnprocessableEntityResponse,
 } from "@/lib/response";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { getAuthSession } from "@/lib/auth";
 
-const Schema = z.object({
+const VerifyMailSchema = z.object({
   token: z.string().nonempty(),
 });
 
 export async function POST(req: Request) {
   try {
-    const session = await getAuthSession();
-    if (!session?.user) return new UnauthorizedResponse();
-
-    const { token } = Schema.parse(await req.json());
+    const { token } = VerifyMailSchema.parse(await req.json());
 
     const user = await db.user.findFirst({
       select: { id: true },
@@ -27,7 +22,7 @@ export async function POST(req: Request) {
     if (!user) return new NotFoundResponse();
 
     await db.user.update({
-      where: { id: session?.user.id },
+      where: { id: user.id },
       data: {
         emailVerified: new Date(),
         verifyToken: null,

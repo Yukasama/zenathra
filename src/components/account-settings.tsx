@@ -27,7 +27,6 @@ import { UserAvatar } from "./shared/user-avatar";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import dynamic from "next/dynamic";
 import { toast } from "@/hooks/use-toast";
-import { UserMailProps } from "@/lib/validators/user";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -50,9 +49,7 @@ export default function AccountSettings({ session }: Props) {
   const router = useRouter();
 
   const { mutate: sendResetMail, isLoading } = useMutation({
-    mutationFn: async (payload: UserMailProps) => {
-      await axios.post("/api/user/send-reset-password", payload);
-    },
+    mutationFn: async () => await axios.get("/api/user/send-reset-password"),
     onError: () => {
       toast({
         title: "Oops! Something went wrong.",
@@ -62,10 +59,7 @@ export default function AccountSettings({ session }: Props) {
     },
     onSuccess: () => {
       startTransition(() => router.refresh());
-
-      toast({
-        description: "Password reset mail sent.",
-      });
+      toast({ description: "Password reset mail sent." });
     },
   });
 
@@ -205,12 +199,7 @@ export default function AccountSettings({ session }: Props) {
               <Button
                 variant="subtle"
                 isLoading={isLoading}
-                onClick={() =>
-                  sendResetMail({
-                    email: session?.user.email!,
-                    userId: session?.user.id!,
-                  })
-                }>
+                onClick={() => sendResetMail()}>
                 <Undo2 className="h-4 w-4" />
                 Reset
               </Button>

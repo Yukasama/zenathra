@@ -7,7 +7,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "../ui/button";
 import { LogIn } from "lucide-react";
 import Link from "next/link";
-import { UserSignUpProps } from "@/lib/validators/user";
+import { SignInProps } from "@/lib/validators/user";
 import { useMutation } from "@tanstack/react-query";
 import {
   Form,
@@ -47,7 +47,7 @@ const RegisterSchema = z
 export default function SignUp() {
   const { defaultError } = useCustomToasts();
 
-  const form = useForm<FieldValues>({
+  const form = useForm({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
       email: "",
@@ -57,16 +57,15 @@ export default function SignUp() {
   });
 
   const { mutate: register, isLoading } = useMutation({
-    mutationFn: async (data: UserSignUpProps) =>
+    mutationFn: async (data: SignInProps) =>
       await axios.post("/api/user/sign-up", { ...data }),
     onError: (err) => {
-      if (err instanceof AxiosError)
-        if (err.response?.status === 409)
-          return toast({
-            title: "Oops! Something went wrong.",
-            description: "E-Mail is already registered.",
-            variant: "destructive",
-          });
+      if (err instanceof AxiosError && err.response?.status === 409)
+        return toast({
+          title: "Oops! Something went wrong.",
+          description: "E-Mail is already registered.",
+          variant: "destructive",
+        });
       defaultError();
     },
     onSuccess: () => {
@@ -78,7 +77,7 @@ export default function SignUp() {
   });
 
   function onSubmit(data: FieldValues) {
-    const payload: UserSignUpProps = {
+    const payload: SignInProps = {
       email: data.email,
       password: data.password,
     };
@@ -162,7 +161,7 @@ export default function SignUp() {
 
         <div className="flex items-center my-3">
           <div className="flex-1 border"></div>
-          <div className="f-box h-10 w-10 rounded-full border text-[12px] text-slate-400 ">
+          <div className="f-box h-10 w-10 rounded-full border text-[12px] text-slate-400">
             OR
           </div>
           <div className="flex-1 border"></div>

@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
 import { LogIn } from "lucide-react";
-import { UserSignInProps, UserSignInSchema } from "@/lib/validators/user";
+import { SignInProps, SignInSchema } from "@/lib/validators/user";
 import { useMutation } from "@tanstack/react-query";
 import { startTransition } from "react";
 import {
@@ -34,8 +34,8 @@ import { cn } from "@/lib/utils";
 export default function SignIn() {
   const router = useRouter();
 
-  const form = useForm<FieldValues>({
-    resolver: zodResolver(UserSignInSchema),
+  const form = useForm({
+    resolver: zodResolver(SignInSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -43,7 +43,7 @@ export default function SignIn() {
   });
 
   const { mutate: login, isLoading } = useMutation({
-    mutationFn: (data: UserSignInProps) => signIn("credentials", { ...data }),
+    mutationFn: (data: SignInProps) => signIn("credentials", { ...data }),
     onError: () =>
       toast({
         title: "Oops! Something went wrong.",
@@ -54,7 +54,7 @@ export default function SignIn() {
   });
 
   function onSubmit(data: FieldValues) {
-    const payload: UserSignInProps = {
+    const payload: SignInProps = {
       email: data.email,
       password: data.password,
     };
@@ -127,7 +127,7 @@ export default function SignIn() {
         </Form>
         <div className="flex items-center my-3">
           <div className="flex-1 border"></div>
-          <div className="f-box h-10 w-10 rounded-full border text-[12px] text-slate-400 ">
+          <div className="f-box h-10 w-10 rounded-full border text-[12px] text-slate-400">
             OR
           </div>
           <div className="flex-1 border"></div>

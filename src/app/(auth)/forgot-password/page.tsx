@@ -31,7 +31,7 @@ import { toast } from "@/hooks/use-toast";
 export default function Page() {
   const [sent, setSent] = useState<boolean>(false);
 
-  const form = useForm<FieldValues>({
+  const form = useForm({
     resolver: zodResolver(UserMailSchema),
     defaultValues: { email: "" },
   });
