@@ -74,7 +74,9 @@ model User {
   stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
   stripePriceId          String?   @map(name: "stripe_price_id")
   stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
-  Stock                  Stock[]
+
+  createdStocks     Stock[]
+  createdFinancials Financials[]
 }
 
 model Subscription {
@@ -125,7 +127,7 @@ model StockInPortfolio {
   portfolioId String
   stockId     String
   portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
-  stock       Stock     @relation(fields: [stockId], references: [id])
+  stock       Stock     @relation(fields: [stockId], references: [id], onDelete: Cascade)
 
   @@id([portfolioId, stockId])
 }
@@ -139,39 +141,39 @@ model UserRecentStocks {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   stockId String
-  stock   Stock  @relation(fields: [stockId], references: [id])
+  stock   Stock  @relation(fields: [stockId], references: [id], onDelete: Cascade)
 }
 
 model Stock {
   id                                        String   @id @default(cuid())
   symbol                                    String   @unique
   eye                                       Int?
-  price                                     Float
-  beta                                      Float
-  volAvg                                    Float
+  price                                     Float?
+  beta                                      Float?
+  volAvg                                    Float?
   mktCap                                    Float
   lastDiv                                   Float?
-  range                                     String
+  range                                     String?
   changes                                   Float?
   companyName                               String
-  currency                                  String
+  currency                                  String?
   cik                                       String?
   isin                                      String?
   cusip                                     String?
-  exchange                                  String
-  exchangeShortName                         String
-  industry                                  String
-  website                                   String
-  description                               String   @db.Text
-  ceo                                       String
-  sector                                    String
-  country                                   String
-  fullTimeEmployees                         String
-  phone                                     String
-  address                                   String
-  city                                      String
-  state                                     String
-  zip                                       String
+  exchange                                  String?
+  exchangeShortName                         String?
+  industry                                  String?
+  website                                   String?
+  description                               String?  @db.Text
+  ceo                                       String?
+  sector                                    String?
+  country                                   String?
+  fullTimeEmployees                         String?
+  phone                                     String?
+  address                                   String?
+  city                                      String?
+  state                                     String?
+  zip                                       String?
   dcfDiff                                   Float?
   dcf                                       Float?
   image                                     String
@@ -181,111 +183,111 @@ model Stock {
   isActivelyTrading                         Boolean?
   isAdr                                     Boolean?
   isFund                                    Boolean?
-  dividendYielTTM                           Float
-  dividendYielPercentageTTM                 Float
-  peRatioTTM                                Float
-  pegRatioTTM                               Float
-  payoutRatioTTM                            Float
-  currentRatioTTM                           Float
-  quickRatioTTM                             Float
-  cashRatioTTM                              Float
-  daysOfSalesOutstandingTTM                 Float
-  daysOfInventoryOutstandingTTM             Float
-  operatingCycleTTM                         Float
-  daysOfPayablesOutstandingTTM              Float
-  cashConversionCycleTTM                    Float
-  grossProfitMarginTTM                      Float
-  operatingProfitMarginTTM                  Float
-  pretaxProfitMarginTTM                     Float
-  netProfitMarginTTM                        Float
-  effectiveTaxRateTTM                       Float
-  returnOnAssetsTTM                         Float
-  returnOnEquityTTM                         Float
-  returnOnCapitalEmployedTTM                Float
-  netIncomePerEBTTTM                        Float
-  ebtPerEbitTTM                             Float
-  ebitPerRevenueTTM                         Float
-  debtRatioTTM                              Float
-  debtEquityRatioTTM                        Float
-  longTermDebtToCapitalizationTTM           Float
-  totalDebtToCapitalizationTTM              Float
-  interestCoverageTTM                       Float
-  cashFlowToDebtRatioTTM                    Float
-  companyEquityMultiplierTTM                Float
-  receivablesTurnoverTTM                    Float
-  payablesTurnoverTTM                       Float
-  inventoryTurnoverTTM                      Float
-  fixedAssetTurnoverTTM                     Float
-  assetTurnoverTTM                          Float
-  operatingCashFlowPerShareTTM              Float
-  freeCashFlowPerShareTTM                   Float
-  cashPerShareTTM                           Float
-  operatingCashFlowSalesRatioTTM            Float
-  freeCashFlowOperatingCashFlowRatioTTM     Float
-  cashFlowCoverageRatiosTTM                 Float
-  shortTermCoverageRatiosTTM                Float
-  capitalExpenditureCoverageRatioTTM        Float
-  dividendPaidAndCapexCoverageRatioTTM      Float
-  priceBookValueRatioTTM                    Float
-  priceToBookRatioTTM                       Float
-  priceEarningsRatioTTM                     Float
-  priceToFreeCashFlowsRatioTTM              Float
-  priceToOperatingCashFlowsRatioTTM         Float
-  priceCashFlowRatioTTM                     Float
-  priceEarningsToGrowthRatioTTM             Float
-  priceSalesRatioTTM                        Float
-  enterpriseValueMultipleTTM                Float
-  priceFairValueTTM                         Float
-  revenuePerShareTTM                        Float
-  netIncomePerShareTTM                      Float
-  bookValuePerShareTTM                      Float
-  tangibleBookValuePerShareTTM              Float
-  shareholdersEquityPerShareTTM             Float
-  interestDebtPerShareTTM                   Float
-  marketCapTTM                              Float
-  enterpriseValueTTM                        Float
-  priceToSalesRatioTTM                      Float
-  pocfratioTTM                              Float
-  pfcfRatioTTM                              Float
-  pbRatioTTM                                Float
-  ptbRatioTTM                               Float
-  evToSalesTTM                              Float
-  enterpriseValueOverEBITDATTM              Float
-  evToOperatingCashFlowTTM                  Float
-  evToFreeCashFlowTTM                       Float
-  earningsYieldTTM                          Float
-  freeCashFlowYieldTTM                      Float
-  debtToEquityTTM                           Float
-  debtToAssetsTTM                           Float
-  netDebtToEBITDATTM                        Float
-  incomeQualityTTM                          Float
-  dividendYieldTTM                          Float
-  dividendYieldPercentageTTM                Float
-  salesGeneralAndAdministrativeToRevenueTTM Float
-  researchAndDevelopementToRevenueTTM       Float
-  intangiblesToTotalAssetsTTM               Float
-  capexToOperatingCashFlowTTM               Float
-  capexToRevenueTTM                         Float
-  capexToDepreciationTTM                    Float
-  stockBasedCompensationToRevenueTTM        Float
-  grahamNumberTTM                           Float
-  roicTTM                                   Float
-  returnOnTangibleAssetsTTM                 Float
-  grahamNetNetTTM                           Float
-  workingCapitalTTM                         Float
-  tangibleAssetValueTTM                     Float
-  netCurrentAssetValueTTM                   Float
-  investedCapitalTTM                        Float
-  averageReceivablesTTM                     Float
-  averagePayablesTTM                        Float
-  averageInventoryTTM                       Float
-  daysSalesOutstandingTTM                   Float
-  daysPayablesOutstandingTTM                Float
-  daysOfInventoryOnHandTTM                  Float
-  roeTTM                                    Float
-  capexPerShareTTM                          Float
-  dividendPerShareTTM                       Float
-  debtToMarketCapTTM                        Float
+  dividendYielTTM                           Float?
+  dividendYielPercentageTTM                 Float?
+  peRatioTTM                                Float?
+  pegRatioTTM                               Float?
+  payoutRatioTTM                            Float?
+  currentRatioTTM                           Float?
+  quickRatioTTM                             Float?
+  cashRatioTTM                              Float?
+  daysOfSalesOutstandingTTM                 Float?
+  daysOfInventoryOutstandingTTM             Float?
+  operatingCycleTTM                         Float?
+  daysOfPayablesOutstandingTTM              Float?
+  cashConversionCycleTTM                    Float?
+  grossProfitMarginTTM                      Float?
+  operatingProfitMarginTTM                  Float?
+  pretaxProfitMarginTTM                     Float?
+  netProfitMarginTTM                        Float?
+  effectiveTaxRateTTM                       Float?
+  returnOnAssetsTTM                         Float?
+  returnOnEquityTTM                         Float?
+  returnOnCapitalEmployedTTM                Float?
+  netIncomePerEBTTTM                        Float?
+  ebtPerEbitTTM                             Float?
+  ebitPerRevenueTTM                         Float?
+  debtRatioTTM                              Float?
+  debtEquityRatioTTM                        Float?
+  longTermDebtToCapitalizationTTM           Float?
+  totalDebtToCapitalizationTTM              Float?
+  interestCoverageTTM                       Float?
+  cashFlowToDebtRatioTTM                    Float?
+  companyEquityMultiplierTTM                Float?
+  receivablesTurnoverTTM                    Float?
+  payablesTurnoverTTM                       Float?
+  inventoryTurnoverTTM                      Float?
+  fixedAssetTurnoverTTM                     Float?
+  assetTurnoverTTM                          Float?
+  operatingCashFlowPerShareTTM              Float?
+  freeCashFlowPerShareTTM                   Float?
+  cashPerShareTTM                           Float?
+  operatingCashFlowSalesRatioTTM            Float?
+  freeCashFlowOperatingCashFlowRatioTTM     Float?
+  cashFlowCoverageRatiosTTM                 Float?
+  shortTermCoverageRatiosTTM                Float?
+  capitalExpenditureCoverageRatioTTM        Float?
+  dividendPaidAndCapexCoverageRatioTTM      Float?
+  priceBookValueRatioTTM                    Float?
+  priceToBookRatioTTM                       Float?
+  priceEarningsRatioTTM                     Float?
+  priceToFreeCashFlowsRatioTTM              Float?
+  priceToOperatingCashFlowsRatioTTM         Float?
+  priceCashFlowRatioTTM                     Float?
+  priceEarningsToGrowthRatioTTM             Float?
+  priceSalesRatioTTM                        Float?
+  enterpriseValueMultipleTTM                Float?
+  priceFairValueTTM                         Float?
+  revenuePerShareTTM                        Float?
+  netIncomePerShareTTM                      Float?
+  bookValuePerShareTTM                      Float?
+  tangibleBookValuePerShareTTM              Float?
+  shareholdersEquityPerShareTTM             Float?
+  interestDebtPerShareTTM                   Float?
+  marketCapTTM                              Float?
+  enterpriseValueTTM                        Float?
+  priceToSalesRatioTTM                      Float?
+  pocfratioTTM                              Float?
+  pfcfRatioTTM                              Float?
+  pbRatioTTM                                Float?
+  ptbRatioTTM                               Float?
+  evToSalesTTM                              Float?
+  enterpriseValueOverEBITDATTM              Float?
+  evToOperatingCashFlowTTM                  Float?
+  evToFreeCashFlowTTM                       Float?
+  earningsYieldTTM                          Float?
+  freeCashFlowYieldTTM                      Float?
+  debtToEquityTTM                           Float?
+  debtToAssetsTTM                           Float?
+  netDebtToEBITDATTM                        Float?
+  incomeQualityTTM                          Float?
+  dividendYieldTTM                          Float?
+  dividendYieldPercentageTTM                Float?
+  salesGeneralAndAdministrativeToRevenueTTM Float?
+  researchAndDevelopementToRevenueTTM       Float?
+  intangiblesToTotalAssetsTTM               Float?
+  capexToOperatingCashFlowTTM               Float?
+  capexToRevenueTTM                         Float?
+  capexToDepreciationTTM                    Float?
+  stockBasedCompensationToRevenueTTM        Float?
+  grahamNumberTTM                           Float?
+  roicTTM                                   Float?
+  returnOnTangibleAssetsTTM                 Float?
+  grahamNetNetTTM                           Float?
+  workingCapitalTTM                         Float?
+  tangibleAssetValueTTM                     Float?
+  netCurrentAssetValueTTM                   Float?
+  investedCapitalTTM                        Float?
+  averageReceivablesTTM                     Float?
+  averagePayablesTTM                        Float?
+  averageInventoryTTM                       Float?
+  daysSalesOutstandingTTM                   Float?
+  daysPayablesOutstandingTTM                Float?
+  daysOfInventoryOnHandTTM                  Float?
+  roeTTM                                    Float?
+  capexPerShareTTM                          Float?
+  dividendPerShareTTM                       Float?
+  debtToMarketCapTTM                        Float?
   targetHigh                                Float?
   targetLow                                 Float?
   targetConsensus                           Float?
@@ -294,12 +296,14 @@ model Stock {
   updatedAt                                 DateTime @updatedAt
   peersList                                 String?
 
+  ErrorMessage String?
+
   portfolios  StockInPortfolio[]
   financials  Financials[]
   recentUsers UserRecentStocks[]
 
-  creatorId String?
-  creator   User?   @relation(fields: [creatorId], references: [id])
+  creatorId String
+  creator   User   @relation(fields: [creatorId], references: [id])
 }
 
 model Financials {
@@ -519,5 +523,8 @@ model Financials {
   stockId String
   stock   Stock  @relation(fields: [stockId], references: [id], onDelete: Cascade)
 
-  @@unique([symbol, calendarYear])
+  creatorId String
+  creator   User   @relation(fields: [creatorId], references: [id])
+
+  @@unique([stockId, calendarYear])
 }

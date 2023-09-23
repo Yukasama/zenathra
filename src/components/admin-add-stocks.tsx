@@ -49,23 +49,17 @@ export default function AdminAddStocks() {
   });
 
   const { mutate: uploadStocks, isLoading } = useMutation({
-    mutationFn: async (payload: UploadStockProps) => {
-      await axios.post("/api/stock/upload", payload);
-    },
+    mutationFn: async (payload: UploadStockProps) =>
+      await axios.post("/api/stock/upload", payload),
     onError: (err) => {
       if (err instanceof AxiosError) {
-        if (err.response?.status === 401) {
-          return loginToast();
-        }
-      }
-      if (err instanceof AxiosError) {
-        if (err.response?.status === 403) {
+        if (err.response?.status === 401) return loginToast();
+        if (err.response?.status === 403)
           return toast({
             title: "This action is forbidden.",
-            description: "We will trace your ip if you try that again.",
+            description: "Only admins are allowed to start stock uploads.",
             variant: "destructive",
           });
-        }
       }
       toast({
         title: "Oops! Something went wrong.",
@@ -184,15 +178,17 @@ export default function AdminAddStocks() {
                       Pull Times
                     </FormLabel>
                     <FormDescription>
-                      How many batches of data to pull (30 stocks/batch)
+                      {form.getValues("pullTimes")} batches of data to pull (30
+                      stocks/batch)
                     </FormDescription>
                   </div>
                   <FormControl>
                     <Slider
                       name="pullTimes"
                       max={100}
-                      step={1}
-                      onChange={field.onChange}>
+                      min={1}
+                      defaultValue={[1]}
+                      onValueChange={field.onChange}>
                       {field.value}
                     </Slider>
                   </FormControl>

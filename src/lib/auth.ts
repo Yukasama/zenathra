@@ -5,15 +5,12 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { db } from "@/lib/db";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-// import EmailProvider from "next-auth/providers/email";
-// import { Client } from "postmark";
-// import { site } from "@/config/site";
+import EmailProvider from "next-auth/providers/email";
+import { site } from "@/config/site";
 import { env } from "@/env.mjs";
 import Google from "next-auth/providers/google";
 import { nanoid } from "nanoid";
 import { redirect } from "next/navigation";
-
-//const postmarkClient = new Client(config.postmark.apiToken!);
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
@@ -130,24 +127,17 @@ export const authOptions: NextAuthOptions = {
       });
 
       if (!dbUser) {
-        token.id = user.id;
+        token.id = user!.id;
         return token;
       }
 
-      if (!dbUser.username) {
+      if (!dbUser.username)
         await db.user.update({
           where: { id: dbUser.id },
           data: { username: nanoid(10) },
         });
-      }
 
-      return {
-        id: dbUser.id,
-        name: dbUser.name,
-        email: dbUser.email,
-        picture: dbUser.image,
-        username: dbUser.username,
-      };
+      return dbUser;
     },
     redirect() {
       return "/";

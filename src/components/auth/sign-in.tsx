@@ -43,11 +43,15 @@ export default function SignIn() {
   });
 
   const { mutate: login, isLoading } = useMutation({
-    mutationFn: (data: SignInProps) => signIn("credentials", { ...data }),
-    onError: () =>
+    mutationFn: async (data: SignInProps) => {
+      const y = await signIn("credentials", { ...data, redirect: false });
+      console.log(y);
+      return y;
+    },
+    onError: (err: any) =>
       toast({
         title: "Oops! Something went wrong.",
-        description: "Please check your credentials and try again.",
+        description: `${err?.error ?? "Unknown Error"}`,
         variant: "destructive",
       }),
     onSuccess: () => startTransition(() => router.refresh()),

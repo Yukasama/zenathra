@@ -8,11 +8,12 @@ import {
   UnprocessableEntityResponse,
 } from "@/lib/response";
 import { z } from "zod";
-import axios from "axios";
 import { getAuthSession } from "@/lib/auth";
 import { UploadStockSchema } from "@/lib/validators/stock";
 import { env } from "@/env.mjs";
 import { getSymbols } from "@/lib/fmp/quote";
+import { Session } from "next-auth";
+import { Stock } from "@prisma/client";
 
 export async function POST(req: Request) {
   try {
@@ -33,9 +34,7 @@ export async function POST(req: Request) {
     let alreadySymbols: string[] = [];
     if (skip) {
       const allStocks = await db.stock.findMany({
-        select: {
-          symbol: true,
-        },
+        select: { symbol: true },
       });
       alreadySymbols = allStocks.map((stock) => stock.symbol);
     }
@@ -43,8 +42,7 @@ export async function POST(req: Request) {
     if (stock === "All" || stock === "US500") {
       const symbolArray = await getSymbols(stock, pullTimes);
 
-      if (!symbolArray)
-        return new InternalServerErrorResponse("Symbols could not be fetched");
+      if (!symbolArray) return new InternalServerErrorResponse();
 
       const totalIterations = symbolArray.length;
       let currentIteration = 0;
@@ -56,20 +54,18 @@ export async function POST(req: Request) {
         if (skip) symbols = symbols.filter((s) => !alreadySymbols.includes(s));
         if (symbols.length === 0) continue;
 
-        await uploadStocks(symbols);
+        await uploadStocks(symbols, session);
 
         if (currentIteration !== totalIterations)
           await Timeout(Number(fmpConfig.timeout));
       }
-    } else await uploadStocks([stock]);
-
-    if (clean) await axios.post("/api/admin/clean");
+    } else await uploadStocks([stock], session);
 
     return new Response("OK");
   } catch (error) {
     if (error instanceof z.ZodError)
       return new UnprocessableEntityResponse(error.message);
-
+    console.log(error);
     return new InternalServerErrorResponse();
   }
 }
@@ -100,7 +96,10 @@ function MergeArrays(arrays: Record<string, any>[][]): Record<string, any>[] {
   return result;
 }
 
-async function uploadStocks(symbols: string[]): Promise<void> {
+async function uploadStocks(
+  symbols: string[],
+  session: Session
+): Promise<void> {
   if (!symbols.length) throw new Error("ArgumentError: No symbols provided");
 
   const financialUrls = symbols.map((symbol) => [
@@ -126,7 +125,7 @@ async function uploadStocks(symbols: string[]): Promise<void> {
           try {
             const response = await fetch(url, { cache: "no-cache" });
             return await response.json();
-          } catch (error) {
+          } catch {
             return undefined;
           }
         })
@@ -168,65 +167,76 @@ async function uploadStocks(symbols: string[]): Promise<void> {
     })
   );
 
-  const promises = symbols.map(async (symbol, index) => {
+  const promises = symbols.map(async (symbol, i) => {
     const stock = {
-      ...stocks[index],
-      createdAt: new Date(),
+      ...stocks[i],
       updatedAt: new Date(),
-      pegRatioTTM: Math.abs(stocks[index].peRatioTTM),
-      peersList: stocks[index].peersList.join(","),
+      creatorId: session.user.id,
+      peersList: stocks[i].peersList ? stocks[i].peersList.join(",") : "",
     };
 
     const existingStock = await db.stock.findUnique({
       where: { symbol },
     });
 
-    if (existingStock) {
-      await db.stock.update({
+    let createdStock: Stock | null = null;
+    if (existingStock)
+      createdStock = await db.stock.update({
         where: { symbol },
-        data: { ...stock, updatedAt: new Date() },
-      });
-    } else {
-      await db.stock.create({
         data: stock,
       });
-    }
+    else
+      createdStock = await db.stock.create({
+        data: {
+          ...stock,
+          createdAt: new Date(),
+        },
+      });
 
-    const statements = combinedData[index];
+    const statements = combinedData[i];
 
     const statementsByYear = statements.reduce((acc, statement) => {
       const year = statement.date.split("-")[0];
-      if (!acc[year]) {
-        acc[year] = [];
-      }
+      if (!acc[year]) acc[year] = [];
       acc[year].push(statement);
       return acc;
     }, {});
 
     const financialsPromises = Object.entries(statementsByYear).map(
       async ([year, statements]) => {
-        const financialData = statements[0];
+        const financialData = {
+          ...statements[0],
+          updatedAt: new Date(),
+          creatorId: session.user.id,
+        };
 
         const existingFinancial = await db.financials.findUnique({
-          where: { symbol_calendarYear: { symbol, calendarYear: year } },
+          where: {
+            stockId_calendarYear: {
+              stockId: createdStock!.id,
+              calendarYear: year,
+            },
+          },
         });
 
-        if (existingFinancial) {
+        if (existingFinancial)
           await db.financials.update({
-            where: { symbol_calendarYear: { symbol, calendarYear: year } },
-            data: { ...financialData, updatedAt: new Date() },
+            where: {
+              stockId_calendarYear: {
+                stockId: createdStock!.id,
+                calendarYear: year,
+              },
+            },
+            data: { ...financialData },
           });
-        } else {
+        else
           await db.financials.create({
             data: {
               ...financialData,
               stockId: stock.id,
               createdAt: new Date(),
-              updatedAt: new Date(),
-              stock: { connect: { symbol } },
             },
           });
-        }
       }
     );
 
