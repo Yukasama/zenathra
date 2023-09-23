@@ -101,11 +101,13 @@ export default function ChangeUsername() {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel className="text-black dark:text-white">
+                    Username
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="Enter your Username" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -114,11 +116,13 @@ export default function ChangeUsername() {
               name="confUsername"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Username</FormLabel>
+                  <FormLabel className="text-black dark:text-white">
+                    Confirm Username
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="Confirm your Username" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />

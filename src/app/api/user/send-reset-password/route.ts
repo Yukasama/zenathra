@@ -6,21 +6,20 @@ import {
 } from "@/lib/response";
 import { UserMailSchema } from "@/lib/validators/user";
 import { z } from "zod";
-import bcryptjs from "bcryptjs";
 import { tokenConfig } from "@/config/token";
 import { env } from "@/env.mjs";
+import { createToken } from "@/lib/db";
 
 export async function POST(req: Request) {
   try {
     const { email } = UserMailSchema.parse(await req.json());
 
-    const token = crypto.randomUUID();
-    const hashedToken = await bcryptjs.hash(token, 10);
+    const token = await createToken();
 
     await db.user.update({
       where: { email: email },
       data: {
-        forgotPasswordToken: hashedToken,
+        forgotPasswordToken: token,
         forgotPasswordExpiry: new Date(
           Date.now() + tokenConfig.forgotPasswordExpiry
         ),
@@ -31,7 +30,7 @@ export async function POST(req: Request) {
       from: "daszehntefragezeichen@gmail.com",
       to: email,
       subject: "Reset your password",
-      html: `Reset your password here: ${env.NEXT_PUBLIC_VERCEL_URL}/reset-password?token=${hashedToken}`,
+      html: `Reset your password here: ${env.NEXT_PUBLIC_VERCEL_URL}/reset-password?token=${token}`,
     };
 
     await transporter.sendMail(mailOptions);
@@ -40,6 +39,7 @@ export async function POST(req: Request) {
   } catch (error) {
     if (error instanceof z.ZodError)
       return new UnprocessableEntityResponse(error.message);
+    
     return new InternalServerErrorResponse();
   }
 }

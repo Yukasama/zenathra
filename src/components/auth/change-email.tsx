@@ -97,11 +97,13 @@ export default function ChangeEmail() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>E-Mail</FormLabel>
+                  <FormLabel className="text-black dark:text-white">
+                    E-Mail
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="Enter your E-Mail" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -110,11 +112,13 @@ export default function ChangeEmail() {
               name="confemail"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm E-Mail</FormLabel>
+                  <FormLabel className="text-black dark:text-white">
+                    Confirm E-Mail
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="Confirm your E-Mail" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />

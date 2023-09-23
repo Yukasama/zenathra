@@ -2,9 +2,9 @@ import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
 import { z } from "zod";
 import {
-  BadRequestResponse,
   ConflictResponse,
   InternalServerErrorResponse,
+  UnauthorizedResponse,
   UnprocessableEntityResponse,
 } from "@/lib/response";
 import { UserSignUpSchema } from "@/lib/validators/user";
@@ -16,7 +16,7 @@ import { tokenConfig } from "@/config/token";
 export async function POST(req: Request) {
   try {
     const session = await getAuthSession();
-    if (session) return new ConflictResponse("User is already logged in");
+    if (session) return new UnauthorizedResponse("User is already logged in");
 
     const { email, password } = UserSignUpSchema.parse(await req.json());
 
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     });
 
     if (existingUser)
-      return new UnprocessableEntityResponse("Email is already registered");
+      return new ConflictResponse("Email is already registered");
 
     // Hash password 12 times
     const hashedPassword = await bcryptjs.hash(password, 12);
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
     return new Response("OK");
   } catch (error) {
     if (error instanceof z.ZodError)
-      return new BadRequestResponse(error.message);
+      return new UnprocessableEntityResponse(error.message);
 
     return new InternalServerErrorResponse();
   }

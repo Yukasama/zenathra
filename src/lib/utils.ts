@@ -5,14 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const Formatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 2,
-});
-
 export function Timer() {
   let timeStart = new Date().getTime();
   return {

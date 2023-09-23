@@ -57,13 +57,12 @@ export default function Page() {
     mutationFn: async (payload: UserUpdatePasswordProps) =>
       await axios.post("/api/user/reset-password", payload),
     onError: (err) => {
-      if (err instanceof AxiosError)
-        if (err.response?.status === 401)
-          return toast({
-            title: "Unauthorized.",
-            description: "You are not authorized to pursue this action.",
-            variant: "destructive",
-          });
+      if (err instanceof AxiosError && err.response?.status === 401)
+        return toast({
+          title: "Unauthorized.",
+          description: "You are not authorized to pursue this action.",
+          variant: "destructive",
+        });
       toast({
         title: "Oops! Something went wrong.",
         description: "Password could not be updated.",
@@ -117,7 +116,9 @@ export default function Page() {
               name="confPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
+                  <FormLabel className="text-black dark:text-white">
+                    Confirm Password
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -125,7 +126,7 @@ export default function Page() {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />

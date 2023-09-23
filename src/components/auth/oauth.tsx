@@ -33,7 +33,7 @@ export default function OAuth({ provider, className, ...props }: Props) {
   };
 
   return (
-    <div className={cn("flex justify-center", className)} {...props}>
+    <div className={cn("flex justify-center w-full", className)} {...props}>
       <Button
         isLoading={isLoading}
         className="w-full bg-slate-900 hover:bg-slate-900/70 border"

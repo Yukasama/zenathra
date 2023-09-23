@@ -131,7 +131,9 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel className="text-black dark:text-white">
+                    Title
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Choose your title..."
@@ -142,7 +144,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
                   <FormDescription>
                     This is what your portfolio will be called.
                   </FormDescription>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -158,7 +160,9 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>Make public</FormLabel>
+                    <FormLabel className="text-black dark:text-white">
+                      Make public
+                    </FormLabel>
                     <FormDescription>
                       Display portfolio publicly?
                     </FormDescription>

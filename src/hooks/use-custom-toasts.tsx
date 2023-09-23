@@ -22,7 +22,7 @@ export const useCustomToasts = () => {
   const defaultError = () =>
     toast({
       title: "Oops! Something went wrong.",
-      description: `Please check your credentials and try again.`,
+      description: `Please try again later.`,
       variant: "destructive",
     });
 

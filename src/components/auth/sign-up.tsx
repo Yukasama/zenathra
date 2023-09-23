@@ -1,29 +1,24 @@
 "use client";
 
 import OAuth from "./oauth";
-import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
-import { toast } from "@/hooks/use-toast";
 import { LogIn } from "lucide-react";
 import Link from "next/link";
 import { UserSignUpProps } from "@/lib/validators/user";
 import { useMutation } from "@tanstack/react-query";
-import { startTransition } from "react";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "../ui/input";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import {
   Card,
   CardContent,
@@ -32,6 +27,9 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { useCustomToasts } from "@/hooks/use-custom-toasts";
+import { signIn } from "next-auth/react";
+import { toast } from "@/hooks/use-toast";
 
 const RegisterSchema = z
   .object({
@@ -40,7 +38,6 @@ const RegisterSchema = z
       .string()
       .min(11, "Password must contain 11 or more characters."),
     confPassword: z.string(),
-    remember: z.boolean().optional(),
   })
   .refine((data) => data.password === data.confPassword, {
     message: "Passwords do not match",
@@ -48,31 +45,35 @@ const RegisterSchema = z
   });
 
 export default function SignUp() {
-  const router = useRouter();
+  const { defaultError } = useCustomToasts();
 
-  const form = useForm({
+  const form = useForm<FieldValues>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
       email: "",
       password: "",
       confPassword: "",
-      remember: false,
     },
   });
 
   const { mutate: register, isLoading } = useMutation({
-    mutationFn: async (data: UserSignUpProps) => {
-      await axios.post("/api/user/sign-up", { ...data });
-    },
-    onError: () => {
-      toast({
-        title: "Oops! Something went wrong.",
-        description: `Please check your credentials and try again.`,
-        variant: "destructive",
-      });
+    mutationFn: async (data: UserSignUpProps) =>
+      await axios.post("/api/user/sign-up", { ...data }),
+    onError: (err) => {
+      if (err instanceof AxiosError)
+        if (err.response?.status === 409)
+          return toast({
+            title: "Oops! Something went wrong.",
+            description: "E-Mail is already registered.",
+            variant: "destructive",
+          });
+      defaultError();
     },
     onSuccess: () => {
-      startTransition(() => router.refresh());
+      signIn("credentials", {
+        email: form.getValues("email"),
+        password: form.getValues("password"),
+      });
     },
   });
 
@@ -80,7 +81,6 @@ export default function SignUp() {
     const payload: UserSignUpProps = {
       email: data.email,
       password: data.password,
-      remember: data.remember,
     };
     register(payload);
   }
@@ -89,7 +89,7 @@ export default function SignUp() {
     <Card className="md:p-2 w-[400px]">
       <CardHeader>
         <CardTitle>Sign Up</CardTitle>
-        <CardDescription>Create Your Personal Account</CardDescription>
+        <CardDescription>Create your Personal Account</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -99,7 +99,9 @@ export default function SignUp() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>E-Mail</FormLabel>
+                  <FormLabel className="text-black dark:text-white">
+                    E-Mail
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="email"
@@ -107,7 +109,7 @@ export default function SignUp() {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -116,7 +118,9 @@ export default function SignUp() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="text-black dark:text-white">
+                    Password
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -124,7 +128,7 @@ export default function SignUp() {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -133,7 +137,9 @@ export default function SignUp() {
               name="confPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
+                  <FormLabel className="text-black dark:text-white">
+                    Confirm Password
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -141,27 +147,7 @@ export default function SignUp() {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="remember"
-              render={({ field }) => (
-                <FormItem className="flex items-center gap-2">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none mt-5">
-                    <FormLabel>Remember Me</FormLabel>
-                    <FormDescription className="text-[13px]">
-                      Keep me logged in
-                    </FormDescription>
-                  </div>
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -182,7 +168,7 @@ export default function SignUp() {
           <div className="flex-1 border"></div>
         </div>
 
-        <div className="f-col gap-2">
+        <div className="grid grid-cols-2 gap-2">
           <OAuth provider="google" />
           <OAuth provider="facebook" />
           <OAuth provider="github" />

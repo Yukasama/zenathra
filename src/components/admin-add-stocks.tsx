@@ -105,7 +105,9 @@ export default function AdminAddStocks() {
               name="stock"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Symbols</FormLabel>
+                  <FormLabel className="text-black dark:text-white">
+                    Symbols
+                  </FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}>
@@ -124,7 +126,7 @@ export default function AdminAddStocks() {
                   <FormDescription>
                     Start a uploading queue by selecting All
                   </FormDescription>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -140,7 +142,9 @@ export default function AdminAddStocks() {
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>Skip Stocks</FormLabel>
+                    <FormLabel className="text-black dark:text-white">
+                      Skip Stocks
+                    </FormLabel>
                     <FormDescription>
                       This will skip stocks that already exist in the database
                     </FormDescription>
@@ -160,7 +164,9 @@ export default function AdminAddStocks() {
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>Clean Database</FormLabel>
+                    <FormLabel className="text-black dark:text-white">
+                      Clean Database
+                    </FormLabel>
                     <FormDescription>
                       Cleans the database of empty records
                     </FormDescription>
@@ -174,7 +180,9 @@ export default function AdminAddStocks() {
               render={({ field }) => (
                 <FormItem className="f-col items-start space-y-3 rounded-md border p-4">
                   <div className="space-y-1 leading-none">
-                    <FormLabel>Pull Times</FormLabel>
+                    <FormLabel className="text-black dark:text-white">
+                      Pull Times
+                    </FormLabel>
                     <FormDescription>
                       How many batches of data to pull (30 stocks/batch)
                     </FormDescription>

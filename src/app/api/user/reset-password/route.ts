@@ -39,6 +39,7 @@ export async function POST(req: Request) {
   } catch (error) {
     if (error instanceof z.ZodError)
       return new UnprocessableEntityResponse(error.message);
+    
     return new InternalServerErrorResponse();
   }
 }
