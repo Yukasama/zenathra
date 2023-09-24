@@ -143,7 +143,7 @@ export default function PriceChart({
                 </CardTitle>
               </Skeleton>
               <Skeleton isLoaded={isFetched}>
-                <CardDescription className="bg-card hidden md:flex max-w-[200px] truncate">
+                <CardDescription className="bg-card hidden md:flex max-w-[175px] truncate">
                   {description}
                 </CardDescription>
               </Skeleton>

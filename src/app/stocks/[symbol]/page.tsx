@@ -43,13 +43,24 @@ export default async function page({ params: { symbol } }: Props) {
 
   if (!stock) return notFound();
 
-  if (session?.user)
-    await db.userRecentStocks.create({
-      data: {
-        userId: session?.user.id,
+  if (session?.user) {
+    const tenSecondsAgo = new Date(new Date().getTime() - 10000);
+    const recentEntry = await db.userRecentStocks.findFirst({
+      where: {
+        userId: session.user.id,
         stockId: stock.id,
+        createdAt: { gte: tenSecondsAgo },
       },
     });
+
+    if (!recentEntry)
+      await db.userRecentStocks.create({
+        data: {
+          userId: session.user.id,
+          stockId: stock.id,
+        },
+      });
+  }
 
   return (
     <PageLayout>

@@ -19,6 +19,7 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/sign-in",
+    error: "/sign-in",
   },
   providers: [
     Google({
@@ -39,7 +40,7 @@ export const authOptions: NextAuthOptions = {
     Credentials({
       name: "credentials",
       credentials: {
-        email: { label: "email", type: "text" },
+        email: { label: "email", type: "email" },
         password: { label: "password", type: "password" },
       },
       async authorize(credentials) {
@@ -57,6 +58,7 @@ export const authOptions: NextAuthOptions = {
           credentials.password,
           user.hashedPassword
         );
+
         if (!isCorrectPassword) throw new Error("Invalid email or password");
 
         return user;
@@ -140,7 +142,7 @@ export const authOptions: NextAuthOptions = {
       return dbUser;
     },
     redirect() {
-      return "/";
+      return "http://localhost:3000/";
     },
   },
 };

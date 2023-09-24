@@ -1,17 +1,15 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { SignInResponse, signIn } from "next-auth/react";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, buttonVariants } from "../ui/button";
 import OAuth from "./oauth";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
 import { LogIn } from "lucide-react";
 import { SignInProps, SignInSchema } from "@/lib/validators/user";
 import { useMutation } from "@tanstack/react-query";
-import { startTransition } from "react";
 import {
   Form,
   FormControl,
@@ -32,8 +30,6 @@ import {
 import { cn } from "@/lib/utils";
 
 export default function SignIn() {
-  const router = useRouter();
-
   const form = useForm({
     resolver: zodResolver(SignInSchema),
     defaultValues: {
@@ -44,17 +40,22 @@ export default function SignIn() {
 
   const { mutate: login, isLoading } = useMutation({
     mutationFn: async (data: SignInProps) => {
-      const y = await signIn("credentials", { ...data, redirect: false });
-      console.log(y);
-      return y;
+      const response = await signIn("credentials", {
+        ...data,
+        redirect: false,
+      });
+      if (response?.error) throw new Error(response?.error);
+      return response as SignInResponse;
     },
-    onError: (err: any) =>
+    onError: (err: string) =>
       toast({
         title: "Oops! Something went wrong.",
-        description: `${err?.error ?? "Unknown Error"}`,
+        description: `${err ?? "Please try again later."}`,
         variant: "destructive",
       }),
-    onSuccess: () => startTransition(() => router.refresh()),
+    onSettled: (res, resp) => {
+      if (!resp) window.location.reload();
+    },
   });
 
   function onSubmit(data: FieldValues) {

@@ -23,10 +23,9 @@ import { toast } from "@/hooks/use-toast";
 import { UploadStockProps, UploadStockSchema } from "@/lib/validators/stock";
 import { Checkbox } from "./ui/checkbox";
 import { useMutation } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { Slider } from "./ui/slider";
 import { Upload } from "lucide-react";
-import { useCustomToasts } from "@/hooks/use-custom-toasts";
 import {
   Card,
   CardContent,
@@ -36,12 +35,10 @@ import {
 } from "./ui/card";
 
 export default function AdminAddStocks() {
-  const { loginToast } = useCustomToasts();
-
   const form = useForm({
     resolver: zodResolver(UploadStockSchema),
     defaultValues: {
-      stock: "AAPL",
+      stock: "All",
       clean: true,
       skip: false,
       pullTimes: 1,
@@ -51,22 +48,12 @@ export default function AdminAddStocks() {
   const { mutate: uploadStocks, isLoading } = useMutation({
     mutationFn: async (payload: UploadStockProps) =>
       await axios.post("/api/stock/upload", payload),
-    onError: (err) => {
-      if (err instanceof AxiosError) {
-        if (err.response?.status === 401) return loginToast();
-        if (err.response?.status === 403)
-          return toast({
-            title: "This action is forbidden.",
-            description: "Only admins are allowed to start stock uploads.",
-            variant: "destructive",
-          });
-      }
+    onError: () =>
       toast({
         title: "Oops! Something went wrong.",
         description: `Stocks could not be uploaded.`,
         variant: "destructive",
-      });
-    },
+      }),
     onSuccess: () => {
       toast({
         title: "Stocks uploaded.",
@@ -86,7 +73,7 @@ export default function AdminAddStocks() {
   }
 
   return (
-    <Card className="w-[400px] md:w-[500px]">
+    <Card className="w-[400px] sm:w-[500px]">
       <CardHeader>
         <CardTitle>Upload Stocks</CardTitle>
         <CardDescription>Upload stock data to the database</CardDescription>
@@ -112,13 +99,14 @@ export default function AdminAddStocks() {
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="All">All</SelectItem>
+                      <SelectItem value="US500">US500</SelectItem>
                       <SelectItem value="AAPL">AAPL</SelectItem>
                       <SelectItem value="MSFT">MSFT</SelectItem>
-                      <SelectItem value="SQ">SQ</SelectItem>
+                      <SelectItem value="TSLA">TSLA</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    Start a uploading queue by selecting All
+                    Start a uploading queue by selecting All or US500
                   </FormDescription>
                   <FormMessage className="text-red-500" />
                 </FormItem>
@@ -184,11 +172,19 @@ export default function AdminAddStocks() {
                   </div>
                   <FormControl>
                     <Slider
+                      // disabled={
+                      //   form.getValues("stock") !== "All" ||
+                      //   form.getValues("stock") !== "US500"
+                      // }
                       name="pullTimes"
                       max={100}
                       min={1}
                       defaultValue={[1]}
-                      onValueChange={field.onChange}>
+                      value={[field.value]}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        form.setValue("pullTimes", value[0]);
+                      }}>
                       {field.value}
                     </Slider>
                   </FormControl>

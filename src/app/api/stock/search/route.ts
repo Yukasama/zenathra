@@ -15,14 +15,8 @@ export async function GET(req: Request) {
       return new UnprocessableEntityResponse("Missing query parameter 'q'");
 
     const results = await db.stock.findMany({
-      where: {
-        symbol: {
-          startsWith: q,
-        },
-      },
-      include: {
-        _count: true,
-      },
+      where: { symbol: { startsWith: q } },
+      include: { _count: true },
       take: 10,
     });
 

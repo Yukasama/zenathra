@@ -296,7 +296,7 @@ model Stock {
   updatedAt                                 DateTime @updatedAt
   peersList                                 String?
 
-  ErrorMessage String?
+  errorMessage String?
 
   portfolios  StockInPortfolio[]
   financials  Financials[]
@@ -307,7 +307,6 @@ model Stock {
 }
 
 model Financials {
-  id                                       String   @id @default(cuid())
   createdAt                                DateTime @default(now())
   updatedAt                                DateTime @updatedAt
   date                                     String
@@ -520,11 +519,13 @@ model Financials {
   roe                                      Float?
   capexPerShare                            Float?
 
+  errorMessage String?
+
   stockId String
   stock   Stock  @relation(fields: [stockId], references: [id], onDelete: Cascade)
 
   creatorId String
   creator   User   @relation(fields: [creatorId], references: [id])
 
-  @@unique([stockId, calendarYear])
+  @@id([stockId, calendarYear])
 }

@@ -4,8 +4,8 @@ import { Quote } from "@/types/stock";
 import { env } from "@/env.mjs";
 
 export const fmpConfig = {
-  timeout: 60,
-  docsPerPull: 33,
+  timeout: 60000,
+  docsPerPull: 25,
   simulation: false,
 };
 
