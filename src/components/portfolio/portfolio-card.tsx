@@ -26,9 +26,7 @@ interface Props {
 export default async function PortfolioCard({ portfolio }: Props) {
   const symbols = await db.stock.findMany({
     select: { symbol: true },
-    where: {
-      id: { in: portfolio.stockIds },
-    },
+    where: { id: { in: portfolio.stockIds } },
   });
 
   return (

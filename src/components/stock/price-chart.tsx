@@ -22,13 +22,12 @@ import { StockHistoryProps } from "@/lib/validators/stock";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { cn, computeDomain } from "@/lib/utils";
 import Skeleton from "../ui/skeleton";
-import { StockImage } from "./stock-image";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
   description?: string;
   symbols: string | string[];
-  image?: string;
+  image?: React.ReactNode;
   height?: number;
   width?: number;
 }
@@ -133,9 +132,7 @@ export default function PriceChart({
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Skeleton isLoaded={isFetched}>
-              <StockImage src={image} px={40} className="bg-card" />
-            </Skeleton>
+            <Skeleton isLoaded={isFetched}>{image ?? null}</Skeleton>
             <div className="f-col gap-1">
               <Skeleton isLoaded={isFetched}>
                 <CardTitle className="bg-card hidden md:flex">

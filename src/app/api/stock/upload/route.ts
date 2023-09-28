@@ -217,8 +217,10 @@ async function uploadStocks(
                 createdAt: new Date(),
               },
             });
-          } catch {
-            console.log("Error uploading financials for", symbol, year);
+          } catch (error: any) {
+            if (error.message.includes("Timed out"))
+              console.log("Timed out while uploading", symbol, year);
+            else console.log("Error uploading financials for", symbol, year);
           }
         }
       );

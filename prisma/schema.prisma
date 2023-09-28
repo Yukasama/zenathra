@@ -18,6 +18,11 @@ enum SubscriptionType {
   premium
 }
 
+enum VerificationType {
+  email
+  forgotPassword
+}
+
 model Account {
   id                String  @id @default(cuid())
   type              String
@@ -35,6 +40,7 @@ model Account {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -44,6 +50,8 @@ model Session {
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model User {
@@ -62,11 +70,12 @@ model User {
   verifyToken          String?
   verifyTokenExpiry    DateTime?
 
-  role          UserRole           @default(user)
-  accounts      Account[]
-  sessions      Session[]
-  subscriptions UserSubscription[]
-  portfolios    Portfolio[]        @relation("CreatedBy")
+  role               UserRole            @default(user)
+  accounts           Account[]
+  sessions           Session[]
+  subscriptions      Subscription[]
+  portfolios         Portfolio[]         @relation("CreatedBy")
+  verificationTokens VerificationToken[]
 
   recentStocks UserRecentStocks[]
 
@@ -79,30 +88,27 @@ model User {
   createdFinancials Financials[]
 }
 
-model Subscription {
-  id       String           @id @default(cuid())
-  type     SubscriptionType @default(basic)
-  price    Float
-  duration Int
-
-  users UserSubscription[]
-}
-
-model UserSubscription {
-  id        String    @id @default(cuid())
-  startDate DateTime  @default(now())
-  endDate   DateTime?
-
-  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
-  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
-  stripePriceId          String?   @map(name: "stripe_price_id")
-  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+model VerificationToken {
+  token   String           @unique
+  expires DateTime
+  type    VerificationType
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  subscriptionPlanId String
-  subscriptionPlan   Subscription @relation(fields: [subscriptionPlanId], references: [id])
+  @@index([userId])
+}
+
+model Subscription {
+  id        String           @id @default(cuid())
+  type      SubscriptionType @default(basic)
+  startDate DateTime         @default(now())
+  endDate   DateTime?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Portfolio {
@@ -118,6 +124,8 @@ model Portfolio {
 
   creatorId String
   creator   User   @relation("CreatedBy", fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@index([creatorId])
 }
 
 model StockInPortfolio {
@@ -130,6 +138,8 @@ model StockInPortfolio {
   stock       Stock     @relation(fields: [stockId], references: [id], onDelete: Cascade)
 
   @@id([portfolioId, stockId])
+  @@index([portfolioId])
+  @@index([stockId])
 }
 
 model UserRecentStocks {
@@ -142,6 +152,9 @@ model UserRecentStocks {
 
   stockId String
   stock   Stock  @relation(fields: [stockId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([stockId])
 }
 
 model Stock {
@@ -302,8 +315,10 @@ model Stock {
   financials  Financials[]
   recentUsers UserRecentStocks[]
 
-  creatorId String
-  creator   User   @relation(fields: [creatorId], references: [id])
+  creatorId String?
+  creator   User?   @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+
+  @@index([creatorId])
 }
 
 model Financials {
@@ -524,8 +539,10 @@ model Financials {
   stockId String
   stock   Stock  @relation(fields: [stockId], references: [id], onDelete: Cascade)
 
-  creatorId String
-  creator   User   @relation(fields: [creatorId], references: [id])
+  creatorId String?
+  creator   User?   @relation(fields: [creatorId], references: [id], onDelete: SetNull)
 
   @@id([stockId, calendarYear])
+  @@index([stockId])
+  @@index([creatorId])
 }

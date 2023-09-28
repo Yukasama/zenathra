@@ -33,9 +33,7 @@ export default async function PortfolioAssets({
   session,
 }: Props) {
   const [stocks, quotes] = await Promise.all([
-    db.stock.findMany({
-      where: { symbol: { in: symbols } },
-    }),
+    db.stock.findMany({ where: { symbol: { in: symbols } } }),
     getQuotes(symbols),
   ]);
 
@@ -85,7 +83,7 @@ export default async function PortfolioAssets({
                 </TableCell>
                 <TableCell>
                   <div className="f-col justify-end items-center">
-                    <p>${stock.price.toFixed(2)}</p>
+                    <p>${stock.price ? stock.price.toFixed(2) : "N/A"}</p>
                     <p
                       className={`text-[13px] ${
                         stock.changesPercentage! > 0
@@ -98,7 +96,7 @@ export default async function PortfolioAssets({
                   </div>
                 </TableCell>
                 <TableCell className="text-right">
-                  {stock.peRatioTTM.toFixed(2)}
+                  {stock.peRatioTTM ? stock.peRatioTTM.toFixed(2) : "N/A"}
                 </TableCell>
               </TableRow>
             ))}

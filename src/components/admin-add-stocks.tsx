@@ -56,7 +56,7 @@ export default function AdminAddStocks() {
       }),
     onSuccess: () => {
       toast({
-        title: "Stocks uploaded.",
+        title: `${form.getValues("stock")} uploaded.`,
         description: `Files were successfully added to the database.`,
       });
     },
@@ -166,16 +166,12 @@ export default function AdminAddStocks() {
                       Pull Times
                     </FormLabel>
                     <FormDescription>
-                      {form.getValues("pullTimes")} batches of data to pull (30
+                      {form.getValues("pullTimes")} batches of data to pull (~30
                       stocks/batch)
                     </FormDescription>
                   </div>
                   <FormControl>
                     <Slider
-                      // disabled={
-                      //   form.getValues("stock") !== "All" ||
-                      //   form.getValues("stock") !== "US500"
-                      // }
                       name="pullTimes"
                       max={100}
                       min={1}

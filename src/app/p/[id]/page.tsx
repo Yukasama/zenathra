@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import Image from "next/image";
 import PortfolioAddModal from "@/components/portfolio/portfolio-add-modal";
 import PriceChart from "@/components/stock/price-chart";
 import { getAuthSession } from "@/lib/auth";
@@ -7,57 +6,41 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import PageLayout from "@/components/shared/page-layout";
 import PortfolioAssets from "@/components/portfolio/portfolio-assets";
-import { PortfolioWithStocks } from "@/types/db";
 import PortfolioAllocation from "@/components/portfolio/portfolio-allocation";
-
-interface Props {
-  params: { id: string };
-}
+import { EyeOff } from "lucide-react";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export async function generateStaticParams() {
-  const data = await db.portfolio.findMany({
-    select: { id: true },
-  });
+  const data = await db.portfolio.findMany({ select: { id: true } });
   return data.map((portfolio) => ({ id: portfolio.id }));
 }
 
 export async function generateMetadata({ params: { id } }: Props) {
   const [session, portfolio] = await Promise.all([
     getAuthSession(),
-    db.portfolio.findFirst({
-      where: { id },
-    }),
+    db.portfolio.findFirst({ where: { id } }),
   ]);
 
   if (!portfolio) return { title: "Portfolio not found" };
-
   if (!portfolio.public && session?.user.id !== portfolio.creatorId)
     return { title: "This portfolio is private" };
 
   return { title: portfolio.title };
 }
 
-interface NoStockProps {
-  portfolio: PortfolioWithStocks;
-}
-
-function NoStocks({ portfolio }: NoStockProps) {
-  return (
-    <div>
-      <div>
-        <Image src="/nostocks.png" height={500} width={700} alt="No Stocks" />
-      </div>
-      <PortfolioAddModal portfolio={portfolio} />
-    </div>
-  );
+interface Props {
+  params: { id: string };
 }
 
 export default async function page({ params: { id } }: Props) {
   const [session, portfolio, stockIds] = await Promise.all([
     getAuthSession(),
-    db.portfolio.findFirst({
-      where: { id },
-    }),
+    db.portfolio.findFirst({ where: { id } }),
     db.stockInPortfolio.findMany({
       select: { stockId: true },
       where: { portfolioId: id },
@@ -66,18 +49,31 @@ export default async function page({ params: { id } }: Props) {
 
   if (!portfolio) return notFound();
 
-  // If the portfolio is private
+  // Portfolio is private and it does not belong to the user
   if (!portfolio.public && !session?.user)
-    return <p>This Portfolio is private.</p>;
+    return (
+      <div className="f-box f-col mt-96 gap-3">
+        <div className="p-5 rounded-full w-20 h-12 f-box bg-primary">
+          <EyeOff className="h-6 w-6" />
+        </div>
+        <h2 className="text-xl font-medium">This Portfolio is private.</h2>
+      </div>
+    );
 
+  // Portfolio belongs to user but no stocks added yet
   if (session?.user.id === portfolio.creatorId && !stockIds.length)
     return (
-      <NoStocks
-        portfolio={{
-          ...portfolio,
-          stockIds: stockIds.map((s) => s.stockId),
-        }}
-      />
+      <div className="f-box f-col gap-3 mt-80">
+        <h2 className="font-medium text-lg">
+          There are no stocks in this portfolio.
+        </h2>
+        <PortfolioAddModal
+          portfolio={{
+            ...portfolio,
+            stockIds: stockIds.map((s) => s.stockId),
+          }}
+        />
+      </div>
     );
 
   const stocks = await db.stock.findMany({
@@ -85,38 +81,45 @@ export default async function page({ params: { id } }: Props) {
   });
 
   return (
-    <PageLayout
-      title={portfolio.title}
-      description={`Created on ${
-        portfolio.createdAt.toISOString().split(".")[0].split("T")[0]
-      }`}>
-      {stockIds.length ? (
-        <div className="f-col gap-4">
-          <div className="flex f-col items-start lg:flex-row gap-4">
-            <PriceChart
-              symbols={stocks.map((s) => s.symbol)}
-              title="Portfolio Chart"
-              description="Chart of all portfolio positions"
-            />
-            <PortfolioAllocation stocks={stocks} />
-          </div>
-          <div className="flex">
-            <Suspense fallback={<p>Loading...</p>}>
-              {/* @ts-expect-error Server Component */}
-              <PortfolioAssets
-                portfolio={{
-                  ...portfolio,
-                  stockIds: stockIds.map((s) => s.stockId),
-                }}
+    <>
+      <Card className="rounded-none border-none">
+        <CardHeader>
+          <CardTitle>{portfolio.title}</CardTitle>
+          <CardDescription>
+            Created on{" "}
+            {portfolio.createdAt.toISOString().split(".")[0].split("T")[0]}
+          </CardDescription>
+        </CardHeader>
+      </Card>
+      <PageLayout>
+        {stockIds.length ? (
+          <div className="f-col gap-4">
+            <div className="flex f-col items-start lg:flex-row gap-4">
+              <PriceChart
                 symbols={stocks.map((s) => s.symbol)}
-                session={session}
+                title="Portfolio Chart"
+                description="Chart of all portfolio positions"
               />
-            </Suspense>
+              <PortfolioAllocation stocks={stocks} />
+            </div>
+            <div className="flex">
+              <Suspense fallback={<p>Loading...</p>}>
+                {/* @ts-expect-error Server Component */}
+                <PortfolioAssets
+                  portfolio={{
+                    ...portfolio,
+                    stockIds: stockIds.map((s) => s.stockId),
+                  }}
+                  symbols={stocks.map((s) => s.symbol)}
+                  session={session}
+                />
+              </Suspense>
+            </div>
           </div>
-        </div>
-      ) : (
-        <h2>There are no stocks in this portfolio.</h2>
-      )}
-    </PageLayout>
+        ) : (
+          <h2>There are no stocks in this portfolio.</h2>
+        )}
+      </PageLayout>
+    </>
   );
 }

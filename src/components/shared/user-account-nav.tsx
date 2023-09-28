@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { User } from "next-auth";
 import { signOut } from "next-auth/react";
 import {
   DropdownMenu,
@@ -11,9 +10,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "@/components/shared/user-avatar";
+import { User } from "@prisma/client";
 
 interface UserAccountNavProps {
-  user: User;
+  user: Pick<User, "id" | "name" | "image" | "email" | "username">;
   isAdmin?: boolean;
 }
 
@@ -22,16 +22,19 @@ export function UserAccountNav({ user, isAdmin }: UserAccountNavProps) {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <UserAvatar
-          user={{ name: user.name || null, image: user.image || null }}
+          user={{
+            name: user.name || user.username || null,
+            image: user.image || null,
+          }}
           className="h-8 w-8"
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <div className="flex items-center justify-start gap-2 p-2">
-        <UserAvatar
-          user={{ name: user.name || null, image: user.image || null }}
-          className="h-8 w-8"
-        />
+          <UserAvatar
+            user={{ name: user.name || null, image: user.image || null }}
+            className="h-8 w-8"
+          />
           <div className="flex flex-col space-y-1 leading-none">
             {user.name && <p className="font-medium">{user.name}</p>}
             {user.email && (

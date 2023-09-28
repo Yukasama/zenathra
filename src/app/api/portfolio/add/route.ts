@@ -31,9 +31,7 @@ export async function POST(req: Request) {
 
     const stocksInDatabase = await db.stock.findMany({
       select: { id: true },
-      where: {
-        id: { in: stockIds },
-      },
+      where: { id: { in: stockIds } },
     });
 
     const portfolioStocks = await db.stockInPortfolio.findMany({

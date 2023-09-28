@@ -5,7 +5,7 @@ import { env } from "@/env.mjs";
 
 export const fmpConfig = {
   timeout: 60000,
-  docsPerPull: 25,
+  docsPerPull: 33,
   simulation: false,
 };
 

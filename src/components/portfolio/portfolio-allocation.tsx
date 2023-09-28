@@ -42,14 +42,15 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export default function PortfolioAllocation({ stocks }: Props) {
   const [mounted, setMounted] = useState<boolean>(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => setMounted(true), []);
 
   const sectorCount = useMemo(() => {
     const count: { [key: string]: number } = {};
     stocks.forEach((stock) => {
-      count[stock.sector] = (count[stock.sector] || 0) + 1;
+      if (stock.sector) {
+        if (count[stock.sector]) count[stock.sector] += 1;
+        else count[stock.sector] = 1;
+      }
     });
     return count;
   }, [stocks]);
@@ -64,10 +65,8 @@ export default function PortfolioAllocation({ stocks }: Props) {
 
   const colors = useMemo(() => generateColors(sortedData.length), [sortedData]);
 
-  const totalStocks = stocks.length;
-
   const renderCustomLabel = ({ value }: { value: number }) => {
-    const percentage = getPercentage(value, totalStocks);
+    const percentage = getPercentage(value, stocks.length);
     return `${percentage}`;
   };
 

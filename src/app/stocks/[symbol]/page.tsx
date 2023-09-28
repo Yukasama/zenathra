@@ -16,6 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import PageLayout from "@/components/shared/page-layout";
 import StockStatistics from "@/components/stock/stock-statistics";
 import PriceChart from "@/components/stock/price-chart";
+import { StockImage } from "@/components/stock/stock-image";
 
 export const revalidate = 30;
 
@@ -85,7 +86,7 @@ export default async function page({ params: { symbol } }: Props) {
             symbols={symbol}
             title={`${symbol} Chart`}
             description={`Price Chart of ${stock.companyName}`}
-            image={stock.image}
+            image={<StockImage src={stock.image} px={40} className="bg-card" />}
           />
           <Suspense fallback={<Card />}>
             {/* @ts-expect-error Server Component */}

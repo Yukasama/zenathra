@@ -34,14 +34,12 @@ interface Props {
 }
 
 export default function PortfolioAddModal({ portfolio }: Props) {
-  const [input, setInput] = useState<string>("");
-  const commandRef = useRef<HTMLDivElement>(null);
-  const [selected, setSelected] = useState<string[]>([]);
   const router = useRouter();
+  const commandRef = useRef<HTMLDivElement>(null);
+  const [input, setInput] = useState<string>("");
+  const [selected, setSelected] = useState<string[]>([]);
 
-  const request = debounce(async () => {
-    refetch();
-  }, 300);
+  const request = debounce(async () => refetch(), 300);
 
   const debounceRequest = useCallback(() => {
     request();
@@ -75,13 +73,12 @@ export default function PortfolioAddModal({ portfolio }: Props) {
       };
       await axios.post("/api/portfolio/add", payload);
     },
-    onError: () => {
+    onError: () =>
       toast({
         title: "Oops! Something went wrong.",
         description: "Failed to add stocks to portfolio.",
         variant: "destructive",
-      });
-    },
+      }),
     onSuccess: () => {
       startTransition(() => router.refresh());
       toast({ description: "Added stocks to portfolio." });

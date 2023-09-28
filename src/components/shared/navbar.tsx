@@ -17,7 +17,14 @@ export default async function Navbar() {
 
   const [user, recentStocks] = await Promise.all([
     db.user.findFirst({
-      select: { role: true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+        username: true,
+        role: true,
+      },
       where: { id: session?.user?.id },
     }),
     db.userRecentStocks.findMany({
@@ -57,9 +64,15 @@ export default async function Navbar() {
           </Link>
         )}
         <ThemeToggle />
-        {session?.user && (
+        {session && user && (
           <UserAccountNav
-            user={session.user}
+            user={{
+              id: user.id,
+              name: user.name,
+              image: user.image,
+              email: user.email,
+              username: user.username,
+            }}
             isAdmin={user?.role === "admin"}
           />
         )}

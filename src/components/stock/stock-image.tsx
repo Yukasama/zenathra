@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { ImageOff } from "lucide-react";
 import Image from "next/image";
 
 interface Props extends React.HTMLAttributes<HTMLImageElement> {
@@ -22,15 +23,21 @@ export function StockImage({
         height: px,
       }}
       {...props}>
-      <Image
-        className={cn("p-1", className)}
-        src={src ?? "/stock.jpg"}
-        height={px}
-        width={px}
-        alt="Stock Logo"
-        loading={`${priority ? "eager" : "lazy"}`}
-        priority={priority}
-      />
+      {src ? (
+        <Image
+          className={cn("p-1", className)}
+          src={src}
+          height={px}
+          width={px}
+          alt="Stock Logo"
+          loading={`${priority ? "eager" : "lazy"}`}
+          priority={priority}
+        />
+      ) : (
+        <div className="f-box p-3 rounded-full bg-slate-300 dark:bg-slate-700">
+          <ImageOff className="h-5 w-5" />
+        </div>
+      )}
     </div>
   );
 }
