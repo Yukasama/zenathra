@@ -20,8 +20,20 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { StockHistoryProps } from "@/lib/validators/stock";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
-import { cn, computeDomain } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import Skeleton from "../ui/skeleton";
+
+function computeDomain(data: any[]) {
+  const values = data.map((item) => parseFloat(item.uv));
+  const dataMax = Math.max(...values);
+  const dataMin = Math.min(...values);
+  const padding = (dataMax - dataMin) * 0.05; // 5% padding
+
+  return [
+    Number((dataMin - padding).toFixed(2)),
+    Number((dataMax + padding).toFixed(2)),
+  ];
+}
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;

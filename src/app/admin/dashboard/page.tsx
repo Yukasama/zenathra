@@ -1,8 +1,7 @@
 import AdminAddStocks from "@/components/admin-add-stocks";
 import PageLayout from "@/components/shared/page-layout";
 import { site } from "@/config/site";
-import { getAuthSession } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 
 export const metadata = {
@@ -10,14 +9,9 @@ export const metadata = {
 };
 
 export default async function page() {
-  const session = await getAuthSession();
+  const { getPermission } = getKindeServerSession();
 
-  const user = await db.user.findFirst({
-    select: { role: true },
-    where: { id: session?.user?.id },
-  });
-
-  if (user?.role !== "admin") redirect("/");
+  if (!getPermission("upload:stocks").isGranted) redirect("/");
 
   return (
     <PageLayout

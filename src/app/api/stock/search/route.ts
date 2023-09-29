@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import { z } from "zod";
 import {
   InternalServerErrorResponse,
@@ -8,7 +8,6 @@ import {
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
-
     const q = url.searchParams.get("q");
 
     if (!q)

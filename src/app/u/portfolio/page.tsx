@@ -1,6 +1,6 @@
 import PortfolioCard from "@/components/portfolio/portfolio-card";
 import PortfolioCreateCard from "@/components/portfolio/portfolio-create-card";
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import { getAuthSession } from "@/lib/auth";
 import PageLayout from "@/components/shared/page-layout";
 import { noSub } from "@/config/subscription";

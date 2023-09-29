@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getAuthSession } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import { notFound } from "next/navigation";
 
 interface Props {

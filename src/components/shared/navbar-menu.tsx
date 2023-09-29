@@ -14,13 +14,13 @@ import {
 } from "@/components/ui/navigation-menu";
 import { navLinks } from "@/config/site";
 import { ListFilter } from "lucide-react";
-import { Session } from "next-auth";
+import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface Props {
-  session: Session | null;
+  user: KindeUser | null;
 }
 
-export default function NavbarMenu({ session }: Props) {
+export default function NavbarMenu({ user }: Props) {
   return (
     <NavigationMenu className="hidden lg:flex">
       <NavigationMenuList>
@@ -48,9 +48,9 @@ export default function NavbarMenu({ session }: Props) {
                 Assemble your own collection of stocks and track their
                 performance.
               </ListItem>
-              {session?.user ? (
+              {user ? (
                 <ListItem
-                  href={`/u/${session?.user.id}`}
+                  href={`/u/${user.id}`}
                   title="Customize your profile">
                   Personalize your profile to reflect your unique style and
                   preferences.

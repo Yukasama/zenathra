@@ -1,10 +1,11 @@
 import { cn } from "@/lib/utils";
+import { FullProps } from "@/types/layout";
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-}
-
-export default function GridLayout({ children, className, ...props }: Props) {
+export default function GridLayout({
+  children,
+  className,
+  ...props
+}: FullProps) {
   return (
     <div
       className={cn(

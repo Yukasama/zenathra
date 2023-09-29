@@ -1,23 +1,9 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { Metadata } from "next";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
-}
-
-export function Timer() {
-  let timeStart = new Date().getTime();
-  return {
-    get seconds() {
-      const seconds =
-        Math.ceil((new Date().getTime() - timeStart) / 1000) + "s";
-      return seconds;
-    },
-    get ms() {
-      const ms = new Date().getTime() - timeStart + "ms";
-      return ms;
-    },
-  };
 }
 
 export function Years(startYear: number) {
@@ -33,14 +19,52 @@ export async function Timeout(ms: number) {
   return await new Promise((resolve) => setTimeout(resolve, Number(ms)));
 }
 
-export function computeDomain(data: any[]) {
-  const values = data.map((item) => parseFloat(item.uv));
-  const dataMax = Math.max(...values);
-  const dataMin = Math.min(...values);
-  const padding = (dataMax - dataMin) * 0.05; // 5% padding
+export function absoluteUrl(path: string) {
+  if (typeof window !== "undefined") return path;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}${path}`;
+  return `http://localhost:${process.env.PORT ?? 3000}${path}`;
+}
 
-  return [
-    Number((dataMin - padding).toFixed(2)),
-    Number((dataMax + padding).toFixed(2)),
-  ];
+export function constructMetadata({
+  title = "Quill - the SaaS for students",
+  description = "Quill is an open-source software to make chatting to your PDF files easy.",
+  image = "/thumbnail.png",
+  icons = "/favicon.ico",
+  noIndex = false,
+}: {
+  title?: string;
+  description?: string;
+  image?: string;
+  icons?: string;
+  noIndex?: boolean;
+} = {}): Metadata {
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [
+        {
+          url: image,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+      creator: "@joshtriedcoding",
+    },
+    icons,
+    metadataBase: new URL("https://quill-jet.vercel.app"),
+    themeColor: "#FFF",
+    ...(noIndex && {
+      robots: {
+        index: false,
+        follow: false,
+      },
+    }),
+  };
 }

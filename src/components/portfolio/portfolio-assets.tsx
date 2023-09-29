@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import {
   Card,
   CardContent,
@@ -19,18 +19,18 @@ import { getQuotes } from "@/lib/fmp/quote";
 import { StockImage } from "../stock/stock-image";
 import PortfolioAddModal from "./portfolio-add-modal";
 import { PortfolioWithStocks } from "@/types/db";
-import { Session } from "next-auth";
+import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface Props {
   symbols: string[];
   portfolio: PortfolioWithStocks;
-  session: Session | null;
+  user: KindeUser | null;
 }
 
 export default async function PortfolioAssets({
   symbols,
   portfolio,
-  session,
+  user,
 }: Props) {
   const [stocks, quotes] = await Promise.all([
     db.stock.findMany({ where: { symbol: { in: symbols } } }),
@@ -50,7 +50,7 @@ export default async function PortfolioAssets({
             <CardTitle>Assets</CardTitle>
             <CardDescription>Positions in your portfolio</CardDescription>
           </div>
-          {portfolio.creatorId === session?.user.id && (
+          {portfolio.creatorId === user?.id && (
             <PortfolioAddModal portfolio={portfolio} />
           )}
         </div>

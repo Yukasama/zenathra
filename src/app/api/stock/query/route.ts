@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import { buildFilter } from "@/config/screener";
 import { StockScreenerSchema } from "@/lib/validators/stock";
 import { z } from "zod";
@@ -15,9 +15,7 @@ export async function POST(req: Request) {
 
     const stocks = await db.stock.findMany({
       where: filter,
-      orderBy: {
-        companyName: "asc",
-      },
+      orderBy: { companyName: "asc" },
     });
 
     return new Response(JSON.stringify(stocks));

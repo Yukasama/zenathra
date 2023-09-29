@@ -3,7 +3,7 @@ import { Stock } from "@prisma/client";
 import { Years } from "@/lib/utils";
 import { StructureProps } from "@/types/layout";
 import React from "react";
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import StockKeyMetricsChart from "./stock-key-metrics-chart";
 import StockDividendChart from "./stock-dividend-chart";
 

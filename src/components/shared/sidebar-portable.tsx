@@ -1,24 +1,25 @@
-import { getAuthSession } from "@/lib/auth";
 import SidebarPortableClient from "./sidebar-portable-client";
-import { db } from "@/lib/db";
+import { db } from "@/db";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import _ from "lodash";
 
 export default async function SidebarPortable() {
-  const session = await getAuthSession();
+  const { getUser } = getKindeServerSession();
+  const user = getUser();
 
-  const [user, recentStocks] = await Promise.all([
-    db.user.findFirst({
-      select: { role: true },
-      where: { id: session?.user?.id },
-    }),
-    db.userRecentStocks.findMany({
-      select: {
-        stock: { select: { symbol: true, image: true, companyName: true } },
+  const recentStocks = await db.userRecentStocks.findMany({
+    select: {
+      stock: {
+        select: {
+          symbol: true,
+          image: true,
+          companyName: true,
+        },
       },
-      where: { userId: session?.user?.id },
-      take: 10,
-    }),
-  ]);
+    },
+    where: { userId: user?.id ?? undefined },
+    take: 10,
+  });
 
   const uniqueStocks = _.uniqBy(recentStocks, "stock.symbol");
 

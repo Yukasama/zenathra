@@ -1,4 +1,9 @@
-export interface StructureProps extends React.HTMLAttributes<HTMLElement> {
-  children?: React.ReactNode;
+import { PropsWithChildren } from "react";
+
+export interface FullProps
+  extends React.HTMLAttributes<HTMLElement>,
+    PropsWithChildren {}
+
+export interface StructureProps extends FullProps {
   isLoading?: boolean;
 }

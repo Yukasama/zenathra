@@ -1,25 +1,24 @@
 "use client";
 
-import { User } from "@prisma/client";
 import { AvatarProps } from "@radix-ui/react-avatar";
-
 import { Icons } from "./icons";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
-interface UserAvatarProps extends AvatarProps {
-  user: Pick<User, "image" | "name">;
+interface Props extends AvatarProps {
+  user: Pick<KindeUser, "given_name" | "picture">;
 }
 
-export function UserAvatar({ user, className, ...props }: UserAvatarProps) {
+export function UserAvatar({ user, className, ...props }: Props) {
   return (
     <Avatar className={cn(className)} {...props}>
-      {user.image ? (
+      {user.picture ? (
         <div className="essential relative aspect-square h-full w-full">
           <Image
             fill
-            src={user.image}
+            src={user.picture}
             sizes="100%"
             alt="profile picture"
             referrerPolicy="no-referrer"
@@ -27,7 +26,7 @@ export function UserAvatar({ user, className, ...props }: UserAvatarProps) {
         </div>
       ) : (
         <AvatarFallback>
-          <span className="sr-only">{user?.name}</span>
+          <span className="sr-only">{user?.picture}</span>
           <Icons.user className="h-4 w-4" />
         </AvatarFallback>
       )}

@@ -1,6 +1,6 @@
 import StockListItem from "./stock-list-item";
 import React from "react";
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import { getQuotes } from "@/lib/fmp/quote";
 import {
   Card,

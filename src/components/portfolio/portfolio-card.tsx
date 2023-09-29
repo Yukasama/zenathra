@@ -11,7 +11,7 @@ import {
 } from "../ui/card";
 import PortfolioDeleteModal from "./portfolio-delete-modal";
 import { PortfolioWithStocks } from "@/types/db";
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import { buttonVariants } from "../ui/button";
 import { BarChart } from "lucide-react";
 import PortfolioAddModal from "./portfolio-add-modal";

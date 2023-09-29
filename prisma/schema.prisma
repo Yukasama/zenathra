@@ -8,76 +8,18 @@ datasource db {
   relationMode = "prisma"
 }
 
-enum UserRole {
-  user
-  admin
-}
-
 enum SubscriptionType {
   basic
   premium
 }
 
-enum VerificationType {
-  email
-  forgotPassword
-}
-
-model Account {
-  id                String  @id @default(cuid())
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@index([userId])
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  expires      DateTime
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-}
-
 model User {
-  id             String    @id @default(cuid())
-  name           String?
-  username       String?   @unique
-  email          String?   @unique
-  emailVerified  DateTime?
-  image          String?
-  hashedPassword String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id    String @id @unique
+  email String @unique
 
-  forgotPasswordToken  String?
-  forgotPasswordExpiry DateTime?
-  verifyToken          String?
-  verifyTokenExpiry    DateTime?
-
-  role               UserRole            @default(user)
-  accounts           Account[]
-  sessions           Session[]
-  subscriptions      Subscription[]
-  portfolios         Portfolio[]         @relation("CreatedBy")
-  verificationTokens VerificationToken[]
-
-  recentStocks UserRecentStocks[]
+  subscriptions Subscription[]
+  portfolios    Portfolio[]        @relation("CreatedBy")
+  recentStocks  UserRecentStocks[]
 
   stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
   stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
@@ -86,17 +28,6 @@ model User {
 
   createdStocks     Stock[]
   createdFinancials Financials[]
-}
-
-model VerificationToken {
-  token   String           @unique
-  expires DateTime
-  type    VerificationType
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
 }
 
 model Subscription {

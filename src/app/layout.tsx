@@ -8,8 +8,9 @@ import { cn } from "@/lib/utils";
 import { K2D } from "next/font/google";
 import { site } from "@/config/site";
 import { Toaster } from "@/components/ui/toaster";
+import { PropsWithChildren } from "react";
 
-import "@/styles/globals.css";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: site.name,
@@ -21,12 +22,7 @@ export const metadata: Metadata = {
 
 const k2d = K2D({ subsets: ["latin"], weight: ["400", "500", "600"] });
 
-interface LayoutProps {
-  children: React.ReactNode;
-  authModal: React.ReactNode;
-}
-
-export default async function RootLayout({ children, authModal }: LayoutProps) {
+export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <html
       lang="en"
@@ -39,7 +35,6 @@ export default async function RootLayout({ children, authModal }: LayoutProps) {
             <Sidebar />
             {/* @ts-expect-error Server Component */}
             <SidebarPortable />
-            {authModal}
             <div className="w-full overflow-auto">
               {/* @ts-expect-error Server Component */}
               <Navbar />

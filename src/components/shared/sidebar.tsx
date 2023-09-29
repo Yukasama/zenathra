@@ -1,19 +1,17 @@
 import SidebarToggle from "./sidebar-toggle";
 import { Card } from "../ui/card";
 import { Menu } from "lucide-react";
-import { getAuthSession } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import Link from "next/link";
+import { getUser } from "@/lib/auth";
 
 export default async function Sidebar() {
-  const session = await getAuthSession();
+  const user = getUser();
 
-  const portfolios =
-    session?.user &&
-    (await db.portfolio.findMany({
-      where: { creatorId: session?.user?.id },
-      orderBy: { title: "asc" },
-    }));
+  const portfolios = await db.portfolio.findMany({
+    where: { creatorId: user?.id ?? undefined },
+    orderBy: { title: "asc" },
+  });
 
   return (
     <Card className="hidden md:flex rounded-none border-y-0 f-col p-3.5 gap-4">
@@ -21,8 +19,8 @@ export default async function Sidebar() {
         <Menu className="h-[18px]" />
       </SidebarToggle>
 
-      {session?.user &&
-        portfolios!.map((portfolio) => (
+      {user &&
+        portfolios.map((portfolio) => (
           <Link
             href={`/p/${portfolio.id}`}
             key={portfolio.id}

@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { signOut } from "next-auth/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,21 +7,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "@/components/shared/user-avatar";
-import { User } from "@prisma/client";
+import { KindeUser, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/server";
 
-interface UserAccountNavProps {
-  user: Pick<User, "id" | "name" | "image" | "email" | "username">;
+interface Props {
+  user: KindeUser;
   isAdmin?: boolean;
 }
 
-export function UserAccountNav({ user, isAdmin }: UserAccountNavProps) {
+export function UserAccountNav({ user, isAdmin }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <UserAvatar
           user={{
-            name: user.name || user.username || null,
-            image: user.image || null,
+            name: user.given_name || user.family_name || null,
+            image: user.picture || null,
           }}
           className="h-8 w-8"
         />
@@ -32,11 +29,16 @@ export function UserAccountNav({ user, isAdmin }: UserAccountNavProps) {
       <DropdownMenuContent align="end">
         <div className="flex items-center justify-start gap-2 p-2">
           <UserAvatar
-            user={{ name: user.name || null, image: user.image || null }}
+            user={{
+              name: user.given_name || null,
+              image: user.picture || null,
+            }}
             className="h-8 w-8"
           />
           <div className="flex flex-col space-y-1 leading-none">
-            {user.name && <p className="font-medium">{user.name}</p>}
+            {user.given_name && (
+              <p className="font-medium">{user.given_name}</p>
+            )}
             {user.email && (
               <p className="w-[200px] truncate text-sm text-muted-foreground">
                 {user.email}
@@ -68,15 +70,8 @@ export function UserAccountNav({ user, isAdmin }: UserAccountNavProps) {
           <DropdownMenuItem>Help</DropdownMenuItem>
         </Link>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className="cursor-pointer"
-          onSelect={(event) => {
-            event.preventDefault();
-            signOut({
-              callbackUrl: `${window.location.origin}/sign-in`,
-            });
-          }}>
-          Sign out
+        <DropdownMenuItem>
+          <LogoutLink>Log out</LogoutLink>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

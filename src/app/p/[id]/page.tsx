@@ -1,8 +1,7 @@
 import { Suspense } from "react";
 import PortfolioAddModal from "@/components/portfolio/portfolio-add-modal";
 import PriceChart from "@/components/stock/price-chart";
-import { getAuthSession } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import { notFound } from "next/navigation";
 import PageLayout from "@/components/shared/page-layout";
 import PortfolioAssets from "@/components/portfolio/portfolio-assets";
@@ -14,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getUser } from "@/lib/auth";
 
 export async function generateStaticParams() {
   const data = await db.portfolio.findMany({ select: { id: true } });
@@ -21,13 +21,11 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params: { id } }: Props) {
-  const [session, portfolio] = await Promise.all([
-    getAuthSession(),
-    db.portfolio.findFirst({ where: { id } }),
-  ]);
+  const user = getUser();
+  const portfolio = await db.portfolio.findFirst({ where: { id } });
 
   if (!portfolio) return { title: "Portfolio not found" };
-  if (!portfolio.public && session?.user.id !== portfolio.creatorId)
+  if (!portfolio.public && user?.id !== portfolio.creatorId)
     return { title: "This portfolio is private" };
 
   return { title: portfolio.title };
@@ -38,8 +36,9 @@ interface Props {
 }
 
 export default async function page({ params: { id } }: Props) {
-  const [session, portfolio, stockIds] = await Promise.all([
-    getAuthSession(),
+  const user = getUser();
+
+  const [portfolio, stockIds] = await Promise.all([
     db.portfolio.findFirst({ where: { id } }),
     db.stockInPortfolio.findMany({
       select: { stockId: true },
@@ -50,7 +49,7 @@ export default async function page({ params: { id } }: Props) {
   if (!portfolio) return notFound();
 
   // Portfolio is private and it does not belong to the user
-  if (!portfolio.public && !session?.user)
+  if (!portfolio.public && !user)
     return (
       <div className="f-box f-col mt-96 gap-3">
         <div className="p-5 rounded-full w-20 h-12 f-box bg-primary">
@@ -61,7 +60,7 @@ export default async function page({ params: { id } }: Props) {
     );
 
   // Portfolio belongs to user but no stocks added yet
-  if (session?.user.id === portfolio.creatorId && !stockIds.length)
+  if (user?.id === portfolio.creatorId && !stockIds.length)
     return (
       <div className="f-box f-col gap-3 mt-80">
         <h2 className="font-medium text-lg">
@@ -111,7 +110,7 @@ export default async function page({ params: { id } }: Props) {
                     stockIds: stockIds.map((s) => s.stockId),
                   }}
                   symbols={stocks.map((s) => s.symbol)}
-                  session={session}
+                  user={user}
                 />
               </Suspense>
             </div>

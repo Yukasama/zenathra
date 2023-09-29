@@ -51,15 +51,14 @@ export default function AdminAddStocks() {
     onError: () =>
       toast({
         title: "Oops! Something went wrong.",
-        description: `Stocks could not be uploaded.`,
+        description: "Stocks could not be uploaded.",
         variant: "destructive",
       }),
-    onSuccess: () => {
+    onSuccess: () =>
       toast({
         title: `${form.getValues("stock")} uploaded.`,
-        description: `Files were successfully added to the database.`,
-      });
-    },
+        description: "Files were successfully added to the database.",
+      }),
   });
 
   function onSubmit(data: FieldValues) {

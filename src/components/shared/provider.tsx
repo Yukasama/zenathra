@@ -1,22 +1,37 @@
 "use client";
 
-import { ThemeProvider } from "next-themes";
+import { trpc } from "@/app/_trpc/client";
+import { absoluteUrl } from "@/lib/utils";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { httpBatchLink } from "@trpc/client";
+import { PropsWithChildren, useState } from "react";
 import { SidebarProvider } from "./sidebar-provider";
-import TrpcProvider from "@/lib/trpc/Provider";
 import { NextUIProvider } from "@nextui-org/system";
+import { ThemeProvider } from "next-themes";
 
-interface Props {
-  children: React.ReactNode;
-}
-
-export default function Provider({ children }: Props) {
-  return (
-    <NextUIProvider>
-      <TrpcProvider>
-        <ThemeProvider attribute="class">
-          <SidebarProvider>{children}</SidebarProvider>
-        </ThemeProvider>
-      </TrpcProvider>
-    </NextUIProvider>
+const Providers = ({ children }: PropsWithChildren) => {
+  const [queryClient] = useState(() => new QueryClient());
+  const [trpcClient] = useState(() =>
+    trpc.createClient({
+      links: [
+        httpBatchLink({
+          url: absoluteUrl("/api/trpc"),
+        }),
+      ],
+    })
   );
-}
+
+  return (
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <NextUIProvider>
+          <ThemeProvider attribute="class">
+            <SidebarProvider>{children}</SidebarProvider>
+          </ThemeProvider>
+        </NextUIProvider>
+      </QueryClientProvider>
+    </trpc.Provider>
+  );
+};
+
+export default Providers;

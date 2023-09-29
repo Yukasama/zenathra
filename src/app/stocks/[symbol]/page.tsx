@@ -8,15 +8,15 @@ import StockPrice2, {
   StockPrice2Loading,
 } from "@/components/stock/stock-price-2";
 import { Suspense } from "react";
-import { getAuthSession } from "@/lib/auth";
 import { notFound } from "next/navigation";
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import PageLayout from "@/components/shared/page-layout";
 import StockStatistics from "@/components/stock/stock-statistics";
 import PriceChart from "@/components/stock/price-chart";
 import { StockImage } from "@/components/stock/stock-image";
+import { getUser } from "@/lib/auth";
 
 export const revalidate = 30;
 
@@ -35,20 +35,19 @@ interface Props {
 }
 
 export default async function page({ params: { symbol } }: Props) {
-  const [session, stock] = await Promise.all([
-    getAuthSession(),
-    db.stock.findFirst({
-      where: { symbol: symbol },
-    }),
-  ]);
+  const stock = await db.stock.findFirst({
+    where: { symbol: symbol },
+  });
 
   if (!stock) return notFound();
 
-  if (session?.user) {
+  const user = getUser();
+
+  if (user) {
     const tenSecondsAgo = new Date(new Date().getTime() - 10000);
     const recentEntry = await db.userRecentStocks.findFirst({
       where: {
-        userId: session.user.id,
+        userId: user?.id ?? undefined,
         stockId: stock.id,
         createdAt: { gte: tenSecondsAgo },
       },
@@ -57,7 +56,7 @@ export default async function page({ params: { symbol } }: Props) {
     if (!recentEntry)
       await db.userRecentStocks.create({
         data: {
-          userId: session.user.id,
+          userId: user?.id!,
           stockId: stock.id,
         },
       });

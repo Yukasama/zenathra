@@ -1,14 +1,12 @@
-import { headers } from "next/headers";
-import Stripe from "stripe";
-
-import { env } from "@/env.mjs";
-import { db } from "@/lib/db";
-import { stripe } from "@/lib/stripe";
+import { db } from "@/db";
 import { BadRequestResponse } from "@/lib/response";
+import { stripe } from "@/lib/stripe";
+import { headers } from "next/headers";
+import type Stripe from "stripe";
 
-export async function POST(req: Request) {
-  const body = await req.text();
-  const signature = headers().get("Stripe-Signature") as string;
+export async function POST(request: Request) {
+  const body = await request.text();
+  const signature = headers().get("Stripe-Signature") ?? "";
 
   let event: Stripe.Event;
 
@@ -16,31 +14,29 @@ export async function POST(req: Request) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      env.STRIPE_WEBHOOK_SECRET
+      process.env.STRIPE_WEBHOOK_SECRET || ""
     );
-  } catch (error: any) {
-    return new BadRequestResponse(`Webhook Error: ${error.message}`);
+  } catch (err) {
+    return new BadRequestResponse(
+      `Webhook Error: ${err instanceof Error ? err.message : "Unknown Error"}`
+    );
   }
 
   const session = event.data.object as Stripe.Checkout.Session;
 
+  if (!session?.metadata?.userId) return new Response("OK");
+
   if (event.type === "checkout.session.completed") {
-    // Retrieve the subscription details from Stripe.
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     );
 
-    // Update the user stripe into in our database.
-    // Since this is the initial subscription, we need to update
-    // the subscription id and customer id.
     await db.user.update({
-      where: {
-        id: session?.metadata?.userId,
-      },
+      where: { id: session.metadata.userId },
       data: {
         stripeSubscriptionId: subscription.id,
         stripeCustomerId: subscription.customer as string,
-        stripePriceId: subscription.items.data[0].price.id,
+        stripePriceId: subscription.items.data[0]?.price.id,
         stripeCurrentPeriodEnd: new Date(
           subscription.current_period_end * 1000
         ),
@@ -54,13 +50,10 @@ export async function POST(req: Request) {
       session.subscription as string
     );
 
-    // Update the price id and set the new period end.
     await db.user.update({
-      where: {
-        stripeSubscriptionId: subscription.id,
-      },
+      where: { stripeSubscriptionId: subscription.id },
       data: {
-        stripePriceId: subscription.items.data[0].price.id,
+        stripePriceId: subscription.items.data[0]?.price.id,
         stripeCurrentPeriodEnd: new Date(
           subscription.current_period_end * 1000
         ),

@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
-interface Props extends React.HTMLAttributes<HTMLButtonElement> {}
-
-export default function ThemeToggle({ className }: Props) {
+export default function ThemeToggle({
+  className,
+}: React.HTMLAttributes<HTMLButtonElement>) {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 

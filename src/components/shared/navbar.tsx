@@ -1,40 +1,37 @@
 import Link from "next/link";
 import ThemeToggle from "./theme-toggle";
 import { Menu } from "lucide-react";
-import { getAuthSession } from "@/lib/auth";
 import Searchbar from "./searchbar";
 import { UserAccountNav } from "./user-account-nav";
 import SidebarToggle from "./sidebar-toggle";
 import { buttonVariants } from "../ui/button";
 import NavbarMenu from "./navbar-menu";
 import { cn } from "@/lib/utils";
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import _ from "lodash";
 import CompanyLogo from "../company-logo";
+import {
+  LoginLink,
+  getKindeServerSession,
+} from "@kinde-oss/kinde-auth-nextjs/server";
 
 export default async function Navbar() {
-  const session = await getAuthSession();
+  const { getUser, getPermission } = getKindeServerSession();
+  const user = getUser();
 
-  const [user, recentStocks] = await Promise.all([
-    db.user.findFirst({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        image: true,
-        username: true,
-        role: true,
+  const recentStocks = await db.userRecentStocks.findMany({
+    select: {
+      stock: {
+        select: {
+          symbol: true,
+          image: true,
+          companyName: true,
+        },
       },
-      where: { id: session?.user?.id },
-    }),
-    db.userRecentStocks.findMany({
-      select: {
-        stock: { select: { symbol: true, image: true, companyName: true } },
-      },
-      where: { userId: session?.user?.id },
-      take: 10,
-    }),
-  ]);
+    },
+    where: { userId: user?.id ?? undefined },
+    take: 10,
+  });
 
   const uniqueStocks = _.uniqBy(recentStocks, "stock.symbol");
 
@@ -50,30 +47,23 @@ export default async function Navbar() {
         <Menu className="h-5" />
       </SidebarToggle>
 
-      <NavbarMenu session={session} />
+      <NavbarMenu user={user} />
 
       <div className="flex items-center gap-3">
-        {!session?.user && (
-          <Link
-            href="/sign-in"
+        {!user && (
+          <LoginLink
             className={cn(
               buttonVariants({ variant: "subtle" }),
               "hidden lg:flex"
             )}>
             Sign In
-          </Link>
+          </LoginLink>
         )}
         <ThemeToggle />
-        {session && user && (
+        {user && (
           <UserAccountNav
-            user={{
-              id: user.id,
-              name: user.name,
-              image: user.image,
-              email: user.email,
-              username: user.username,
-            }}
-            isAdmin={user?.role === "admin"}
+            user={user}
+            isAdmin={getPermission("upload:stocks").isGranted}
           />
         )}
       </div>

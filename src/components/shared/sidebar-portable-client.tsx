@@ -8,10 +8,10 @@ import { X } from "lucide-react";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import CompanyLogo from "../company-logo";
 import { RecentStocks } from "@/types/db";
-import { User } from "@prisma/client";
+import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface Props {
-  user: Pick<User, "role"> | null;
+  user: KindeUser | null;
   recentStocks: RecentStocks;
 }
 

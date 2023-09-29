@@ -1,6 +1,6 @@
 import { Timeout } from "@/lib/utils";
 import { FMP_API_URL, fmpConfig } from "@/config/fmp";
-import { db } from "@/lib/db";
+import { db } from "@/db";
 import {
   ForbiddenResponse,
   InternalServerErrorResponse,
@@ -8,27 +8,24 @@ import {
   UnprocessableEntityResponse,
 } from "@/lib/response";
 import { z } from "zod";
-import { getAuthSession } from "@/lib/auth";
 import { UploadStockSchema } from "@/lib/validators/stock";
 import { env } from "@/env.mjs";
 import { getSymbols } from "@/lib/fmp/quote";
-import { Session } from "next-auth";
+import { KindeUser, getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export async function POST(req: Request) {
   try {
-    const session = await getAuthSession();
-    if (!session?.user) return new UnauthorizedResponse();
+    const { getUser, getPermission } = getKindeServerSession();
+    const user = getUser();
+
+    if (user) return new UnauthorizedResponse();
+
+    if (!getPermission("upload:stocks").isGranted)
+      return new ForbiddenResponse();
 
     const { stock, skip, clean, pullTimes } = UploadStockSchema.parse(
       await req.json()
     );
-
-    const user = await db.user.findFirst({
-      select: { role: true },
-      where: { id: session.user.id },
-    });
-
-    if (user?.role !== "admin") return new ForbiddenResponse();
 
     let alreadySymbols: string[] = [];
     if (skip) {
@@ -52,7 +49,7 @@ export async function POST(req: Request) {
         if (skip) symbols = symbols.filter((s) => !alreadySymbols.includes(s));
         if (symbols.length === 0) continue;
 
-        await uploadStocks(symbols, session);
+        await uploadStocks(symbols, user);
         console.log(
           `Uploaded ${symbols.length} stocks including: ${
             symbols[0] ?? symbols[2] ?? "undefined"
@@ -62,7 +59,7 @@ export async function POST(req: Request) {
         if (currentIteration !== totalIterations)
           await Timeout(Number(fmpConfig.timeout));
       }
-    } else await uploadStocks([stock], session);
+    } else await uploadStocks([stock], user);
 
     if (clean)
       await db.stock.deleteMany({
@@ -99,7 +96,7 @@ function MergeArrays(arrays: Record<string, any>[][]): Record<string, any>[] {
 
 async function uploadStocks(
   symbols: string[],
-  session: Session
+  user: KindeUser
 ): Promise<void> {
   if (!symbols.length) throw new Error("ArgumentError: No symbols provided");
 
@@ -170,7 +167,7 @@ async function uploadStocks(
       const stock = {
         ...stocks[i],
         updatedAt: new Date(),
-        creator: { connect: { id: session.user.id } },
+        creator: { connect: { id: user.id } },
         peersList: stocks[i].peersList ? stocks[i].peersList.join(",") : "",
         errorMessage: stocks[i]["Error Message"],
         "Error Message": undefined,
@@ -198,7 +195,7 @@ async function uploadStocks(
             ...statements[0],
             updatedAt: new Date(),
             stock: { connect: { id: createdStock.id } },
-            creator: { connect: { id: session.user.id } },
+            creator: { connect: { id: user.id } },
             errorMessage: statements[0]["Error Message"],
             "Error Message": undefined,
           };
