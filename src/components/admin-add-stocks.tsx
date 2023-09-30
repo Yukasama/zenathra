@@ -51,7 +51,7 @@ export default function AdminAddStocks() {
     onError: () =>
       toast({
         title: "Oops! Something went wrong.",
-        description: "Stocks could not be uploaded.",
+        description: `${form.getValues("stock")} could not be uploaded.`,
         variant: "destructive",
       }),
     onSuccess: () =>
@@ -68,6 +68,7 @@ export default function AdminAddStocks() {
       skip: data.skip,
       pullTimes: data.pullTimes,
     };
+
     uploadStocks(payload);
   }
 

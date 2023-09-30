@@ -7,9 +7,7 @@ import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
 import { Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import {
-  CreatePortfolioSchema,
-} from "@/lib/validators/portfolio";
+import { CreatePortfolioSchema } from "@/lib/validators/portfolio";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
@@ -52,33 +50,20 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
 
   const { mutate: createPortfolio, isLoading } =
     trpc.portfolio.createPortfolio.useMutation({
-      onError: () => {
+      onError: () =>
         toast({
           title: "Oops! Something went wrong.",
           description: `Failed to create portfolio.`,
           variant: "destructive",
-        });
-      },
+        }),
       onSuccess: () => {
         startTransition(() => router.refresh());
 
-        toast({
-          description: `Portfolio successfully created.`,
-        });
+        toast({ description: `Portfolio successfully created.` });
       },
     });
 
   function onSubmit(data: FieldValues) {
-    if (data.title.length < 1)
-      return toast({
-        title: "Oops! Something went wrong.",
-        description: "Please choose a longer title.",
-      });
-    if (data.title.length > 30)
-      return toast({
-        title: "Oops! Something went wrong.",
-        description: "Please choose a shorter title.",
-      });
     if (numberOfPortfolios >= 3)
       return toast({
         title: "Oops! Something went wrong.",

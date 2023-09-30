@@ -1,7 +1,7 @@
 import { Portfolio } from "@prisma/client";
 
 export interface PortfolioWithStocks extends Portfolio {
-  stockIds: string[];
+  stocks: StockInPortfolio[];
 }
 
 export type RecentStocks =

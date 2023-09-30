@@ -34,6 +34,7 @@ export async function POST(req: Request) {
 
       return new Response(JSON.stringify(result));
     }
+    
     return new Response(JSON.stringify(await fetchHistory(symbol)));
   } catch (error) {
     if (error instanceof z.ZodError)

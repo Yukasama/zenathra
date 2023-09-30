@@ -6,7 +6,7 @@ import { startTransition, useCallback, useRef, useState } from "react";
 import { Prisma, Stock } from "@prisma/client";
 import { toast } from "@/hooks/use-toast";
 import { ModifySymbolsPortfolioProps } from "@/lib/validators/portfolio";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ListPlus, ListX, Pencil, Plus } from "lucide-react";
 import debounce from "lodash.debounce";
@@ -28,9 +28,10 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { PortfolioWithStocks } from "@/types/db";
+import { trpc } from "@/app/_trpc/client";
 
 interface Props {
-  portfolio: Pick<PortfolioWithStocks, "id" | "title" | "stockIds">;
+  portfolio: PortfolioWithStocks;
 }
 
 export default function PortfolioAddModal({ portfolio }: Props) {
@@ -59,31 +60,25 @@ export default function PortfolioAddModal({ portfolio }: Props) {
       const results = data as (Stock & {
         _count: Prisma.StockCountOutputType;
       })[];
-      return results.filter((r) => !portfolio.stockIds.includes(r.id));
+      return results.filter((r) => !portfolio.stocks.includes(r.id));
     },
     queryKey: ["portfolio-search-query"],
     enabled: false,
   });
 
-  const { mutate: addToPortfolio, isLoading } = useMutation({
-    mutationFn: async () => {
-      const payload: ModifySymbolsPortfolioProps = {
-        portfolioId: portfolio.id,
-        stockIds: selected,
-      };
-      await axios.post("/api/portfolio/add", payload);
-    },
-    onError: () =>
-      toast({
-        title: "Oops! Something went wrong.",
-        description: "Failed to add stocks to portfolio.",
-        variant: "destructive",
-      }),
-    onSuccess: () => {
-      startTransition(() => router.refresh());
-      toast({ description: "Added stocks to portfolio." });
-    },
-  });
+  const { mutate: addToPortfolio, isLoading } =
+    trpc.portfolio.addToPortfolio.useMutation({
+      onError: () =>
+        toast({
+          title: "Oops! Something went wrong.",
+          description: "Failed to add stocks to portfolio.",
+          variant: "destructive",
+        }),
+      onSuccess: () => {
+        startTransition(() => router.refresh());
+        toast({ description: "Added stocks to portfolio." });
+      },
+    });
 
   function onSubmit() {
     if (selected.length < 1)
@@ -91,7 +86,12 @@ export default function PortfolioAddModal({ portfolio }: Props) {
     if (selected.length >= 20)
       return toast({ description: "You can only add 20 stocks at a time." });
 
-    addToPortfolio();
+    const payload: ModifySymbolsPortfolioProps = {
+      portfolioId: portfolio.id,
+      stockIds: selected,
+    };
+
+    addToPortfolio(payload);
   }
 
   function modifyPortfolio(id: string) {

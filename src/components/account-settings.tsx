@@ -33,11 +33,11 @@ import { startTransition } from "react";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 // Dynamically importing forms to avoid client overload
-const ChangeEmail = dynamic(() => import("./auth/change-email"), {
+const ChangeEmail = dynamic(() => import("./change-email"), {
   ssr: false,
 });
 
-const ChangeUsername = dynamic(() => import("./auth/change-username"), {
+const ChangeUsername = dynamic(() => import("./change-username"), {
   ssr: false,
 });
 

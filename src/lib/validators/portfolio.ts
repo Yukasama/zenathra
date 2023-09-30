@@ -1,7 +1,10 @@
 import { z } from "zod";
 
 export const CreatePortfolioSchema = z.object({
-  title: z.string().nonempty(),
+  title: z
+    .string()
+    .min(1, "Title must be at least 1 character long.")
+    .max(20, "Title must be less than 20 characters long."),
   publicPortfolio: z.boolean().optional(),
   stockIds: z
     .array(z.string().nonempty())
@@ -14,7 +17,8 @@ export const ModifySymbolsPortfolioSchema = z.object({
   stockIds: z.union([
     z.string(),
     z
-      .array(z.string().nonempty())
+      .array(z.string())
+      .nonempty()
       .max(20, "A maximum of 20 symbols can be added at a time."),
   ]),
 });

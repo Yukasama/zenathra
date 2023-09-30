@@ -14,7 +14,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  portfolios        Portfolio[]        @relation("CreatedBy")
+  portfolios        Portfolio[]
   recentStocks      UserRecentStocks[]
   createdStocks     Stock[]
   createdFinancials Financials[]
@@ -29,7 +29,6 @@ model Portfolio {
   id        String   @id @default(cuid())
   title     String
   public    Boolean  @default(false)
-  image     String?
   color     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -37,7 +36,7 @@ model Portfolio {
   stocks StockInPortfolio[]
 
   creatorId String
-  creator   User   @relation("CreatedBy", fields: [creatorId], references: [id], onDelete: Cascade)
+  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 
   @@index([creatorId])
 }

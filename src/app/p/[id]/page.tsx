@@ -17,6 +17,7 @@ import { getUser } from "@/lib/auth";
 
 export async function generateStaticParams() {
   const data = await db.portfolio.findMany({ select: { id: true } });
+
   return data.map((portfolio) => ({ id: portfolio.id }));
 }
 
@@ -36,17 +37,16 @@ interface Props {
 }
 
 export default async function page({ params: { id } }: Props) {
-  const user = getUser();
-
-  const [portfolio, stockIds] = await Promise.all([
-    db.portfolio.findFirst({ where: { id } }),
-    db.stockInPortfolio.findMany({
-      select: { stockId: true },
-      where: { portfolioId: id },
-    }),
-  ]);
+  const portfolio = await db.portfolio.findFirst({
+    include: {
+      stocks: { select: { stockId: true } },
+    },
+    where: { id },
+  });
 
   if (!portfolio) return notFound();
+
+  const user = getUser();
 
   // Portfolio is private and it does not belong to the user
   if (!portfolio.public && !user)
@@ -60,23 +60,18 @@ export default async function page({ params: { id } }: Props) {
     );
 
   // Portfolio belongs to user but no stocks added yet
-  if (user?.id === portfolio.creatorId && !stockIds.length)
+  if (user?.id === portfolio.creatorId && !portfolio.stocks.length)
     return (
       <div className="f-box f-col gap-3 mt-80">
         <h2 className="font-medium text-lg">
           There are no stocks in this portfolio.
         </h2>
-        <PortfolioAddModal
-          portfolio={{
-            ...portfolio,
-            stockIds: stockIds.map((s) => s.stockId),
-          }}
-        />
+        <PortfolioAddModal portfolio={portfolio} />
       </div>
     );
 
   const stocks = await db.stock.findMany({
-    where: { id: { in: stockIds.map((s) => s.stockId) } },
+    where: { id: { in: portfolio.stocks.map((s) => s.stockId) } },
   });
 
   return (
@@ -91,7 +86,7 @@ export default async function page({ params: { id } }: Props) {
         </CardHeader>
       </Card>
       <PageLayout>
-        {stockIds.length ? (
+        {portfolio.stocks.length ? (
           <div className="f-col gap-4">
             <div className="flex f-col items-start lg:flex-row gap-4">
               <PriceChart
@@ -105,10 +100,7 @@ export default async function page({ params: { id } }: Props) {
               <Suspense fallback={<p>Loading...</p>}>
                 {/* @ts-expect-error Server Component */}
                 <PortfolioAssets
-                  portfolio={{
-                    ...portfolio,
-                    stockIds: stockIds.map((s) => s.stockId),
-                  }}
+                  portfolio={portfolio}
                   symbols={stocks.map((s) => s.symbol)}
                   user={user}
                 />
