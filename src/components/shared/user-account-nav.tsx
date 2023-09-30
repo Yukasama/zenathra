@@ -20,8 +20,8 @@ export function UserAccountNav({ user, isAdmin }: Props) {
       <DropdownMenuTrigger>
         <UserAvatar
           user={{
-            name: user.given_name || user.family_name || null,
-            image: user.picture || null,
+            given_name: user.given_name,
+            picture: user.picture,
           }}
           className="h-8 w-8"
         />
@@ -30,8 +30,8 @@ export function UserAccountNav({ user, isAdmin }: Props) {
         <div className="flex items-center justify-start gap-2 p-2">
           <UserAvatar
             user={{
-              name: user.given_name || null,
-              image: user.picture || null,
+              given_name: user.given_name,
+              picture: user.picture,
             }}
             className="h-8 w-8"
           />
@@ -69,10 +69,12 @@ export function UserAccountNav({ user, isAdmin }: Props) {
         <Link href="/u/settings">
           <DropdownMenuItem>Help</DropdownMenuItem>
         </Link>
+        
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <LogoutLink>Log out</LogoutLink>
-        </DropdownMenuItem>
+
+        <LogoutLink>
+          <DropdownMenuItem>Sign Out</DropdownMenuItem>
+        </LogoutLink>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -1,8 +1,11 @@
 import AccountSettings from "@/components/account-settings";
-import { getAuthSession } from "@/lib/auth";
+import { getUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default async function page() {
-  const session = await getAuthSession();
+export default function page() {
+  const user = getUser();
 
-  return <AccountSettings session={session} />;
+  if (!user) redirect("/");
+
+  return <AccountSettings user={user} />;
 }

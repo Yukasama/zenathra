@@ -37,26 +37,24 @@ export default async function page({ params: { id } }: Props) {
         <h2 className="text-xl font-medium">This Portfolio is private.</h2>
       </div>
     );
-  
+
   const dbUser = await db.user.findFirst({
     where: { id },
     select: { createdAt: true },
   });
 
   const portfolios = await db.portfolio.findMany({
-    select: { id: true, title: true, public: true, createdAt: true },
+    select: {
+      id: true,
+      title: true,
+      public: true,
+      createdAt: true,
+      stocks: {
+        select: { stockId: true },
+      },
+    },
     where: { creatorId: user.id },
   });
-
-  const flattenedPortfolios = await Promise.all(
-    portfolios.map(async (portfolio) => ({
-      ...portfolio,
-      stockIds: await db.stockInPortfolio.findMany({
-        select: { stockId: true },
-        where: { portfolioId: portfolio.id },
-      }),
-    }))
-  );
 
   return (
     <PageLayout
@@ -65,12 +63,14 @@ export default async function page({ params: { id } }: Props) {
       <Card className="border-none rounded-none bg-gradient-to-br from-slate-400 to-slate-600">
         <CardHeader>
           <CardTitle>{user.given_name}</CardTitle>
-          <CardDescription>Joined in {user..toISOString()}</CardDescription>
+          <CardDescription>
+            Joined in {dbUser?.createdAt.toISOString() ?? "<Not date found>"}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div>
             <h2>Portfolios</h2>
-            {flattenedPortfolios.map((portfolio) => (
+            {portfolios.map((portfolio) => (
               <Card key={portfolio.id}>
                 <CardHeader>
                   <div className="flex">

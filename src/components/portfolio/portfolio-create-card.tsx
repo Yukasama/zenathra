@@ -8,11 +8,8 @@ import { Input } from "../ui/input";
 import { Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import {
-  CreatePortfolioProps,
   CreatePortfolioSchema,
 } from "@/lib/validators/portfolio";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
@@ -36,6 +33,7 @@ import {
 } from "../ui/form";
 import { motion } from "framer-motion";
 import { animationVariants } from "@/config/motion";
+import { trpc } from "@/app/_trpc/client";
 
 interface Props {
   numberOfPortfolios?: number;
@@ -52,25 +50,23 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
     },
   });
 
-  const { mutate: createPortfolio, isLoading } = useMutation({
-    mutationFn: async (data: CreatePortfolioProps) => {
-      await axios.post("/api/portfolio/create", { ...data });
-    },
-    onError: () => {
-      toast({
-        title: "Oops! Something went wrong.",
-        description: `Failed to create portfolio.`,
-        variant: "destructive",
-      });
-    },
-    onSuccess: () => {
-      startTransition(() => router.refresh());
+  const { mutate: createPortfolio, isLoading } =
+    trpc.portfolio.createPortfolio.useMutation({
+      onError: () => {
+        toast({
+          title: "Oops! Something went wrong.",
+          description: `Failed to create portfolio.`,
+          variant: "destructive",
+        });
+      },
+      onSuccess: () => {
+        startTransition(() => router.refresh());
 
-      toast({
-        description: `Portfolio successfully created.`,
-      });
-    },
-  });
+        toast({
+          description: `Portfolio successfully created.`,
+        });
+      },
+    });
 
   function onSubmit(data: FieldValues) {
     if (data.title.length < 1)
@@ -89,7 +85,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
         description: "Maximum number of portfolios reached.",
       });
 
-    const payload: CreatePortfolioProps = {
+    const payload = {
       title: data.title,
       publicPortfolio: data.publicPortfolio,
     };

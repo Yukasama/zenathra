@@ -12,7 +12,6 @@ import {
   LockIcon,
   Undo2,
 } from "lucide-react";
-import type { Session } from "next-auth";
 import {
   Card,
   CardContent,
@@ -31,10 +30,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { startTransition } from "react";
-
-interface Props {
-  session: Session | null;
-}
+import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 // Dynamically importing forms to avoid client overload
 const ChangeEmail = dynamic(() => import("./auth/change-email"), {
@@ -45,7 +41,11 @@ const ChangeUsername = dynamic(() => import("./auth/change-username"), {
   ssr: false,
 });
 
-export default function AccountSettings({ session }: Props) {
+interface Props {
+  user: KindeUser;
+}
+
+export default function AccountSettings({ user }: Props) {
   const router = useRouter();
 
   const { mutate: sendResetMail, isLoading } = useMutation({
@@ -97,8 +97,8 @@ export default function AccountSettings({ session }: Props) {
       value: (
         <UserAvatar
           user={{
-            name: session?.user.name || null,
-            image: session?.user.image || null,
+            given_name: user.given_name,
+            picture: user.picture,
           }}
           className="h-8 w-8"
         />
@@ -107,12 +107,12 @@ export default function AccountSettings({ session }: Props) {
     },
     {
       title: "Name",
-      value: session?.user.name || null,
+      value: user.given_name || null,
       form: <ChangeUsername />,
     },
     {
       title: "E-Mail",
-      value: session?.user.email || null,
+      value: user.email || null,
       form: <ChangeEmail />,
     },
   ];
