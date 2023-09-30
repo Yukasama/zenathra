@@ -77,7 +77,7 @@ export default async function page({ params: { symbol } }: Props) {
             </Suspense>
           </div>
           <StockMetrics stock={stock} />
-          <StockEye eye={stock.eye} session={session} />
+          <StockEye eye={stock.eye} user={user} />
         </div>
         <Separator />
         <div className="flex f-col md:flex-row gap-5">

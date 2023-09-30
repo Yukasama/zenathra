@@ -6,8 +6,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getAuthSession } from "@/lib/auth";
 import { db } from "@/db";
+import { getUser } from "@/lib/auth";
+import { EyeOff } from "lucide-react";
 import { notFound } from "next/navigation";
 
 interface Props {
@@ -23,24 +24,29 @@ export async function generateStaticParams() {
 }
 
 export default async function page({ params: { id } }: Props) {
-  const session = await getAuthSession();
-  if (session?.user.id !== id) return <p>Not your profile</p>;
-
-  const user = await db.user.findFirst({
-    where: { id },
-  });
+  const user = getUser();
 
   if (!user) return notFound();
 
-  const [portfolios, subscription] = await Promise.all([
-    db.portfolio.findMany({
-      select: { id: true, title: true, public: true, createdAt: true },
-      where: { creatorId: session?.user.id },
-    }),
-    db.userSubscription.findFirst({
-      where: { userId: session?.user.id },
-    }),
-  ]);
+  if (user.id !== id)
+    return (
+      <div className="f-box f-col mt-96 gap-3">
+        <div className="p-5 rounded-full w-20 h-12 f-box bg-primary">
+          <EyeOff className="h-6 w-6" />
+        </div>
+        <h2 className="text-xl font-medium">This Portfolio is private.</h2>
+      </div>
+    );
+  
+  const dbUser = await db.user.findFirst({
+    where: { id },
+    select: { createdAt: true },
+  });
+
+  const portfolios = await db.portfolio.findMany({
+    select: { id: true, title: true, public: true, createdAt: true },
+    where: { creatorId: user.id },
+  });
 
   const flattenedPortfolios = await Promise.all(
     portfolios.map(async (portfolio) => ({
@@ -58,8 +64,8 @@ export default async function page({ params: { id } }: Props) {
       description="This page will be visible to everyone">
       <Card className="border-none rounded-none bg-gradient-to-br from-slate-400 to-slate-600">
         <CardHeader>
-          <CardTitle>{user.username}</CardTitle>
-          <CardDescription>{user.createdAt.toISOString()}</CardDescription>
+          <CardTitle>{user.given_name}</CardTitle>
+          <CardDescription>Joined in {user..toISOString()}</CardDescription>
         </CardHeader>
         <CardContent>
           <div>

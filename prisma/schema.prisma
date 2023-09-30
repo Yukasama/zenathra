@@ -8,38 +8,21 @@ datasource db {
   relationMode = "prisma"
 }
 
-enum SubscriptionType {
-  basic
-  premium
-}
-
 model User {
-  id    String @id @unique
-  email String @unique
+  id        String   @id @unique
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  subscriptions Subscription[]
-  portfolios    Portfolio[]        @relation("CreatedBy")
-  recentStocks  UserRecentStocks[]
+  portfolios        Portfolio[]        @relation("CreatedBy")
+  recentStocks      UserRecentStocks[]
+  createdStocks     Stock[]
+  createdFinancials Financials[]
 
   stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
   stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
   stripePriceId          String?   @map(name: "stripe_price_id")
   stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
-
-  createdStocks     Stock[]
-  createdFinancials Financials[]
-}
-
-model Subscription {
-  id        String           @id @default(cuid())
-  type      SubscriptionType @default(basic)
-  startDate DateTime         @default(now())
-  endDate   DateTime?
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
 }
 
 model Portfolio {

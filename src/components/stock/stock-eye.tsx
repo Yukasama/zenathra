@@ -1,13 +1,13 @@
 import { Lock } from "lucide-react";
-import type { Session } from "next-auth";
 import { Card } from "../ui/card";
+import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface Props {
-  session: Session | null;
+  user: KindeUser | null;
   eye: number | null;
 }
 
-export default function StockEye({ session, eye }: Props) {
+export default function StockEye({ user, eye }: Props) {
   const value = eye || 78;
   const dashArray = 2 * Math.PI * 54;
   const dashOffset = (1 - value / 165) * dashArray;
@@ -45,10 +45,10 @@ export default function StockEye({ session, eye }: Props) {
         </svg>
         <div className="f-box relative h-[90%] w-full flex-col">
           <p className="text-center text-[27px] font-thin">
-            {session?.user ? value : <Lock className="mb-1.5 h-6" />}
+            {user ? value : <Lock className="mb-1.5 h-6" />}
           </p>
           <p className="text-center text-[13px] font-light text-blue-500">
-            {session?.user ? score : "Locked"}
+            {user ? score : "Locked"}
           </p>
         </div>
       </div>
