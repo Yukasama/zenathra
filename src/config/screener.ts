@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { ScreenerProps } from "@/lib/validators/screener";
+import { ScreenerProps } from "@/lib/validators/stock";
 
 export function buildFilter(screener: ScreenerProps) {
   const filter: Prisma.StockWhereInput = {};

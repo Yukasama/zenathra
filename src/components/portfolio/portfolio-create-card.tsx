@@ -29,7 +29,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { motion } from "framer-motion";
-import { animationVariants } from "@/config/motion";
+import { ANIMATION_VARIANTS } from "@/config/motion";
 import { trpc } from "@/app/_trpc/client";
 import { CreatePortfolioSchema } from "@/lib/validators/portfolio";
 
@@ -82,7 +82,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
     <Dialog>
       <DialogTrigger asChild>
         <motion.div
-          variants={animationVariants}
+          variants={ANIMATION_VARIANTS}
           initial="hidden"
           animate="visible"
           exit="exit"

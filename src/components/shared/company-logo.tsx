@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { site } from "@/config/site";
+import { SITE } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 interface Props extends React.HTMLAttributes<HTMLImageElement> {
@@ -20,7 +20,7 @@ export default function CompanyLogo({ px, className, ...props }: Props) {
         src="/logo.png"
         width={px}
         height={px}
-        alt={`${site.name} Logo`}
+        alt={`${SITE.name} Logo`}
       />
     </div>
   );

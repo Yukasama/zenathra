@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { footerLinks, site } from "@/config/site";
+import { footerLinks, SITE } from "@/config/site";
 import CompanyLogo from "./company-logo";
 import { Card, CardTitle } from "../ui/card";
 import { Icons } from "./icons";
@@ -14,7 +14,7 @@ export default function Footer() {
         </div>
         <div className="flex items-center gap-5">
           <p className="text-[13px] text-slate-500">
-            &copy; 2023 {site.name[0].toUpperCase() + site.name.slice(1)}
+            &copy; 2023 {SITE.name[0].toUpperCase() + SITE.name.slice(1)}
           </p>
           {footerLinks.map((link) => (
             <Link
@@ -26,7 +26,7 @@ export default function Footer() {
           ))}
         </div>
         <div className="flex items-center gap-4">
-          {Object.entries(site.links).map(([name, url]) => (
+          {Object.entries(SITE.links).map(([name, url]) => (
             <Link key={name} href={url} className="f-box h-10 w-10 rounded-md">
               {name === "github" ? (
                 <Icons.github className="h-6 dark:invert" />

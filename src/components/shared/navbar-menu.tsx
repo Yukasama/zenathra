@@ -49,9 +49,7 @@ export default function NavbarMenu({ user }: Props) {
                 performance.
               </ListItem>
               {user ? (
-                <ListItem
-                  href={`/u/${user.id}`}
-                  title="Customize your profile">
+                <ListItem href={`/u/${user.id}`} title="Customize your profile">
                   Personalize your profile to reflect your unique style and
                   preferences.
                 </ListItem>

@@ -1,4 +1,4 @@
-export const animationVariants = {
+export const ANIMATION_VARIANTS = {
   hidden: {
     opacity: 0,
     y: 10,

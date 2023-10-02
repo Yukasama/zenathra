@@ -6,18 +6,18 @@ import Provider from "@/components/shared/provider";
 import { Metadata } from "next";
 import { cn } from "@/lib/utils";
 import { K2D } from "next/font/google";
-import { site } from "@/config/site";
+import { SITE } from "@/config/site";
 import { Toaster } from "@/components/ui/toaster";
 import { PropsWithChildren } from "react";
 
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: site.name,
-  description: site.description,
+  title: SITE.name,
+  description: SITE.description,
   icons: { icon: "/favicon.ico" },
-  keywords: site.keywords,
-  creator: site.creator,
+  keywords: SITE.keywords,
+  creator: SITE.creator,
 };
 
 const k2d = K2D({ subsets: ["latin"], weight: ["400", "500", "600"] });

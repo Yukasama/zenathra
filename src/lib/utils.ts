@@ -1,23 +1,12 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Metadata } from "next";
+import { SITE } from "@/config/site";
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export function Years(startYear: number) {
-  const currentYear: number = new Date().getFullYear();
-  const years: string[] = [];
-  for (let year = startYear; year <= currentYear - 1; year++) {
-    years.push(year.toString());
-  }
-  return years;
-}
-
-export async function Timeout(ms: number) {
-  return await new Promise((resolve) => setTimeout(resolve, Number(ms)));
-}
+export const Timeout = async (ms: number) =>
+  await new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function absoluteUrl(path: string) {
   if (typeof window !== "undefined") return path;
@@ -26,9 +15,9 @@ export function absoluteUrl(path: string) {
 }
 
 export function constructMetadata({
-  title = "Quill - the SaaS for students",
-  description = "Quill is an open-source software to make chatting to your PDF files easy.",
-  image = "/thumbnail.png",
+  title = SITE.name,
+  description = SITE.description,
+  image = "/logo.png",
   icons = "/favicon.ico",
   noIndex = false,
 }: {
@@ -44,21 +33,10 @@ export function constructMetadata({
     openGraph: {
       title,
       description,
-      images: [
-        {
-          url: image,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [image],
-      creator: "@joshtriedcoding",
+      images: [{ url: image }],
     },
     icons,
-    metadataBase: new URL("https://quill-jet.vercel.app"),
+    metadataBase: new URL("https://elysium-two.vercel.app"),
     themeColor: "#FFF",
     ...(noIndex && {
       robots: {
@@ -67,4 +45,13 @@ export function constructMetadata({
       },
     }),
   };
+}
+
+export function Years(startYear: number) {
+  const currentYear: number = new Date().getFullYear();
+  const years: string[] = [];
+  for (let year = startYear; year <= currentYear - 1; year++) {
+    years.push(year.toString());
+  }
+  return years;
 }

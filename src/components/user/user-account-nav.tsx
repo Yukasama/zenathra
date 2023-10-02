@@ -6,8 +6,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { UserAvatar } from "@/components/shared/user-avatar";
-import { KindeUser, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/server";
+import { UserAvatar } from "@/components/user/user-avatar";
+import { type KindeUser, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface Props {
   user: KindeUser;
@@ -18,23 +18,11 @@ export function UserAccountNav({ user, isAdmin }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <UserAvatar
-          user={{
-            given_name: user.given_name,
-            picture: user.picture,
-          }}
-          className="h-8 w-8"
-        />
+        <UserAvatar user={user} className="h-8 w-8" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <div className="flex items-center justify-start gap-2 p-2">
-          <UserAvatar
-            user={{
-              given_name: user.given_name,
-              picture: user.picture,
-            }}
-            className="h-8 w-8"
-          />
+          <UserAvatar user={user} className="h-8 w-8" />
           <div className="flex flex-col space-y-1 leading-none">
             {user.given_name && (
               <p className="font-medium">{user.given_name}</p>
@@ -69,7 +57,7 @@ export function UserAccountNav({ user, isAdmin }: Props) {
         <Link href="/u/settings">
           <DropdownMenuItem>Help</DropdownMenuItem>
         </Link>
-        
+
         <DropdownMenuSeparator />
 
         <LogoutLink>

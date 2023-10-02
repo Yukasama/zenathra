@@ -21,18 +21,6 @@ export const ScreenerSchema = z.object({
   marketCap: z.string(),
 });
 
-export const SearchStocksSchema = z.object({
-  q: z.string().nonempty(),
-});
-
-export const StockHistorySchema = z.object({
-  symbol: z.string().or(z.array(z.string())),
-});
-
 export type UploadStockProps = z.infer<typeof UploadStockSchema>;
 
 export type ScreenerProps = z.infer<typeof ScreenerSchema>;
-
-export type SearchStocksProps = z.infer<typeof SearchStocksSchema>;
-
-export type StockHistoryProps = z.infer<typeof StockHistorySchema>;

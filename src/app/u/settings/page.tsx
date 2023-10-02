@@ -1,4 +1,4 @@
-import AccountSettings from "@/components/account-settings";
+import AccountSettings from "@/components/user/account-settings";
 import { getUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 

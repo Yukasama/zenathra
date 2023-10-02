@@ -16,12 +16,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { StockHistoryProps } from "@/lib/validators/stock";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { cn } from "@/lib/utils";
 import Skeleton from "../ui/skeleton";
+import { trpc } from "@/app/_trpc/client";
 
 function computeDomain(data: any[]) {
   const values = data.map((item) => parseFloat(item.uv));
@@ -60,24 +58,8 @@ export default function PriceChart({
     setMounted(true);
   }, []);
 
-  const { data: results, isFetched } = useQuery({
-    queryFn: async () => {
-      const payload: StockHistoryProps = {
-        symbol: symbols,
-      };
-
-      const { data } = await axios.post("/api/stock/history", payload);
-
-      const newData: any = {};
-      for (const key in data) {
-        newData[key] = data[key].map((item: any) => ({
-          name: item.date,
-          uv: item.close.toFixed(2),
-        }));
-      }
-      return newData;
-    },
-    queryKey: ["stock-query"],
+  const { data: results, isFetched } = trpc.stock.history.useQuery({
+    symbol: symbols,
   });
 
   let [minDomain, maxDomain] = [0, 0];

@@ -19,7 +19,6 @@
     "@types/react-dom": "^18.2.7"
   },
   "dependencies": {
-    "@cloudflare/next-on-pages": "^1.6.1",
     "@hookform/resolvers": "^3.3.1",
     "@kinde-oss/kinde-auth-nextjs": "^1.8.21",
     "@mantine/core": "^6.0.21",
@@ -58,7 +57,6 @@
     "class-variance-authority": "^0.6.1",
     "clsx": "^1.2.1",
     "cmdk": "^0.2.0",
-    "cssnano": "^6.0.1",
     "csstype": "^3.1.2",
     "date-fns": "^2.30.0",
     "eslint": "8.41.0",

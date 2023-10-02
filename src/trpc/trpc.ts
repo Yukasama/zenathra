@@ -22,7 +22,7 @@ const isAdmin = middleware(async (opts) => {
   const { getUser, getPermission } = getKindeServerSession();
   const user = getUser();
 
-  if (!user || !user.id || !getPermission("upload:stocks").isGranted)
+  if (!user || !user.id || !getPermission("(upload:stocks)").isGranted)
     throw new TRPCError({ code: "UNAUTHORIZED" });
 
   return opts.next({

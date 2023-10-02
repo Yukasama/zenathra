@@ -2,7 +2,7 @@ import Link from "next/link";
 import ThemeToggle from "./theme-toggle";
 import { Menu } from "lucide-react";
 import Searchbar from "./searchbar";
-import { UserAccountNav } from "./user-account-nav";
+import { UserAccountNav } from "../user/user-account-nav";
 import SidebarToggle from "./sidebar-toggle";
 import { buttonVariants } from "../ui/button";
 import NavbarMenu from "./navbar-menu";
@@ -63,7 +63,7 @@ export default async function Navbar() {
         {user && (
           <UserAccountNav
             user={user}
-            isAdmin={getPermission("upload:stocks").isGranted}
+            isAdmin={getPermission("(upload:stocks)").isGranted}
           />
         )}
       </div>

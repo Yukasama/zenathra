@@ -8,7 +8,7 @@ import { X } from "lucide-react";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import CompanyLogo from "./company-logo";
 import { RecentStocks } from "@/types/db";
-import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
+import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface Props {
   user: KindeUser | null;

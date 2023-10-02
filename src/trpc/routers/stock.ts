@@ -1,15 +1,10 @@
-import {
-  adminProcedure,
-  privateProcedure,
-  publicProcedure,
-  router,
-} from "../trpc";
+import { adminProcedure, publicProcedure, router } from "../trpc";
 import { db } from "@/db";
 import { z } from "zod";
 import { buildFilter } from "@/config/screener";
 import axios from "axios";
-import { FMP_API_URL, TIMEFRAMES, fmpConfig, historyUrls } from "@/config/fmp";
-import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
+import { FMP_API_URL, TIMEFRAMES, FMP, historyUrls } from "@/config/fmp";
+import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import { TRPCError } from "@trpc/server";
 import { getSymbols } from "@/lib/fmp/quote";
 import { Timeout } from "@/lib/utils";
@@ -31,14 +26,13 @@ export const stockRouter = router({
         q: z.string().nonempty(),
       })
     )
-    .query(
-      async (opts) =>
-        await db.stock.findMany({
-          where: { symbol: { startsWith: opts.input.q } },
-          include: { _count: true },
-          take: 10,
-        })
-    ),
+    .query(async (opts) => {
+      await db.stock.findMany({
+        where: { symbol: { startsWith: opts.input.q } },
+        include: { _count: true },
+        take: 10,
+      });
+    }),
   history: publicProcedure
     .input(
       z.object({
@@ -72,7 +66,7 @@ export const stockRouter = router({
       }
       return await fetchHistory(symbol);
     }),
-  upload: privateProcedure
+  upload: adminProcedure
     .input(
       z.object({
         stock: z.string({
@@ -86,8 +80,6 @@ export const stockRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
       const { stock, skip, clean, pullTimes } = input;
-
-      console.log(user, "user");
 
       let alreadySymbols: string[] = [];
       if (skip) {
@@ -121,7 +113,7 @@ export const stockRouter = router({
           );
 
           if (currentIteration !== totalIterations)
-            await Timeout(Number(fmpConfig.timeout));
+            await Timeout(Number(FMP.timeout));
         }
       } else await uploadStocks([stock], user);
 
@@ -250,7 +242,7 @@ async function uploadStocks(symbols: string[], user: KindeUser): Promise<void> {
       const stock = {
         ...stocks[i],
         updatedAt: new Date(),
-        creator: { connect: { id: user.id } },
+        creatorId: user.id,
         peersList: stocks[i].peersList ? stocks[i].peersList.join(",") : "",
         errorMessage: stocks[i]["Error Message"],
         "Error Message": undefined,
@@ -277,8 +269,8 @@ async function uploadStocks(symbols: string[], user: KindeUser): Promise<void> {
           const financialData = {
             ...statements[0],
             updatedAt: new Date(),
-            stock: { connect: { id: createdStock.id } },
-            creator: { connect: { id: user.id } },
+            stockId: createdStock.id,
+            creatorId: user.id,
             errorMessage: statements[0]["Error Message"],
             "Error Message": undefined,
           };
@@ -298,17 +290,16 @@ async function uploadStocks(symbols: string[], user: KindeUser): Promise<void> {
               },
             });
           } catch (error: any) {
-            console.log(error.message);
             if (error.message.includes("Timed out"))
               console.log("Timed out while uploading", symbol, year);
-            else console.log("Error uploading financials for", symbol, year);
+            else
+              console.log("Error while uploading financials for", symbol, year);
           }
         }
       );
       await Promise.all(financialsPromises);
-    } catch (error: any) {
-      console.log(error.message);
-      console.log("Error uploading stock", symbol);
+    } catch {
+      console.log("Error while uploading stock", symbol);
     }
   });
   await Promise.all(promises);

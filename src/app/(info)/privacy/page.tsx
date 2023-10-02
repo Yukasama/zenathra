@@ -528,8 +528,8 @@ export default function page() {
       <p className="my-5">
         Our Service may contain links to other websites that are not operated by
         Us. If You click on a third party link, You will be directed to that
-        third party&apos;s site. We strongly advise You to review the Privacy
-        Policy of every site You visit.
+        third party&apos;s SITE. We strongly advise You to review the Privacy
+        Policy of every SITE You visit.
       </p>
       <p className="my-5">
         We have no control over and assume no responsibility for the content,

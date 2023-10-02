@@ -3,7 +3,7 @@ import "server-only";
 import { Quote } from "@/types/stock";
 import { env } from "@/env.mjs";
 
-export const fmpConfig = {
+export const FMP = {
   timeout: 60000,
   docsPerPull: 33,
   simulation: false,
@@ -11,7 +11,7 @@ export const fmpConfig = {
 
 export const FMP_API_URL = "https://financialmodelingprep.com/api/";
 
-export const fmpUrls = {
+export const FMP_URLS = {
   All: `${FMP_API_URL}v3/stock/list?apikey=${env.FMP_API_KEY}`,
   US500: `${FMP_API_URL}v3/sp500_constituent?apikey=${env.FMP_API_KEY}`,
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import {
   UserIcon,
   Grid,
@@ -19,27 +19,17 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Separator } from "./ui/separator";
-import { UserAvatar } from "./shared/user-avatar";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
-import dynamic from "next/dynamic";
+} from "../ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Separator } from "../ui/separator";
+import { UserAvatar } from "./user-avatar";
+import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { toast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { startTransition } from "react";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
-
-// Dynamically importing forms to avoid client overload
-const ChangeEmail = dynamic(() => import("./change-email"), {
-  ssr: false,
-});
-
-const ChangeUsername = dynamic(() => import("./change-username"), {
-  ssr: false,
-});
 
 interface Props {
   user: KindeUser;
@@ -103,17 +93,17 @@ export default function AccountSettings({ user }: Props) {
           className="h-8 w-8"
         />
       ),
-      form: <ChangeEmail />,
+      form: <div></div>,
     },
     {
       title: "Name",
       value: user.given_name || null,
-      form: <ChangeUsername />,
+      form: <div></div>,
     },
     {
       title: "E-Mail",
       value: user.email || null,
-      form: <ChangeEmail />,
+      form: <div></div>,
     },
   ];
 

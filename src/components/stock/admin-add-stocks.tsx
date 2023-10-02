@@ -21,8 +21,8 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { UploadStockSchema } from "@/lib/validators/stock";
-import { Checkbox } from "./ui/checkbox";
-import { Slider } from "./ui/slider";
+import { Checkbox } from "../ui/checkbox";
+import { Slider } from "../ui/slider";
 import { Upload } from "lucide-react";
 import {
   Card,
@@ -30,7 +30,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+} from "../ui/card";
 import { trpc } from "@/app/_trpc/client";
 
 export default function AdminAddStocks() {

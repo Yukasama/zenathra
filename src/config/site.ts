@@ -1,4 +1,4 @@
-export const site = {
+export const SITE = {
   name: "Elysium",
   description:
     "A stock market analysis tool that provides a visual representation of the market's performance.",

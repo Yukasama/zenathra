@@ -32,6 +32,7 @@ export const portfolioRouter = router({
     .input(CreatePortfolioSchema)
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
+      
       return await db.portfolio.create({
         data: {
           ...input,

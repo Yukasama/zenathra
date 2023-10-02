@@ -1,12 +1,6 @@
 import "server-only";
 
-import {
-  FMP_API_URL,
-  fmpConfig,
-  fmpUrls,
-  indexQuotes,
-  quote,
-} from "@/config/fmp";
+import { FMP_API_URL, FMP, FMP_URLS, indexQuotes, quote } from "@/config/fmp";
 import { env } from "@/env.mjs";
 import axios from "axios";
 import { Quote } from "@/types/stock";
@@ -15,9 +9,9 @@ async function getDailys(
   action: "actives" | "winners" | "losers"
 ): Promise<string[] | null> {
   try {
-    if (fmpConfig.simulation) return ["AAPL", "MSFT", "GOOG", "TSLA", "NVDA"];
+    if (FMP.simulation) return ["AAPL", "MSFT", "GOOG", "TSLA", "NVDA"];
 
-    const response = await fetch(fmpUrls[action]).then((res) => res.json());
+    const response = await fetch(FMP_URLS[action]).then((res) => res.json());
 
     // Filtering all ETFs and stocks with "-" in their symbol
     const symbols = response
@@ -39,9 +33,9 @@ async function getIndexQuotes(): Promise<Quote[] | null> {
   try {
     const requiredIndexes = ["^GSPC", "^GDAXI", "^NDX", "^DJI"];
 
-    if (fmpConfig.simulation) return indexQuotes;
+    if (FMP.simulation) return indexQuotes;
 
-    const { data } = await axios.get(fmpUrls["indexQuotes"]);
+    const { data } = await axios.get(FMP_URLS["indexQuotes"]);
 
     const results = data.filter((result: any) =>
       requiredIndexes.includes(result.symbol)
@@ -56,7 +50,7 @@ async function getIndexQuotes(): Promise<Quote[] | null> {
 async function getQuote(symbol: string | undefined): Promise<Quote | null> {
   try {
     if (!symbol) return null;
-    if (fmpConfig.simulation) return quote;
+    if (FMP.simulation) return quote;
 
     const url = `${FMP_API_URL}v3/quote/${symbol}?apikey=${env.FMP_API_KEY}`;
 
@@ -70,7 +64,7 @@ async function getQuote(symbol: string | undefined): Promise<Quote | null> {
 
 async function getQuotes(symbols: string[]): Promise<Quote[] | null> {
   try {
-    if (fmpConfig.simulation) return [quote, quote, quote, quote, quote];
+    if (FMP.simulation) return [quote, quote, quote, quote, quote];
 
     if (symbols.length > 20) symbols = symbols.slice(0, 20);
 
@@ -91,13 +85,13 @@ async function getSymbols(
   pullTimes = 1
 ): Promise<string[][] | null> {
   try {
-    if (fmpConfig.simulation)
+    if (FMP.simulation)
       return [
         ["AAPL", "MSFT", "GOOG"],
         ["TSLA", "NVDA", "META"],
       ];
 
-    const url = fmpUrls[symbolSet];
+    const url = FMP_URLS[symbolSet];
 
     const { data } = await axios.get(url);
 
@@ -109,12 +103,12 @@ async function getSymbols(
           !stock.symbol.includes("-")
       )
       .map((stock: any) => stock.symbol)
-      .slice(0, Number(fmpConfig.docsPerPull) * pullTimes) as [];
+      .slice(0, Number(FMP.docsPerPull) * pullTimes) as [];
 
     const symbols = [];
 
-    for (let i = 0; i < results.length; i += Number(fmpConfig.docsPerPull))
-      symbols.push(results.slice(i, i + Number(fmpConfig.docsPerPull)));
+    for (let i = 0; i < results.length; i += Number(FMP.docsPerPull))
+      symbols.push(results.slice(i, i + Number(FMP.docsPerPull)));
 
     return symbols;
   } catch {

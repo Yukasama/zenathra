@@ -1,11 +1,11 @@
 "use client";
 
 import { AvatarProps } from "@radix-ui/react-avatar";
-import { Icons } from "./icons";
+import { Icons } from "../shared/icons";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
+import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface Props extends AvatarProps {
   user: Pick<KindeUser, "given_name" | "picture">;
