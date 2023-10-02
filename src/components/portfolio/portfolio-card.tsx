@@ -19,14 +19,14 @@ import PortfolioAddModal from "./portfolio-add-modal";
 interface Props {
   portfolio: Pick<
     PortfolioWithStocks,
-    "id" | "title" | "public" | "color" | "stockIds"
+    "id" | "title" | "public" | "color" | "stocks"
   >;
 }
 
 export default async function PortfolioCard({ portfolio }: Props) {
   const symbols = await db.stock.findMany({
     select: { symbol: true },
-    where: { id: { in: portfolio.stockIds } },
+    where: { id: { in: portfolio.stocks } },
   });
 
   return (

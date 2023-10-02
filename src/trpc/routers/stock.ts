@@ -1,78 +1,164 @@
-import { Timeout } from "@/lib/utils";
-import { FMP_API_URL, fmpConfig } from "@/config/fmp";
-import { db } from "@/db";
 import {
-  ForbiddenResponse,
-  InternalServerErrorResponse,
-  UnauthorizedResponse,
-  UnprocessableEntityResponse,
-} from "@/lib/response";
+  adminProcedure,
+  privateProcedure,
+  publicProcedure,
+  router,
+} from "../trpc";
+import { db } from "@/db";
 import { z } from "zod";
-import { UploadStockSchema } from "@/lib/validators/stock";
-import { env } from "@/env.mjs";
+import { buildFilter } from "@/config/screener";
+import axios from "axios";
+import { FMP_API_URL, TIMEFRAMES, fmpConfig, historyUrls } from "@/config/fmp";
+import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
+import { TRPCError } from "@trpc/server";
 import { getSymbols } from "@/lib/fmp/quote";
-import { KindeUser, getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { Timeout } from "@/lib/utils";
+import { env } from "@/env.mjs";
+import { ScreenerSchema } from "@/lib/validators/stock";
 
-export async function POST(req: Request) {
-  try {
-    const { getUser, getPermission } = getKindeServerSession();
-    const user = getUser();
+export const stockRouter = router({
+  query: publicProcedure.input(ScreenerSchema).query(async (opts) => {
+    const filter = buildFilter(opts.input);
 
-    if (user) return new UnauthorizedResponse();
+    return await db.stock.findMany({
+      where: filter,
+      orderBy: { companyName: "asc" },
+    });
+  }),
+  search: publicProcedure
+    .input(
+      z.object({
+        q: z.string().nonempty(),
+      })
+    )
+    .query(
+      async (opts) =>
+        await db.stock.findMany({
+          where: { symbol: { startsWith: opts.input.q } },
+          include: { _count: true },
+          take: 10,
+        })
+    ),
+  history: publicProcedure
+    .input(
+      z.object({
+        symbol: z.string().or(z.array(z.string())),
+      })
+    )
+    .query(async (opts) => {
+      const { symbol } = opts.input;
 
-    if (!getPermission("upload:stocks").isGranted)
-      return new ForbiddenResponse();
+      if (Array.isArray(symbol)) {
+        const data = await Promise.all(symbol.map(fetchHistory));
 
-    const { stock, skip, clean, pullTimes } = UploadStockSchema.parse(
-      await req.json()
-    );
+        // Merging symbol data to get average
+        let result: any = {};
+        data.forEach((symbolData: any) => {
+          Object.keys(symbolData).forEach((range) => {
+            if (!result[range]) result[range] = [];
 
-    let alreadySymbols: string[] = [];
-    if (skip) {
-      const allStocks = await db.stock.findMany({
-        select: { symbol: true },
-      });
-      alreadySymbols = allStocks.map((stock) => stock.symbol);
-    }
-
-    if (stock === "All" || stock === "US500") {
-      const symbolArray = await getSymbols(stock, pullTimes);
-      if (!symbolArray) return new InternalServerErrorResponse();
-
-      const totalIterations = symbolArray.length;
-      let currentIteration = 0;
-
-      for (let symbols of symbolArray) {
-        currentIteration++;
-
-        symbols = symbols.filter((s) => s && s !== null && s !== undefined);
-        if (skip) symbols = symbols.filter((s) => !alreadySymbols.includes(s));
-        if (symbols.length === 0) continue;
-
-        await uploadStocks(symbols, user);
-        console.log(
-          `Uploaded ${symbols.length} stocks including: ${
-            symbols[0] ?? symbols[2] ?? "undefined"
-          }`
-        );
-
-        if (currentIteration !== totalIterations)
-          await Timeout(Number(fmpConfig.timeout));
+            symbolData[range].forEach((entry: any, entryIndex: any) => {
+              if (!result[range][entryIndex]) {
+                result[range][entryIndex] = {
+                  date: entry.date,
+                  close: 0,
+                };
+              }
+              result[range][entryIndex].close += entry.close / data.length;
+            });
+          });
+        });
+        return result;
       }
-    } else await uploadStocks([stock], user);
+      return await fetchHistory(symbol);
+    }),
+  upload: privateProcedure
+    .input(
+      z.object({
+        stock: z.string({
+          required_error: "Please select a stock to upload.",
+        }),
+        skip: z.boolean().optional(),
+        clean: z.boolean().optional(),
+        pullTimes: z.number().min(1).max(100).default(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { user } = ctx;
+      const { stock, skip, clean, pullTimes } = input;
 
-    if (clean)
-      await db.stock.deleteMany({
-        where: { errorMessage: { not: null } },
-      });
+      console.log(user, "user");
 
-    return new Response("OK");
-  } catch (error) {
-    if (error instanceof z.ZodError)
-      return new UnprocessableEntityResponse(error.message);
+      let alreadySymbols: string[] = [];
+      if (skip) {
+        const allStocks = await db.stock.findMany({
+          select: { symbol: true },
+        });
+        alreadySymbols = allStocks.map((stock) => stock.symbol);
+      }
 
-    return new InternalServerErrorResponse();
+      if (stock === "All" || stock === "US500") {
+        const symbolArray = await getSymbols(stock, pullTimes);
+        if (!symbolArray)
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+        const totalIterations = symbolArray.length;
+        let currentIteration = 0;
+
+        for (let symbols of symbolArray) {
+          currentIteration++;
+
+          symbols = symbols.filter((s) => s && s !== null && s !== undefined);
+          if (skip)
+            symbols = symbols.filter((s) => !alreadySymbols.includes(s));
+          if (symbols.length === 0) continue;
+
+          await uploadStocks(symbols, user);
+          console.log(
+            `Uploaded ${symbols.length} stocks including: ${
+              symbols[0] ?? symbols[2] ?? "undefined"
+            }`
+          );
+
+          if (currentIteration !== totalIterations)
+            await Timeout(Number(fmpConfig.timeout));
+        }
+      } else await uploadStocks([stock], user);
+
+      if (clean)
+        await db.stock.deleteMany({
+          where: { errorMessage: { not: null } },
+        });
+    }),
+});
+
+async function fetchHistory(symbol: string) {
+  const fetchedURLs: Record<string, any> = {};
+
+  for (let timeframe of Object.keys(TIMEFRAMES)) {
+    const { url } = TIMEFRAMES[timeframe];
+    if (!fetchedURLs[url]) {
+      const { data } = await axios.get(historyUrls(symbol, url));
+      fetchedURLs[url] = url.includes("price-full") ? data.historical : data;
+    }
   }
+
+  return Object.fromEntries(
+    Object.entries(TIMEFRAMES).map(([timeframe, { url, limit }]) => {
+      const relevantData = fetchedURLs[url];
+      return [
+        timeframe,
+        timeframe !== "ALL"
+          ? relevantData
+              .slice(
+                0,
+                relevantData.length < limit ? relevantData.length : limit
+              )
+              .reverse()
+          : relevantData.reverse(),
+      ];
+    })
+  );
 }
 
 function MergeArrays(arrays: Record<string, any>[][]): Record<string, any>[] {
@@ -94,10 +180,7 @@ function MergeArrays(arrays: Record<string, any>[][]): Record<string, any>[] {
   return result;
 }
 
-async function uploadStocks(
-  symbols: string[],
-  user: KindeUser
-): Promise<void> {
+async function uploadStocks(symbols: string[], user: KindeUser): Promise<void> {
   if (!symbols.length) throw new Error("ArgumentError: No symbols provided");
 
   const financialUrls = symbols.map((symbol) => [
@@ -215,6 +298,7 @@ async function uploadStocks(
               },
             });
           } catch (error: any) {
+            console.log(error.message);
             if (error.message.includes("Timed out"))
               console.log("Timed out while uploading", symbol, year);
             else console.log("Error uploading financials for", symbol, year);
@@ -222,7 +306,8 @@ async function uploadStocks(
         }
       );
       await Promise.all(financialsPromises);
-    } catch {
+    } catch (error: any) {
+      console.log(error.message);
       console.log("Error uploading stock", symbol);
     }
   });

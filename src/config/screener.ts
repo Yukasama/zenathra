@@ -1,9 +1,7 @@
 import { Prisma } from "@prisma/client";
-import { StockScreenerProps } from "@/lib/validators/stock";
+import { ScreenerProps } from "@/lib/validators/screener";
 
-export function buildFilter(
-  screener: StockScreenerProps
-): Prisma.StockWhereInput {
+export function buildFilter(screener: ScreenerProps) {
   const filter: Prisma.StockWhereInput = {};
 
   if (screener.exchange && screener.exchange !== "Any")

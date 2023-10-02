@@ -20,10 +20,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import { UploadStockProps, UploadStockSchema } from "@/lib/validators/stock";
+import { UploadStockSchema } from "@/lib/validators/stock";
 import { Checkbox } from "./ui/checkbox";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { Slider } from "./ui/slider";
 import { Upload } from "lucide-react";
 import {
@@ -33,6 +31,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { trpc } from "@/app/_trpc/client";
 
 export default function AdminAddStocks() {
   const form = useForm({
@@ -45,9 +44,7 @@ export default function AdminAddStocks() {
     },
   });
 
-  const { mutate: uploadStocks, isLoading } = useMutation({
-    mutationFn: async (payload: UploadStockProps) =>
-      await axios.post("/api/stock/upload", payload),
+  const { mutate: uploadStocks, isLoading } = trpc.stock.upload.useMutation({
     onError: () =>
       toast({
         title: "Oops! Something went wrong.",
@@ -62,7 +59,7 @@ export default function AdminAddStocks() {
   });
 
   function onSubmit(data: FieldValues) {
-    const payload: UploadStockProps = {
+    const payload = {
       stock: data.stock,
       clean: data.clean,
       skip: data.skip,

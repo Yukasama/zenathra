@@ -12,7 +12,7 @@ export const CreatePortfolioSchema = z.object({
     .optional(),
 });
 
-export const ModifySymbolsPortfolioSchema = z.object({
+export const ModifyPortfolioSchema = z.object({
   portfolioId: z.string().nonempty(),
   stockIds: z
     .string()
@@ -23,14 +23,6 @@ export const ModifySymbolsPortfolioSchema = z.object({
     ),
 });
 
-export const DeletePortfolioSchema = z.object({
-  portfolioId: z.string().nonempty(),
-});
-
 export type CreatePortfolioProps = z.infer<typeof CreatePortfolioSchema>;
 
-export type ModifySymbolsPortfolioProps = z.infer<
-  typeof ModifySymbolsPortfolioSchema
->;
-
-export type DeletePortfolioProps = z.infer<typeof DeletePortfolioSchema>;
+export type ModifyPortfolioProps = z.infer<typeof ModifyPortfolioSchema>;

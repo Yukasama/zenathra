@@ -1,5 +1,4 @@
 import { db } from "@/db";
-import { BadRequestResponse } from "@/lib/response";
 import { stripe } from "@/lib/stripe";
 import { headers } from "next/headers";
 import type Stripe from "stripe";
@@ -17,8 +16,9 @@ export async function POST(request: Request) {
       process.env.STRIPE_WEBHOOK_SECRET || ""
     );
   } catch (err) {
-    return new BadRequestResponse(
-      `Webhook Error: ${err instanceof Error ? err.message : "Unknown Error"}`
+    return new Response(
+      `Webhook Error: ${err instanceof Error ? err.message : "Unknown Error"}`,
+      { status: 400 }
     );
   }
 

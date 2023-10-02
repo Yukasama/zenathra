@@ -7,7 +7,6 @@ import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
 import { Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { CreatePortfolioSchema } from "@/lib/validators/portfolio";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
@@ -32,6 +31,7 @@ import {
 import { motion } from "framer-motion";
 import { animationVariants } from "@/config/motion";
 import { trpc } from "@/app/_trpc/client";
+import { CreatePortfolioSchema } from "@/lib/validators/portfolio";
 
 interface Props {
   numberOfPortfolios?: number;
@@ -72,7 +72,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
 
     const payload = {
       title: data.title,
-      publicPortfolio: data.publicPortfolio,
+      public: data.publicPortfolio,
     };
 
     createPortfolio(payload);

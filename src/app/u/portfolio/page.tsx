@@ -39,12 +39,12 @@ export default async function page() {
                 id: portfolio.id,
                 public: portfolio.public,
                 color: portfolio.color,
-                stockIds: portfolio.stocks.map((stock) => stock.stockId),
+                stocks: portfolio.stocks.map((stock) => stock.stockId),
               }}
             />
           </Suspense>
         ))}
-        {(portfolios.length < noSub.maxPortfolios) && (
+        {portfolios.length < noSub.maxPortfolios && (
           <PortfolioCreateCard numberOfPortfolios={portfolios.length} />
         )}
       </GridLayout>

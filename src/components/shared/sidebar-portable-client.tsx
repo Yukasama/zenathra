@@ -6,7 +6,7 @@ import { useSidebar } from "@/components/shared/sidebar-provider";
 import { useEffect } from "react";
 import { X } from "lucide-react";
 import { Card, CardContent, CardHeader } from "../ui/card";
-import CompanyLogo from "../company-logo";
+import CompanyLogo from "./company-logo";
 import { RecentStocks } from "@/types/db";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 

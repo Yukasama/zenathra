@@ -9,7 +9,7 @@ import NavbarMenu from "./navbar-menu";
 import { cn } from "@/lib/utils";
 import { db } from "@/db";
 import _ from "lodash";
-import CompanyLogo from "../company-logo";
+import CompanyLogo from "./company-logo";
 import {
   LoginLink,
   getKindeServerSession,

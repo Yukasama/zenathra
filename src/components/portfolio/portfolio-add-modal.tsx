@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { startTransition, useCallback, useRef, useState } from "react";
 import { Prisma, Stock } from "@prisma/client";
 import { toast } from "@/hooks/use-toast";
-import { ModifySymbolsPortfolioProps } from "@/lib/validators/portfolio";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ListPlus, ListX, Pencil, Plus } from "lucide-react";
@@ -31,7 +30,10 @@ import { PortfolioWithStocks } from "@/types/db";
 import { trpc } from "@/app/_trpc/client";
 
 interface Props {
-  portfolio: PortfolioWithStocks;
+  portfolio: Pick<
+    PortfolioWithStocks,
+    "id" | "title" | "public" | "color" | "stocks"
+  >;
 }
 
 export default function PortfolioAddModal({ portfolio }: Props) {
@@ -86,7 +88,7 @@ export default function PortfolioAddModal({ portfolio }: Props) {
     if (selected.length >= 20)
       return toast({ description: "You can only add 20 stocks at a time." });
 
-    const payload: ModifySymbolsPortfolioProps = {
+    const payload = {
       portfolioId: portfolio.id,
       stockIds: selected,
     };
@@ -95,8 +97,10 @@ export default function PortfolioAddModal({ portfolio }: Props) {
   }
 
   function modifyPortfolio(id: string) {
-    if (selected.includes(id)) setSelected(selected.filter((s) => s !== id));
-    else setSelected([...selected, id]);
+    if (selected.includes(id))
+      return setSelected(selected.filter((s) => s !== id));
+
+    setSelected([...selected, id]);
   }
 
   return (

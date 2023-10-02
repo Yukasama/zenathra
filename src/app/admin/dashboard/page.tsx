@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 export default async function page() {
   const { getPermission } = getKindeServerSession();
 
-  if (!getPermission("upload:stocks").isGranted) redirect("/");
+  // if (!getPermission("upload:stocks").isGranted) redirect("/");
 
   return (
     <PageLayout

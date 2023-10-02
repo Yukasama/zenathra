@@ -2,7 +2,10 @@ import { z } from "zod";
 import { privateProcedure, publicProcedure, router } from "../trpc";
 import { db } from "@/db";
 import { TRPCError } from "@trpc/server";
-import { ModifySymbolsPortfolioSchema } from "@/lib/validators/portfolio";
+import {
+  CreatePortfolioSchema,
+  ModifyPortfolioSchema,
+} from "@/lib/validators/portfolio";
 
 const BASE_COLORS = ["#0088FE", "#00C49F", "#A463F2", "#20B2AA", "#7C4DFF"];
 
@@ -26,12 +29,7 @@ export const portfolioRouter = router({
       });
     }),
   createPortfolio: privateProcedure
-    .input(
-      z.object({
-        title: z.string(),
-        publicPortfolio: z.boolean(),
-      })
-    )
+    .input(CreatePortfolioSchema)
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
       return await db.portfolio.create({
@@ -44,7 +42,7 @@ export const portfolioRouter = router({
       });
     }),
   addToPortfolio: privateProcedure
-    .input(ModifySymbolsPortfolioSchema)
+    .input(ModifyPortfolioSchema)
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
       const { portfolioId, stockIds } = input;
@@ -85,12 +83,7 @@ export const portfolioRouter = router({
       return portfolio;
     }),
   removeFromPortfolio: privateProcedure
-    .input(
-      z.object({
-        portfolioId: z.string(),
-        stockIds: z.array(z.string()),
-      })
-    )
+    .input(ModifyPortfolioSchema)
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
       const { portfolioId, stockIds } = input;

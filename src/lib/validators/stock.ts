@@ -9,7 +9,7 @@ export const UploadStockSchema = z.object({
   pullTimes: z.number().min(1).max(100).default(1),
 });
 
-export const StockScreenerSchema = z.object({
+export const ScreenerSchema = z.object({
   exchange: z.string(),
   ticker: z.string(),
   sector: z.string(),
@@ -31,7 +31,7 @@ export const StockHistorySchema = z.object({
 
 export type UploadStockProps = z.infer<typeof UploadStockSchema>;
 
-export type StockScreenerProps = z.infer<typeof StockScreenerSchema>;
+export type ScreenerProps = z.infer<typeof ScreenerSchema>;
 
 export type SearchStocksProps = z.infer<typeof SearchStocksSchema>;
 
