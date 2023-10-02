@@ -14,13 +14,13 @@ export const CreatePortfolioSchema = z.object({
 
 export const ModifySymbolsPortfolioSchema = z.object({
   portfolioId: z.string().nonempty(),
-  stockIds: z.union([
-    z.string(),
-    z
-      .array(z.string())
-      .nonempty()
-      .max(20, "A maximum of 20 symbols can be added at a time."),
-  ]),
+  stockIds: z
+    .string()
+    .or(
+      z
+        .array(z.string())
+        .max(20, "A maximum of 20 symbols can be added at a time.")
+    ),
 });
 
 export const DeletePortfolioSchema = z.object({

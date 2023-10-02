@@ -2,6 +2,7 @@ import { z } from "zod";
 import { privateProcedure, publicProcedure, router } from "../trpc";
 import { db } from "@/db";
 import { TRPCError } from "@trpc/server";
+import { ModifySymbolsPortfolioSchema } from "@/lib/validators/portfolio";
 
 const BASE_COLORS = ["#0088FE", "#00C49F", "#A463F2", "#20B2AA", "#7C4DFF"];
 
@@ -43,12 +44,7 @@ export const portfolioRouter = router({
       });
     }),
   addToPortfolio: privateProcedure
-    .input(
-      z.object({
-        portfolioId: z.string(),
-        stockIds: z.array(z.string()),
-      })
-    )
+    .input(ModifySymbolsPortfolioSchema)
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
       const { portfolioId, stockIds } = input;
