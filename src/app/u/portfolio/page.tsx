@@ -3,7 +3,7 @@ import PortfolioCreateCard from "@/components/portfolio/portfolio-create-card";
 import { db } from "@/db";
 import { getUser } from "@/lib/auth";
 import PageLayout from "@/components/shared/page-layout";
-import { noSub } from "@/config/stripe";
+import { PLANS } from "@/config/stripe";
 import GridLayout from "@/components/shared/grid-layout";
 import { Suspense } from "react";
 import { Card } from "@/components/ui/card";
@@ -25,8 +25,6 @@ export default async function page() {
     where: { creatorId: user?.id ?? undefined },
   });
 
-  console.log(portfolios);
-
   return (
     <PageLayout title="My Portfolios" description="Manage your portfolios here">
       <GridLayout>
@@ -46,7 +44,7 @@ export default async function page() {
             />
           </Suspense>
         ))}
-        {portfolios.length < noSub.maxPortfolios && (
+        {portfolios.length < PLANS[0].maxPortfolios && (
           <PortfolioCreateCard numberOfPortfolios={portfolios.length} />
         )}
       </GridLayout>
