@@ -1,7 +1,18 @@
-interface Props {
-  
-}
+import { db } from "@/db";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { redirect } from "next/navigation";
 
-export default function page({}: Props) {
-  return <div>page</div>
+export default async function page() {
+  const { getUser } = getKindeServerSession();
+  const user = getUser();
+
+  if (!user || !user.id) redirect("/auth-callback?origin=home");
+
+  const dbUser = await db.user.findFirst({
+    where: { id: user.id },
+  });
+
+  if (!dbUser) redirect("/auth-callback?origin=home");
+
+  return <div>page</div>;
 }

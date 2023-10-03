@@ -69,7 +69,7 @@ export default async function page({ params: { symbol } }: Props) {
           <div className="relative f-col gap-2">
             <Suspense fallback={<StockPrice2Loading />}>
               {/* @ts-expect-error Server Component */}
-              <StockPrice2 session={session} stock={stock} />
+              <StockPrice2 stock={stock} />
             </Suspense>
             <Suspense fallback={<StockAfterHoursLoading />}>
               {/* @ts-expect-error Server Component */}

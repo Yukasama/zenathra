@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "../ui/button";
-import type { Session } from "next-auth";
 import { Plus } from "lucide-react";
 import { useCustomToasts } from "@/hooks/use-custom-toasts";
 import { toast } from "@/hooks/use-toast";
@@ -15,16 +14,17 @@ import {
   DialogDescription,
 } from "../ui/dialog";
 import StockPortfolioModifier from "./stock-portfolio-modifier";
+import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface Props {
-  session: Session | null;
+  user: KindeUser | null;
   symbolId: string;
   symbol: string;
-  portfolios: PortfolioWithStocks[] | null;
+  portfolios: PortfolioWithStocks[] | undefined;
 }
 
 export default function StockPortfolioAddModal({
-  session,
+  user,
   symbolId,
   symbol,
   portfolios,
@@ -32,14 +32,14 @@ export default function StockPortfolioAddModal({
   const { loginToast } = useCustomToasts();
 
   const handleClick = () => {
-    if (!session) return loginToast();
+    if (!user) return loginToast();
     if (!portfolios || portfolios.length === 0)
       return toast({ description: "You have to create a portfolio first." });
   };
 
   return (
     <>
-      {!session?.user ? (
+      {!user ? (
         <Button variant="subtle" size="xs" onClick={handleClick}>
           <Plus className="h-4" />
         </Button>

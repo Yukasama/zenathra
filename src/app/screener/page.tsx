@@ -12,11 +12,8 @@ import {
   earningsDates,
   exchanges,
 } from "@/config/screener";
-import { Prisma, Stock } from "@prisma/client";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { BarChart2, FileText, Layers, RotateCcw } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
@@ -34,7 +31,7 @@ import {
 } from "@/components/ui/card";
 import PageLayout from "@/components/shared/page-layout";
 import { StockImage } from "@/components/stock/stock-image";
-import { StockScreenerProps } from "@/lib/validators/stock";
+import { trpc } from "../_trpc/client";
 
 export default function Page() {
   const [resetCounter, setResetCounter] = useState(0);
@@ -79,26 +76,16 @@ export default function Page() {
     isFetching,
     isFetched,
     refetch,
-  } = useQuery({
-    queryFn: async () => {
-      const payload: StockScreenerProps = {
-        exchange: exchange,
-        ticker: ticker,
-        sector: sector,
-        industry: industry,
-        country: country,
-        earningsDate: earningsDate,
-        peRatio: [peRatio1, peRatio2],
-        pegRatio: [pegRatio1, pegRatio2],
-        marketCap: marketCap,
-      };
-
-      const { data } = await axios.post("/api/stock/query", payload);
-      return data as (Stock & {
-        _count: Prisma.StockCountOutputType;
-      })[];
-    },
-    queryKey: ["screener-query"],
+  } = trpc.stock.query.useQuery({
+    exchange: exchange,
+    ticker: ticker,
+    sector: sector,
+    industry: industry,
+    country: country,
+    earningsDate: earningsDate,
+    peRatio: [peRatio1, peRatio2],
+    pegRatio: [pegRatio1, pegRatio2],
+    marketCap: marketCap,
   });
 
   useEffect(() => {
@@ -419,7 +406,7 @@ export default function Page() {
             <>
               <TabsContent value="descriptive">
                 <div className="f-col hidden-scrollbar max-h-[800px] gap-2 overflow-scroll">
-                  {results?.map((stock: Stock) => (
+                  {results?.map((stock) => (
                     <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
                       <Card className="flex h-[60px] px-4 hover:bg-slate-100 dark:hover:bg-slate-900">
                         <div className="col-span-3 flex items-center gap-4">
@@ -438,7 +425,7 @@ export default function Page() {
               </TabsContent>
               <TabsContent value="fundamental">
                 <div className="f-col hidden-scrollbar h-[800px] gap-2 overflow-scroll">
-                  {results?.map((stock: Stock) => (
+                  {results?.map((stock) => (
                     <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
                       <Card className="flex h-[60px] p-2 px-4 hover:bg-slate-100 dark:hover:bg-slate-900">
                         <div className="col-span-3 flex items-center gap-4">

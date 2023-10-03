@@ -69,7 +69,7 @@ export default function PortfolioAddModal({ portfolio }: Props) {
   });
 
   const { mutate: addToPortfolio, isLoading } =
-    trpc.portfolio.addToPortfolio.useMutation({
+    trpc.portfolio.add.useMutation({
       onError: () =>
         toast({
           title: "Oops! Something went wrong.",

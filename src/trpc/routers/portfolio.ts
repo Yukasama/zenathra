@@ -15,7 +15,7 @@ function getRandomColor(): string {
 }
 
 export const portfolioRouter = router({
-  getPortfolio: publicProcedure
+  getById: publicProcedure
     .input(
       z.object({
         id: z.string(),
@@ -28,11 +28,11 @@ export const portfolioRouter = router({
         },
       });
     }),
-  createPortfolio: privateProcedure
+  create: privateProcedure
     .input(CreatePortfolioSchema)
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
-      
+
       return await db.portfolio.create({
         data: {
           ...input,
@@ -42,7 +42,7 @@ export const portfolioRouter = router({
         },
       });
     }),
-  addToPortfolio: privateProcedure
+  add: privateProcedure
     .input(ModifyPortfolioSchema)
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
@@ -83,7 +83,7 @@ export const portfolioRouter = router({
 
       return portfolio;
     }),
-  removeFromPortfolio: privateProcedure
+  remove: privateProcedure
     .input(ModifyPortfolioSchema)
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
@@ -108,7 +108,7 @@ export const portfolioRouter = router({
 
       return portfolio;
     }),
-  deletePortfolio: privateProcedure
+  delete: privateProcedure
     .input(
       z.object({
         portfolioId: z.string(),

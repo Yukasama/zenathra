@@ -1,15 +1,13 @@
 "use client";
 
 import { toast } from "@/hooks/use-toast";
-import { ModifySymbolsPortfolioProps } from "@/lib/validators/portfolio";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { startTransition } from "react";
 import { Button } from "../ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import { PortfolioWithStocks } from "@/types/db";
 import { Card } from "../ui/card";
+import { trpc } from "@/app/_trpc/client";
 
 interface Props {
   portfolio: PortfolioWithStocks;
@@ -19,52 +17,33 @@ interface Props {
 export default function StockPortfolioModifier({ portfolio, symbolId }: Props) {
   const router = useRouter();
 
-  const { mutate: addToPortfolio, isLoading: isAddLoading } = useMutation({
-    mutationFn: async () => {
-      const payload: ModifySymbolsPortfolioProps = {
-        portfolioId: portfolio.id,
-        stockIds: symbolId,
-      };
-      await axios.post("/api/portfolio/add", payload);
-    },
-    onError: () => {
-      toast({
-        title: "Oops! Something went wrong.",
-        description: `Failed to add to portfolio.`,
-        variant: "destructive",
-      });
-    },
-    onSuccess: () => {
-      startTransition(() => router.refresh());
+  const { mutate: addToPortfolio, isLoading: isAddLoading } =
+    trpc.portfolio.add.useMutation({
+      onError: () =>
+        toast({
+          title: "Oops! Something went wrong.",
+          description: `Failed to add to portfolio.`,
+          variant: "destructive",
+        }),
+      onSuccess: () => {
+        startTransition(() => router.refresh());
 
-      toast({
-        description: `Added to portfolio.`,
-      });
-    },
-  });
+        toast({ description: `Added to portfolio.` });
+      },
+    });
 
   const { mutate: removeFromPortfolio, isLoading: isRemoveLoading } =
-    useMutation({
-      mutationFn: async () => {
-        const payload: ModifySymbolsPortfolioProps = {
-          portfolioId: portfolio.id,
-          stockIds: symbolId,
-        };
-        await axios.post("/api/portfolio/remove", payload);
-      },
-      onError: () => {
+    trpc.portfolio.remove.useMutation({
+      onError: () =>
         toast({
           title: "Oops! Something went wrong.",
           description: `Failed to remove from portfolio.`,
           variant: "destructive",
-        });
-      },
+        }),
       onSuccess: () => {
         startTransition(() => router.refresh());
 
-        toast({
-          description: `Removed from portfolio.`,
-        });
+        toast({ description: `Removed from portfolio.` });
       },
     });
 
@@ -74,9 +53,14 @@ export default function StockPortfolioModifier({ portfolio, symbolId }: Props) {
       <p className="text-slate-400 text-[13px]">
         {portfolio.public ? "Public" : "Private"}
       </p>
-      {portfolio.stockIds.includes(symbolId) ? (
+      {portfolio.stocks.includes(symbolId) ? (
         <Button
-          onClick={() => removeFromPortfolio()}
+          onClick={() =>
+            removeFromPortfolio({
+              portfolioId: portfolio.id,
+              stockIds: symbolId,
+            })
+          }
           variant="destructive"
           isLoading={isRemoveLoading}
           className={`w-full h-full absolute top-0 left-0 ${
@@ -86,7 +70,12 @@ export default function StockPortfolioModifier({ portfolio, symbolId }: Props) {
         </Button>
       ) : (
         <Button
-          onClick={() => addToPortfolio()}
+          onClick={() =>
+            addToPortfolio({
+              portfolioId: portfolio.id,
+              stockIds: symbolId,
+            })
+          }
           variant="success"
           isLoading={isAddLoading}
           className={`w-full h-full absolute top-0 left-0 ${

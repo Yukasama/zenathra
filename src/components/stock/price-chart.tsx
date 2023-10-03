@@ -54,9 +54,7 @@ export default function PriceChart({
   const [mounted, setMounted] = useState<boolean>(false);
   const [timeFrame, setTimeFrame] = useState<string>("1D");
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => setMounted(true), []);
 
   const { data: results, isFetched } = trpc.stock.history.useQuery({
     symbol: symbols,

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { StructureProps } from "@/types/layout";
 import React from "react";
-import type { Session } from "next-auth";
 import { ChevronsDown, ChevronsUp } from "lucide-react";
 import { getQuote } from "@/lib/fmp/quote";
 import { StockImage } from "./stock-image";
@@ -9,6 +8,7 @@ import { Stock } from "@prisma/client";
 import { db } from "@/db";
 import { Card } from "../ui/card";
 import StockPortfolioAddModal from "./stock-portfolio-add-modal";
+import { getUser } from "@/lib/auth";
 
 function Structure({ className, isLoading, children }: StructureProps) {
   return (
@@ -26,32 +26,23 @@ export function StockPrice2Loading({ className }: StructureProps) {
 }
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  session: Session | null;
   stock: Stock;
 }
 
-export default async function StockPrice2({ session, stock }: Props) {
+export default async function StockPrice2({ stock }: Props) {
+  const user = getUser();
+
   const [quote, portfolios] = await Promise.all([
     getQuote(stock.symbol),
     db.portfolio.findMany({
-      where: { creatorId: session?.user.id },
+      include: {
+        stocks: {
+          select: { stockId: true },
+        },
+      },
+      where: { creatorId: user?.id },
     }),
   ]);
-
-  const portfoliosWithStocks = await Promise.all(
-    portfolios.map(async (portfolio) => ({
-      ...portfolio,
-      stockIds: await db.stockInPortfolio.findMany({
-        select: { stockId: true },
-        where: { portfolioId: portfolio.id },
-      }),
-    }))
-  );
-
-  const flattenedPortfolios = portfoliosWithStocks.map((portfolio) => ({
-    ...portfolio,
-    stockIds: portfolio.stockIds.map((stock) => stock.stockId),
-  }));
 
   const positive =
     quote && quote.change ? (quote.change > 0 ? true : false) : true;
@@ -59,7 +50,7 @@ export default async function StockPrice2({ session, stock }: Props) {
   return (
     <Card className="f-col p-3 pb-1.5 gap-1">
       <div className="flex gap-2">
-        <Link href={stock.website ?? null} prefetch={false} target="_blank">
+        <Link href={stock.website} prefetch={false} target="_blank">
           <StockImage src={stock.image} px={40} />
         </Link>
         <div className="-space-y-1">
@@ -89,10 +80,10 @@ export default async function StockPrice2({ session, stock }: Props) {
       </div>
       <div className="absolute right-3 top-3 flex">
         <StockPortfolioAddModal
-          session={session}
+          user={user}
           symbolId={stock.id}
           symbol={stock.symbol}
-          portfolios={flattenedPortfolios}
+          portfolios={portfolios}
         />
       </div>
     </Card>

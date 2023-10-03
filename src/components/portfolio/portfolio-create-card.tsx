@@ -49,7 +49,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
   });
 
   const { mutate: createPortfolio, isLoading } =
-    trpc.portfolio.createPortfolio.useMutation({
+    trpc.portfolio.create.useMutation({
       onError: () =>
         toast({
           title: "Oops! Something went wrong.",
@@ -68,6 +68,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
       return toast({
         title: "Oops! Something went wrong.",
         description: "Maximum number of portfolios reached.",
+        variant: "destructive",
       });
 
     const payload = {

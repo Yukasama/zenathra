@@ -10,18 +10,18 @@ export default function StockMetrics({ stock }: Props) {
   const data = [
     {
       title: "P/E Ratio",
-      value: stock ? stock.peRatioTTM.toFixed(2) : "N/A",
-      good: stock && stock.peRatioTTM < 20,
+      value: stock?.peRatioTTM?.toFixed(2) ?? "N/A",
+      good: stock?.peRatioTTM ?? 0 < 20,
     },
     {
       title: "Earnings Per Share",
-      value: stock ? stock.netIncomePerShareTTM?.toFixed(2) : "N/A",
-      good: stock && stock.netIncomePerShareTTM > 1,
+      value: stock?.netIncomePerShareTTM?.toFixed(2) ?? "N/A",
+      good: stock?.netIncomePerShareTTM ?? 0 > 1,
     },
     {
       title: "P/B Ratio",
-      value: stock ? stock.priceToBookRatioTTM.toFixed(2) : "N/A",
-      good: stock && stock.priceToBookRatioTTM < 3,
+      value: stock?.priceToBookRatioTTM?.toFixed(2) ?? "N/A",
+      good: stock?.priceToBookRatioTTM ?? 0 < 3,
     },
   ];
 

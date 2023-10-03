@@ -55,9 +55,7 @@ export default function StockDividendChart({
 }: Props) {
   const [mounted, setMounted] = useState<boolean>(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => setMounted(true), []);
 
   return (
     <Card

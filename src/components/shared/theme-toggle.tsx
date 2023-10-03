@@ -12,9 +12,7 @@ export default function ThemeToggle({
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => setMounted(true), []);
 
   return (
     <div className={cn(className)}>

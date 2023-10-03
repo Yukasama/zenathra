@@ -3,6 +3,7 @@ export const PLANS = [
     name: "Free",
     slug: "free",
     maxPortfolios: 1,
+    eye: false,
     price: {
       amount: 0,
       priceIds: {
@@ -15,6 +16,7 @@ export const PLANS = [
     name: "Pro",
     slug: "pro",
     maxPortfolios: 6,
+    eye: true,
     price: {
       amount: 14,
       priceIds: {

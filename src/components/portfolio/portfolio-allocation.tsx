@@ -31,9 +31,8 @@ function generateColors(num: number): string[] {
   return colors.slice(0, num);
 }
 
-function getPercentage(count: number, total: number): string {
-  return `${((count / total) * 100).toFixed(2)}%`;
-}
+const getPercentage = (count: number, total: number): string =>
+  `${((count / total) * 100).toFixed(2)}%`;
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   stocks: Stock[];
