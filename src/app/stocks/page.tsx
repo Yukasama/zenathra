@@ -6,7 +6,7 @@ import { StockCardListLoading } from "@/components/stock/stock-card-list";
 import { Suspense } from "react";
 import PageLayout from "@/components/shared/page-layout";
 import { db } from "@/db";
-import PriceChart from "@/components/stock/price-chart";
+import PriceChart from "@/components/price-chart";
 
 export const revalidate = 30;
 

@@ -19,6 +19,7 @@ import {
 import { Loader, Search } from "lucide-react";
 import { RecentStocks } from "@/types/db";
 import { cn } from "@/lib/utils";
+import { trpc } from "@/app/_trpc/client";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   recentStocks: RecentStocks;
@@ -77,17 +78,7 @@ export default function Searchbar({
     isFetching,
     data: results,
     refetch,
-  } = useQuery({
-    queryFn: async () => {
-      if (!input) return [];
-      const { data } = await axios.get(`/api/stock/search?q=${input}`);
-      return data as (Stock & {
-        _count: Prisma.StockCountOutputType;
-      })[];
-    },
-    queryKey: ["search-query"],
-    enabled: false,
-  });
+  } = trpc.stock.search.useQuery({ q: input }, { enabled: false });
 
   return (
     <>

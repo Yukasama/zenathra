@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import PortfolioAddModal from "@/components/portfolio/portfolio-add-modal";
-import PriceChart from "@/components/stock/price-chart";
+import PriceChart from "@/components/price-chart";
 import { db } from "@/db";
 import { notFound } from "next/navigation";
 import PageLayout from "@/components/shared/page-layout";

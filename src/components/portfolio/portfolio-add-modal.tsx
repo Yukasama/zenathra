@@ -49,7 +49,7 @@ export default function PortfolioAddModal({ portfolio }: Props) {
     data: results,
     refetch,
     isFetched,
-  } = trpc.stock.search.useQuery({ q: input });
+  } = trpc.stock.search.useQuery({ q: input }, { enabled: false });
 
   const filteredResults = results?.filter(
     (r) => !portfolio.stocks.includes(r.id)

@@ -11,14 +11,15 @@ import {
 } from "recharts";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
-import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { cn } from "@/lib/utils";
-import Skeleton from "../ui/skeleton";
+import Skeleton from "./ui/skeleton";
 import { trpc } from "@/app/_trpc/client";
 
 function computeDomain(data: any[]) {
@@ -64,13 +65,14 @@ export default function PriceChart({
   let startPrice = 0;
   let transformedData: any[] = [];
 
+  // results[timeFrame] is undefined when the query is not yet fetched
   if (isFetched) {
     [minDomain, maxDomain] = computeDomain(results[timeFrame]);
-    startPrice = Number(results[timeFrame][0].uv);
+    startPrice = Number(results[timeFrame][0].close);
     transformedData = results[timeFrame].map((item: any) => {
-      const uv = Number(item.uv);
+      const uv = Number(item.close);
       return {
-        name: item.name,
+        name: item.date,
         uvAbove: uv >= startPrice ? uv : null,
         uvBelow: uv < startPrice ? uv : null,
       };
@@ -95,13 +97,13 @@ export default function PriceChart({
             style={{
               color: payload[0].value >= startPrice ? "#19E363" : "#e6221e",
             }}>
-            ${payload[0].value} (
+            ${payload[0].value.toFixed(2)} (
             <span className="text-[12px]">
-              {(payload[0].value / Number(results[timeFrame][0].uv)) * 100 -
+              {(payload[0].value / Number(results[timeFrame][0].close)) * 100 -
                 100 >
                 0 && "+"}
               {(
-                (payload[0].value / Number(results[timeFrame][0].uv)) * 100 -
+                (payload[0].value / Number(results[timeFrame][0].close)) * 100 -
                 100
               ).toFixed(2)}
               %)
@@ -115,16 +117,21 @@ export default function PriceChart({
 
   const timeFrames = ["1D", "5D", "1M", "6M", "1Y", "5Y", "ALL"];
 
+  // This temporary hides the warning for the reference line support
+  const error = console.error;
+  console.error = (...args: any) => {
+    if (/defaultProps/.test(args[0])) return;
+    error(...args);
+  };
+
   return (
     <Card
       className={cn(className, "w-full md:max-w-[600px]")}
-      style={{
-        height: (height || 250) + 100,
-      }}>
+      style={{ height: (height || 250) + 100 }}>
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Skeleton isLoaded={isFetched}>{image ?? null}</Skeleton>
+            {image ? <Skeleton isLoaded={isFetched}>{image}</Skeleton> : null}
             <div className="f-col gap-1">
               <Skeleton isLoaded={isFetched}>
                 <CardTitle className="bg-card hidden md:flex">
@@ -154,15 +161,15 @@ export default function PriceChart({
           </Skeleton>
         </div>
       </CardHeader>
-      {mounted && (
-        <Skeleton isLoaded={isFetched}>
+      <CardContent>
+        <Skeleton isLoaded={mounted && isFetched}>
           <ResponsiveContainer width="100%" height={height || 250}>
             <AreaChart
               className="bg-card"
-              width={width || 500}
-              height={height || 250}
+              width={width ?? 500}
+              height={height ?? 250}
               data={transformedData}
-              margin={{ top: 5, right: 60, left: 20, bottom: 5 }}>
+              margin={{ top: 5, right: 40, left: 0, bottom: 5 }}>
               <defs>
                 <linearGradient id="colorUvAbove" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#19E363" stopOpacity={0.8} />
@@ -201,7 +208,7 @@ export default function PriceChart({
             </AreaChart>
           </ResponsiveContainer>
         </Skeleton>
-      )}
+      </CardContent>
     </Card>
   );
 }

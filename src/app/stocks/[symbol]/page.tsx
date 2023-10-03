@@ -14,7 +14,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import PageLayout from "@/components/shared/page-layout";
 import StockStatistics from "@/components/stock/stock-statistics";
-import PriceChart from "@/components/stock/price-chart";
+import PriceChart from "@/components/price-chart";
 import { StockImage } from "@/components/stock/stock-image";
 import { getUser } from "@/lib/auth";
 

@@ -107,9 +107,9 @@ export const stockRouter = router({
 
           await uploadStocks(symbols, user);
           console.log(
-            `Uploaded ${symbols.length} stocks including: ${
-              symbols[0] ?? symbols[2] ?? "undefined"
-            }`
+            `[SUCCESS] Uploaded ${symbols.length} stocks including: '${
+              symbols[0] ?? symbols[1] ?? "undefined"
+            }'`
           );
 
           if (currentIteration !== totalIterations)
@@ -291,15 +291,20 @@ async function uploadStocks(symbols: string[], user: KindeUser): Promise<void> {
             });
           } catch (error: any) {
             if (error.message.includes("Timed out"))
-              console.log("Timed out while uploading", symbol, year);
+              console.log("[ERROR] Timed out while uploading", symbol, year);
             else
-              console.log("Error while uploading financials for", symbol, year);
+              console.log(
+                "[ERROR] Uploading financials for",
+                symbol,
+                year,
+                "failed"
+              );
           }
         }
       );
       await Promise.all(financialsPromises);
     } catch {
-      console.log("Error while uploading stock", symbol);
+      console.log("[ERROR] Uploading stock", symbol, "failed");
     }
   });
   await Promise.all(promises);
