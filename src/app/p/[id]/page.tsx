@@ -29,7 +29,7 @@ export async function generateMetadata({ params: { id } }: Props) {
   if (!portfolio.public && user?.id !== portfolio.creatorId)
     return { title: "This portfolio is private" };
 
-  return { title: portfolio.title };
+  return { title: `${portfolio.title} - Portfolio` };
 }
 
 interface Props {
@@ -108,7 +108,11 @@ export default async function page({ params: { id } }: Props) {
             </div>
           </div>
         ) : (
-          <h2>There are no stocks in this portfolio.</h2>
+          <div className="f-box f-col gap-3 mt-80">
+            <h2 className="font-medium text-lg">
+              There are no stocks in this portfolio.
+            </h2>
+          </div>
         )}
       </PageLayout>
     </>

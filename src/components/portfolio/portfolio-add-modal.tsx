@@ -3,10 +3,7 @@
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { startTransition, useCallback, useRef, useState } from "react";
-import { Prisma, Stock } from "@prisma/client";
 import { toast } from "@/hooks/use-toast";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { ListPlus, ListX, Pencil, Plus } from "lucide-react";
 import debounce from "lodash.debounce";
 import { StockImage } from "../stock/stock-image";
@@ -30,10 +27,7 @@ import { PortfolioWithStocks } from "@/types/db";
 import { trpc } from "@/app/_trpc/client";
 
 interface Props {
-  portfolio: Pick<
-    PortfolioWithStocks,
-    "id" | "title" | "public" | "color" | "stocks"
-  >;
+  portfolio: Pick<PortfolioWithStocks, "id" | "title" | "stocks">;
 }
 
 export default function PortfolioAddModal({ portfolio }: Props) {
@@ -55,32 +49,24 @@ export default function PortfolioAddModal({ portfolio }: Props) {
     data: results,
     refetch,
     isFetched,
-  } = useQuery({
-    queryFn: async () => {
-      if (!input) return [];
-      const { data } = await axios.get(`/api/stock/search?q=${input}`);
-      const results = data as (Stock & {
-        _count: Prisma.StockCountOutputType;
-      })[];
-      return results.filter((r) => !portfolio.stocks.includes(r.id));
-    },
-    queryKey: ["portfolio-search-query"],
-    enabled: false,
-  });
+  } = trpc.stock.search.useQuery({ q: input });
 
-  const { mutate: addToPortfolio, isLoading } =
-    trpc.portfolio.add.useMutation({
-      onError: () =>
-        toast({
-          title: "Oops! Something went wrong.",
-          description: "Failed to add stocks to portfolio.",
-          variant: "destructive",
-        }),
-      onSuccess: () => {
-        startTransition(() => router.refresh());
-        toast({ description: "Added stocks to portfolio." });
-      },
-    });
+  const filteredResults = results?.filter(
+    (r) => !portfolio.stocks.includes(r.id)
+  );
+
+  const { mutate: addToPortfolio, isLoading } = trpc.portfolio.add.useMutation({
+    onError: () =>
+      toast({
+        title: "Oops! Something went wrong.",
+        description: "Failed to add stocks to portfolio.",
+        variant: "destructive",
+      }),
+    onSuccess: () => {
+      startTransition(() => router.refresh());
+      toast({ description: "Added stocks to portfolio." });
+    },
+  });
 
   function onSubmit() {
     if (selected.length < 1)
@@ -133,7 +119,7 @@ export default function PortfolioAddModal({ portfolio }: Props) {
           />
 
           {input.length > 0 && (
-            <CommandList key={results?.length}>
+            <CommandList key={filteredResults?.length}>
               {isFetching && (
                 <CommandEmpty>
                   {[...Array(4)].map((_, i) => (
@@ -144,12 +130,12 @@ export default function PortfolioAddModal({ portfolio }: Props) {
                   ))}
                 </CommandEmpty>
               )}
-              {isFetched && !results?.length && (
+              {isFetched && !filteredResults?.length && (
                 <CommandEmpty>No results found.</CommandEmpty>
               )}
-              {isFetched && (results?.length ?? 0) > 0 && (
+              {isFetched && (filteredResults?.length ?? 0) > 0 && (
                 <CommandGroup heading="Stocks">
-                  {results?.map((result) => (
+                  {filteredResults?.map((result) => (
                     <CommandItem
                       key={result.id}
                       onSelect={() => modifyPortfolio(result.id)}

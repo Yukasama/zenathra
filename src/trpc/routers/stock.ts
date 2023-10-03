@@ -27,7 +27,7 @@ export const stockRouter = router({
       })
     )
     .query(async (opts) => {
-      await db.stock.findMany({
+      return await db.stock.findMany({
         where: { symbol: { startsWith: opts.input.q } },
         include: { _count: true },
         take: 10,
