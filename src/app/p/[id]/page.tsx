@@ -4,7 +4,9 @@ import PriceChart from "@/components/price-chart";
 import { db } from "@/db";
 import { notFound } from "next/navigation";
 import PageLayout from "@/components/shared/page-layout";
-import PortfolioAssets from "@/components/portfolio/portfolio-assets";
+import PortfolioAssets, {
+  PortfolioAssetsLoading,
+} from "@/components/portfolio/portfolio-assets";
 import PortfolioAllocation from "@/components/portfolio/portfolio-allocation";
 import { EyeOff } from "lucide-react";
 import {
@@ -14,6 +16,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getUser } from "@/lib/auth";
+import EditName from "@/components/portfolio/edit-name";
+import EditVisibility from "@/components/portfolio/edit-visibility";
 
 export async function generateStaticParams() {
   const data = await db.portfolio.findMany({ select: { id: true } });
@@ -75,46 +79,62 @@ export default async function page({ params: { id } }: Props) {
   });
 
   return (
-    <>
-      <Card className="rounded-none border-none">
+    <PageLayout className="f-col gap-4">
+      <Card>
         <CardHeader>
-          <CardTitle>{portfolio.title}</CardTitle>
-          <CardDescription>
-            Created on{" "}
-            {portfolio.createdAt.toISOString().split(".")[0].split("T")[0]}
-          </CardDescription>
+          <div className="flex justify-between">
+            <div className="f-col gap-1.5">
+              <div className="flex items-center gap-2">
+                <CardTitle>{portfolio.title}</CardTitle>
+                {user?.id === portfolio.creatorId && (
+                  <EditName portfolio={portfolio} />
+                )}
+              </div>
+              <CardDescription>
+                Created on{" "}
+                {portfolio.createdAt.toISOString().split(".")[0].split("T")[0]}
+              </CardDescription>
+              {user?.id === portfolio.creatorId && (
+                <div className="w-28">
+                  <EditVisibility portfolio={portfolio} />
+                </div>
+              )}
+            </div>
+
+            {portfolio.creatorId === user?.id && (
+              <PortfolioAddModal portfolio={portfolio} />
+            )}
+          </div>
         </CardHeader>
       </Card>
-      <PageLayout>
-        {portfolio.stocks.length ? (
-          <div className="f-col gap-4">
-            <div className="flex f-col items-start lg:flex-row gap-4">
-              <PriceChart
-                symbols={stocks.map((s) => s.symbol)}
-                title="Portfolio Chart"
-                description="Chart of all portfolio positions"
+      {portfolio.stocks.length ? (
+        <div className="f-col gap-4">
+          <div className="flex f-col items-start lg:flex-row gap-4">
+            <PriceChart
+              symbols={stocks.map((s) => s.symbol)}
+              title="Portfolio Chart"
+              description="Chart of all portfolio positions"
+            />
+            <PortfolioAllocation stocks={stocks} />
+          </div>
+          <div className="flex">
+            <Suspense fallback={<PortfolioAssetsLoading />}>
+              {/* @ts-expect-error Server Component */}
+              <PortfolioAssets
+                user={user}
+                portfolio={portfolio}
+                stocks={stocks}
               />
-              <PortfolioAllocation stocks={stocks} />
-            </div>
-            <div className="flex">
-              <Suspense fallback={<p>Loading...</p>}>
-                {/* @ts-expect-error Server Component */}
-                <PortfolioAssets
-                  portfolio={portfolio}
-                  symbols={stocks.map((s) => s.symbol)}
-                  user={user}
-                />
-              </Suspense>
-            </div>
+            </Suspense>
           </div>
-        ) : (
-          <div className="f-box f-col gap-3 mt-80">
-            <h2 className="font-medium text-lg">
-              There are no stocks in this portfolio.
-            </h2>
-          </div>
-        )}
-      </PageLayout>
-    </>
+        </div>
+      ) : (
+        <div className="f-box f-col gap-3 mt-80">
+          <h2 className="font-medium text-lg">
+            There are no stocks in this portfolio.
+          </h2>
+        </div>
+      )}
+    </PageLayout>
   );
 }

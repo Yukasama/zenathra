@@ -40,31 +40,36 @@ export const stockRouter = router({
       })
     )
     .query(async (opts) => {
-      const { symbol } = opts.input;
+      try {
+        const { symbol } = opts.input;
 
-      if (Array.isArray(symbol)) {
-        const data = await Promise.all(symbol.map(fetchHistory));
+        if (Array.isArray(symbol)) {
+          const data = await Promise.all(symbol.map(fetchHistory));
 
-        // Merging symbol data to get average
-        let result: any = {};
-        data.forEach((symbolData: any) => {
-          Object.keys(symbolData).forEach((range) => {
-            if (!result[range]) result[range] = [];
+          // Merging symbol data to get average
+          let result: any = {};
+          data.forEach((symbolData: any) => {
+            Object.keys(symbolData).forEach((range) => {
+              if (!result[range]) result[range] = [];
 
-            symbolData[range].forEach((entry: any, entryIndex: any) => {
-              if (!result[range][entryIndex]) {
-                result[range][entryIndex] = {
-                  date: entry.date,
-                  close: 0,
-                };
-              }
-              result[range][entryIndex].close += entry.close / data.length;
+              symbolData[range].forEach((entry: any, entryIndex: any) => {
+                if (!result[range][entryIndex]) {
+                  result[range][entryIndex] = {
+                    date: entry.date,
+                    close: 0,
+                  };
+                }
+                result[range][entryIndex].close += entry.close / data.length;
+              });
             });
           });
-        });
-        return result;
+          return result;
+        }
+        return await fetchHistory(symbol);
+      } catch (error) {
+        console.log(error);
+        return {};
       }
-      return await fetchHistory(symbol);
     }),
   upload: adminProcedure
     .input(
@@ -304,7 +309,7 @@ async function uploadStocks(symbols: string[], user: KindeUser): Promise<void> {
       );
       await Promise.all(financialsPromises);
     } catch {
-      console.log("[ERROR] Uploading stock", symbol, "failed");
+      console.log("[ERROR] Uploading stock data for", symbol, "failed");
     }
   });
   await Promise.all(promises);

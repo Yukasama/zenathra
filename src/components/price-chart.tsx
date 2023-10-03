@@ -181,7 +181,11 @@ export default function PriceChart({
                 </linearGradient>
               </defs>
               <XAxis dataKey="name" fontSize={12} />
-              <YAxis domain={[minDomain, maxDomain]} fontSize={12} />
+              <YAxis
+                domain={[minDomain, maxDomain]}
+                fontSize={12}
+                tickFormatter={(value) => `${value.toFixed(2)}`}
+              />
               {/* @ts-ignore */}
               <Tooltip content={<CustomTooltip />} />
               <ReferenceLine

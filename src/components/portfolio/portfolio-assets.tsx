@@ -1,4 +1,3 @@
-import { db } from "@/db";
 import {
   Card,
   CardContent,
@@ -17,25 +16,60 @@ import {
 } from "../ui/table";
 import { getQuotes } from "@/lib/fmp/quote";
 import { StockImage } from "../stock/stock-image";
-import PortfolioAddModal from "./portfolio-add-modal";
 import { PortfolioWithStocks } from "@/types/db";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
+import dynamic from "next/dynamic";
+import Skeleton from "../ui/skeleton";
+import { buttonVariants } from "../ui/button";
+import { Pencil } from "lucide-react";
+import { Stock } from "@prisma/client";
 
 interface Props {
-  symbols: string[];
+  stocks: Stock[];
   portfolio: PortfolioWithStocks;
   user: KindeUser | null;
 }
 
+const EditPositions = dynamic(() => import("./edit-positions"), {
+  ssr: false,
+});
+
+export function PortfolioAssetsLoading() {
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div className="f-col gap-1.5">
+            <Skeleton>
+              <CardTitle>Assets</CardTitle>
+            </Skeleton>
+            <Skeleton>
+              <CardDescription>Positions in your portfolio</CardDescription>
+            </Skeleton>
+          </div>
+          <Skeleton>
+            <div className={buttonVariants()}>
+              <Pencil className="h-4 w-4" />
+              Edit
+            </div>
+          </Skeleton>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {[...Array(3)].map((_, i) => (
+          <Skeleton key={i} className="h-14 w-full"></Skeleton>
+        ))}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default async function PortfolioAssets({
-  symbols,
+  stocks,
   portfolio,
   user,
 }: Props) {
-  const [stocks, quotes] = await Promise.all([
-    db.stock.findMany({ where: { symbol: { in: symbols } } }),
-    getQuotes(symbols),
-  ]);
+  const quotes = await getQuotes(stocks.map((stock) => stock.symbol));
 
   const results = stocks.map((stock) => ({
     ...stock,
@@ -46,12 +80,12 @@ export default async function PortfolioAssets({
     <Card className="w-full">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <div>
+          <div className="f-col gap-1.5">
             <CardTitle>Assets</CardTitle>
             <CardDescription>Positions in your portfolio</CardDescription>
           </div>
           {portfolio.creatorId === user?.id && (
-            <PortfolioAddModal portfolio={portfolio} />
+            <EditPositions stocks={stocks} portfolio={portfolio} />
           )}
         </div>
       </CardHeader>

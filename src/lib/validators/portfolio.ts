@@ -23,6 +23,18 @@ export const ModifyPortfolioSchema = z.object({
     ),
 });
 
+export const EditPortfolioSchema = z.object({
+  portfolioId: z.string().nonempty(),
+  title: z
+    .string()
+    .min(1, "Title must be at least 1 character long.")
+    .max(20, "Title must be less than 20 characters long.")
+    .optional(),
+  publicPortfolio: z.boolean().optional(),
+});
+
 export type CreatePortfolioProps = z.infer<typeof CreatePortfolioSchema>;
 
 export type ModifyPortfolioProps = z.infer<typeof ModifyPortfolioSchema>;
+
+export type EditPortfolioProps = z.infer<typeof EditPortfolioSchema>;

@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { startTransition, useCallback, useRef, useState } from "react";
 import { toast } from "@/hooks/use-toast";
-import { ListPlus, ListX, Pencil, Plus } from "lucide-react";
+import { ListPlus, ListX, Plus } from "lucide-react";
 import debounce from "lodash.debounce";
 import { StockImage } from "../stock/stock-image";
 import {
@@ -93,15 +93,15 @@ export default function PortfolioAddModal({ portfolio }: Props) {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="subtle">
-          <Pencil className="h-4 w-4" />
-          Edit
+          <Plus className="h-4 w-4" />
+          Add Stocks
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[375px] rounded-md">
         <DialogHeader>
-          <DialogTitle>Modify {portfolio.title}</DialogTitle>
+          <DialogTitle>Add stocks to {portfolio.title}</DialogTitle>
           <DialogDescription>
-            Here you can add or remove stocks
+            Here you can add stocks to your portfolio
           </DialogDescription>
         </DialogHeader>
         <Command

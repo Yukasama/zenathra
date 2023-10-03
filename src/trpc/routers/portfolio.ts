@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { TRPCError } from "@trpc/server";
 import {
   CreatePortfolioSchema,
+  EditPortfolioSchema,
   ModifyPortfolioSchema,
 } from "@/lib/validators/portfolio";
 
@@ -39,6 +40,29 @@ export const portfolioRouter = router({
           public: input.publicPortfolio,
           creatorId: user.id!,
           color: getRandomColor(),
+        },
+      });
+    }),
+  edit: privateProcedure
+    .input(EditPortfolioSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { user } = ctx;
+      const { portfolioId, title, publicPortfolio } = input;
+
+      const portfolio = await db.portfolio.findFirst({
+        where: {
+          id: portfolioId,
+          creatorId: user?.id ?? undefined,
+        },
+      });
+
+      if (!portfolio) throw new TRPCError({ code: "NOT_FOUND" });
+
+      await db.portfolio.update({
+        where: { id: portfolioId },
+        data: {
+          title: title ?? portfolio.title,
+          public: publicPortfolio ?? portfolio.public,
         },
       });
     }),
