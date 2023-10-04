@@ -1,22 +1,22 @@
-import StockList from "@/components/stock/stock-list";
+import StockList, { StockListLoading } from "@/components/stock/stock-list";
 import StockMetrics from "@/components/stock/stock-metrics";
 import StockEye from "@/components/stock/stock-eye";
 import StockAfterHours, {
   StockAfterHoursLoading,
 } from "@/components/stock/stock-after-hours";
-import StockPrice2, {
-  StockPrice2Loading,
-} from "@/components/stock/stock-price-2";
+import StockInfo, { StockInfoLoading } from "@/components/stock/stock-info";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { db } from "@/db";
-import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import PageLayout from "@/components/shared/page-layout";
-import StockStatistics from "@/components/stock/stock-statistics";
+import StockStatistics, {
+  StockStatisticsLoading,
+} from "@/components/stock/stock-statistics";
 import PriceChart from "@/components/price-chart";
 import { StockImage } from "@/components/stock/stock-image";
 import { getUser } from "@/lib/auth";
+import { getQuote } from "@/lib/fmp/quote";
 
 export const revalidate = 30;
 
@@ -32,6 +32,17 @@ export async function generateStaticParams() {
 
 interface Props {
   params: { symbol: string };
+}
+
+export async function generateMetadata({ params: { symbol } }: Props) {
+  const [stock, quote] = await Promise.all([
+    db.stock.findFirst({ where: { symbol } }),
+    getQuote(symbol),
+  ]);
+
+  if (!stock) return { title: "Stock not found" };
+
+  return { title: `$${quote?.price} - ${stock.companyName}` };
 }
 
 export default async function page({ params: { symbol } }: Props) {
@@ -67,9 +78,9 @@ export default async function page({ params: { symbol } }: Props) {
       <div className="w-full f-col gap-3">
         <div className="flex f-col md:flex-row gap-5">
           <div className="relative f-col gap-2">
-            <Suspense fallback={<StockPrice2Loading />}>
+            <Suspense fallback={<StockInfoLoading />}>
               {/* @ts-expect-error Server Component */}
-              <StockPrice2 stock={stock} />
+              <StockInfo stock={stock} />
             </Suspense>
             <Suspense fallback={<StockAfterHoursLoading />}>
               {/* @ts-expect-error Server Component */}
@@ -87,7 +98,7 @@ export default async function page({ params: { symbol } }: Props) {
             description={`Price Chart of ${stock.companyName}`}
             image={<StockImage src={stock.image} px={40} className="bg-card" />}
           />
-          <Suspense fallback={<Card />}>
+          <Suspense fallback={<StockListLoading limit={4} />}>
             {/* @ts-expect-error Server Component */}
             <StockList
               symbols={stock?.peersList?.split(",")}
@@ -99,14 +110,9 @@ export default async function page({ params: { symbol } }: Props) {
           </Suspense>
         </div>
         <Separator />
-        <Suspense fallback={<p>Loading...</p>}>
+        <Suspense fallback={<StockStatisticsLoading />}>
           {/* @ts-expect-error Server Component */}
-          <StockStatistics
-            stock={{
-              symbol: stock.symbol,
-              companyName: stock.companyName,
-            }}
-          />
+          <StockStatistics stock={stock} />
         </Suspense>
       </div>
     </PageLayout>

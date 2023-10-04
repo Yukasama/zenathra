@@ -1,6 +1,5 @@
-import StockCard from "./stock-card";
+import StockCard, { StockCardLoading } from "./stock-card";
 import { getQuotes } from "@/lib/fmp/quote";
-import { StructureProps } from "@/types/layout";
 import { db } from "@/db";
 import {
   Card,
@@ -9,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import GridLayout from "../shared/grid-layout";
 
 interface Props {
   symbols: string[] | null;
@@ -16,26 +16,15 @@ interface Props {
   description?: string;
 }
 
-function Structure({ className, isLoading, children }: StructureProps) {
+export function StockCardListLoading() {
   return (
-    <div
-      className={`flex min-h-[100px] justify-evenly gap-4 border-y border-slate-200 py-3 dark:border-zinc-200 ${className}`}>
-      {children}
-    </div>
+    <GridLayout>
+      {[...Array(8)].map((_, i) => (
+        <StockCardLoading key={i} />
+      ))}
+    </GridLayout>
   );
 }
-
-export const StockCardListLoading = () => {
-  return (
-    <div className="flex">
-      <StockCard quote={null} image={undefined} />
-      <StockCard quote={null} image={undefined} />
-      <StockCard quote={null} image={undefined} />
-      <StockCard quote={null} image={undefined} />
-      <StockCard quote={null} image={undefined} />
-    </div>
-  );
-};
 
 export default async function StockCardList({
   symbols,
@@ -44,11 +33,14 @@ export default async function StockCardList({
 }: Props) {
   if (!symbols)
     return (
-      <div className="f-col gap-3">
-        <p className="text-lg">l</p>
-      </div>
+      <Card className="border-none">
+        <CardContent className="f-box text-slate-400">
+          Stocks could not be loaded.
+        </CardContent>
+      </Card>
     );
-  symbols = symbols.slice(0, 5);
+
+  symbols = symbols.slice(0, 10);
 
   let [quotes, stocks] = await Promise.all([
     getQuotes(symbols),
@@ -68,14 +60,16 @@ export default async function StockCardList({
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex justify-between gap-4">
-        {quotes.map((quote) => (
-          <StockCard
-            key={quote.symbol}
-            quote={quote}
-            image={stocks.find((s) => s.symbol === quote.symbol)?.image}
-          />
-        ))}
+      <CardContent>
+        <GridLayout>
+          {quotes.map((quote) => (
+            <StockCard
+              key={quote.symbol}
+              quote={quote}
+              image={stocks.find((s) => s.symbol === quote.symbol)?.image}
+            />
+          ))}
+        </GridLayout>
       </CardContent>
     </Card>
   );

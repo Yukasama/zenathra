@@ -72,12 +72,7 @@ export default async function PortfolioCard({ portfolio }: Props) {
           <BarChart className="h-4 w-4" />
           View
         </Link>
-        <PortfolioDeleteModal
-          portfolio={{
-            id: portfolio.id,
-            title: portfolio.title,
-          }}
-        />
+        <PortfolioDeleteModal portfolio={portfolio} />
       </CardFooter>
     </Card>
   );

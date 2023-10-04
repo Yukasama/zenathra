@@ -35,7 +35,11 @@ export default function EditPositions({ stocks, portfolio }: Props) {
           </DialogDescription>
         </DialogHeader>
         {stocks.map((stock) => (
-          <PortfolioPosition key={stock.id} stock={stock} portfolio={portfolio} />
+          <PortfolioPosition
+            key={stock.id}
+            stock={stock}
+            portfolio={portfolio}
+          />
         ))}
       </DialogContent>
     </Dialog>

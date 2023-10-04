@@ -33,7 +33,7 @@ interface Props {
   portfolio: Pick<Portfolio, "id">;
 }
 
-export default function EditName({ portfolio }: Props) {
+export default function EditTitle({ portfolio }: Props) {
   const router = useRouter();
 
   const form = useForm({
@@ -41,7 +41,7 @@ export default function EditName({ portfolio }: Props) {
     defaultValues: { title: "" },
   });
 
-  const { mutate: editName, isLoading } = trpc.portfolio.edit.useMutation({
+  const { mutate: editTitle, isLoading } = trpc.portfolio.edit.useMutation({
     onError: () =>
       toast({
         title: "Oops! Something went wrong.",
@@ -61,7 +61,7 @@ export default function EditName({ portfolio }: Props) {
       title: data.title,
     };
 
-    editName(payload);
+    editTitle(payload);
   }
 
   return (

@@ -13,14 +13,66 @@ import { StockImage } from "./stock-image";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
 import React from "react";
+import Skeleton from "../ui/skeleton";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   quote: Quote | null;
   image: string | undefined;
 }
 
+export function StockCardLoading() {
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex justify-between">
+          <div className="flex gap-3">
+            <Skeleton>
+              <div className="h-10 w-10"></div>
+            </Skeleton>
+            <div className="f-col gap-1">
+              <Skeleton>
+                <CardTitle></CardTitle>
+              </Skeleton>
+              <Skeleton>
+                <CardDescription className="w-[190px] truncate"></CardDescription>
+              </Skeleton>
+            </div>
+          </div>
+        </div>
+      </CardHeader>
+
+      <CardContent className="flex gap-3">
+        <Skeleton>
+          <div
+            className={cn(
+              buttonVariants({ size: "xs" }),
+              "text-blue-500 bg-slate-900"
+            )}>
+            Technology
+          </div>
+        </Skeleton>
+        <Skeleton>
+          <div
+            className={cn(
+              buttonVariants({ size: "xs" }),
+              "text-blue-500 bg-slate-900"
+            )}>
+            Computer Devices
+          </div>
+        </Skeleton>
+      </CardContent>
+
+      <CardFooter>
+        <Skeleton>
+          <div className="h-10 w-full" />
+        </Skeleton>
+      </CardFooter>
+    </Card>
+  );
+}
+
 export default function StockCard({ quote, image, className }: Props) {
-  if (!quote) return <div className="animate-pulse-right h-40 w-80"></div>;
+  if (!quote) return <Card className="f-box">Stock could not be loaded</Card>;
 
   return (
     <Link
@@ -42,15 +94,6 @@ export default function StockCard({ quote, image, className }: Props) {
         </CardHeader>
 
         <CardContent className="flex gap-3">
-          {quote.symbol === "NVOS" && (
-            <div
-              className={cn(
-                buttonVariants({ size: "xs" }),
-                "text-blue-400 bg-gradient-radial from-blue-500/30 to-slate-900"
-              )}>
-              SOtd
-            </div>
-          )}
           <div
             className={cn(
               buttonVariants({ size: "xs" }),

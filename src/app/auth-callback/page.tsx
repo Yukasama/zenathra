@@ -12,7 +12,7 @@ export default function Page() {
 
   trpc.user.authCallback.useQuery(undefined, {
     onSuccess: ({ success }) => {
-      if (success) router.push(origin ? `/${origin}` : "/");
+      if (success) router.push(origin ? `/${origin}` : "/dashboard");
     },
     onError: (err) => {
       if (err.data?.code === "UNAUTHORIZED") router.push("/sign-in");

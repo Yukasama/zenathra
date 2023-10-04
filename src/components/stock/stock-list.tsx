@@ -10,13 +10,37 @@ import {
   CardTitle,
 } from "../ui/card";
 import { cn } from "@/lib/utils";
+import Skeleton from "../ui/skeleton";
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
+interface LoadingProps extends React.HTMLAttributes<HTMLDivElement> {
+  limit?: number;
+}
+
+interface Props extends LoadingProps {
   title?: string;
   description?: string;
-  limit?: number;
   symbols: string[] | null | undefined;
   error?: string;
+}
+
+export function StockListLoading({ className, limit = 5 }: LoadingProps) {
+  return (
+    <Card className={cn(className)}>
+      <CardHeader>
+        <Skeleton>
+          <CardTitle></CardTitle>
+        </Skeleton>
+        <Skeleton>
+          <CardDescription></CardDescription>
+        </Skeleton>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {[...Array(limit)].map((_, i) => (
+          <Skeleton key={i} className="h-14 w-full"></Skeleton>
+        ))}
+      </CardContent>
+    </Card>
+  );
 }
 
 export default async function StockList({

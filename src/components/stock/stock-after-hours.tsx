@@ -1,27 +1,27 @@
 import { Stock } from "@prisma/client";
-import { StructureProps } from "@/types/layout";
 import { ChevronsUp, ChevronsDown } from "lucide-react";
 import { getQuote } from "@/lib/fmp/quote";
 import { Card, CardDescription } from "../ui/card";
 import { cn } from "@/lib/utils";
+import Skeleton from "../ui/skeleton";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   stock: Stock;
 }
 
-function Structure({ className, isLoading, children }: StructureProps) {
+export function StockAfterHoursLoading() {
   return (
-    <div
-      className={`${
-        isLoading && "animate-pulse-right"
-      } flex h-[40px] w-[350px] items-center gap-1 rounded-lg bg-slate-200 p-2 px-4 dark:bg-zinc-400 ${className}`}>
-      {children}
-    </div>
+    <Card className={cn("flex p-2 px-3 gap-3 items-center")}>
+      <Skeleton>
+        <CardDescription>After Hours:</CardDescription>
+      </Skeleton>
+      <Skeleton>
+        <div className="flex items-center gap-1">
+          <p className="text-[16px]">$</p>
+        </div>
+      </Skeleton>
+    </Card>
   );
-}
-
-export function StockAfterHoursLoading({ className }: StructureProps) {
-  return <Structure className={className} isLoading />;
 }
 
 export default async function StockAfterHours({ stock, className }: Props) {

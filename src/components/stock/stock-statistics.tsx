@@ -1,35 +1,27 @@
 import StockMarginChart from "./stock-margin-chart";
 import { Stock } from "@prisma/client";
 import { Years } from "@/lib/utils";
-import { StructureProps } from "@/types/layout";
 import React from "react";
 import { db } from "@/db";
 import StockKeyMetricsChart from "./stock-key-metrics-chart";
 import StockDividendChart from "./stock-dividend-chart";
+import Skeleton from "../ui/skeleton";
 
-interface SharedProps extends React.HTMLAttributes<HTMLDivElement> {}
+export function StockStatisticsLoading() {
+  return (
+    <div className="f-col gap-5 lg:flex-row h-[350px]">
+      {[Array(3)].map((_, i) => (
+        <Skeleton key={i}></Skeleton>
+      ))}
+    </div>
+  );
+}
 
-interface Props extends SharedProps {
+interface Props {
   stock: Pick<Stock, "symbol" | "companyName">;
 }
 
-function Structure({ className, children }: StructureProps) {
-  return (
-    <div className={`f-col gap-5 lg:flex-row ${className}`}>{children}</div>
-  );
-}
-
-export function StockStatisticsLoading({ className }: SharedProps) {
-  return (
-    <Structure className={className}>
-      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 rounded-lg bg-slate-200 p-3 px-6 dark:bg-zinc-400"></div>
-      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 rounded-lg bg-slate-200 p-3 px-6 dark:bg-zinc-400"></div>
-      <div className="animate-pulse-right h-[340px] w-[500px] flex-1 rounded-lg bg-slate-200 p-3 px-6 dark:bg-zinc-400"></div>
-    </Structure>
-  );
-}
-
-export default async function StockStatistics({ stock, className }: Props) {
+export default async function StockStatistics({ stock }: Props) {
   const fin = await db.financials.findMany({
     where: { symbol: stock.symbol },
     orderBy: { date: "desc" },
@@ -61,13 +53,13 @@ export default async function StockStatistics({ stock, className }: Props) {
   }));
 
   return (
-    <Structure className={className}>
+    <div className="f-col gap-5 lg:flex-row">
       <StockKeyMetricsChart companyName={stock.companyName} data={statConfig} />
       <StockMarginChart companyName={stock.companyName} data={marginConfig} />
       <StockDividendChart
         companyName={stock.companyName}
         data={dividendConfig}
       />
-    </Structure>
+    </div>
   );
 }

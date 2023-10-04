@@ -39,14 +39,6 @@ export interface Quote {
   timestamp: number;
 }
 
-export interface Chart extends React.HTMLAttributes<HTMLDivElement> {
-  title?: string;
-  description?: string;
-  data: any[] | undefined;
-  height?: number;
-  width?: number;
-}
-
 export interface AllHistory {
   "1D": History[];
   "5D": History[];

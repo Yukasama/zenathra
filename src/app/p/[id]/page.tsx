@@ -16,13 +16,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getUser } from "@/lib/auth";
-import EditName from "@/components/portfolio/edit-name";
 import EditVisibility from "@/components/portfolio/edit-visibility";
+import EditTitle from "@/components/portfolio/edit-title";
+
+export const revalidate = 30;
 
 export async function generateStaticParams() {
   const data = await db.portfolio.findMany({ select: { id: true } });
 
   return data.map((portfolio) => ({ id: portfolio.id }));
+}
+
+interface Props {
+  params: { id: string };
 }
 
 export async function generateMetadata({ params: { id } }: Props) {
@@ -34,10 +40,6 @@ export async function generateMetadata({ params: { id } }: Props) {
     return { title: "This portfolio is private" };
 
   return { title: `${portfolio.title} - Portfolio` };
-}
-
-interface Props {
-  params: { id: string };
 }
 
 export default async function page({ params: { id } }: Props) {
@@ -87,7 +89,7 @@ export default async function page({ params: { id } }: Props) {
               <div className="flex items-center gap-2">
                 <CardTitle>{portfolio.title}</CardTitle>
                 {user?.id === portfolio.creatorId && (
-                  <EditName portfolio={portfolio} />
+                  <EditTitle portfolio={portfolio} />
                 )}
               </div>
               <CardDescription>

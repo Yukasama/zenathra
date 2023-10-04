@@ -7,10 +7,34 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import Skeleton from "../ui/skeleton";
 
-export const IndexListLoading = () => {
-  return <div className="animate-pulse-right flex min-h-[450px] flex-1"></div>;
-};
+export function IndexListLoading() {
+  return (
+    <Card>
+      <CardHeader>
+        <Skeleton>
+          <CardTitle>Index List</CardTitle>
+        </Skeleton>
+        <Skeleton>
+          <CardDescription>Most popular indexes</CardDescription>
+        </Skeleton>
+      </CardHeader>
+      <CardContent className="f-col gap-4 w-full">
+        {[
+          Array(4).map((_, i) => (
+            <Skeleton key={i}>
+              <div>
+                <h2 className="font-medium"></h2>
+                <p className="w-[100px] truncate text-sm text-slate-500"></p>
+              </div>
+            </Skeleton>
+          )),
+        ]}
+      </CardContent>
+    </Card>
+  );
+}
 
 export default async function IndexList() {
   const indexQuotes = await getIndexQuotes();

@@ -145,20 +145,20 @@ export default function PriceChart({
               </Skeleton>
             </div>
           </div>
-          <Skeleton isLoaded={isFetched}>
-            <Tabs defaultValue="1D">
-              <TabsList>
-                {timeFrames.map((timeFrame) => (
+
+          <Tabs defaultValue="1D">
+            <TabsList>
+              {timeFrames.map((timeFrame) => (
+                <Skeleton key={timeFrame} isLoaded={isFetched}>
                   <TabsTrigger
-                    key={timeFrame}
                     onClick={() => setTimeFrame(timeFrame)}
                     value={timeFrame}>
                     {timeFrame}
                   </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
-          </Skeleton>
+                </Skeleton>
+              ))}
+            </TabsList>
+          </Tabs>
         </div>
       </CardHeader>
       <CardContent>
