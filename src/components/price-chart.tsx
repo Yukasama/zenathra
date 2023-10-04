@@ -147,7 +147,7 @@ export default function PriceChart({
           </div>
 
           <Tabs defaultValue="1D">
-            <TabsList>
+            <TabsList className={`${!isFetched && "bg-transparent gap-[1px]"}`}>
               {timeFrames.map((timeFrame) => (
                 <Skeleton key={timeFrame} isLoaded={isFetched}>
                   <TabsTrigger

@@ -9,10 +9,16 @@ import Skeleton from "../ui/skeleton";
 
 export function StockStatisticsLoading() {
   return (
-    <div className="f-col gap-5 lg:flex-row h-[350px]">
-      {[Array(3)].map((_, i) => (
-        <Skeleton key={i}></Skeleton>
-      ))}
+    <div className="grid grid-cols-3 gap-5 h-[350px]">
+      <Skeleton>
+        <div className="w-full"></div>
+      </Skeleton>
+      <Skeleton>
+        <div className="w-full"></div>
+      </Skeleton>
+      <Skeleton>
+        <div className="w-full"></div>
+      </Skeleton>
     </div>
   );
 }
@@ -22,34 +28,43 @@ interface Props {
 }
 
 export default async function StockStatistics({ stock }: Props) {
-  const fin = await db.financials.findMany({
+  const financials = await db.financials.findMany({
+    select: {
+      peRatio: true,
+      eps: true,
+      pbRatio: true,
+      grossProfitMargin: true,
+      operatingProfitMargin: true,
+      netProfitMargin: true,
+      dividendYield: true,
+    },
     where: { symbol: stock.symbol },
     orderBy: { date: "desc" },
     take: 8,
   });
 
-  if (!fin) return null;
+  if (!financials) return null;
 
-  const startYear = new Date().getFullYear() - fin.length;
+  const startYear = new Date().getFullYear() - financials.length;
   const labels = Years(startYear < 2015 ? 2015 : startYear);
 
   const statConfig = labels.map((label, index) => ({
     name: label,
-    uv: fin[fin.length - 1 - index].peRatio,
-    pv: fin[fin.length - 1 - index].eps,
-    fv: fin[fin.length - 1 - index].pbRatio,
+    uv: financials[financials.length - 1 - index].peRatio,
+    pv: financials[financials.length - 1 - index].eps,
+    fv: financials[financials.length - 1 - index].pbRatio,
   }));
 
   const marginConfig = labels.map((label, index) => ({
     name: label,
-    uv: fin[fin.length - 1 - index].grossProfitMargin,
-    pv: fin[fin.length - 1 - index].operatingProfitMargin,
-    fv: fin[fin.length - 1 - index].netProfitMargin,
+    uv: financials[financials.length - 1 - index].grossProfitMargin,
+    pv: financials[financials.length - 1 - index].operatingProfitMargin,
+    fv: financials[financials.length - 1 - index].netProfitMargin,
   }));
 
   const dividendConfig = labels.map((label, index) => ({
     name: label,
-    uv: fin[fin.length - 1 - index].dividendYield,
+    uv: financials[financials.length - 1 - index].dividendYield,
   }));
 
   return (
