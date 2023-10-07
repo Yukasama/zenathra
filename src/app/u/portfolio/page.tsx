@@ -32,15 +32,7 @@ export default async function page() {
             key={portfolio.id}
             fallback={<Card className="animate-pulse-right min-h-72" />}>
             {/* @ts-expect-error Server Component */}
-            <PortfolioCard
-              portfolio={{
-                title: portfolio.title,
-                id: portfolio.id,
-                public: portfolio.public,
-                color: portfolio.color,
-                stocks: portfolio.stocks.map((stock) => stock.stockId),
-              }}
-            />
+            <PortfolioCard portfolio={portfolio} />
           </Suspense>
         ))}
         {portfolios.length < PLANS[0].maxPortfolios && (

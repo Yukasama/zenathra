@@ -63,6 +63,13 @@ export default async function Navbar() {
       <NavbarMenu user={user} />
 
       <div className="flex items-center gap-3">
+        <ThemeToggle />
+        {user && (
+          <UserAccountNav
+            user={user}
+            isAdmin={getPermission("(upload:stocks)").isGranted}
+          />
+        )}
         {!user && (
           <LoginLink
             className={cn(
@@ -71,13 +78,6 @@ export default async function Navbar() {
             )}>
             Sign In
           </LoginLink>
-        )}
-        <ThemeToggle />
-        {user && (
-          <UserAccountNav
-            user={user}
-            isAdmin={getPermission("(upload:stocks)").isGranted}
-          />
         )}
       </div>
     </div>
