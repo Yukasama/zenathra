@@ -1,6 +1,5 @@
 import Footer from "@/components/shared/footer";
 import Navbar from "@/components/shared/navbar";
-import Sidebar from "@/components/shared/sidebar";
 import Provider from "@/components/shared/provider";
 import { Metadata } from "next";
 import { cn, constructMetadata } from "@/lib/utils";
@@ -23,17 +22,11 @@ export default async function RootLayout({ children }: PropsWithChildren) {
           k2d.className
         )}>
         <Provider>
-          <div className="h-screen w-screen overflow-auto">
+          <div className="h-screen overflow-auto">
             {/* @ts-expect-error Server Component */}
             <Navbar />
-            <div>
-              {/* @ts-expect-error Server Component */}
-              <Sidebar />
-              <div className="w-[100%-64px] ml-16">
-                <main className="min-h-screen">{children}</main>
-                <Footer />
-              </div>
-            </div>
+            <main className="min-h-screen">{children}</main>
+            <Footer />
           </div>
         </Provider>
         <Toaster />

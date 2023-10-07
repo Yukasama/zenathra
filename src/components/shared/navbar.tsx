@@ -1,9 +1,7 @@
 import Link from "next/link";
 import ThemeToggle from "./theme-toggle";
 import Searchbar from "./searchbar";
-import { UserAccountNav } from "./user-account-nav";
 import { buttonVariants } from "../ui/button";
-import NavbarMenu from "./navbar-menu";
 import { cn } from "@/lib/utils";
 import { db } from "@/db";
 import _ from "lodash";
@@ -12,7 +10,26 @@ import {
   LoginLink,
   getKindeServerSession,
 } from "@kinde-oss/kinde-auth-nextjs/server";
-import SidebarPortable from "./sidebar-portable";
+import dynamic from "next/dynamic";
+import { UserAccountNav } from "./user-account-nav";
+import { Menu } from "lucide-react";
+import NavbarMenu from "./navbar-menu";
+
+const Sidebar = dynamic(() => import("./sidebar"), {
+  ssr: false,
+  loading: () => (
+    <div
+      className={cn(
+        buttonVariants({
+          size: "xs",
+          variant: "link",
+        }),
+        "border"
+      )}>
+      <Menu className="h-5" />
+    </div>
+  ),
+});
 
 export default async function Navbar() {
   const { getUser, getPermission } = getKindeServerSession();
@@ -49,7 +66,7 @@ export default async function Navbar() {
   return (
     <div className="sticky top-0 h-16 z-20 flex w-full items-center justify-between gap-4 p-2 px-4 border-b bg-card/50">
       <div className="flex items-center gap-5">
-        <SidebarPortable
+        <Sidebar
           user={user}
           portfolios={portfolios}
           recentStocks={uniqueStocks}

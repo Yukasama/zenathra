@@ -20,19 +20,20 @@ import { PortfolioWithStocks } from "@/types/db";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import dynamic from "next/dynamic";
 import Skeleton from "../ui/skeleton";
-import { buttonVariants } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { Pencil } from "lucide-react";
 import { Stock } from "@prisma/client";
+
+const EditPositions = dynamic(() => import("./edit-positions"), {
+  ssr: false,
+  loading: () => <Button variant="subtle" isLoading />,
+});
 
 interface Props {
   stocks: Stock[];
   portfolio: PortfolioWithStocks;
   user: KindeUser | null;
 }
-
-const EditPositions = dynamic(() => import("./edit-positions"), {
-  ssr: false,
-});
 
 export function PortfolioAssetsLoading() {
   return (

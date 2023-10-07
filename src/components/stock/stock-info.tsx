@@ -6,10 +6,18 @@ import { StockImage } from "./stock-image";
 import { Stock } from "@prisma/client";
 import { db } from "@/db";
 import { Card } from "../ui/card";
-import StockPortfolioAddModal from "./stock-portfolio-add-modal";
 import { getUser } from "@/lib/auth";
 import Skeleton from "../ui/skeleton";
-import { buttonVariants } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
+import dynamic from "next/dynamic";
+
+const StockPortfolioAddModal = dynamic(
+  () => import("./stock-portfolio-add-modal"),
+  {
+    ssr: false,
+    loading: () => <Button variant="subtle" isLoading />,
+  }
+);
 
 export function StockInfoLoading() {
   return (

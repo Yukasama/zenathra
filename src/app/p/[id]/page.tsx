@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import PortfolioAddModal from "@/components/portfolio/portfolio-add-modal";
 import PriceChart from "@/components/price-chart";
 import { db } from "@/db";
 import { notFound } from "next/navigation";
@@ -16,8 +15,30 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getUser } from "@/lib/auth";
-import EditVisibility from "@/components/portfolio/edit-visibility";
-import EditTitle from "@/components/portfolio/edit-title";
+import dynamic from "next/dynamic";
+import Skeleton from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+
+const EditTitle = dynamic(() => import("@/components/portfolio/edit-title"), {
+  ssr: false,
+  loading: () => null,
+});
+
+const EditVisibility = dynamic(
+  () => import("@/components/portfolio/edit-visibility"),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-10 w-16" />,
+  }
+);
+
+const PortfolioAddModal = dynamic(
+  () => import("@/components/portfolio/portfolio-add-modal"),
+  {
+    ssr: false,
+    loading: () => <Button variant="subtle" isLoading />,
+  }
+);
 
 export const revalidate = 30;
 

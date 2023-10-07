@@ -9,12 +9,32 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import PortfolioDeleteModal from "./portfolio-delete-modal";
 import { PortfolioWithStocks } from "@/types/db";
 import { db } from "@/db";
-import { buttonVariants } from "../ui/button";
-import { BarChart } from "lucide-react";
-import PortfolioAddModal from "./portfolio-add-modal";
+import { Button, buttonVariants } from "../ui/button";
+import { BarChart, Plus, Trash } from "lucide-react";
+import dynamic from "next/dynamic";
+import PortfolioImage from "../portfolio-image";
+
+const PortfolioAddModal = dynamic(() => import("./portfolio-add-modal"), {
+  ssr: false,
+  loading: () => (
+    <Button variant="subtle" isLoading>
+      <Plus className="h-4 w-4" />
+      Add Stocks
+    </Button>
+  ),
+});
+
+const PortfolioDeleteModal = dynamic(() => import("./portfolio-delete-modal"), {
+  ssr: false,
+  loading: () => (
+    <Button variant="destructive" isLoading>
+      <Trash className="h-4 w-4" />
+      Delete
+    </Button>
+  ),
+});
 
 interface Props {
   portfolio: Pick<
@@ -26,7 +46,11 @@ interface Props {
 export default async function PortfolioCard({ portfolio }: Props) {
   const symbols = await db.stock.findMany({
     select: { symbol: true },
-    where: { id: { in: portfolio.stocks } },
+    where: {
+      id: {
+        in: portfolio.stocks.map((stock) => stock.stockId),
+      },
+    },
   });
 
   return (
@@ -34,13 +58,7 @@ export default async function PortfolioCard({ portfolio }: Props) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div
-              className="h-10 w-10 f-box rounded-full border text-lg"
-              style={{
-                backgroundColor: portfolio.color ?? "#000",
-              }}>
-              {portfolio.title[0].toUpperCase()}
-            </div>
+            <PortfolioImage portfolio={portfolio} />
             <div>
               <CardTitle>{portfolio.title}</CardTitle>
               <CardDescription>
@@ -72,7 +90,9 @@ export default async function PortfolioCard({ portfolio }: Props) {
           <BarChart className="h-4 w-4" />
           View
         </Link>
-        <PortfolioDeleteModal portfolio={portfolio} />
+        <Suspense fallback={<p>Loading...</p>}>
+          <PortfolioDeleteModal portfolio={portfolio} />
+        </Suspense>
       </CardFooter>
     </Card>
   );

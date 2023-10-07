@@ -1,19 +1,24 @@
-import Link from "next/link";
 import { Separator } from "../ui/separator";
 import { UserAvatar } from "@/components/user/user-avatar";
 import {
   type KindeUser,
   LogoutLink,
 } from "@kinde-oss/kinde-auth-nextjs/server";
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
-import {
-  Bell,
-  HelpCircle,
-  LayoutDashboard,
-  LogOut,
-  Settings,
-  User,
-} from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { LogOut } from "lucide-react";
+import dynamic from "next/dynamic";
+import Skeleton from "../ui/skeleton";
+
+const UserNavLinks = dynamic(() => import("./user-nav-links"), {
+  ssr: false,
+  loading: () => (
+    <>
+      {[...Array(5)].map((_, i) => (
+        <Skeleton key={i} className="h-9 w-full" />
+      ))}
+    </>
+  ),
+});
 
 interface Props {
   user: KindeUser;
@@ -21,36 +26,6 @@ interface Props {
 }
 
 export function UserAccountNav({ user, isAdmin }: Props) {
-  const navLinks = [
-    {
-      label: "My Profile",
-      href: `/u/${user.id}`,
-      icon: <User className="w-5 h-5 mr-2 text-slate-400" />,
-    },
-    {
-      label: "My Portfolios",
-      href: "/u/portfolio",
-      icon: <LayoutDashboard className="w-5 h-5 mr-2 text-slate-400" />,
-      separator: true,
-    },
-    {
-      label: "Notifications",
-      href: "/u/settings",
-      icon: <Bell className="w-5 h-5 mr-2 text-slate-400" />,
-    },
-    {
-      label: "Settings",
-      href: "/u/settings",
-      icon: <Settings className="w-5 h-5 mr-2 text-slate-400" />,
-      separator: true,
-    },
-    {
-      label: "Support",
-      href: "/u/settings",
-      icon: <HelpCircle className="w-5 h-5 mr-2 text-slate-400" />,
-    },
-  ];
-
   return (
     <Sheet>
       <SheetTrigger>
@@ -71,30 +46,7 @@ export function UserAccountNav({ user, isAdmin }: Props) {
           </div>
         </div>
 
-        {isAdmin && (
-          <>
-            <Link
-              href="/admin/dashboard"
-              className="flex items-center h-9 p-1 mb-[1px] rounded-md px-4 hover:bg-slate-800">
-              <h2 className="text-[15px]">Stock Dashboard</h2>
-            </Link>
-            <Separator className="my-2" />
-          </>
-        )}
-
-        {navLinks.map((link) => (
-          <SheetClose key={link.label} className="f-col w-full" asChild>
-            <div>
-              <Link
-                href={link.href}
-                className="flex items-center h-9 p-1 mb-[1px] rounded-md px-4 hover:bg-slate-800 w-full">
-                {link.icon}
-                <h2 className="text-[15px]">{link.label}</h2>
-              </Link>
-              {link.separator && <Separator className="my-2" />}
-            </div>
-          </SheetClose>
-        ))}
+        <UserNavLinks user={user} isAdmin={isAdmin} />
 
         <Separator className="my-2" />
 
