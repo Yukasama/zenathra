@@ -19,12 +19,12 @@ export function StockStatisticsLoading() {
     <div className="grid grid-cols-3 gap-5 h-[350px]">
       {[...Array(3)].map((_, i) => (
         <Card key={i} className="w-full">
-          <CardHeader>
+          <CardHeader className="items-start">
             <Skeleton>
-              <CardTitle className="w-2/3">a</CardTitle>
+              <CardTitle className="w-[150px]">a</CardTitle>
             </Skeleton>
             <Skeleton>
-              <CardDescription className="w-2/3">a</CardDescription>
+              <CardDescription className="w-[250px]">a</CardDescription>
             </Skeleton>
           </CardHeader>
           <CardContent className="w-full h-full">

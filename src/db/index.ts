@@ -1,6 +1,7 @@
 import "server-only";
 
-import { PrismaClient } from "@prisma/client/edge";
+// todo: prisma accelerate
+import { PrismaClient } from "@prisma/client";
 
 declare global {
   // eslint-disable-next-line no-var, no-unused-vars

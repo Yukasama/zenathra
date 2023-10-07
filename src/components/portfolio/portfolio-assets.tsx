@@ -102,38 +102,40 @@ export default async function PortfolioAssets({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {results.map((stock) => (
-              <TableRow key={stock.symbol}>
-                <TableCell className="font-medium">
-                  <div className="flex items-center gap-2">
-                    <StockImage src={stock.image} px={30} />
-                    <div className="f-col">
-                      <p className="font-medium">{stock.symbol}</p>
-                      <p className="text-[13px] w-[80px] lg:w-[120px] truncate text-slate-400">
-                        {stock.companyName}
+            {results
+              .slice(0, results.length > 5 ? 5 : results.length)
+              .map((stock) => (
+                <TableRow key={stock.symbol}>
+                  <TableCell className="font-medium">
+                    <div className="flex items-center gap-2">
+                      <StockImage src={stock.image} px={30} />
+                      <div className="f-col">
+                        <p className="font-medium">{stock.symbol}</p>
+                        <p className="text-[13px] w-[80px] lg:w-[120px] truncate text-slate-400">
+                          {stock.companyName}
+                        </p>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="f-col justify-end items-center">
+                      <p>${stock.price ? stock.price.toFixed(2) : "N/A"}</p>
+                      <p
+                        className={`text-[13px] ${
+                          stock.changesPercentage! > 0
+                            ? "text-green-500"
+                            : "text-red-500"
+                        }`}>
+                        {stock.changesPercentage! > 0 && "+"}
+                        {stock.changesPercentage?.toFixed(2)}%
                       </p>
                     </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="f-col justify-end items-center">
-                    <p>${stock.price ? stock.price.toFixed(2) : "N/A"}</p>
-                    <p
-                      className={`text-[13px] ${
-                        stock.changesPercentage! > 0
-                          ? "text-green-500"
-                          : "text-red-500"
-                      }`}>
-                      {stock.changesPercentage! > 0 && "+"}
-                      {stock.changesPercentage?.toFixed(2)}%
-                    </p>
-                  </div>
-                </TableCell>
-                <TableCell className="text-right">
-                  {stock.peRatioTTM ? stock.peRatioTTM.toFixed(2) : "N/A"}
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {stock.peRatioTTM ? stock.peRatioTTM.toFixed(2) : "N/A"}
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </CardContent>

@@ -5,7 +5,7 @@ import {
   type KindeUser,
   LogoutLink,
 } from "@kinde-oss/kinde-auth-nextjs/server";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import {
   Bell,
   HelpCircle,
@@ -83,16 +83,17 @@ export function UserAccountNav({ user, isAdmin }: Props) {
         )}
 
         {navLinks.map((link) => (
-          <>
-            <Link
-              key={link.label}
-              href={link.href}
-              className="flex items-center h-9 p-1 mb-[1px] rounded-md px-4 hover:bg-slate-800">
-              {link.icon}
-              <h2 className="text-[15px]">{link.label}</h2>
-            </Link>
-            {link.separator && <Separator className="my-2" />}
-          </>
+          <SheetClose key={link.label} className="f-col w-full" asChild>
+            <div>
+              <Link
+                href={link.href}
+                className="flex items-center h-9 p-1 mb-[1px] rounded-md px-4 hover:bg-slate-800 w-full">
+                {link.icon}
+                <h2 className="text-[15px]">{link.label}</h2>
+              </Link>
+              {link.separator && <Separator className="my-2" />}
+            </div>
+          </SheetClose>
         ))}
 
         <Separator className="my-2" />

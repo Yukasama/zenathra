@@ -31,10 +31,10 @@ export function StockCardLoading() {
             </Skeleton>
             <div className="f-col gap-1">
               <Skeleton>
-                <CardTitle className="w-[150px]">a</CardTitle>
+                <CardTitle className="h-4 w-[150px]"></CardTitle>
               </Skeleton>
               <Skeleton>
-                <CardDescription className="w-[200px]"></CardDescription>
+                <CardDescription className="h-4 w-[200px]"></CardDescription>
               </Skeleton>
             </div>
           </div>
@@ -48,7 +48,7 @@ export function StockCardLoading() {
               buttonVariants({ size: "xs" }),
               "text-blue-500 bg-slate-900"
             )}>
-            a
+            Placeholder
           </div>
         </Skeleton>
         <Skeleton>
@@ -57,14 +57,14 @@ export function StockCardLoading() {
               buttonVariants({ size: "xs" }),
               "text-blue-500 bg-slate-900"
             )}>
-            a
+            Placeholder
           </div>
         </Skeleton>
       </CardContent>
 
       <CardFooter>
         <Skeleton>
-          <div className="h-10 w-full">a</div>
+          <div className="w-40 h-8"></div>
         </Skeleton>
       </CardFooter>
     </Card>

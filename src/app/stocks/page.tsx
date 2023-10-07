@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import PageLayout from "@/components/shared/page-layout";
 import { db } from "@/db";
 import PriceChart from "@/components/price-chart";
+import { StockImage } from "@/components/stock/stock-image";
 
 export const revalidate = 30;
 
@@ -33,7 +34,7 @@ export default async function page() {
             symbols={quote.symbol}
             title={quote.symbol}
             description={`Price Chart of ${quote?.name}`}
-            image={stock?.image}
+            image={<StockImage src={stock?.image} px={40} />}
           />
         )}
         <Suspense fallback={<IndexListLoading />}>

@@ -12,25 +12,20 @@ import Skeleton from "../ui/skeleton";
 export function IndexListLoading() {
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="items-start">
         <Skeleton>
-          <CardTitle>Index List</CardTitle>
+          <CardTitle className="h-4 w-[150px]"></CardTitle>
         </Skeleton>
         <Skeleton>
-          <CardDescription>Most popular indexes</CardDescription>
+          <CardTitle className="h-4 w-[200px]"></CardTitle>
         </Skeleton>
       </CardHeader>
       <CardContent className="f-col gap-4 w-full">
-        {[
-          Array(4).map((_, i) => (
-            <Skeleton key={i}>
-              <div>
-                <h2 className="font-medium"></h2>
-                <p className="w-[100px] truncate text-sm text-slate-500"></p>
-              </div>
-            </Skeleton>
-          )),
-        ]}
+        {[...Array(4)].map((_, i) => (
+          <Skeleton key={i}>
+            <div className="h-10 w-60"></div>
+          </Skeleton>
+        ))}
       </CardContent>
     </Card>
   );

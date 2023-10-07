@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import Skeleton from "../ui/skeleton";
 
 interface Props {
   symbols: string[] | null;
@@ -17,10 +18,22 @@ interface Props {
 
 export function StockCardListLoading() {
   return (
-    <div className="f-col gap-6 md:grid md:grid-cols-3 xl:gap-8 xl:grid-cols-4">
-      {[...Array(8)].map((_, i) => (
-        <StockCardLoading key={i} />
-      ))}
+    <div>
+      <div className="p-6 py-7 f-col gap-1.5 items-start">
+        <Skeleton>
+          <div className="h-4 w-[200px]"></div>
+        </Skeleton>
+        <Skeleton>
+          <div className="h-4 w-[300px]"></div>
+        </Skeleton>
+      </div>
+      <CardContent>
+        <div className="f-col gap-6 md:grid md:grid-cols-3 xl:gap-8 xl:grid-cols-4">
+          {[...Array(8)].map((_, i) => (
+            <StockCardLoading key={i} />
+          ))}
+        </div>
+      </CardContent>
     </div>
   );
 }
