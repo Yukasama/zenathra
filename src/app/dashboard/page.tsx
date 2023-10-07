@@ -14,5 +14,6 @@ export default async function page() {
 
   if (!dbUser) redirect("/auth-callback?origin=dashboard");
 
+  // todo
   return <div>dashboard</div>;
 }

@@ -6,19 +6,34 @@ import { db } from "@/db";
 import StockKeyMetricsChart from "./stock-key-metrics-chart";
 import StockDividendChart from "./stock-dividend-chart";
 import Skeleton from "../ui/skeleton";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 export function StockStatisticsLoading() {
   return (
     <div className="grid grid-cols-3 gap-5 h-[350px]">
-      <Skeleton>
-        <div className="w-full"></div>
-      </Skeleton>
-      <Skeleton>
-        <div className="w-full"></div>
-      </Skeleton>
-      <Skeleton>
-        <div className="w-full"></div>
-      </Skeleton>
+      {[...Array(3)].map((_, i) => (
+        <Card key={i} className="w-full">
+          <CardHeader>
+            <Skeleton>
+              <CardTitle className="w-2/3">a</CardTitle>
+            </Skeleton>
+            <Skeleton>
+              <CardDescription className="w-2/3">a</CardDescription>
+            </Skeleton>
+          </CardHeader>
+          <CardContent className="w-full h-full">
+            <Skeleton>
+              <div className="h-[250px]"></div>
+            </Skeleton>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 }

@@ -11,7 +11,7 @@ export default function GlobalError({ reset }: Props) {
   return (
     <html>
       <body>
-        <div className="f-box mt-[370px]">
+        <div className="f-box mt-[360px]">
           <div className="f-col gap-2.5">
             <h2 className="text-zinc-600 dark:text-zinc-400 text-lg">
               Internal Server Error

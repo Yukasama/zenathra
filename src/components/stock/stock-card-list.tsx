@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import GridLayout from "../shared/grid-layout";
 
 interface Props {
   symbols: string[] | null;
@@ -18,11 +17,11 @@ interface Props {
 
 export function StockCardListLoading() {
   return (
-    <GridLayout>
+    <div className="f-col gap-6 md:grid md:grid-cols-3 xl:gap-8 xl:grid-cols-4">
       {[...Array(8)].map((_, i) => (
         <StockCardLoading key={i} />
       ))}
-    </GridLayout>
+    </div>
   );
 }
 
@@ -61,7 +60,7 @@ export default async function StockCardList({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <GridLayout>
+        <div className="f-col gap-6 md:grid md:grid-cols-3 xl:gap-8 xl:grid-cols-4">
           {quotes.map((quote) => (
             <StockCard
               key={quote.symbol}
@@ -69,7 +68,7 @@ export default async function StockCardList({
               image={stocks.find((s) => s.symbol === quote.symbol)?.image}
             />
           ))}
-        </GridLayout>
+        </div>
       </CardContent>
     </Card>
   );

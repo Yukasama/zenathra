@@ -15,13 +15,10 @@ export default function ThemeToggle({
   useEffect(() => setMounted(true), []);
 
   return (
-    <div className={cn(className)}>
+    <div className={cn(className, "border rounded-md")}>
       {!mounted ? (
-        <Button
-          variant="link"
-          size="sm"
-          className="essential animate-pulse-right">
-          <Moon className="h-5 invisible" />
+        <Button variant="link" size="sm" className="animate-pulse-right">
+          <Moon className="h-[18px] invisible" />
         </Button>
       ) : (
         <Button
@@ -30,12 +27,11 @@ export default function ThemeToggle({
           aria-label="Toggle Website Appearance"
           onClick={() =>
             theme === "light" ? setTheme("dark") : setTheme("light")
-          }
-          className="essential">
+          }>
           {theme === "dark" ? (
-            <Sun className="h-5" />
+            <Sun className="h-[18px] text-slate-600 dark:text-slate-300" />
           ) : (
-            <Moon className="h-5" />
+            <Moon className="h-[18px] text-slate-600 dark:text-slate-300" />
           )}
         </Button>
       )}

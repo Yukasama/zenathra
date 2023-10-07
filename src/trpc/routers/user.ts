@@ -1,10 +1,14 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import {
+  createKindeManagementAPIClient,
+  getKindeServerSession,
+} from "@kinde-oss/kinde-auth-nextjs/server";
 import { privateProcedure, publicProcedure, router } from "../trpc";
 import { absoluteUrl } from "@/lib/utils";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { getUserSubscriptionPlan, stripe } from "@/lib/stripe";
 import { PLANS } from "@/config/stripe";
+import { UserUpdateSchema } from "@/lib/validators/user";
 
 export const userRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -78,4 +82,31 @@ export const userRouter = router({
 
     return { url: stripeSession.url };
   }),
+  update: privateProcedure
+    .input(UserUpdateSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { userId } = ctx;
+
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const dbUser = await db.user.findFirst({
+        where: { id: userId },
+      });
+
+      if (!dbUser) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const client = await createKindeManagementAPIClient();
+
+      await client.usersApi.updateUser({
+        id: userId,
+        updateUserRequest: input,
+      });
+
+      const updatedUser = await db.user.update({
+        where: { id: userId },
+        data: input,
+      });
+
+      return { user: updatedUser };
+    }),
 });

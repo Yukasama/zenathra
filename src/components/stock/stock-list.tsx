@@ -2,13 +2,7 @@ import StockListItem from "./stock-list-item";
 import React from "react";
 import { db } from "@/db";
 import { getQuotes } from "@/lib/fmp/quote";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { cn } from "@/lib/utils";
 import Skeleton from "../ui/skeleton";
 
@@ -28,17 +22,17 @@ export function StockListLoading({ className, limit = 5 }: LoadingProps) {
     <Card className={cn(className)}>
       <CardHeader>
         <Skeleton>
-          <CardTitle></CardTitle>
+          <CardTitle className="w-[150px]">a</CardTitle>
         </Skeleton>
         <Skeleton>
-          <CardDescription></CardDescription>
+          <CardDescription className="w-[200px]">a</CardDescription>
         </Skeleton>
       </CardHeader>
-      <CardContent className="space-y-2">
+      <div className="f-col gap-2 px-4">
         {[...Array(limit)].map((_, i) => (
-          <Skeleton key={i} className="h-14 w-full"></Skeleton>
+          <Skeleton key={i} className="h-12 w-[300px]"></Skeleton>
         ))}
-      </CardContent>
+      </div>
     </Card>
   );
 }
@@ -58,12 +52,13 @@ export default async function StockList({
 
   const symbolsToFetch = symbols.slice(0, Math.min(symbols.length, limit));
 
-  let stocks = await db.stock.findMany({
-    select: { symbol: true, image: true },
-    where: { symbol: { in: symbolsToFetch } },
-  });
-
-  const quotes = await getQuotes(symbolsToFetch);
+  let [stocks, quotes] = await Promise.all([
+    db.stock.findMany({
+      select: { symbol: true, image: true },
+      where: { symbol: { in: symbolsToFetch } },
+    }),
+    getQuotes(symbolsToFetch),
+  ]);
 
   if (!Array.isArray(stocks)) stocks = [stocks];
 
@@ -85,7 +80,7 @@ export default async function StockList({
             <CardTitle>{title}</CardTitle>
             <CardDescription>{description}</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <div className="space-y-2 px-4">
             {quotes?.map((quote) => (
               <StockListItem
                 key={quote.symbol}
@@ -93,7 +88,7 @@ export default async function StockList({
                 quote={quote}
               />
             ))}
-          </CardContent>
+          </div>
         </Card>
       )}
     </>

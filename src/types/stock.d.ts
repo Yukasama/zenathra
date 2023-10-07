@@ -38,13 +38,3 @@ export interface Quote {
   sharesOutstanding: number | null;
   timestamp: number;
 }
-
-export interface AllHistory {
-  "1D": History[];
-  "5D": History[];
-  "1M": History[];
-  "6M": History[];
-  "1Y": History[];
-  "5Y": History[];
-  ALL: History[];
-}

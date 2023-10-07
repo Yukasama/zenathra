@@ -18,7 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useEffect, useState } from "react";
-import { Skeleton } from "@nextui-org/skeleton";
+import Skeleton from "../ui/skeleton";
 import { cn } from "@/lib/utils";
 
 const CustomTooltip = ({
@@ -68,7 +68,7 @@ export default function StockKeyMetricsChart({
         <CardDescription>Important Metrics for {companyName}</CardDescription>
       </CardHeader>
       <CardContent>
-        <Skeleton isLoaded={mounted} className="rounded-md">
+        <Skeleton isLoaded={mounted}>
           {mounted && (
             <ResponsiveContainer width="100%" height={250}>
               <LineChart

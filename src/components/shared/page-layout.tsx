@@ -1,8 +1,10 @@
 import { cn } from "@/lib/utils";
 import { CardDescription, CardTitle } from "../ui/card";
-import { FullProps } from "@/types/layout";
+import React, { PropsWithChildren } from "react";
 
-interface Props extends FullProps {
+interface Props
+  extends React.HTMLAttributes<HTMLDivElement>,
+    PropsWithChildren {
   title?: string;
   description?: string;
 }

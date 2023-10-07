@@ -5,7 +5,6 @@ import { absoluteUrl } from "@/lib/utils";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { PropsWithChildren, useState } from "react";
-import { SidebarProvider } from "./sidebar-provider";
 import { NextUIProvider } from "@nextui-org/system";
 import { ThemeProvider } from "next-themes";
 
@@ -25,9 +24,7 @@ const Providers = ({ children }: PropsWithChildren) => {
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <NextUIProvider>
-          <ThemeProvider attribute="class">
-            <SidebarProvider>{children}</SidebarProvider>
-          </ThemeProvider>
+          <ThemeProvider attribute="class">{children}</ThemeProvider>
         </NextUIProvider>
       </QueryClientProvider>
     </trpc.Provider>

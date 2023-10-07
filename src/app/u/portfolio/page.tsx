@@ -4,7 +4,6 @@ import { db } from "@/db";
 import { getUser } from "@/lib/auth";
 import PageLayout from "@/components/shared/page-layout";
 import { PLANS } from "@/config/stripe";
-import GridLayout from "@/components/shared/grid-layout";
 import { Suspense } from "react";
 import { Card } from "@/components/ui/card";
 
@@ -27,7 +26,7 @@ export default async function page() {
 
   return (
     <PageLayout title="My Portfolios" description="Manage your portfolios here">
-      <GridLayout>
+      <div className="f-col gap-6 md:grid md:grid-cols-2 xl:gap-8 xl:grid-cols-3">
         {portfolios.map((portfolio) => (
           <Suspense
             key={portfolio.id}
@@ -47,7 +46,7 @@ export default async function page() {
         {portfolios.length < PLANS[0].maxPortfolios && (
           <PortfolioCreateCard numberOfPortfolios={portfolios.length} />
         )}
-      </GridLayout>
+      </div>
     </PageLayout>
   );
 }

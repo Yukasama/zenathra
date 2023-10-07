@@ -1,8 +1,5 @@
 "use client";
 
-import { Prisma, Stock } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import debounce from "lodash.debounce";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
@@ -20,9 +17,10 @@ import { Loader, Search } from "lucide-react";
 import { RecentStocks } from "@/types/db";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/app/_trpc/client";
+import { buttonVariants } from "../ui/button";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  recentStocks: RecentStocks;
+  recentStocks: RecentStocks | null;
 }
 
 export default function Searchbar({
@@ -84,7 +82,7 @@ export default function Searchbar({
     <>
       <div
         className={cn(
-          "border bg-card text-slate-400 p-2 rounded-md flex items-center justify-between w-60 cursor-pointer",
+          "border bg-card text-slate-400 p-2 rounded-md hidden md:flex items-center justify-between w-60 cursor-pointer",
           className
         )}
         onClick={() => setOpen((prev) => (prev === open ? !open : open))}
@@ -96,6 +94,9 @@ export default function Searchbar({
         <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-[3px] rounded border bg-muted px-1.5 font-mono text-xs font-medium text-muted-foreground opacity-100">
           <span className=" text-[10px] mt-[1px]">⌘</span>K
         </kbd>
+      </div>
+      <div className={cn(buttonVariants({ size: "xs" }), "flex md:hidden")}>
+        <Search className="h-4 w-4" />
       </div>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput
@@ -114,6 +115,7 @@ export default function Searchbar({
             {(recentlyViewed?.length ?? 0) > 0 && (
               <CommandGroup heading="Recently Viewed">
                 {recentlyViewed?.map((stock) => (
+                  // todo
                   <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
                     <CommandItem
                       onSelect={() => {

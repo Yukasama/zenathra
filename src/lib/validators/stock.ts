@@ -10,6 +10,8 @@ export const UploadStockSchema = z.object({
 });
 
 export const ScreenerSchema = z.object({
+  cursor: z.number().min(1).default(1),
+  take: z.number().min(1).max(50).default(13),
   exchange: z.string(),
   ticker: z.string(),
   sector: z.string(),

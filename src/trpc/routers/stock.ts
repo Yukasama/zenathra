@@ -9,7 +9,7 @@ import { TRPCError } from "@trpc/server";
 import { getSymbols } from "@/lib/fmp/quote";
 import { Timeout } from "@/lib/utils";
 import { env } from "@/env.mjs";
-import { ScreenerSchema } from "@/lib/validators/stock";
+import { ScreenerSchema, UploadStockSchema } from "@/lib/validators/stock";
 
 export const stockRouter = router({
   query: publicProcedure.input(ScreenerSchema).query(async (opts) => {
@@ -17,18 +17,25 @@ export const stockRouter = router({
 
     return await db.stock.findMany({
       where: filter,
+      take: opts.input.take,
+      skip: (Number(opts.input.cursor) - 1) * opts.input.take,
       orderBy: { companyName: "asc" },
     });
   }),
   search: publicProcedure
     .input(
       z.object({
-        q: z.string().nonempty(),
+        q: z.string(),
       })
     )
     .query(async (opts) => {
       return await db.stock.findMany({
-        where: { symbol: { startsWith: opts.input.q } },
+        where: {
+          OR: [
+            { symbol: { contains: opts.input.q } },
+            { companyName: { contains: opts.input.q } },
+          ],
+        },
         include: { _count: true },
         take: 10,
       });
@@ -66,22 +73,12 @@ export const stockRouter = router({
           return result;
         }
         return await fetchHistory(symbol);
-      } catch (error) {
-        console.log(error);
+      } catch {
         return {};
       }
     }),
   upload: adminProcedure
-    .input(
-      z.object({
-        stock: z.string({
-          required_error: "Please select a stock to upload.",
-        }),
-        skip: z.boolean().optional(),
-        clean: z.boolean().optional(),
-        pullTimes: z.number().min(1).max(100).default(1),
-      })
-    )
+    .input(UploadStockSchema)
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
       const { stock, skip, clean, pullTimes } = input;

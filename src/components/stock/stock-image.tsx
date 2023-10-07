@@ -34,7 +34,9 @@ export function StockImage({
           priority={priority}
         />
       ) : (
-        <div className="f-box p-3 rounded-full bg-slate-300 dark:bg-slate-700">
+        <div
+          style={{ height: px, width: px }}
+          className="f-box p-3 rounded-full bg-slate-300 dark:bg-slate-700">
           <ImageOff className="h-5 w-5" />
         </div>
       )}

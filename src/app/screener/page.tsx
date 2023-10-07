@@ -32,8 +32,25 @@ import {
 import PageLayout from "@/components/shared/page-layout";
 import { StockImage } from "@/components/stock/stock-image";
 import { trpc } from "../_trpc/client";
+import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
-export default function Page() {
+interface Props {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export default function Page({ searchParams }: Props) {
+  const router = useRouter();
+
+  const cursor =
+    typeof searchParams["cursor"] === "string"
+      ? Number(searchParams["cursor"])
+      : 1;
+  const take =
+    typeof searchParams["take"] === "string"
+      ? Number(searchParams["take"])
+      : 13;
+
   const [resetCounter, setResetCounter] = useState(0);
 
   const [exchange, setExchange] = useState<string>("Any");
@@ -77,6 +94,8 @@ export default function Page() {
     isFetched,
     refetch,
   } = trpc.stock.query.useQuery({
+    cursor: cursor,
+    take: take,
     exchange: exchange,
     ticker: ticker,
     sector: sector,
@@ -90,6 +109,13 @@ export default function Page() {
 
   useEffect(() => {
     refetch();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cursor, take]);
+
+  useEffect(() => {
+    refetch();
+    router.replace(`/screener?cursor=1&take=${take}`);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -259,27 +285,6 @@ export default function Page() {
                   <div className="flex gap-4">
                     <div className="w-full">
                       <Select
-                        onValueChange={(e) => filter.setOption(e)}
-                        value={filter.value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Any">
-                            {filter.value}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {filter.options.map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <CardDescription className="ml-1 text-[13px]">
-                        Maximum Value
-                      </CardDescription>
-                    </div>
-                    <div className="w-full">
-                      <Select
                         onValueChange={(e) => filter.setOption2(e)}
                         value={filter.value2}>
                         <SelectTrigger>
@@ -297,6 +302,27 @@ export default function Page() {
                       </Select>
                       <CardDescription className="ml-1 text-[13px]">
                         Minimum Value
+                      </CardDescription>
+                    </div>
+                    <div className="w-full">
+                      <Select
+                        onValueChange={(e) => filter.setOption(e)}
+                        value={filter.value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Any">
+                            {filter.value}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {filter.options.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <CardDescription className="ml-1 text-[13px]">
+                        Maximum Value
                       </CardDescription>
                     </div>
                   </div>
@@ -323,27 +349,6 @@ export default function Page() {
                   <div className="flex gap-4">
                     <div className="w-full">
                       <Select
-                        onValueChange={(e) => filter.setOption(e)}
-                        value={filter.value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Any">
-                            {filter.value}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {filter.options.map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <CardDescription className="ml-1 text-[13px]">
-                        Maximum Value
-                      </CardDescription>
-                    </div>
-                    <div className="w-full">
-                      <Select
                         onValueChange={(e) => filter.setOption2(e)}
                         value={filter.value2}>
                         <SelectTrigger>
@@ -361,6 +366,27 @@ export default function Page() {
                       </Select>
                       <CardDescription className="ml-1 text-[13px]">
                         Minimum Value
+                      </CardDescription>
+                    </div>
+                    <div className="w-full">
+                      <Select
+                        onValueChange={(e) => filter.setOption(e)}
+                        value={filter.value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Any">
+                            {filter.value}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {filter.options.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <CardDescription className="ml-1 text-[13px]">
+                        Maximum Value
                       </CardDescription>
                     </div>
                   </div>
@@ -403,7 +429,7 @@ export default function Page() {
               </p>
             </div>
           ) : (
-            <>
+            <div className="f-col gap-5">
               <TabsContent value="descriptive">
                 <div className="f-col hidden-scrollbar max-h-[800px] gap-2 overflow-scroll">
                   {results?.map((stock) => (
@@ -446,7 +472,24 @@ export default function Page() {
                   ))}
                 </div>
               </TabsContent>
-            </>
+              <div className="flex gap-3.5 justify-center">
+                <Link
+                  href={`/screener?cursor=${
+                    cursor >= 1 ? 1 : cursor - 1
+                  }&take=${take}`}
+                  className={cn(
+                    buttonVariants({ variant: "subtle" }),
+                    `${cursor <= 1 && "pointer-events-none opacity-80"}`
+                  )}>
+                  Previous
+                </Link>
+                <Link
+                  href={`/screener?cursor=${cursor + 1}&take=${take}`}
+                  className={buttonVariants({ variant: "subtle" })}>
+                  Next
+                </Link>
+              </div>
+            </div>
           )}
         </div>
       </Tabs>

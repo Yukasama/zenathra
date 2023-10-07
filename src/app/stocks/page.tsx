@@ -17,7 +17,7 @@ export default async function page() {
     getDailys("losers"),
   ]);
 
-  const [quote, highlight] = await Promise.all([
+  const [quote, stock] = await Promise.all([
     getQuote(actives?.[0]),
     db.stock.findFirst({
       select: { image: true },
@@ -33,7 +33,7 @@ export default async function page() {
             symbols={quote.symbol}
             title={quote.symbol}
             description={`Price Chart of ${quote?.name}`}
-            image={highlight?.image}
+            image={stock?.image}
           />
         )}
         <Suspense fallback={<IndexListLoading />}>

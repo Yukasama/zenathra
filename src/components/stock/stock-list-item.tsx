@@ -18,11 +18,11 @@ export default function StockListItem({ stock, quote, className }: Props) {
     <Link href={`/stocks/${quote.symbol}`}>
       <Card
         className={cn(
-          "flex items-center justify-between h-12 p-2 hover:bg-slate-100 dark:hover:bg-slate-900 mb-2",
+          "flex items-center justify-between h-12 p-2 hover:bg-slate-100 dark:hover:bg-slate-900 mb-2 mx-2",
           className
         )}>
         <div className="flex items-center gap-2">
-          <StockImage src={stock?.image} px={40} />
+          <StockImage src={stock?.image} px={35} className="mx-0.5" />
           <div>
             <p className="text-sm">{quote.symbol}</p>
             <p className="text-[12px] truncate w-[180px] text-slate-500">

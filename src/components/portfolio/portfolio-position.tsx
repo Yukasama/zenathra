@@ -43,12 +43,14 @@ export default function PortfolioPosition({ stock, portfolio }: Props) {
       </div>
 
       <Button
-        className="w-6 h-6 rounded-full" size="xs" variant="destructive"
+        className="w-6 h-6 rounded-full"
+        size="xs"
+        variant="destructive"
         isLoading={isLoading}
         onClick={() =>
           remove({
             portfolioId: portfolio.id,
-            stockIds: stock.id,
+            stockIds: [stock.id],
           })
         }>
         <Minus className="h-4 w-4" />

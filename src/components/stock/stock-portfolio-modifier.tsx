@@ -58,7 +58,7 @@ export default function StockPortfolioModifier({ portfolio, symbolId }: Props) {
           onClick={() =>
             removeFromPortfolio({
               portfolioId: portfolio.id,
-              stockIds: symbolId,
+              stockIds: [symbolId],
             })
           }
           variant="destructive"
@@ -73,7 +73,7 @@ export default function StockPortfolioModifier({ portfolio, symbolId }: Props) {
           onClick={() =>
             addToPortfolio({
               portfolioId: portfolio.id,
-              stockIds: symbolId,
+              stockIds: [symbolId],
             })
           }
           variant="success"

@@ -31,10 +31,10 @@ export function StockCardLoading() {
             </Skeleton>
             <div className="f-col gap-1">
               <Skeleton>
-                <CardTitle></CardTitle>
+                <CardTitle className="w-[150px]">a</CardTitle>
               </Skeleton>
               <Skeleton>
-                <CardDescription className="w-[190px] truncate"></CardDescription>
+                <CardDescription className="w-[200px]"></CardDescription>
               </Skeleton>
             </div>
           </div>
@@ -48,7 +48,7 @@ export function StockCardLoading() {
               buttonVariants({ size: "xs" }),
               "text-blue-500 bg-slate-900"
             )}>
-            Technology
+            a
           </div>
         </Skeleton>
         <Skeleton>
@@ -57,14 +57,14 @@ export function StockCardLoading() {
               buttonVariants({ size: "xs" }),
               "text-blue-500 bg-slate-900"
             )}>
-            Computer Devices
+            a
           </div>
         </Skeleton>
       </CardContent>
 
       <CardFooter>
         <Skeleton>
-          <div className="h-10 w-full" />
+          <div className="h-10 w-full">a</div>
         </Skeleton>
       </CardFooter>
     </Card>
@@ -111,7 +111,7 @@ export default function StockCard({ quote, image, className }: Props) {
         </CardContent>
 
         <CardFooter>
-          <StockPrice quote={quote} />
+          <StockPrice className="w-full" quote={quote} />
         </CardFooter>
       </Card>
     </Link>
