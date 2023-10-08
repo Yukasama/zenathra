@@ -21,10 +21,12 @@ import { buttonVariants } from "../ui/button";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   recentStocks: RecentStocks | null;
+  responsive?: boolean;
 }
 
 export default function Searchbar({
   recentStocks,
+  responsive = true,
   className,
   ...props
 }: Props) {
@@ -82,7 +84,9 @@ export default function Searchbar({
     <>
       <div
         className={cn(
-          "border bg-card text-slate-400 p-2 rounded-md hidden md:flex items-center justify-between w-60 cursor-pointer",
+          `border bg-card text-slate-400 p-2 rounded-md ${
+            responsive ? "hidden md:flex" : "flex"
+          }  items-center justify-between w-60 cursor-pointer`,
           className
         )}
         onClick={() => setOpen((prev) => (prev === open ? !open : open))}
@@ -95,83 +99,96 @@ export default function Searchbar({
           <span className=" text-[10px] mt-[1px]">⌘</span>K
         </kbd>
       </div>
-      <div className={cn(buttonVariants({ size: "xs" }), "flex md:hidden")}>
-        <Search className="h-4 w-4" />
-      </div>
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput
-          isLoading={isFetching}
-          onValueChange={(text) => {
-            setInput(text);
-            debounceRequest();
-          }}
-          value={input}
-          className="h-9"
-          placeholder="Search stocks..."
-        />
-
-        {input.length > 0 && (
-          <CommandList key={results?.length} className="f-col gap-1">
-            {(recentlyViewed?.length ?? 0) > 0 && (
-              <CommandGroup heading="Recently Viewed">
-                {recentlyViewed?.map((stock) => (
-                  // todo
-                  <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
-                    <CommandItem
-                      onSelect={() => {
-                        router.push(`/stocks/${stock.symbol}`);
-                        router.refresh();
-                      }}
-                      value={stock.companyName}
-                      className="flex items-center gap-3 h-14 cursor-pointer">
-                      <StockImage src={stock.image} px={25} />
-                      <div>
-                        <p className="font-medium">{stock.symbol}</p>
-                        <p className="text-[12px] text-slate-500 truncate w-[150px]">
-                          {stock.companyName}
-                        </p>
-                      </div>
-                    </CommandItem>
-                  </Link>
-                ))}
-              </CommandGroup>
-            )}
-            {isFetching ? (
-              <div className="p-5 f-box">
-                <Loader className="h-5 w-5 animate-spin text-slate-500 text-center" />
-              </div>
-            ) : !results?.length ? (
-              <CommandEmpty>No results found.</CommandEmpty>
-            ) : (
-              <>
-                {(results?.length ?? 0) > 0 && (
-                  <CommandGroup key={results?.length} heading="Stocks">
-                    {results?.map((stock) => (
-                      <Link key={stock.id} href={`/stocks/${stock.symbol}`}>
-                        <CommandItem
-                          onSelect={() => {
-                            router.push(`/stocks/${stock.symbol}`);
-                            router.refresh();
-                          }}
-                          value={stock.companyName}
-                          className="flex items-center gap-3 h-14 cursor-pointer">
-                          <StockImage src={stock.image} px={25} />
-                          <div>
-                            <p className="font-medium">{stock.symbol}</p>
-                            <p className="text-[12px] text-slate-500 truncate w-[150px]">
-                              {stock.companyName}
-                            </p>
-                          </div>
-                        </CommandItem>
-                      </Link>
-                    ))}
-                  </CommandGroup>
-                )}
-              </>
-            )}
-          </CommandList>
+      <div
+        onClick={() => setOpen((prev) => (prev === open ? !open : open))}
+        className={cn(
+          buttonVariants({
+            variant: "link",
+            size: "sm",
+          }),
+          `${responsive ? "flex md:hidden" : "hidden"} border cursor-pointer`
         )}
-      </CommandDialog>
+        {...props}>
+        <Search className="h-[18px]" />
+      </div>
+      <div className="max-w-[375px]">
+        <CommandDialog open={open} onOpenChange={setOpen}>
+          <CommandInput
+            isLoading={isFetching}
+            onValueChange={(text) => {
+              setInput(text);
+              debounceRequest();
+            }}
+            value={input}
+            className="h-9"
+            placeholder="Search stocks..."
+          />
+
+          {input.length > 0 && (
+            <CommandList
+              key={results?.length}
+              className="f-col gap-1">
+              {(recentlyViewed?.length ?? 0) > 0 && (
+                <CommandGroup heading="Recently Viewed">
+                  {recentlyViewed?.map((stock) => (
+                    // todo
+                    <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
+                      <CommandItem
+                        onSelect={() => {
+                          router.push(`/stocks/${stock.symbol}`);
+                          router.refresh();
+                        }}
+                        value={stock.companyName}
+                        className="flex items-center gap-3 h-14 cursor-pointer">
+                        <StockImage src={stock.image} px={25} />
+                        <div>
+                          <p className="font-medium">{stock.symbol}</p>
+                          <p className="text-[12px] text-slate-500 truncate w-[150px]">
+                            {stock.companyName}
+                          </p>
+                        </div>
+                      </CommandItem>
+                    </Link>
+                  ))}
+                </CommandGroup>
+              )}
+              {isFetching ? (
+                <div className="p-5 f-box">
+                  <Loader className="h-5 w-5 animate-spin text-slate-500 text-center" />
+                </div>
+              ) : !results?.length ? (
+                <CommandEmpty>No results found.</CommandEmpty>
+              ) : (
+                <>
+                  {(results?.length ?? 0) > 0 && (
+                    <CommandGroup key={results?.length} heading="Stocks">
+                      {results?.map((stock) => (
+                        <Link key={stock.id} href={`/stocks/${stock.symbol}`}>
+                          <CommandItem
+                            onSelect={() => {
+                              router.push(`/stocks/${stock.symbol}`);
+                              router.refresh();
+                            }}
+                            value={stock.companyName}
+                            className="flex items-center gap-3 h-14 cursor-pointer">
+                            <StockImage src={stock.image} px={25} />
+                            <div>
+                              <p className="font-medium">{stock.symbol}</p>
+                              <p className="text-[12px] text-slate-500 truncate w-[150px]">
+                                {stock.companyName}
+                              </p>
+                            </div>
+                          </CommandItem>
+                        </Link>
+                      ))}
+                    </CommandGroup>
+                  )}
+                </>
+              )}
+            </CommandList>
+          )}
+        </CommandDialog>
+      </div>
     </>
   );
 }

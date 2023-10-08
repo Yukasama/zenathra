@@ -9,7 +9,7 @@ import { PropsWithChildren } from "react";
 
 import "./globals.css";
 
-const k2d = K2D({ subsets: ["latin"], weight: ["400", "500", "600"] });
+const k2d = K2D({ subsets: ["latin"], weight: ["100", "200", "300", "400", "500", "600"] });
 
 export const metadata: Metadata = constructMetadata();
 

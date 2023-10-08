@@ -1,15 +1,14 @@
-import PageLayout from "@/components/shared/page-layout";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import PortfolioList from "@/components/portfolio/portfolio-list";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { UserAvatar } from "@/components/user/user-avatar";
 import { db } from "@/db";
 import { getUser } from "@/lib/auth";
-import { EyeOff } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import RecentStocks from "@/components/user/recent-stocks";
+import { StockListLoading } from "@/components/stock/stock-list";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   params: { id: string };
@@ -28,68 +27,56 @@ export default async function page({ params: { id } }: Props) {
 
   if (!user) return notFound();
 
-  if (user.id !== id)
-    return (
-      <div className="f-box f-col mt-96 gap-3">
-        <div className="p-5 rounded-full w-20 h-12 f-box bg-primary">
-          <EyeOff className="h-6 w-6" />
-        </div>
-        <h2 className="text-xl font-medium">This Portfolio is private.</h2>
-      </div>
-    );
-
   const dbUser = await db.user.findFirst({
-    where: { id },
-    select: { createdAt: true },
-  });
-
-  const portfolios = await db.portfolio.findMany({
     select: {
-      id: true,
-      title: true,
-      public: true,
       createdAt: true,
-      stocks: {
-        select: { stockId: true },
-      },
+      status: true,
+      biography: true,
     },
-    where: { creatorId: user.id },
+    where: { id },
   });
 
   return (
-    <PageLayout
-      title="My Profile"
-      description="This page will be visible to everyone">
-      <Card className="border-none rounded-none bg-gradient-to-br from-slate-400 to-slate-600">
-        <CardHeader>
-          <CardTitle>{user.given_name}</CardTitle>
-          <CardDescription>
-            Joined in {dbUser?.createdAt.toISOString() ?? "<Not date found>"}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div>
-            <h2>Portfolios</h2>
-            {portfolios.map((portfolio) => (
-              <Card key={portfolio.id}>
-                <CardHeader>
-                  <div className="flex">
-                    <div className="bg-primary f-box rounded-full h-10 w-10">
-                      {portfolio.title[0].toUpperCase()}
-                    </div>
-                    <div>
-                      <CardTitle>{portfolio.title}</CardTitle>
-                      <CardDescription>
-                        {portfolio.createdAt.toISOString()}
-                      </CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </PageLayout>
+    <>
+      <div className="relative">
+        <div className="bg-gradient-to-br from-blue-500 to-purple-600 h-28 lg:h-40"></div>
+        <UserAvatar
+          user={user}
+          className="h-24 w-24 lg:w-48 lg:h-48 border absolute top-16 left-12 lg:top-16 lg:left-20"
+        />
+        <Card className="border-x-0 rounded-t-none px-8 pt-10 lg:pt-0 lg:px-80">
+          <CardHeader>
+            <div className="flex justify-between">
+              <div className="f-col gap-1">
+                <CardTitle className="text-3xl font-medium">
+                  {`${user.given_name} ${user.family_name}`}
+                </CardTitle>
+                <p className="text-slate-400">{dbUser?.status}</p>
+                <div className="text-slate-500 flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  <p className="text-slate-600">
+                    Joined on {dbUser?.createdAt.toISOString().split("T")[0]}
+                  </p>
+                </div>
+              </div>
+              <Button variant="subtle">Edit Profile</Button>
+            </div>
+          </CardHeader>
+        </Card>
+      </div>
+      <div className="f-col lg:grid lg:grid-cols-3 p-6 gap-6">
+        <div className="f-box">
+          <p className="text-slate-400">{dbUser?.biography}</p>
+        </div>
+        <Suspense fallback={<StockListLoading className="w-full" />}>
+          {/* @ts-expect-error Server Component */}
+          <PortfolioList user={user} />
+        </Suspense>
+        <Suspense fallback={<StockListLoading className="w-full" />}>
+          {/* @ts-expect-error Server Component */}
+          <RecentStocks user={user} />
+        </Suspense>
+      </div>
+    </>
   );
 }

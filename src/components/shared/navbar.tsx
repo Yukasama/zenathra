@@ -74,12 +74,17 @@ export default async function Navbar() {
         <Link href="/">
           <CompanyLogo px={30} />
         </Link>
-        <Searchbar className="md:flex" recentStocks={uniqueStocks} />
+        <div className="md:flex hidden">
+          <Searchbar recentStocks={uniqueStocks} />
+        </div>
       </div>
 
       <NavbarMenu user={user} />
 
       <div className="flex items-center gap-3">
+        <div className="md:hidden flex">
+          <Searchbar recentStocks={uniqueStocks} />
+        </div>
         <ThemeToggle />
         {user && (
           <UserAccountNav

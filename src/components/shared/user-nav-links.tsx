@@ -53,16 +53,16 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
   return (
     <>
       {isAdmin && (
-        <div>
-          <SheetClose>
+        <SheetClose>
+          <div>
             <button
               onClick={() => router.push("/admin/dashboard")}
               className="flex items-center h-9 p-1 mb-[1px] rounded-md px-4 hover:bg-slate-800">
               <h2 className="text-[15px]">Stock Dashboard</h2>
             </button>
             <Separator className="my-2" />
-          </SheetClose>
-        </div>
+          </div>
+        </SheetClose>
       )}
 
       {navLinks.map((link) => (

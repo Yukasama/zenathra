@@ -44,7 +44,11 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
             <p className="text-lg">Elysium</p>
           </div>
         </div>
-        <Searchbar recentStocks={recentStocks} className="w-full" />
+        <Searchbar
+          recentStocks={recentStocks}
+          responsive={false}
+          className="w-full"
+        />
         <div className="f-col justify-between h-full">
           {user &&
             portfolios?.map((portfolio) => (

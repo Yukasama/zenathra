@@ -3,13 +3,13 @@ import { ImageOff } from "lucide-react";
 import Image from "next/image";
 
 interface Props extends React.HTMLAttributes<HTMLImageElement> {
-  px: number;
+  px?: number;
   src: string | null | undefined;
   priority?: boolean;
 }
 
 export function StockImage({
-  px,
+  px = 40,
   src,
   className,
   priority = false,
