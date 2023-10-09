@@ -31,7 +31,7 @@ export function UserAccountNav({ user, isAdmin }: Props) {
       <SheetTrigger>
         <UserAvatar user={user} className="h-8 w-8" />
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="rounded-l-xl">
         <div className="flex items-center justify-start gap-2 p-2 mb-1">
           <UserAvatar user={user} className="h-8 w-8" />
           <div className="flex flex-col space-y-1 leading-none">
@@ -50,7 +50,7 @@ export function UserAccountNav({ user, isAdmin }: Props) {
 
         <Separator className="my-2" />
 
-        <LogoutLink className="flex items-center h-9 p-1 rounded-md px-4 hover:bg-slate-800">
+        <LogoutLink className="flex items-center h-9 p-1 rounded-md px-4 hover:bg-slate-100 dark:hover:bg-slate-900">
           <LogOut className="w-5 h-5 mr-2 text-slate-400" />
           <h2 className="text-[15px]">Sign Out</h2>
         </LogoutLink>

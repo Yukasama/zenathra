@@ -93,11 +93,7 @@ export default async function Navbar() {
           />
         )}
         {!user && (
-          <LoginLink
-            className={cn(
-              buttonVariants({ variant: "subtle" }),
-              "hidden lg:flex"
-            )}>
+          <LoginLink className={buttonVariants({ variant: "subtle" })}>
             Sign In
           </LoginLink>
         )}

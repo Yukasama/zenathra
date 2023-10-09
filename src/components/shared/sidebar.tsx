@@ -37,7 +37,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
           <Menu className="h-5" />
         </div>
       </SheetTrigger>
-      <SheetContent side="left" className="f-col gap-5">
+      <SheetContent side="left" className="f-col gap-5 rounded-r-xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <CompanyLogo px={35} />
@@ -56,7 +56,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                 <button
                   key={portfolio.id}
                   onClick={() => router.push(`/p/${portfolio.id}`)}>
-                  <Card className="flex items-center gap-2.5 p-2 px-3 hover:bg-slate-900">
+                  <Card className="flex items-center gap-2.5 p-2 px-3 hover:bg-slate-100 dark:hover:bg-slate-900">
                     <PortfolioImage portfolio={portfolio} />
                     <div>
                       <p className="font-medium">{portfolio.title}</p>

@@ -57,7 +57,7 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
           <div>
             <button
               onClick={() => router.push("/admin/dashboard")}
-              className="flex items-center h-9 p-1 mb-[1px] rounded-md px-4 hover:bg-slate-800">
+              className="flex items-center h-9 p-1 mb-[1px] rounded-md px-4 hover:bg-slate-100 dark:hover:bg-slate-900">
               <h2 className="text-[15px]">Stock Dashboard</h2>
             </button>
             <Separator className="my-2" />
@@ -70,7 +70,7 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
           <div>
             <button
               onClick={() => router.push(link.href)}
-              className="flex items-center h-9 p-1 mb-[1px] rounded-md px-4 hover:bg-slate-800 w-full">
+              className="flex items-center h-9 p-1 mb-[1px] rounded-md px-4 hover:bg-slate-100 dark:hover:bg-slate-900 w-full">
               {link.icon}
               <h2 className="text-[15px]">{link.label}</h2>
             </button>

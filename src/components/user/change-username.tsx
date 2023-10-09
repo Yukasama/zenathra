@@ -18,8 +18,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { trpc } from "@/app/_trpc/client";
 import { UserUpdateProps, UserUpdateSchema } from "@/lib/validators/user";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
+import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
-export default function ChangeUsername() {
+interface Props {
+  user: Pick<KindeUser, "given_name" | "family_name">;
+}
+
+export default function ChangeUsername({ user }: Props) {
   const router = useRouter();
 
   const form = useForm({
@@ -54,18 +67,25 @@ export default function ChangeUsername() {
   }
 
   return (
-    <div className="f-col gap-5">
-      <div className="f-col gap-0.5">
-        <h2 className="font-medium text-lg">Change Username</h2>
-        <p className="text-sm text-slate-400">
-          You can change your Username here
-        </p>
-      </div>
-      <div>
+    <Sheet>
+      <SheetTrigger>
+        <div className="bg-white dark:bg-gray-950 flex items-center h-12 rounded-md border p-4">
+          <p>{`${user?.given_name} ${user?.family_name}`}</p>
+        </div>
+      </SheetTrigger>
+      <SheetContent className="space-y-4">
+        <SheetHeader>
+          <SheetTitle className="font-medium text-lg">
+            Change Username
+          </SheetTitle>
+          <SheetDescription className="text-sm text-slate-400">
+            You can change your first and last name here
+          </SheetDescription>
+        </SheetHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 f-col">
+            className="gap-3 f-col">
             <FormField
               control={form.control}
               name="given_name"
@@ -96,13 +116,13 @@ export default function ChangeUsername() {
                 </FormItem>
               )}
             />
-            <Button className="mt-4" variant="subtle" isLoading={isLoading}>
-              <ArrowRightCircle className="h-4 w-4" />
+            <Button className="mt-2" variant="subtle" isLoading={isLoading}>
               Save changes
+              <ArrowRightCircle className="h-4 w-4" />
             </Button>
           </form>
         </Form>
-      </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   );
 }
