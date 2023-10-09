@@ -23,18 +23,19 @@ export async function generateStaticParams() {
 }
 
 export default async function page({ params: { id } }: Props) {
-  const user = getUser();
-
-  if (!user) return notFound();
-
   const dbUser = await db.user.findFirst({
     select: {
       createdAt: true,
-      status: true,
       biography: true,
     },
     where: { id },
   });
+
+  if (!dbUser) return notFound();
+
+  const user = getUser();
+
+  if (!user) return notFound();
 
   return (
     <>
@@ -51,7 +52,6 @@ export default async function page({ params: { id } }: Props) {
                 <CardTitle className="text-3xl font-medium">
                   {`${user.given_name} ${user.family_name}`}
                 </CardTitle>
-                <p className="text-slate-400">{dbUser?.status}</p>
                 <div className="text-slate-500 flex items-center gap-2">
                   <Calendar className="h-5 w-5" />
                   <p className="text-slate-600">

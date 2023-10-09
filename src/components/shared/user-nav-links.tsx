@@ -28,24 +28,24 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
     },
     {
       label: "My Portfolios",
-      href: "/u/portfolio",
+      href: "/portfolio",
       icon: <LayoutDashboard className="w-5 h-5 mr-2 text-slate-400" />,
       separator: true,
     },
     {
       label: "Notifications",
-      href: "/u/settings",
+      href: "/settings",
       icon: <Bell className="w-5 h-5 mr-2 text-slate-400" />,
     },
     {
       label: "Settings",
-      href: "/u/settings",
+      href: "/settings",
       icon: <Settings className="w-5 h-5 mr-2 text-slate-400" />,
       separator: true,
     },
     {
       label: "Support",
-      href: "/u/settings",
+      href: "/settings",
       icon: <HelpCircle className="w-5 h-5 mr-2 text-slate-400" />,
     },
   ];

@@ -84,15 +84,7 @@ export default function AccountSettings({ user }: Props) {
   const personal = [
     {
       title: "Picture",
-      value: (
-        <UserAvatar
-          user={{
-            given_name: user.given_name,
-            picture: user.picture,
-          }}
-          className="h-8 w-8"
-        />
-      ),
+      value: <UserAvatar user={user} className="h-8 w-8" />,
       form: <div></div>,
     },
     {
@@ -110,12 +102,8 @@ export default function AccountSettings({ user }: Props) {
   return (
     <Tabs
       defaultValue="personal"
-      className="flex f-col md:flex-row gap-4 h-full p-4">
-      <Card className="md:pr-8 md:h-[600px]">
-        <CardHeader className="hidden md:inline-block">
-          <CardTitle>Settings</CardTitle>
-          <CardDescription>Manage your account settings</CardDescription>
-        </CardHeader>
+      className="flex f-col md:flex-row gap-4 h-full px-60 p-20">
+      <div className="f-col">
         <TabsList className="flex md:pt-[85px] md:f-col md:bg-transparent md:items-start gap-1 md:pl-3">
           {tabs.map((tab) => (
             <TabsTrigger
@@ -127,7 +115,7 @@ export default function AccountSettings({ user }: Props) {
             </TabsTrigger>
           ))}
         </TabsList>
-      </Card>
+      </div>
       <TabsContent value="personal" className="m-0">
         <Card className="border-none md:w-[450px]">
           <CardHeader>

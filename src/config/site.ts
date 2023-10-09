@@ -24,7 +24,7 @@ export const SITE = {
 export const navLinks = [
   {
     title: "Manage Portfolios",
-    href: "/u/portfolio",
+    href: "/portfolio",
     description:
       "Track and optimize your investments with our portfolio manager.",
   },

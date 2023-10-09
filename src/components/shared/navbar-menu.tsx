@@ -44,7 +44,7 @@ export default function NavbarMenu({ user }: Props) {
                   </a>
                 </NavigationMenuLink>
               </li>
-              <ListItem href="/u/portfolio" title="Create your first portfolio">
+              <ListItem href="/portfolio" title="Create your first portfolio">
                 Assemble your own collection of stocks and track their
                 performance.
               </ListItem>
