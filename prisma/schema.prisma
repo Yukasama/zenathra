@@ -12,10 +12,10 @@ datasource db {
 model User {
   id        String   @id @unique
   email     String   @unique
-  status    String?  @default("Im new around here.")
-  biography String?  @default("My beautiful biography.")
+  biography String   @default("My beautiful biography.")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  inactive  Boolean  @default(false)
 
   portfolios        Portfolio[]
   recentStocks      UserRecentStocks[]

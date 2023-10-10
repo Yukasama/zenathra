@@ -1,4 +1,7 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import {
+  createKindeManagementAPIClient,
+  getKindeServerSession,
+} from "@kinde-oss/kinde-auth-nextjs/server";
 import { privateProcedure, publicProcedure, router } from "../trpc";
 import { absoluteUrl } from "@/lib/utils";
 import { TRPCError } from "@trpc/server";
@@ -6,7 +9,7 @@ import { db } from "@/db";
 import { getUserSubscriptionPlan, stripe } from "@/lib/stripe";
 import { PLANS } from "@/config/stripe";
 import { UserUpdateSchema } from "@/lib/validators/user";
-import { kinde } from "../../lib/kinde";
+import { revalidatePath } from "next/cache";
 
 export const userRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -93,15 +96,19 @@ export const userRouter = router({
 
       if (!dbUser) throw new TRPCError({ code: "UNAUTHORIZED" });
 
+      const client = await createKindeManagementAPIClient();
+
       await Promise.all([
-        kinde.usersApi.updateUser({
+        client.usersApi.updateUser({
           id: userId,
           updateUserRequest: input,
         }),
-        db.user.update({
-          where: { id: userId },
-          data: input,
-        }),
+        // db.user.update({
+        //   where: { id: userId },
+        //   data: {},
+        // }),
       ]);
+
+      revalidatePath("/settings/profile");
     }),
 });

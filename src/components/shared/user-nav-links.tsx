@@ -5,6 +5,7 @@ import {
   Bell,
   HelpCircle,
   LayoutDashboard,
+  ListOrdered,
   Settings,
   User,
 } from "lucide-react";
@@ -29,7 +30,7 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
     {
       label: "My Portfolios",
       href: "/portfolio",
-      icon: <LayoutDashboard className="w-5 h-5 mr-2 text-slate-400" />,
+      icon: <ListOrdered className="w-5 h-5 mr-2 text-slate-400" />,
       separator: true,
     },
     {
@@ -53,11 +54,12 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
   return (
     <>
       {isAdmin && (
-        <SheetClose>
+        <SheetClose className="w-full" asChild>
           <div>
             <button
               onClick={() => router.push("/admin/dashboard")}
-              className="flex items-center h-9 p-1 mb-[1px] rounded-md px-4 hover:bg-slate-100 dark:hover:bg-slate-900">
+              className="flex items-center w-full h-9 p-1 mb-[1px] rounded-md px-4 hover:bg-slate-100 dark:hover:bg-slate-900">
+              <LayoutDashboard className="w-5 h-5 mr-2 text-slate-400" />
               <h2 className="text-[15px]">Stock Dashboard</h2>
             </button>
             <Separator className="my-2" />

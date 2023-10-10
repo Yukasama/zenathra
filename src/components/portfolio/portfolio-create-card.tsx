@@ -53,13 +53,13 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
       onError: () =>
         toast({
           title: "Oops! Something went wrong.",
-          description: `Failed to create portfolio.`,
+          description: "Failed to create portfolio.",
           variant: "destructive",
         }),
       onSuccess: () => {
         startTransition(() => router.refresh());
 
-        toast({ description: `Portfolio successfully created.` });
+        toast({ description: "Portfolio successfully created." });
       },
     });
 

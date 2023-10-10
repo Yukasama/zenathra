@@ -32,9 +32,9 @@ export function UserAccountNav({ user, isAdmin }: Props) {
         <UserAvatar user={user} className="h-8 w-8" />
       </SheetTrigger>
       <SheetContent className="rounded-l-xl">
-        <div className="flex items-center justify-start gap-2 p-2 mb-1">
-          <UserAvatar user={user} className="h-8 w-8" />
-          <div className="flex flex-col space-y-1 leading-none">
+        <div className="flex items-center gap-2 p-2 mb-1">
+          <UserAvatar user={user} className="h-9 w-9" />
+          <div className="f-col">
             {user.given_name && (
               <p className="font-medium">{user.given_name}</p>
             )}

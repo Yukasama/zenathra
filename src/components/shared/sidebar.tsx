@@ -37,7 +37,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
           <Menu className="h-5" />
         </div>
       </SheetTrigger>
-      <SheetContent side="left" className="f-col gap-5 rounded-r-xl">
+      <SheetContent side="left" className="f-col gap-4 rounded-r-xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <CompanyLogo px={35} />
@@ -60,7 +60,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                     <PortfolioImage portfolio={portfolio} />
                     <div>
                       <p className="font-medium">{portfolio.title}</p>
-                      <p className="text-sm text-slate-400">
+                      <p className="text-sm text-start text-slate-400">
                         {portfolio.public ? "Public" : "Private"}
                       </p>
                     </div>
@@ -69,13 +69,11 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
               </SheetClose>
             ))}
           {user && (
-            <Card>
-              <div className="flex items-center p-2 px-3 gap-2.5">
-                <UserAvatar user={user} />
-                <div>
-                  <p className="font-medium">{user.given_name}</p>
-                  <p className="text-sm text-slate-400">{user.email}</p>
-                </div>
+            <Card className="flex items-center p-2 px-3 gap-2.5">
+              <UserAvatar user={user} />
+              <div>
+                <p className="font-medium">{user.given_name}</p>
+                <p className="text-sm text-slate-400">{user.email}</p>
               </div>
             </Card>
           )}

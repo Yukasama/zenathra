@@ -6,7 +6,6 @@ export const config = {
     "/settings/:path*",
     "/dashboard/:path*",
     "/auth-callback",
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };
 

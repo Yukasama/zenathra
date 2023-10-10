@@ -38,8 +38,8 @@ export default function ChangeUsername({ user }: Props) {
   const form = useForm({
     resolver: zodResolver(UserUpdateSchema),
     defaultValues: {
-      given_name: user.given_name ?? "",
-      family_name: user.family_name ?? "",
+      givenName: user.given_name ?? "",
+      familyName: user.family_name ?? "",
     },
   });
 
@@ -58,13 +58,10 @@ export default function ChangeUsername({ user }: Props) {
   });
 
   function onSubmit(data: FieldValues) {
-    console.log(data);
     const payload = {
-      givenName: data.given_name,
-      familyName: data.family_name,
+      givenName: data.givenName,
+      familyName: data.familyName,
     };
-
-    console.log("step 1");
 
     updateUsername(payload);
   }
@@ -77,6 +74,9 @@ export default function ChangeUsername({ user }: Props) {
           <div className="bg-white w-full dark:bg-gray-950 flex items-center h-12 rounded-md border p-4 gap-1">
             <p>{`${user?.given_name} ${user?.family_name}`}</p>
           </div>
+          <small className="text-slate-500 text-sm">
+            This name combination will appear on your public profile.
+          </small>
         </div>
       </SheetTrigger>
       <SheetContent className="space-y-4">
@@ -92,14 +92,18 @@ export default function ChangeUsername({ user }: Props) {
           <form onSubmit={form.handleSubmit(onSubmit)} className="gap-3 f-col">
             <FormField
               control={form.control}
-              name="given_name"
+              name="givenName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-black dark:text-white">
                     First Name
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your first name..." {...field} />
+                    <Input
+                      placeholder="Enter your first name..."
+                      {...field}
+                      required
+                    />
                   </FormControl>
                   <FormMessage className="text-red-500" />
                 </FormItem>
@@ -107,14 +111,18 @@ export default function ChangeUsername({ user }: Props) {
             />
             <FormField
               control={form.control}
-              name="family_name"
+              name="familyName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-black dark:text-white">
                     Last Name
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your last name..." {...field} />
+                    <Input
+                      placeholder="Enter your last name..."
+                      {...field}
+                      required
+                    />
                   </FormControl>
                   <FormMessage className="text-red-500" />
                 </FormItem>
