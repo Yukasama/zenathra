@@ -7,7 +7,13 @@ const ChangeUsername = dynamic(
   () => import("@/components/user/change-username"),
   {
     ssr: false,
-    loading: () => <Skeleton className="h-12"></Skeleton>,
+    loading: () => (
+      <div className="f-col gap-1 w-full">
+        <Skeleton className="h-5" />
+
+        <Skeleton className="h-12 w-full" />
+      </div>
+    ),
   }
 );
 

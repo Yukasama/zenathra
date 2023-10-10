@@ -42,23 +42,23 @@ export default function Layout({ children }: PropsWithChildren) {
   ];
 
   return (
-    <div className="f-col md:px-24 lg:px-52 xl:pl-80 xl:pr-60 p-12 gap-10">
+    <div className="f-col px-6 md:pl-20 md:pr-14 lg:pl-40 lg:pr-32 xl:pl-80 xl:pr-60 p-12 gap-10">
       <div className="flex gap-4 items-center">
-        <UserAvatar user={user!} className="h-14 w-14 border" />
+        <UserAvatar user={user!} className="h-12 w-12 border" />
         <div className="f-col">
-          <h3 className="text-2xl font-extralight">{`${user?.given_name} ${user?.family_name}`}</h3>
+          <h3 className="text-2xl font-medium">{`${user?.given_name} ${user?.family_name}`}</h3>
           <p className="text-slate-500 text-sm">
             User Settings associated with your account
           </p>
         </div>
       </div>
       <div className="flex gap-16">
-        <div className="f-col gap-0.5 min-w-[300px]">
+        <div className="f-col gap-0.5 min-w-[250px] lg:min-w-[300px]">
           {tabs.map((tab) => (
             <SettingsItem key={tab.id} {...tab} />
           ))}
         </div>
-        {children}
+        <div className="hidden sm:flex flex-1">{children}</div>
       </div>
     </div>
   );

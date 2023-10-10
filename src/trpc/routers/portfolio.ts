@@ -24,9 +24,7 @@ export const portfolioRouter = router({
     )
     .query(async (opts) => {
       return await db.portfolio.findFirst({
-        where: {
-          id: opts.input.id,
-        },
+        where: { id: opts.input.id },
       });
     }),
   create: privateProcedure
@@ -38,7 +36,7 @@ export const portfolioRouter = router({
         data: {
           ...input,
           public: input.publicPortfolio,
-          creatorId: user.id!,
+          creatorId: user.id,
           color: getRandomColor(),
         },
       });
@@ -52,7 +50,7 @@ export const portfolioRouter = router({
       const portfolio = await db.portfolio.findFirst({
         where: {
           id: portfolioId,
-          creatorId: user?.id ?? undefined,
+          creatorId: user?.id,
         },
       });
 
@@ -76,7 +74,7 @@ export const portfolioRouter = router({
         select: { id: true },
         where: {
           id: portfolioId,
-          creatorId: user?.id ?? undefined,
+          creatorId: user?.id,
         },
       });
 
@@ -104,8 +102,6 @@ export const portfolioRouter = router({
           stockId: stockId,
         })),
       });
-
-      return portfolio;
     }),
   remove: privateProcedure
     .input(ModifyPortfolioSchema)
@@ -117,7 +113,7 @@ export const portfolioRouter = router({
         select: { id: true },
         where: {
           id: portfolioId,
-          creatorId: user?.id ?? undefined,
+          creatorId: user?.id,
         },
       });
 
@@ -129,8 +125,6 @@ export const portfolioRouter = router({
           stockId: { in: stockIds },
         },
       });
-
-      return portfolio;
     }),
   delete: privateProcedure
     .input(
@@ -146,7 +140,7 @@ export const portfolioRouter = router({
         select: { id: true },
         where: {
           id: portfolioId,
-          creatorId: user?.id ?? undefined,
+          creatorId: user?.id,
         },
       });
 
@@ -155,7 +149,5 @@ export const portfolioRouter = router({
       await db.portfolio.delete({
         where: { id: portfolioId },
       });
-
-      return portfolio;
     }),
 });

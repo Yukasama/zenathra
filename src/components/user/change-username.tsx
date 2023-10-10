@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { trpc } from "@/app/_trpc/client";
-import { UserUpdateProps, UserUpdateSchema } from "@/lib/validators/user";
+import { UserUpdateSchema } from "@/lib/validators/user";
 import {
   Sheet,
   SheetContent,
@@ -38,8 +38,8 @@ export default function ChangeUsername({ user }: Props) {
   const form = useForm({
     resolver: zodResolver(UserUpdateSchema),
     defaultValues: {
-      given_name: "",
-      family_name: "",
+      given_name: user.given_name ?? "",
+      family_name: user.family_name ?? "",
     },
   });
 
@@ -58,19 +58,25 @@ export default function ChangeUsername({ user }: Props) {
   });
 
   function onSubmit(data: FieldValues) {
-    const payload: UserUpdateProps = {
+    console.log(data);
+    const payload = {
       givenName: data.given_name,
       familyName: data.family_name,
     };
+
+    console.log("step 1");
 
     updateUsername(payload);
   }
 
   return (
     <Sheet>
-      <SheetTrigger>
-        <div className="bg-white dark:bg-gray-950 flex items-center h-12 rounded-md border p-4">
-          <p>{`${user?.given_name} ${user?.family_name}`}</p>
+      <SheetTrigger asChild>
+        <div className="f-col items-start gap-1">
+          <h2>Username</h2>
+          <div className="bg-white w-full dark:bg-gray-950 flex items-center h-12 rounded-md border p-4 gap-1">
+            <p>{`${user?.given_name} ${user?.family_name}`}</p>
+          </div>
         </div>
       </SheetTrigger>
       <SheetContent className="space-y-4">
@@ -83,9 +89,7 @@ export default function ChangeUsername({ user }: Props) {
           </SheetDescription>
         </SheetHeader>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="gap-3 f-col">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="gap-3 f-col">
             <FormField
               control={form.control}
               name="given_name"
@@ -95,7 +99,7 @@ export default function ChangeUsername({ user }: Props) {
                     First Name
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your first name" {...field} />
+                    <Input placeholder="Enter your first name..." {...field} />
                   </FormControl>
                   <FormMessage className="text-red-500" />
                 </FormItem>
@@ -110,7 +114,7 @@ export default function ChangeUsername({ user }: Props) {
                     Last Name
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your last name" {...field} />
+                    <Input placeholder="Enter your last name..." {...field} />
                   </FormControl>
                   <FormMessage className="text-red-500" />
                 </FormItem>
