@@ -64,7 +64,7 @@ export default function Layout({ children }: PropsWithChildren) {
             <SettingsItem key={tab.id} {...tab} />
           ))}
         </div>
-        <div className="flex flex-1">{children}</div>
+        <div className="flex px-4 p-2 flex-1">{children}</div>
       </div>
     </div>
   );

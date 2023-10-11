@@ -1,6 +1,5 @@
 "use client";
 
-import { Portfolio } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { startTransition, useState } from "react";
@@ -15,76 +14,64 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { CardDescription } from "../ui/card";
 import { trpc } from "@/app/_trpc/client";
+import axios from "axios";
 
-type Props = {
-  portfolio: Pick<Portfolio, "id" | "title">;
-};
-
-export default function PortfolioDeleteModal({ portfolio }: Props) {
-  const [title, setTitle] = useState<string>();
-
+export default function DeleteUserModal() {
   const router = useRouter();
 
-  const { mutate: deletePortfolio, isLoading } =
-    trpc.portfolio.delete.useMutation({
-      onError: () =>
-        toast({
-          title: "Oops! Something went wrong.",
-          description: `Portfolio '${portfolio.title}' could not be deleted.`,
-          variant: "destructive",
-        }),
-      onSuccess: () => {
-        startTransition(() => router.refresh());
+  const [title, setTitle] = useState<string>();
 
-        toast({
-          title: "Portfolio Deleted.",
-          description: `Portfolio '${portfolio.title}' won't longer show up in your portfolios.`,
-        });
-      },
-    });
+  const { mutate: deleteUser, isLoading } = trpc.user.delete.useMutation({
+    onError: (err) => {
+      console.log(err);
+      toast({
+        title: "Oops! Something went wrong.",
+        description: "Account could not be deleted.",
+        variant: "destructive",
+      });
+    },
+
+    onSuccess: async () => {
+      startTransition(() => router.refresh());
+
+      await axios.post("/api/auth/logout");
+    },
+  });
 
   function onSubmit() {
-    if (title !== `Delete ${portfolio.title}`)
+    if (title !== "CONFIRM")
       return toast({
         title: "Oops! Something went wrong.",
-        description: "Please enter the correct title.",
+        description: "Please enter CONFIRM to complete the deletion.",
         variant: "destructive",
       });
 
-    const payload = {
-      portfolioId: portfolio.id,
-    };
-
-    deletePortfolio(payload);
+    deleteUser();
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="destructive">
+        <Button variant="destructive" className="self-start">
           <Trash2 className="h-4 w-4" />
-          Delete
+          Delete Account
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[375px] rounded-md">
         <DialogHeader>
-          <DialogTitle>
-            <p className="w-54 truncate">Delete Portfolio {portfolio.title}?</p>
-          </DialogTitle>
+          <DialogTitle>Delete Account?</DialogTitle>
           <DialogDescription>This action cannot be undone.</DialogDescription>
         </DialogHeader>
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label>Title</Label>
           <Input
-            placeholder={`Delete ${portfolio.title}`}
+            placeholder="CONFIRM"
             onChange={(e) => setTitle(e.target.value)}
           />
           <CardDescription>
-            Enter the portfolio title to continue
+            Enter &apos;CONFIRM&apos; to delete your account.
           </CardDescription>
         </div>
         <DialogFooter>
@@ -94,7 +81,7 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
             isLoading={isLoading}
             onClick={onSubmit}>
             <Trash2 className="h-4 w-4" />
-            Delete Portfolio
+            Delete Account
           </Button>
         </DialogFooter>
       </DialogContent>

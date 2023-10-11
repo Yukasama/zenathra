@@ -101,14 +101,37 @@ export const userRouter = router({
       await Promise.all([
         client.usersApi.updateUser({
           id: userId,
-          updateUserRequest: input,
+          updateUserRequest: {
+            givenName: input.givenName,
+            familyName: input.familyName,
+          },
         }),
-        // db.user.update({
-        //   where: { id: userId },
-        //   data: {},
-        // }),
+        db.user.update({
+          where: { id: userId },
+          data: { biography: input.biography },
+        }),
       ]);
 
       revalidatePath("/settings/profile");
     }),
+  delete: privateProcedure.mutation(async ({ ctx }) => {
+    const { userId } = ctx;
+    console.log("0")
+
+    if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+    const dbUser = await db.user.findFirst({
+      where: { id: userId },
+    });
+    console.log("1");
+
+    if (!dbUser) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+    const client = await createKindeManagementAPIClient();
+
+    await Promise.all([
+      client.usersApi.deleteUser({ id: userId }),
+      db.user.delete({ where: { id: userId } }),
+    ]);
+  }),
 });
