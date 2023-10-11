@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { startTransition, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { Trash2 } from "lucide-react";
@@ -18,6 +18,7 @@ import { Input } from "../ui/input";
 import { CardDescription } from "../ui/card";
 import { trpc } from "@/app/_trpc/client";
 import axios from "axios";
+import { cn } from "@/lib/utils";
 
 export default function DeleteUserModal() {
   const router = useRouter();
@@ -25,15 +26,12 @@ export default function DeleteUserModal() {
   const [title, setTitle] = useState<string>();
 
   const { mutate: deleteUser, isLoading } = trpc.user.delete.useMutation({
-    onError: (err) => {
-      console.log(err);
+    onError: () =>
       toast({
         title: "Oops! Something went wrong.",
         description: "Account could not be deleted.",
         variant: "destructive",
-      });
-    },
-
+      }),
     onSuccess: async () => {
       startTransition(() => router.refresh());
 
@@ -55,10 +53,14 @@ export default function DeleteUserModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="destructive" className="self-start">
+        <button
+          className={cn(
+            buttonVariants({ variant: "destructive" }),
+            "self-start"
+          )}>
           <Trash2 className="h-4 w-4" />
           Delete Account
-        </Button>
+        </button>
       </DialogTrigger>
       <DialogContent className="max-w-[375px] rounded-md">
         <DialogHeader>

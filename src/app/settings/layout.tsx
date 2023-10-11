@@ -50,7 +50,7 @@ export default function Layout({ children }: PropsWithChildren) {
   return (
     <div className="f-col px-6 md:pl-20 md:pr-14 lg:pl-32 lg:pr-28 xl:pl-64 xl:pr-56 p-8 sm:p-12 gap-7 sm:gap-10">
       <div className="flex gap-4 items-center">
-        <UserAvatar user={user!} className="h-12 w-12 border" />
+        <UserAvatar user={user!} fallbackFontSize={20} className="h-12 w-12 border" />
         <div className="f-col">
           <h3 className="text-2xl font-medium">{`${user?.given_name} ${user?.family_name}`}</h3>
           <p className="text-slate-500 text-sm">

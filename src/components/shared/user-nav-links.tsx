@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   ListOrdered,
   Settings,
+  Settings2,
   User,
 } from "lucide-react";
 import { SheetClose } from "../ui/sheet";
@@ -28,6 +29,11 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
       icon: <User className="w-5 h-5 mr-2 text-slate-400" />,
     },
     {
+      label: "Dashboard",
+      href: "/dashboard",
+      icon: <LayoutDashboard className="w-5 h-5 mr-2 text-slate-400" />,
+    },
+    {
       label: "My Portfolios",
       href: "/portfolio",
       icon: <ListOrdered className="w-5 h-5 mr-2 text-slate-400" />,
@@ -35,7 +41,7 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
     },
     {
       label: "Notifications",
-      href: "/settings",
+      href: "/notifications",
       icon: <Bell className="w-5 h-5 mr-2 text-slate-400" />,
     },
     {
@@ -46,7 +52,7 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
     },
     {
       label: "Support",
-      href: "/settings",
+      href: "/support",
       icon: <HelpCircle className="w-5 h-5 mr-2 text-slate-400" />,
     },
   ];
@@ -59,8 +65,8 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
             <button
               onClick={() => router.push("/admin/dashboard")}
               className="flex items-center w-full h-9 p-1 mb-[1px] rounded-md px-4 hover:bg-slate-100 dark:hover:bg-slate-900">
-              <LayoutDashboard className="w-5 h-5 mr-2 text-slate-400" />
-              <h2 className="text-[15px]">Stock Dashboard</h2>
+              <Settings2 className="w-5 h-5 mr-2 text-slate-400" />
+              <h2 className="text-[15px]">Stock Control</h2>
             </button>
             <Separator className="my-2" />
           </div>

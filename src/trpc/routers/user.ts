@@ -9,7 +9,6 @@ import { db } from "@/db";
 import { getUserSubscriptionPlan, stripe } from "@/lib/stripe";
 import { PLANS } from "@/config/stripe";
 import { UserUpdateSchema } from "@/lib/validators/user";
-import { revalidatePath } from "next/cache";
 
 export const userRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -111,21 +110,11 @@ export const userRouter = router({
           data: { biography: input.biography },
         }),
       ]);
-
-      revalidatePath("/settings/profile");
     }),
   delete: privateProcedure.mutation(async ({ ctx }) => {
     const { userId } = ctx;
-    console.log("0")
 
     if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
-
-    const dbUser = await db.user.findFirst({
-      where: { id: userId },
-    });
-    console.log("1");
-
-    if (!dbUser) throw new TRPCError({ code: "UNAUTHORIZED" });
 
     const client = await createKindeManagementAPIClient();
 
@@ -133,5 +122,7 @@ export const userRouter = router({
       client.usersApi.deleteUser({ id: userId }),
       db.user.delete({ where: { id: userId } }),
     ]);
+
+    client.usersApi.refreshUserClaims({ userId });
   }),
 });

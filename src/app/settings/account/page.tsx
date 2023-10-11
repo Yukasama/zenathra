@@ -1,7 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import DeleteUserModal from "@/components/user/delete-user-modal";
 import { Layers } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const DeleteUserModal = dynamic(
+  () => import("@/components/user/delete-user-modal"),
+  {
+    ssr: false,
+    loading: () => (
+      <Button variant="destructive" className="self-start" isLoading></Button>
+    ),
+  }
+);
 
 export default function page() {
   return (
@@ -11,7 +21,7 @@ export default function page() {
         <Separator />
         <small className="text-slate-500 text-sm">
           Export all portfolio, stock and profile data we have stored in our
-          database
+          database (Functionality coming soon)
         </small>
       </div>
 

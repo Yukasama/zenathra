@@ -8,9 +8,13 @@ import { redirect } from "next/navigation";
 const ProfileForm = dynamic(() => import("@/components/user/profile-form"), {
   ssr: false,
   loading: () => (
-    <div className="f-col gap-1 w-full">
-      <Skeleton className="h-5" />
-      <Skeleton className="h-12 w-full" />
+    <div className="f-col gap-3 w-full">
+      {[...Array(4)].map((_, i) => (
+        <>
+          <Skeleton key={i} className="h-5" />
+          <Skeleton className="h-12 w-full" />
+        </>
+      ))}
     </div>
   ),
 });
