@@ -35,7 +35,7 @@ export const portfolioRouter = router({
       return await db.portfolio.create({
         data: {
           ...input,
-          public: input.publicPortfolio,
+          public: input.public,
           creatorId: user.id,
           color: getRandomColor(),
         },
@@ -45,7 +45,7 @@ export const portfolioRouter = router({
     .input(EditPortfolioSchema)
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
-      const { portfolioId, title, publicPortfolio } = input;
+      const { portfolioId, title, public: publicPortfolio } = input;
 
       const portfolio = await db.portfolio.findFirst({
         where: {

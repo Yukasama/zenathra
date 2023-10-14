@@ -11,8 +11,15 @@ import { buttonVariants } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { Card } from "../ui/card";
 import { UserAvatar } from "../user/user-avatar";
-import PortfolioImage from "../portfolio-image";
+import PortfolioImage from "../portfolio/portfolio-image";
 import { useRouter } from "next/navigation";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
+import Link from "next/link";
 
 interface Props {
   user: KindeUser | null;
@@ -49,6 +56,14 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
           responsive={false}
           className="w-full"
         />
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="item-1">
+            <AccordionTrigger>Getting started</AccordionTrigger>
+            <AccordionContent>
+              <Link href="/settings/profile">Change your Profile</Link>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
         <div className="f-col justify-between h-full">
           {user &&
             portfolios?.map((portfolio) => (

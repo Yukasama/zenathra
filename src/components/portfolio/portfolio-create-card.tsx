@@ -32,6 +32,7 @@ import { motion } from "framer-motion";
 import { ANIMATION_VARIANTS } from "@/config/motion";
 import { trpc } from "@/app/_trpc/client";
 import { CreatePortfolioSchema } from "@/lib/validators/portfolio";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 interface Props {
   numberOfPortfolios?: number;
@@ -44,7 +45,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
     resolver: zodResolver(CreatePortfolioSchema),
     defaultValues: {
       title: "",
-      publicPortfolio: false,
+      public: false,
     },
   });
 
@@ -73,7 +74,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
 
     const payload = {
       title: data.title,
-      public: data.publicPortfolio,
+      public: data.public,
     };
 
     createPortfolio(payload);
@@ -132,7 +133,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
             />
             <FormField
               control={form.control}
-              name="publicPortfolio"
+              name="public"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                   <FormControl>
@@ -152,10 +153,12 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
                 </FormItem>
               )}
             />
-            <Button variant="subtle" isLoading={isLoading}>
-              <Plus className="h-4 w-4" />
-              Create Portfolio
-            </Button>
+            <DialogClose>
+              <Button variant="subtle" isLoading={isLoading}>
+                <Plus className="h-4 w-4" />
+                Create Portfolio
+              </Button>
+            </DialogClose>
           </form>
         </Form>
       </DialogContent>

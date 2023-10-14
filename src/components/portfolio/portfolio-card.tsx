@@ -14,7 +14,7 @@ import { db } from "@/db";
 import { Button, buttonVariants } from "../ui/button";
 import { BarChart, Plus, Trash } from "lucide-react";
 import dynamic from "next/dynamic";
-import PortfolioImage from "../portfolio-image";
+import PortfolioImage from "./portfolio-image";
 
 const PortfolioAddModal = dynamic(() => import("./portfolio-add-modal"), {
   ssr: false,
@@ -54,7 +54,7 @@ export default async function PortfolioCard({ portfolio }: Props) {
   });
 
   return (
-    <Card className="f-col justify-between min-h-72">
+    <Card className="min-h-72">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

@@ -35,7 +35,7 @@ export default function DeleteUserModal() {
     onSuccess: async () => {
       startTransition(() => router.refresh());
 
-      await axios.post("/api/auth/logout");
+      await axios.get("/api/auth/logout");
     },
   });
 

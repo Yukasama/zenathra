@@ -1,6 +1,5 @@
 import "server-only";
 
-// todo: prisma accelerate
 import { PrismaClient } from "@prisma/client";
 
 declare global {

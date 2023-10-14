@@ -10,3 +10,5 @@ export const appRouter = router({
 });
 
 export type AppRouter = typeof appRouter;
+
+export const caller = appRouter.createCaller({});

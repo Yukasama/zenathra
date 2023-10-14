@@ -7,14 +7,19 @@ import {
   CardContent,
 } from "../ui/card";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
-import PortfolioImage from "../portfolio-image";
+import PortfolioImage from "./portfolio-image";
 import Link from "next/link";
+import { getUser } from "@/lib/auth";
 
 interface Props {
-  user: KindeUser;
+  user: Pick<KindeUser, "id">;
 }
 
 export default async function PortfolioList({ user }: Props) {
+  const sessionUser = getUser();
+
+  const profileBelongsToUser = sessionUser?.id === user.id;
+
   const portfolios = await db.portfolio.findMany({
     select: {
       id: true,
@@ -26,7 +31,10 @@ export default async function PortfolioList({ user }: Props) {
         select: { stockId: true },
       },
     },
-    where: { creatorId: user.id },
+    where: {
+      creatorId: user.id,
+      ...(profileBelongsToUser ? {} : { public: true }),
+    },
   });
 
   return (

@@ -46,7 +46,7 @@ export default function EditVisibility({ portfolio }: Props) {
       onValueChange={(e) =>
         editVisibility({
           portfolioId: portfolio.id,
-          publicPortfolio: e === "Public" ? true : false,
+          public: e === "Public" ? true : false,
         })
       }
       disabled={isLoading}

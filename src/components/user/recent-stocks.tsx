@@ -12,7 +12,7 @@ import { getQuotes } from "@/lib/fmp/quote";
 import _ from "lodash";
 
 interface Props {
-  user: KindeUser;
+  user: Pick<KindeUser, "id">;
 }
 
 export default async function RecentStocks({ user }: Props) {

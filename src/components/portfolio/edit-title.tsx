@@ -8,7 +8,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CreatePortfolioSchema } from "@/lib/validators/portfolio";
+import { EditPortfolioSchema } from "@/lib/validators/portfolio";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Portfolio } from "@prisma/client";
 import { Pencil } from "lucide-react";
@@ -28,6 +28,7 @@ import { startTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 interface Props {
   portfolio: Pick<Portfolio, "id">;
@@ -37,7 +38,7 @@ export default function EditTitle({ portfolio }: Props) {
   const router = useRouter();
 
   const form = useForm({
-    resolver: zodResolver(CreatePortfolioSchema),
+    resolver: zodResolver(EditPortfolioSchema),
     defaultValues: { title: "" },
   });
 
@@ -102,10 +103,12 @@ export default function EditTitle({ portfolio }: Props) {
                 </FormItem>
               )}
             />
-            <Button variant="subtle" isLoading={isLoading}>
-              <Pencil className="h-4 w-4" />
-              Change Title
-            </Button>
+            <DialogClose>
+              <Button variant="subtle" isLoading={isLoading}>
+                <Pencil className="h-4 w-4" />
+                Change Title
+              </Button>
+            </DialogClose>
           </form>
         </Form>
       </DialogContent>

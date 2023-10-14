@@ -131,7 +131,6 @@ export default function Searchbar({
               {(recentlyViewed?.length ?? 0) > 0 && (
                 <CommandGroup heading="Recently Viewed">
                   {recentlyViewed?.map((stock) => (
-                    // todo
                     <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
                       <CommandItem
                         onSelect={() => {

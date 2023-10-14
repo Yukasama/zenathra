@@ -2,7 +2,7 @@
 
 import { Portfolio } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { startTransition, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { Trash2 } from "lucide-react";
@@ -15,10 +15,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { CardDescription } from "../ui/card";
 import { trpc } from "@/app/_trpc/client";
+import { DialogClose } from "@radix-ui/react-dialog";
+import { cn } from "@/lib/utils";
 
 type Props = {
   portfolio: Pick<Portfolio, "id" | "title">;
@@ -48,7 +49,7 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
     });
 
   function onSubmit() {
-    if (title !== `Delete ${portfolio.title}`)
+    if (title !== "CONFIRM")
       return toast({
         title: "Oops! Something went wrong.",
         description: "Please enter the correct title.",
@@ -65,10 +66,16 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="destructive">
+        <div
+          className={cn(
+            buttonVariants({
+              variant: "destructive",
+            }),
+            "cursor-pointer"
+          )}>
           <Trash2 className="h-4 w-4" />
           Delete
-        </Button>
+        </div>
       </DialogTrigger>
       <DialogContent className="max-w-[375px] rounded-md">
         <DialogHeader>
@@ -78,24 +85,24 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
           <DialogDescription>This action cannot be undone.</DialogDescription>
         </DialogHeader>
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label>Title</Label>
           <Input
-            placeholder={`Delete ${portfolio.title}`}
+            placeholder="CONFIRM"
             onChange={(e) => setTitle(e.target.value)}
           />
           <CardDescription>
-            Enter the portfolio title to continue
+            Enter &apos;CONFIRM&apos; to delete your portfolio.
           </CardDescription>
         </div>
         <DialogFooter>
-          <Button
-            type="submit"
-            variant="destructive"
-            isLoading={isLoading}
-            onClick={onSubmit}>
-            <Trash2 className="h-4 w-4" />
-            Delete Portfolio
-          </Button>
+          <DialogClose>
+            <Button
+              variant="destructive"
+              isLoading={isLoading}
+              onClick={onSubmit}>
+              <Trash2 className="h-4 w-4" />
+              Delete Portfolio
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -5,7 +5,7 @@ export const CreatePortfolioSchema = z.object({
     .string()
     .min(1, "Title must be at least 1 character long.")
     .max(20, "Title must be less than 20 characters long."),
-  publicPortfolio: z.boolean().optional(),
+  public: z.boolean().default(false).optional(),
   stockIds: z
     .array(z.string())
     .max(20, "A maximum of 20 symbols can be added at a time.")
@@ -26,7 +26,7 @@ export const EditPortfolioSchema = z.object({
     .min(1, "Title must be at least 1 character long.")
     .max(20, "Title must be less than 20 characters long.")
     .optional(),
-  publicPortfolio: z.boolean().optional(),
+  public: z.boolean().optional(),
 });
 
 export type CreatePortfolioProps = z.infer<typeof CreatePortfolioSchema>;

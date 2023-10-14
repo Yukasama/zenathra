@@ -2,7 +2,6 @@ import PortfolioList from "@/components/portfolio/portfolio-list";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserAvatar } from "@/components/user/user-avatar";
 import { db } from "@/db";
-import { getUser } from "@/lib/auth";
 import { Calendar } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -10,6 +9,7 @@ import RecentStocks from "@/components/user/recent-stocks";
 import { StockListLoading } from "@/components/stock/stock-list";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
+import { caller } from "@/trpc";
 
 interface Props {
   params: { id: string };
@@ -34,9 +34,7 @@ export default async function page({ params: { id } }: Props) {
 
   if (!dbUser) return notFound();
 
-  const user = getUser();
-
-  if (!user) return notFound();
+  const user = await caller.user.get({ id });
 
   return (
     <>
@@ -78,11 +76,11 @@ export default async function page({ params: { id } }: Props) {
         </div>
         <Suspense fallback={<StockListLoading className="w-full" />}>
           {/* @ts-expect-error Server Component */}
-          <PortfolioList user={user} />
+          <PortfolioList user={{ id }} />
         </Suspense>
         <Suspense fallback={<StockListLoading className="w-full" />}>
           {/* @ts-expect-error Server Component */}
-          <RecentStocks user={user} />
+          <RecentStocks user={{ id }} />
         </Suspense>
       </div>
     </>

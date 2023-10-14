@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { startTransition, useCallback, useRef, useState } from "react";
 import { toast } from "@/hooks/use-toast";
@@ -25,6 +25,8 @@ import {
 } from "../ui/dialog";
 import { PortfolioWithStocks } from "@/types/db";
 import { trpc } from "@/app/_trpc/client";
+import { DialogClose } from "@radix-ui/react-dialog";
+import { cn } from "@/lib/utils";
 
 interface Props {
   portfolio: Pick<PortfolioWithStocks, "id" | "title" | "stocks">;
@@ -92,10 +94,16 @@ export default function PortfolioAddModal({ portfolio }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="subtle">
+        <div
+          className={cn(
+            buttonVariants({
+              variant: "subtle",
+            }),
+            "cursor-pointer"
+          )}>
           <Plus className="h-4 w-4" />
           Add Stocks
-        </Button>
+        </div>
       </DialogTrigger>
       <DialogContent className="max-w-[375px] rounded-md">
         <DialogHeader>
@@ -119,7 +127,7 @@ export default function PortfolioAddModal({ portfolio }: Props) {
           />
 
           {input.length > 0 && (
-            <CommandList key={filteredResults?.length}>
+            <CommandList autoFocus={false} key={filteredResults?.length}>
               {isFetching && (
                 <CommandEmpty>
                   {[...Array(4)].map((_, i) => (
@@ -134,10 +142,11 @@ export default function PortfolioAddModal({ portfolio }: Props) {
                 <CommandEmpty>No results found.</CommandEmpty>
               )}
               {isFetched && (filteredResults?.length ?? 0) > 0 && (
-                <CommandGroup heading="Stocks">
+                <CommandGroup autoFocus={false} heading="Stocks">
                   {filteredResults?.map((result) => (
                     <CommandItem
                       key={result.id}
+                      autoFocus={false}
                       onSelect={() => modifyPortfolio(result.id)}
                       className="flex items-center justify-between cursor-pointer">
                       <div className="flex items-center gap-2">
@@ -165,10 +174,12 @@ export default function PortfolioAddModal({ portfolio }: Props) {
             </CommandList>
           )}
         </Command>
-        <Button variant="subtle" isLoading={isLoading} onClick={onSubmit}>
-          <Plus className="h-4 w-4" />
-          Add to Portfolio
-        </Button>
+        <DialogClose>
+          <Button variant="subtle" isLoading={isLoading} onClick={onSubmit}>
+            <Plus className="h-4 w-4" />
+            Add to Portfolio
+          </Button>
+        </DialogClose>
       </DialogContent>
     </Dialog>
   );

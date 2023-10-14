@@ -47,7 +47,13 @@ export default async function StockList({
 }: Props) {
   if (!symbols?.length)
     return (
-      <p className="text-xl text-center font-medium text-slate-600">{error}</p>
+      <div
+        className={cn(
+          className,
+          "text-xl text-center font-medium text-slate-600"
+        )}>
+        {error}
+      </div>
     );
 
   const symbolsToFetch = symbols.slice(0, Math.min(symbols.length, limit));

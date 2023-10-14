@@ -9,6 +9,7 @@ import { db } from "@/db";
 import { getUserSubscriptionPlan, stripe } from "@/lib/stripe";
 import { PLANS } from "@/config/stripe";
 import { UserUpdateSchema } from "@/lib/validators/user";
+import { z } from "zod";
 
 export const userRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -82,6 +83,25 @@ export const userRouter = router({
 
     return { url: stripeSession.url };
   }),
+  get: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ input }) => {
+      const client = await createKindeManagementAPIClient();
+
+      const user = await client.usersApi.getUserData({ id: input.id });
+
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return {
+        given_name: user.firstName ?? null,
+        family_name: user.lastName ?? null,
+        picture: user.picture ?? null,
+      };
+    }),
   update: privateProcedure
     .input(UserUpdateSchema)
     .mutation(async ({ ctx, input }) => {
@@ -120,9 +140,9 @@ export const userRouter = router({
 
     await Promise.all([
       client.usersApi.deleteUser({ id: userId }),
-      db.user.delete({ where: { id: userId } }),
+      db.user.delete({
+        where: { id: userId },
+      }),
     ]);
-
-    client.usersApi.refreshUserClaims({ userId });
   }),
 });

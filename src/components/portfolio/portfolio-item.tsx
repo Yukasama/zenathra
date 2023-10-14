@@ -1,6 +1,6 @@
 import { Portfolio } from "@prisma/client";
 import { Card } from "../ui/card";
-import PortfolioImage from "../portfolio-image";
+import PortfolioImage from "./portfolio-image";
 import Link from "next/link";
 import EditVisibility from "./edit-visibility";
 

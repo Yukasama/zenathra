@@ -8,6 +8,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { PortfolioWithStocks } from "@/types/db";
 import { Card } from "../ui/card";
 import { trpc } from "@/app/_trpc/client";
+import PortfolioImage from "../portfolio/portfolio-image";
 
 interface Props {
   portfolio: PortfolioWithStocks;
@@ -48,11 +49,17 @@ export default function StockPortfolioModifier({ portfolio, symbolId }: Props) {
     });
 
   return (
-    <Card className="relative p-4 px-5">
-      <p className="w-[250px] truncate font-semibold">{portfolio.title}</p>
-      <p className="text-slate-400 text-[13px]">
-        {portfolio.public ? "Public" : "Private"}
-      </p>
+    <Card className="relative p-2 px-3">
+      <div className="flex items-center gap-3">
+        <PortfolioImage portfolio={portfolio} />
+        <div>
+          <p className="w-[220px] truncate font-semibold">{portfolio.title}</p>
+          <p className="text-slate-400 text-[13px]">
+            {portfolio.public ? "Public" : "Private"}
+          </p>
+        </div>
+      </div>
+
       {portfolio.stocks.includes(symbolId) ? (
         <Button
           onClick={() =>
