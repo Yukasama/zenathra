@@ -2,7 +2,7 @@ export const PLANS = [
   {
     name: "Free",
     slug: "free",
-    maxPortfolios: 1,
+    maxPortfolios: 3,
     eye: false,
     price: {
       amount: 0,

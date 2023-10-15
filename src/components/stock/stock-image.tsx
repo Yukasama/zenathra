@@ -25,7 +25,10 @@ export function StockImage({
       {...props}>
       {src ? (
         <Image
-          className={cn("p-1", className)}
+          className={cn(
+            `p-1 ${src.includes("AAPL") && "invert dark:invert-0"}`,
+            className
+          )}
           src={src}
           height={px}
           width={px}

@@ -80,7 +80,10 @@ export default function Searchbar({
     refetch,
   } = trpc.stock.search.useQuery({ q: input }, { enabled: false });
 
-  const operatingSystem = navigator.userAgent;
+  const isMac =
+    typeof window !== "undefined"
+      ? navigator.userAgent.toUpperCase().includes("MAC")
+      : false;
 
   return (
     <>
@@ -98,11 +101,8 @@ export default function Searchbar({
           <p className="text-[14px]">Search stocks...</p>
         </div>
         <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-[3px] rounded border bg-muted px-1.5 font-mono text-xs font-medium text-muted-foreground opacity-100">
-          <span
-            className={`${
-              operatingSystem.includes("Mac") && "text-[10px]"
-            } mt-[1px]`}>
-            {!operatingSystem.includes("Mac") ? "Strg" : "⌘"}
+          <span className={`${!isMac && "text-[10px]"} mt-[1px]`}>
+            {!isMac ? "Strg" : "⌘"}
           </span>
           K
         </kbd>
