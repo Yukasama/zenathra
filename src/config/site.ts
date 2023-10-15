@@ -1,3 +1,10 @@
+import {
+  Calendar,
+  Cpu,
+  GanttChartSquare,
+  SlidersHorizontal,
+} from "lucide-react";
+
 export const SITE = {
   name: "Elysium",
   description:
@@ -27,22 +34,26 @@ export const navLinks = [
     href: "/portfolio",
     description:
       "Track and optimize your investments with our portfolio manager.",
+    icon: GanttChartSquare,
   },
   {
     title: "AI Analysis",
     href: "/stocks",
     description:
       "Harness AI-driven insights to analyze market trends and stock performance.",
+    icon: Cpu,
   },
   {
-    title: "Screener",
+    title: "Stock Screener",
     href: "/screener",
     description: "Allows you to research the stock market beyond your limits.",
+    icon: SlidersHorizontal,
   },
   {
     title: "Economic Calendar",
     href: "/calendar",
     description: "Track key financial events to guide your investment choices.",
+    icon: Calendar,
   },
 ];
 

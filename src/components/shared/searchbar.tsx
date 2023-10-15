@@ -80,6 +80,8 @@ export default function Searchbar({
     refetch,
   } = trpc.stock.search.useQuery({ q: input }, { enabled: false });
 
+  const operatingSystem = navigator.userAgent;
+
   return (
     <>
       <div
@@ -96,7 +98,13 @@ export default function Searchbar({
           <p className="text-[14px]">Search stocks...</p>
         </div>
         <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-[3px] rounded border bg-muted px-1.5 font-mono text-xs font-medium text-muted-foreground opacity-100">
-          <span className=" text-[10px] mt-[1px]">⌘</span>K
+          <span
+            className={`${
+              operatingSystem.includes("Mac") && "text-[10px]"
+            } mt-[1px]`}>
+            {!operatingSystem.includes("Mac") ? "Strg" : "⌘"}
+          </span>
+          K
         </kbd>
       </div>
       <div
@@ -125,9 +133,7 @@ export default function Searchbar({
           />
 
           {input.length > 0 && (
-            <CommandList
-              key={results?.length}
-              className="f-col gap-1">
+            <CommandList key={results?.length} className="f-col gap-1">
               {(recentlyViewed?.length ?? 0) > 0 && (
                 <CommandGroup heading="Recently Viewed">
                   {recentlyViewed?.map((stock) => (
@@ -161,8 +167,10 @@ export default function Searchbar({
                 <>
                   {(results?.length ?? 0) > 0 && (
                     <CommandGroup key={results?.length} heading="Stocks">
-                      {results?.map((stock) => (
-                        <Link key={stock.id} href={`/stocks/${stock.symbol}`}>
+                      {results?.map((stock, i) => (
+                        <Link
+                          key={"search" + i}
+                          href={`/stocks/${stock.symbol}`}>
                           <CommandItem
                             onSelect={() => {
                               router.push(`/stocks/${stock.symbol}`);

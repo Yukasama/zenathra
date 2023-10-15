@@ -1,9 +1,9 @@
 import { adminProcedure, publicProcedure, router } from "../trpc";
 import { db } from "@/db";
 import { z } from "zod";
-import { buildFilter } from "@/config/screener";
+import { buildFilter } from "@/config/screener/build-filter";
 import axios from "axios";
-import { FMP_API_URL, TIMEFRAMES, FMP, historyUrls } from "@/config/fmp";
+import { FMP_API_URL, TIMEFRAMES, FMP, historyUrls } from "@/config/fmp/config";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import { TRPCError } from "@trpc/server";
 import { getSymbols } from "@/lib/fmp/quote";
@@ -16,6 +16,12 @@ export const stockRouter = router({
     const filter = buildFilter(opts.input);
 
     return await db.stock.findMany({
+      select: {
+        symbol: true,
+        image: true,
+        companyName: true,
+        sector: true,
+      },
       where: filter,
       take: opts.input.take,
       skip: (Number(opts.input.cursor) - 1) * opts.input.take,
@@ -30,13 +36,17 @@ export const stockRouter = router({
     )
     .query(async (opts) => {
       return await db.stock.findMany({
+        select: {
+          symbol: true,
+          image: true,
+          companyName: true,
+        },
         where: {
           OR: [
             { symbol: { contains: opts.input.q } },
             { companyName: { contains: opts.input.q } },
           ],
         },
-        include: { _count: true },
         take: 10,
       });
     }),

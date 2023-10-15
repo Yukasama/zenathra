@@ -11,7 +11,7 @@ import {
   marketCaps,
   earningsDates,
   exchanges,
-} from "@/config/screener";
+} from "@/config/screener/config";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { BarChart2, FileText, Layers, RotateCcw } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

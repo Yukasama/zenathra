@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
+import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import StockListItem from "../stock/stock-list-item";
 import { getQuotes } from "@/lib/fmp/quote";
 import _ from "lodash";

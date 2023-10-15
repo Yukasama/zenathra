@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
+import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import PortfolioItem from "./portfolio-item";
 
 interface Props {

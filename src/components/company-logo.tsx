@@ -4,9 +4,15 @@ import { cn } from "@/lib/utils";
 
 interface Props extends React.HTMLAttributes<HTMLImageElement> {
   px: number;
+  priority?: boolean;
 }
 
-export default function CompanyLogo({ px, className, ...props }: Props) {
+export default function CompanyLogo({
+  px,
+  className,
+  priority = false,
+  ...props
+}: Props) {
   return (
     <div
       className={cn("f-box rounded-full", className)}
@@ -21,6 +27,7 @@ export default function CompanyLogo({ px, className, ...props }: Props) {
         width={px}
         height={px}
         alt={`${SITE.name} Logo`}
+        priority={priority}
       />
     </div>
   );

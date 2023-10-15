@@ -1,6 +1,5 @@
 import StockMarginChart from "./stock-margin-chart";
 import { Stock } from "@prisma/client";
-import { Years } from "@/lib/utils";
 import React from "react";
 import { db } from "@/db";
 import StockKeyMetricsChart from "./stock-key-metrics-chart";
@@ -60,8 +59,13 @@ export default async function StockStatistics({ stock }: Props) {
 
   if (!financials) return null;
 
-  const startYear = new Date().getFullYear() - financials.length;
-  const labels = Years(startYear < 2015 ? 2015 : startYear);
+  const currentYear = new Date().getFullYear();
+  const startYear = currentYear - financials.length;
+  const chartYearRange = Math.max(2015, startYear);
+
+  const labels = Array.from({ length: currentYear - chartYearRange }, (_, i) =>
+    (chartYearRange + i).toString()
+  );
 
   const statConfig = labels.map((label, index) => ({
     name: label,

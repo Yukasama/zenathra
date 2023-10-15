@@ -46,12 +46,3 @@ export function constructMetadata({
     }),
   };
 }
-
-export function Years(startYear: number) {
-  const currentYear: number = new Date().getFullYear();
-  const years: string[] = [];
-  for (let year = startYear; year <= currentYear - 1; year++) {
-    years.push(year.toString());
-  }
-  return years;
-}

@@ -1,7 +1,13 @@
 "use client";
 
 import Searchbar from "./searchbar";
-import { Menu } from "lucide-react";
+import {
+  CandlestickChart,
+  FilePlus2,
+  Menu,
+  SlidersHorizontal,
+  User,
+} from "lucide-react";
 import CompanyLogo from "../company-logo";
 import { RecentStocks } from "@/types/db";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
@@ -20,6 +26,7 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import Link from "next/link";
+import { navLinks } from "@/config/site";
 
 interface Props {
   user: KindeUser | null;
@@ -57,11 +64,93 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
           className="w-full"
         />
         <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="item-1">
+          <AccordionItem value="getting-started">
             <AccordionTrigger>Getting started</AccordionTrigger>
             <AccordionContent>
-              <Link href="/settings/profile">Change your Profile</Link>
+              <div className="grid grid-cols-2 gap-3">
+                <Card className="hover:bg-slate-900 h-32 cursor-pointer">
+                  <SheetClose asChild>
+                    <Link
+                      href="/screener"
+                      className="f-col items-center justify-center gap-1 h-full w-full font-medium">
+                      <SlidersHorizontal className="h-7 w-7" />
+                      Stock Screener
+                    </Link>
+                  </SheetClose>
+                </Card>
+                {user && (
+                  <Card className="hover:bg-slate-900 h-32 cursor-pointer">
+                    <SheetClose asChild>
+                      <Link
+                        href="/portfolio"
+                        className="f-col items-center justify-center gap-1 h-full w-full font-medium">
+                        <FilePlus2 className="h-7 w-7" />
+                        Create Portfolio
+                      </Link>
+                    </SheetClose>
+                  </Card>
+                )}
+                <Card className="hover:bg-slate-900 h-32 cursor-pointer">
+                  <SheetClose asChild>
+                    <Link
+                      href={user ? "/settings/profile" : "/api/auth/login"}
+                      className="f-col items-center justify-center gap-1 h-full w-full font-medium">
+                      <User className="h-7 w-7" />
+                      {user ? "Edit Profile" : "Create Account"}
+                    </Link>
+                  </SheetClose>
+                </Card>
+                <Card className="hover:bg-slate-900 h-32 cursor-pointer">
+                  <SheetClose asChild>
+                    <Link
+                      href="/stocks"
+                      className="f-col items-center justify-center gap-1 h-full w-full font-medium">
+                      <CandlestickChart className="h-7 w-7" />
+                      Explore stocks
+                    </Link>
+                  </SheetClose>
+                </Card>
+              </div>
             </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="highlights">
+            <AccordionTrigger>Highlights</AccordionTrigger>
+            <AccordionContent>
+              <div className="grid grid-cols-2 gap-3">
+                {navLinks.map((link) => (
+                  <Card
+                    key={link.title}
+                    className="hover:bg-slate-900 h-32 cursor-pointer">
+                    <SheetClose asChild>
+                      <Link
+                        href={link.href}
+                        className="f-col items-center justify-center gap-1 h-full w-full font-medium">
+                        <link.icon className="h-7 w-7" />
+                        {link.title}
+                      </Link>
+                    </SheetClose>
+                  </Card>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="dashboard">
+            <AccordionTrigger asLink>
+              <SheetClose asChild>
+                <Link href="/dashboard" className="w-full py-4 text-start">
+                  Dashboard
+                </Link>
+              </SheetClose>
+            </AccordionTrigger>
+          </AccordionItem>
+          <AccordionItem value="pricing">
+            <AccordionTrigger asLink>
+              <SheetClose asChild>
+                <Link href="/pricing" className="w-full py-4 text-start">
+                  Pricing
+                </Link>
+              </SheetClose>
+            </AccordionTrigger>
           </AccordionItem>
         </Accordion>
         <div className="f-col justify-between h-full">

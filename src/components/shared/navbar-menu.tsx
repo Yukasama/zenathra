@@ -13,7 +13,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { navLinks } from "@/config/site";
-import { ListFilter } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface Props {
@@ -33,7 +33,7 @@ export default function NavbarMenu({ user }: Props) {
                   <a
                     className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                     href="/screener">
-                    <ListFilter className="h-6 w-6" />
+                    <SlidersHorizontal className="h-6 w-6" />
                     <div className="mb-2 mt-4 text-lg font-medium">
                       Stock Screener
                     </div>
@@ -54,7 +54,9 @@ export default function NavbarMenu({ user }: Props) {
                   preferences.
                 </ListItem>
               ) : (
-                <ListItem href="/sign-up" title="Create your personal account">
+                <ListItem
+                  href="/api/auth/login"
+                  title="Create your personal account">
                   You will be able to manage portfolios and get other benefits.
                 </ListItem>
               )}

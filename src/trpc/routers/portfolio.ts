@@ -48,6 +48,7 @@ export const portfolioRouter = router({
       const { portfolioId, title, public: publicPortfolio } = input;
 
       const portfolio = await db.portfolio.findFirst({
+        select: { id: true, title: true, public: true },
         where: {
           id: portfolioId,
           creatorId: user?.id,

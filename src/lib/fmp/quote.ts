@@ -1,11 +1,12 @@
 import "server-only";
 
-import { FMP_API_URL, FMP, FMP_URLS, indexQuotes, quote } from "@/config/fmp";
+import { FMP_API_URL, FMP, FMP_URLS } from "@/config/fmp/config";
+import { indexQuotes, quote } from "@/config/fmp/simulation";
 import { env } from "@/env.mjs";
 import axios from "axios";
 import { Quote } from "@/types/stock";
 
-async function getDailys(
+export async function getDailys(
   action: "actives" | "winners" | "losers"
 ): Promise<string[] | null> {
   try {
@@ -29,7 +30,7 @@ async function getDailys(
   }
 }
 
-async function getIndexQuotes(): Promise<Quote[] | null> {
+export async function getIndexQuotes(): Promise<Quote[] | null> {
   try {
     const requiredIndexes = ["^GSPC", "^GDAXI", "^NDX", "^DJI"];
 
@@ -47,7 +48,9 @@ async function getIndexQuotes(): Promise<Quote[] | null> {
   }
 }
 
-async function getQuote(symbol: string | undefined): Promise<Quote | null> {
+export async function getQuote(
+  symbol: string | undefined
+): Promise<Quote | null> {
   try {
     if (!symbol) return null;
     if (FMP.simulation) return quote;
@@ -62,7 +65,7 @@ async function getQuote(symbol: string | undefined): Promise<Quote | null> {
   }
 }
 
-async function getQuotes(symbols: string[]): Promise<Quote[] | null> {
+export async function getQuotes(symbols: string[]): Promise<Quote[] | null> {
   try {
     if (FMP.simulation) return [quote, quote, quote, quote, quote];
 
@@ -80,7 +83,7 @@ async function getQuotes(symbols: string[]): Promise<Quote[] | null> {
   }
 }
 
-async function getSymbols(
+export async function getSymbols(
   symbolSet: "All" | "US500",
   pullTimes = 1
 ): Promise<string[][] | null> {
@@ -115,5 +118,3 @@ async function getSymbols(
     return null;
   }
 }
-
-export { getDailys, getIndexQuotes, getQuote, getQuotes, getSymbols };

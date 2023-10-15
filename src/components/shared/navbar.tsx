@@ -72,7 +72,7 @@ export default async function Navbar() {
           recentStocks={uniqueStocks}
         />
         <Link href="/">
-          <CompanyLogo px={30} />
+          <CompanyLogo px={30} priority />
         </Link>
         <div className="md:flex hidden">
           <Searchbar recentStocks={uniqueStocks} />

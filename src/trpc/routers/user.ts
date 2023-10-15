@@ -19,6 +19,7 @@ export const userRouter = router({
     if (!user.id || !user.email) throw new TRPCError({ code: "UNAUTHORIZED" });
 
     const dbUser = await db.user.findFirst({
+      select: { id: true },
       where: { id: user.id },
     });
 
@@ -50,6 +51,10 @@ export const userRouter = router({
     if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
 
     const dbUser = await db.user.findFirst({
+      select: {
+        id: true,
+        stripeCustomerId: true,
+      },
       where: { id: userId },
     });
 
@@ -110,6 +115,7 @@ export const userRouter = router({
       if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
 
       const dbUser = await db.user.findFirst({
+        select: { id: true },
         where: { id: userId },
       });
 

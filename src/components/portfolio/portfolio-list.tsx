@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardContent,
 } from "../ui/card";
-import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
+import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import PortfolioImage from "./portfolio-image";
 import Link from "next/link";
 import { getUser } from "@/lib/auth";
