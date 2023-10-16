@@ -34,6 +34,7 @@ export default function Searchbar({
   const router = useRouter();
 
   const [input, setInput] = useState<string>("");
+  const [isMac, setIsMac] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
 
   let recentlyViewed = recentStocks?.map((stock) => stock.stock);
@@ -54,6 +55,10 @@ export default function Searchbar({
     setOpen(false);
     setInput("");
   }, [pathname]);
+
+  useEffect(() => {
+    setIsMac(navigator.userAgent.toUpperCase().includes("MAC"));
+  }, []);
 
   const request = debounce(async () => {
     refetch();
@@ -79,11 +84,6 @@ export default function Searchbar({
     data: results,
     refetch,
   } = trpc.stock.search.useQuery({ q: input }, { enabled: false });
-
-  const isMac =
-    typeof window !== "undefined"
-      ? navigator.userAgent.toUpperCase().includes("MAC")
-      : false;
 
   return (
     <>
