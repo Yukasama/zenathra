@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
 import React from "react";
 import Skeleton from "../ui/skeleton";
+import SmallChart from "./small-chart";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   quote: Quote | null;
@@ -108,6 +109,7 @@ export default function StockCard({ quote, image, className }: Props) {
             )}>
             Computer Devices
           </div>
+          <SmallChart quote={quote} />
         </CardContent>
 
         <CardFooter>

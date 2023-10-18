@@ -14,6 +14,18 @@ export function absoluteUrl(path: string) {
   return `http://localhost:${process.env.PORT ?? 3000}${path}`;
 }
 
+export function computeDomain(data: any[]) {
+  const values = data.map((item) => parseFloat(item.uv));
+  const dataMax = Math.max(...values);
+  const dataMin = Math.min(...values);
+  const padding = (dataMax - dataMin) * 0.05; // 5% padding
+
+  return [
+    Number((dataMin - padding).toFixed(2)),
+    Number((dataMax + padding).toFixed(2)),
+  ];
+}
+
 export function constructMetadata({
   title = SITE.name,
   description = SITE.description,

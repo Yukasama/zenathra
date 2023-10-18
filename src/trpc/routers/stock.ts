@@ -10,6 +10,7 @@ import { getSymbols } from "@/lib/fmp/quote";
 import { Timeout } from "@/lib/utils";
 import { env } from "@/env.mjs";
 import { ScreenerSchema, UploadStockSchema } from "@/lib/validators/stock";
+import { History } from "@/types/stock";
 
 export const stockRouter = router({
   query: publicProcedure.input(ScreenerSchema).query(async (opts) => {
@@ -28,41 +29,30 @@ export const stockRouter = router({
       orderBy: { companyName: "asc" },
     });
   }),
-  search: publicProcedure
-    .input(
-      z.object({
-        q: z.string(),
-      })
-    )
-    .query(async (opts) => {
-      return await db.stock.findMany({
-        select: {
-          id: true,
-          symbol: true,
-          image: true,
-          companyName: true,
-        },
-        where: {
-          OR: [
-            { symbol: { contains: opts.input.q } },
-            { companyName: { contains: opts.input.q } },
-          ],
-        },
-        take: 10,
-      });
-    }),
+  search: publicProcedure.input(z.string()).query(async (opts) => {
+    return await db.stock.findMany({
+      select: {
+        id: true,
+        symbol: true,
+        image: true,
+        companyName: true,
+      },
+      where: {
+        OR: [
+          { symbol: { contains: opts.input } },
+          { companyName: { contains: opts.input } },
+        ],
+      },
+      take: 10,
+    });
+  }),
+  // Input is either a stock symbol or an array of symbols
   history: publicProcedure
-    .input(
-      z.object({
-        symbol: z.string().or(z.array(z.string())),
-      })
-    )
+    .input(z.string().or(z.array(z.string())))
     .query(async (opts) => {
       try {
-        const { symbol } = opts.input;
-
-        if (Array.isArray(symbol)) {
-          const data = await Promise.all(symbol.map(fetchHistory));
+        if (Array.isArray(opts.input)) {
+          const data = await Promise.all(opts.input.map(fetchHistory));
 
           // Merging symbol data to get average
           let result: any = {};
@@ -83,11 +73,20 @@ export const stockRouter = router({
           });
           return result;
         }
-        return await fetchHistory(symbol);
+        return await fetchHistory(opts.input);
       } catch {
         return {};
       }
     }),
+  dailyHistory: publicProcedure.input(z.string()).query(async (opts) => {
+    try {
+      const { url } = TIMEFRAMES["1D"];
+      const { data } = await axios.get(historyUrls(opts.input, url));
+      return data as History[];
+    } catch {
+      return [];
+    }
+  }),
   upload: adminProcedure
     .input(UploadStockSchema)
     .mutation(async ({ ctx, input }) => {

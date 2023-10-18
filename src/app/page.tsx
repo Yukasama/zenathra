@@ -1,7 +1,7 @@
-import PriceChart from "@/components/price-chart";
 import PageLayout from "@/components/shared/page-layout";
-import { StockImage } from "@/components/stock/stock-image";
-import StockList, { StockListLoading } from "@/components/stock/stock-list";
+import StockCardList, {
+  StockCardListLoading,
+} from "@/components/stock/stock-card-list";
 import { Button } from "@/components/ui/button";
 import { db } from "@/db";
 import { getUser } from "@/lib/auth";
@@ -13,37 +13,44 @@ export default async function page() {
   const user = getUser();
 
   const symbols = ["AAPL", "MSFT", "GOOG", "TSLA"];
-  const symbols2 = ["AAPL", "MSFT", "ENPH", "TSLA"];
 
   if (!user || !user.id)
     return (
-      <>
-        <div className="f-col z-10 items-center justify-center gap-4 mt-80">
-          <h2 className="text-4xl font-light text-center shadow-sm shadow-slate-100/50 dark:shadow-slate-800/50">
-            Explore your{" "}
-            <span className="text-[#9089fc] font-medium decoration-2 underline-offset-4 underline">
+      <div className="f-col gap-10 items-center">
+        <div className="f-col z-10 items-center justify-center gap-3 sm:gap-5 mt-24 sm:mt-32">
+          <h2 className="text-4xl sm:text-6xl font-bold font-['Helvetica'] tracking-tight text-center w-4/5 max-w-[800px]">
+            Explore and analyze your{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#9089fc] to-[#c47bff]">
               favourite
             </span>{" "}
             stocks.
           </h2>
-          <div className="flex gap-3">
+          <p className="text-slate-400/90 text-md w-3/4 max-w-[600px] text-center">
+            Manage a wide range of stocks from various industries and sectors,
+            ensuring a diversified and balanced investment approach
+          </p>
+          <div className="flex gap-3 mt-2">
             <Button variant="subtle">Sign In</Button>
-            <Button className="bg-gradient-to-tr from-[#ff80b5] to-[#9089fc]">
+            <Button className="bg-gradient-to-br from-[#837afd] to-[#cc5eff]">
               Get started
               <MoveRight className="w-4 h-4" />
             </Button>
           </div>
         </div>
-        <div className="absolute right-40 top-40 z-10 p-4 shadow-sm dark:shadow-lg rounded-lg">
-          <Suspense fallback={<StockListLoading limit={4} />}>
+        <div className="w-4/5">
+          <Suspense fallback={<StockCardListLoading />}>
             {/* @ts-expect-error Server Component */}
-            <StockList symbols={symbols} />
+            <StockCardList
+              title="Begin your journey"
+              description="Start exploring popular stocks"
+              symbols={symbols}
+            />
           </Suspense>
         </div>
         <div className="relative isolate">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
+            className="pointer-events-none absolute -top-[1000px] inset-x-0 -z-10 transform-gpu overflow-hidden blur-3xl">
             <div
               style={{
                 clipPath:
@@ -53,7 +60,7 @@ export default async function page() {
             />
           </div>
         </div>
-      </>
+      </div>
     );
 
   const dbUser = await db.user.findFirst({

@@ -18,21 +18,9 @@ import {
 } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
-import { cn } from "@/lib/utils";
+import { cn, computeDomain } from "@/lib/utils";
 import Skeleton from "./ui/skeleton";
 import { trpc } from "@/app/_trpc/client";
-
-function computeDomain(data: any[]) {
-  const values = data.map((item) => parseFloat(item.uv));
-  const dataMax = Math.max(...values);
-  const dataMin = Math.min(...values);
-  const padding = (dataMax - dataMin) * 0.05; // 5% padding
-
-  return [
-    Number((dataMin - padding).toFixed(2)),
-    Number((dataMax + padding).toFixed(2)),
-  ];
-}
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
@@ -57,9 +45,7 @@ export default function PriceChart({
 
   useEffect(() => setMounted(true), []);
 
-  const { data: results, isFetched } = trpc.stock.history.useQuery({
-    symbol: symbols,
-  });
+  const { data: results, isFetched } = trpc.stock.history.useQuery(symbols);
 
   let [minDomain, maxDomain] = [0, 0];
   let startPrice = 0;

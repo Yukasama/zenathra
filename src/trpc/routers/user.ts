@@ -123,19 +123,19 @@ export const userRouter = router({
 
       const client = await createKindeManagementAPIClient();
 
-      await Promise.all([
-        client.usersApi.updateUser({
-          id: userId,
-          updateUserRequest: {
-            givenName: input.givenName,
-            familyName: input.familyName,
-          },
-        }),
-        db.user.update({
-          where: { id: userId },
-          data: { biography: input.biography },
-        }),
-      ]);
+      // Running sequential because both requests are required to be successful
+      client.usersApi.updateUser({
+        id: userId,
+        updateUserRequest: {
+          givenName: input.givenName,
+          familyName: input.familyName,
+        },
+      });
+
+      db.user.update({
+        where: { id: userId },
+        data: { biography: input.biography },
+      });
     }),
   delete: privateProcedure.mutation(async ({ ctx }) => {
     const { userId } = ctx;

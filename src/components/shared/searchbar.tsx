@@ -83,7 +83,7 @@ export default function Searchbar({
     isFetching,
     data: results,
     refetch,
-  } = trpc.stock.search.useQuery({ q: input }, { enabled: false });
+  } = trpc.stock.search.useQuery(input, { enabled: false });
 
   return (
     <>
@@ -121,79 +121,81 @@ export default function Searchbar({
       </div>
       <div className="max-w-[375px]">
         <CommandDialog open={open} onOpenChange={setOpen}>
-          <CommandInput
-            isLoading={isFetching}
-            onValueChange={(text) => {
-              setInput(text);
-              debounceRequest();
-            }}
-            value={input}
-            className="h-9"
-            placeholder="Search stocks..."
-          />
+          <div className="max-w-[375px]">
+            <CommandInput
+              isLoading={isFetching}
+              onValueChange={(text) => {
+                setInput(text);
+                debounceRequest();
+              }}
+              value={input}
+              className="h-9 max-w-[375px]"
+              placeholder="Search stocks..."
+            />
 
-          {input.length > 0 && (
-            <CommandList key={results?.length} className="f-col gap-1">
-              {(recentlyViewed?.length ?? 0) > 0 && (
-                <CommandGroup heading="Recently Viewed">
-                  {recentlyViewed?.map((stock) => (
-                    <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
-                      <CommandItem
-                        onSelect={() => {
-                          router.push(`/stocks/${stock.symbol}`);
-                          router.refresh();
-                        }}
-                        value={stock.companyName}
-                        className="flex items-center gap-3 h-14 cursor-pointer">
-                        <StockImage src={stock.image} px={25} />
-                        <div>
-                          <p className="font-medium">{stock.symbol}</p>
-                          <p className="text-[12px] text-slate-500 truncate w-[150px]">
-                            {stock.companyName}
-                          </p>
-                        </div>
-                      </CommandItem>
-                    </Link>
-                  ))}
-                </CommandGroup>
-              )}
-              {isFetching ? (
-                <div className="p-5 f-box">
-                  <Loader className="h-5 w-5 animate-spin text-slate-500 text-center" />
-                </div>
-              ) : !results?.length ? (
-                <CommandEmpty>No results found.</CommandEmpty>
-              ) : (
-                <>
-                  {(results?.length ?? 0) > 0 && (
-                    <CommandGroup key={results?.length} heading="Stocks">
-                      {results?.map((stock, i) => (
-                        <Link
-                          key={"search" + i}
-                          href={`/stocks/${stock.symbol}`}>
-                          <CommandItem
-                            onSelect={() => {
-                              router.push(`/stocks/${stock.symbol}`);
-                              router.refresh();
-                            }}
-                            value={stock.companyName}
-                            className="flex items-center gap-3 h-14 cursor-pointer">
-                            <StockImage src={stock.image} px={25} />
-                            <div>
-                              <p className="font-medium">{stock.symbol}</p>
-                              <p className="text-[12px] text-slate-500 truncate w-[150px]">
-                                {stock.companyName}
-                              </p>
-                            </div>
-                          </CommandItem>
-                        </Link>
-                      ))}
-                    </CommandGroup>
-                  )}
-                </>
-              )}
-            </CommandList>
-          )}
+            {input.length > 0 && (
+              <CommandList key={results?.length} className="f-col gap-1">
+                {(recentlyViewed?.length ?? 0) > 0 && (
+                  <CommandGroup heading="Recently Viewed">
+                    {recentlyViewed?.map((stock) => (
+                      <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
+                        <CommandItem
+                          onSelect={() => {
+                            router.push(`/stocks/${stock.symbol}`);
+                            router.refresh();
+                          }}
+                          value={stock.companyName}
+                          className="flex items-center gap-3 h-14 cursor-pointer">
+                          <StockImage src={stock.image} px={25} />
+                          <div>
+                            <p className="font-medium">{stock.symbol}</p>
+                            <p className="text-[12px] text-slate-500 truncate w-[150px]">
+                              {stock.companyName}
+                            </p>
+                          </div>
+                        </CommandItem>
+                      </Link>
+                    ))}
+                  </CommandGroup>
+                )}
+                {isFetching ? (
+                  <div className="p-5 f-box">
+                    <Loader className="h-5 w-5 animate-spin text-slate-500 text-center" />
+                  </div>
+                ) : !results?.length ? (
+                  <CommandEmpty>No results found.</CommandEmpty>
+                ) : (
+                  <>
+                    {(results?.length ?? 0) > 0 && (
+                      <CommandGroup key={results?.length} heading="Stocks">
+                        {results?.map((stock, i) => (
+                          <Link
+                            key={"search" + i}
+                            href={`/stocks/${stock.symbol}`}>
+                            <CommandItem
+                              onSelect={() => {
+                                router.push(`/stocks/${stock.symbol}`);
+                                router.refresh();
+                              }}
+                              value={stock.companyName}
+                              className="flex items-center gap-3 h-14 cursor-pointer">
+                              <StockImage src={stock.image} px={25} />
+                              <div>
+                                <p className="font-medium">{stock.symbol}</p>
+                                <p className="text-[12px] text-slate-500 truncate w-[150px]">
+                                  {stock.companyName}
+                                </p>
+                              </div>
+                            </CommandItem>
+                          </Link>
+                        ))}
+                      </CommandGroup>
+                    )}
+                  </>
+                )}
+              </CommandList>
+            )}
+          </div>
         </CommandDialog>
       </div>
     </>
