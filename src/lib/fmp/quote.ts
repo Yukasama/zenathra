@@ -110,6 +110,7 @@ export async function getSymbols(
 
     const symbols = [];
 
+    // Splitting the symbols into batches with length of FMP.docsPerPull
     for (let i = 0; i < results.length; i += Number(FMP.docsPerPull))
       symbols.push(results.slice(i, i + Number(FMP.docsPerPull)));
 
