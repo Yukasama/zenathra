@@ -8,6 +8,7 @@ import PageLayout from "@/components/shared/page-layout";
 import { db } from "@/db";
 import PriceChart from "@/components/price-chart";
 import { StockImage } from "@/components/stock/stock-image";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export const revalidate = 30;
 
@@ -18,11 +19,17 @@ export default async function page() {
     getDailys("losers"),
   ]);
 
-  const [quote, stock] = await Promise.all([
+  const { getUser, isAuthenticated } = getKindeServerSession();
+
+  const [quote, stock, portfolios] = await Promise.all([
     getQuote(actives?.[0]),
     db.stock.findFirst({
       select: { image: true },
       where: { symbol: actives?.[0] },
+    }),
+    db.portfolio.findMany({
+      where: { creatorId: getUser()?.id },
+      include: { stocks: true },
     }),
   ]);
 
@@ -49,6 +56,8 @@ export default async function page() {
           symbols={actives}
           title="Most Active"
           description="Stocks that moved strongly in any direction"
+          isAuthenticated={isAuthenticated()}
+          portfolios={portfolios}
         />
       </Suspense>
 
@@ -58,6 +67,8 @@ export default async function page() {
           symbols={winners}
           title="Daily Winners"
           description="Stocks that have risen most today"
+          isAuthenticated={isAuthenticated()}
+          portfolios={portfolios}
         />
       </Suspense>
 
@@ -67,6 +78,8 @@ export default async function page() {
           symbols={losers}
           title="Daily Underperformers"
           description="Stocks that have fallen most today"
+          isAuthenticated={isAuthenticated()}
+          portfolios={portfolios}
         />
       </Suspense>
     </PageLayout>

@@ -14,17 +14,16 @@ import {
   DialogDescription,
 } from "../ui/dialog";
 import StockPortfolioModifier from "./stock-portfolio-modifier";
-import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface Props {
-  user: KindeUser | null;
+  isAuthenticated: boolean;
   symbolId: string;
   symbol: string;
   portfolios: PortfolioWithStocks[] | undefined;
 }
 
 export default function StockPortfolioAddModal({
-  user,
+  isAuthenticated,
   symbolId,
   symbol,
   portfolios,
@@ -32,14 +31,14 @@ export default function StockPortfolioAddModal({
   const { loginToast } = useCustomToasts();
 
   const handleClick = () => {
-    if (!user) return loginToast();
+    if (!isAuthenticated) return loginToast();
     if (!portfolios || portfolios.length === 0)
       return toast({ description: "You have to create a portfolio first." });
   };
 
   return (
     <>
-      {!user ? (
+      {!isAuthenticated ? (
         <Button variant="subtle" size="xs" onClick={handleClick}>
           <Plus className="h-4" />
         </Button>

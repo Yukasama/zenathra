@@ -9,10 +9,13 @@ import {
   CardTitle,
 } from "../ui/card";
 import Skeleton from "../ui/skeleton";
+import { PortfolioWithStocks } from "@/types/db";
 
 interface Props {
   symbols: string[] | null;
-  title: string;
+  isAuthenticated: boolean;
+  portfolios?: PortfolioWithStocks[] | undefined;
+  title?: string;
   description?: string;
 }
 
@@ -28,7 +31,7 @@ export function StockCardListLoading() {
         </Skeleton>
       </div>
       <CardContent>
-        <div className="f-col gap-6 md:grid md:grid-cols-3 xl:gap-8 xl:grid-cols-4">
+        <div className="f-col gap-6 lg:grid lg:grid-cols-2 xl:gap-8 xl:grid-cols-3">
           {[...Array(8)].map((_, i) => (
             <StockCardLoading key={i} />
           ))}
@@ -40,6 +43,8 @@ export function StockCardListLoading() {
 
 export default async function StockCardList({
   symbols,
+  isAuthenticated,
+  portfolios,
   title,
   description,
 }: Props) {
@@ -57,7 +62,7 @@ export default async function StockCardList({
   let [quotes, stocks] = await Promise.all([
     getQuotes(symbols),
     db.stock.findMany({
-      select: { symbol: true, image: true },
+      select: { id: true, symbol: true, image: true },
       where: { symbol: { in: symbols } },
     }),
   ]);
@@ -68,17 +73,21 @@ export default async function StockCardList({
 
   return (
     <Card className="border-none">
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
+      {title && description && (
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </CardHeader>
+      )}
       <CardContent>
-        <div className="f-col gap-6 md:grid md:grid-cols-3 xl:gap-8 xl:grid-cols-4">
+        <div className="f-col gap-6 lg:grid lg:grid-cols-2 xl:gap-8 xl:grid-cols-3">
           {quotes.map((quote) => (
             <StockCard
               key={quote.symbol}
               quote={quote}
-              image={stocks.find((s) => s.symbol === quote.symbol)?.image}
+              stock={stocks.find((s) => s.symbol === quote.symbol)}
+              isAuthenticated={isAuthenticated}
+              portfolios={portfolios}
             />
           ))}
         </div>
