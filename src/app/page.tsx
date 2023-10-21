@@ -2,9 +2,12 @@ import PageLayout from "@/components/shared/page-layout";
 import StockCardList, {
   StockCardListLoading,
 } from "@/components/stock/stock-card-list";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { db } from "@/db";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import {
+  LoginLink,
+  getKindeServerSession,
+} from "@kinde-oss/kinde-auth-nextjs/server";
 import { MoveRight } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -31,11 +34,13 @@ export default async function page() {
             ensuring a diversified and balanced investment approach
           </p>
           <div className="flex gap-3 mt-2">
-            <Button variant="subtle">Sign In</Button>
-            <Button className="bg-gradient-to-br from-[#837afd] to-[#cc5eff] hover:from-[#7268ff] hover:to-[#c64aff]">
+            <LoginLink className={buttonVariants({ variant: "subtle" })}>
+              Sign In
+            </LoginLink>
+            <LoginLink className="bg-gradient-to-br from-[#837afd] to-[#cc5eff] hover:from-[#7268ff] hover:to-[#c64aff]">
               Get started
               <MoveRight className="w-4 h-4" />
-            </Button>
+            </LoginLink>
           </div>
         </div>
         <div className="w-5/6 sm:w-4/5">
