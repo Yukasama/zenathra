@@ -21,8 +21,8 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { UploadStockSchema } from "@/lib/validators/stock";
-import { Checkbox } from "../ui/checkbox";
-import { Slider } from "../ui/slider";
+import { Checkbox } from "./ui/checkbox";
+import { Slider } from "./ui/slider";
 import { Upload } from "lucide-react";
 import {
   Card,
@@ -30,7 +30,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "./ui/card";
 import { trpc } from "@/app/_trpc/client";
 
 export default function AdminAddStocks() {
@@ -43,6 +43,8 @@ export default function AdminAddStocks() {
       pullTimes: 1,
     },
   });
+
+  const stocks = ["All", "US500", "AAPL", "MSFT", "TSLA"]
 
   const { mutate: uploadStocks, isLoading } = trpc.stock.upload.useMutation({
     onError: () =>
@@ -95,11 +97,9 @@ export default function AdminAddStocks() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="All">All</SelectItem>
-                      <SelectItem value="US500">US500</SelectItem>
-                      <SelectItem value="AAPL">AAPL</SelectItem>
-                      <SelectItem value="MSFT">MSFT</SelectItem>
-                      <SelectItem value="TSLA">TSLA</SelectItem>
+                      {stocks.map((stock) => (
+                        <SelectItem key={stock} value={stock}>{stock}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormDescription>

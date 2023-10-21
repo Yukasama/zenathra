@@ -22,9 +22,7 @@ export const revalidate = 30;
 
 export async function generateStaticParams() {
   const data = await db.stock.findMany({
-    select: {
-      symbol: true,
-    },
+    select: { symbol: true },
   });
 
   return data.map((stock) => ({ symbol: stock.symbol }));
@@ -36,7 +34,10 @@ interface Props {
 
 export async function generateMetadata({ params: { symbol } }: Props) {
   const [stock, quote] = await Promise.all([
-    db.stock.findFirst({ where: { symbol } }),
+    db.stock.findFirst({
+      select: { companyName: true },
+      where: { symbol },
+    }),
     getQuote(symbol),
   ]);
 
@@ -47,6 +48,17 @@ export async function generateMetadata({ params: { symbol } }: Props) {
 
 export default async function page({ params: { symbol } }: Props) {
   const stock = await db.stock.findFirst({
+    select: {
+      id: true,
+      symbol: true,
+      companyName: true,
+      image: true,
+      eye: true,
+      peRatioTTM: true,
+      netIncomePerShareTTM: true,
+      priceToBookRatioTTM: true,
+      peersList: true,
+    },
     where: { symbol: symbol },
   });
 

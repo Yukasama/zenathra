@@ -14,7 +14,12 @@ import { PortfolioWithStocks } from "@/types/db";
 interface Props {
   symbols: string[] | null;
   isAuthenticated: boolean;
-  portfolios?: PortfolioWithStocks[] | undefined;
+  portfolios?:
+    | Pick<
+        PortfolioWithStocks,
+        "id" | "title" | "color" | "stocks" | "public"
+      >[]
+    | undefined;
   title?: string;
   description?: string;
 }

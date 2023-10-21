@@ -30,8 +30,14 @@ const EditPositions = dynamic(() => import("./edit-positions"), {
 });
 
 interface Props {
-  stocks: Stock[];
-  portfolio: PortfolioWithStocks;
+  stocks: Pick<
+    Stock,
+    "id" | "symbol" | "companyName" | "image" | "peRatioTTM"
+  >[];
+  portfolio: Pick<
+    PortfolioWithStocks,
+    "id" | "title" | "creatorId" | "public" | "createdAt" | "stocks"
+  >;
   user: KindeUser | null;
 }
 

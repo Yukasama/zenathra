@@ -35,8 +35,8 @@ function generateColors(num: number): string[] {
 const getPercentage = (count: number, total: number): string =>
   `${((count / total) * 100).toFixed(2)}%`;
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  stocks: Stock[];
+interface Props {
+  stocks: Pick<Stock, "sector">[];
 }
 
 export default function PortfolioAllocation({ stocks }: Props) {

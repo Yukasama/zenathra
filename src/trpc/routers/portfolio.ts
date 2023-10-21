@@ -16,23 +16,21 @@ function getRandomColor(): string {
 }
 
 export const portfolioRouter = router({
-  getById: publicProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      })
-    )
-    .query(async (opts) => {
-      return await db.portfolio.findFirst({
-        where: { id: opts.input.id },
-      });
-    }),
+  getById: publicProcedure.input(z.string()).query(async (opts) => {
+    const portfolio = await db.portfolio.findFirst({
+      where: { id: opts.input },
+    });
+
+    if (!portfolio) throw new TRPCError({ code: "NOT_FOUND" });
+
+    return portfolio;
+  }),
   create: privateProcedure
     .input(CreatePortfolioSchema)
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
 
-      return await db.portfolio.create({
+      await db.portfolio.create({
         data: {
           ...input,
           public: input.public,
@@ -44,38 +42,40 @@ export const portfolioRouter = router({
   edit: privateProcedure
     .input(EditPortfolioSchema)
     .mutation(async ({ ctx, input }) => {
-      const { user } = ctx;
-      const { portfolioId, title, public: publicPortfolio } = input;
+      try {
+        const { userId } = ctx;
+        const { portfolioId, title, public: isPublic } = input;
 
-      const portfolio = await db.portfolio.findFirst({
-        select: { id: true, title: true, public: true },
-        where: {
-          id: portfolioId,
-          creatorId: user?.id,
-        },
-      });
-
-      if (!portfolio) throw new TRPCError({ code: "NOT_FOUND" });
-
-      await db.portfolio.update({
-        where: { id: portfolioId },
-        data: {
-          title: title ?? portfolio.title,
-          public: publicPortfolio ?? portfolio.public,
-        },
-      });
+        await db.portfolio.update({
+          where: {
+            id: portfolioId,
+            creatorId: userId,
+          },
+          data: {
+            ...(title !== undefined && { title: title }),
+            ...(isPublic !== undefined && { public: isPublic }),
+          },
+        });
+      } catch {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
     }),
   add: privateProcedure
     .input(ModifyPortfolioSchema)
     .mutation(async ({ ctx, input }) => {
-      const { user } = ctx;
+      const { userId } = ctx;
       const { portfolioId, stockIds } = input;
 
       let portfolio = await db.portfolio.findFirst({
-        select: { id: true },
+        select: {
+          id: true,
+          stocks: {
+            select: { stockId: true },
+          },
+        },
         where: {
           id: portfolioId,
-          creatorId: user?.id,
+          creatorId: userId,
         },
       });
 
@@ -86,12 +86,7 @@ export const portfolioRouter = router({
         where: { id: { in: stockIds } },
       });
 
-      const portfolioStocks = await db.stockInPortfolio.findMany({
-        select: { stockId: true },
-        where: { portfolioId: portfolioId },
-      });
-
-      const portfolioStockIds = portfolioStocks.map((stock) => stock.stockId);
+      const portfolioStockIds = portfolio.stocks.map((stock) => stock.stockId);
 
       const newStocks = stocksInDatabase
         .map((stock) => stock.id)
@@ -107,48 +102,29 @@ export const portfolioRouter = router({
   remove: privateProcedure
     .input(ModifyPortfolioSchema)
     .mutation(async ({ ctx, input }) => {
-      const { user } = ctx;
+      const { userId } = ctx;
       const { portfolioId, stockIds } = input;
-
-      let portfolio = await db.portfolio.findFirst({
-        select: { id: true },
-        where: {
-          id: portfolioId,
-          creatorId: user?.id,
-        },
-      });
-
-      if (!portfolio) throw new TRPCError({ code: "NOT_FOUND" });
 
       await db.stockInPortfolio.deleteMany({
         where: {
           portfolioId: portfolioId,
+          portfolio: {
+            creatorId: userId,
+          },
           stockId: { in: stockIds },
         },
       });
     }),
   delete: privateProcedure
-    .input(
-      z.object({
-        portfolioId: z.string(),
-      })
-    )
+    .input(z.string()) // Portfolio ID
     .mutation(async ({ ctx, input }) => {
-      const { user } = ctx;
-      const { portfolioId } = input;
-
-      let portfolio = await db.portfolio.findFirst({
-        select: { id: true },
-        where: {
-          id: portfolioId,
-          creatorId: user?.id,
-        },
-      });
-
-      if (!portfolio) throw new TRPCError({ code: "NOT_FOUND" });
-
+      const { userId } = ctx;
+      
       await db.portfolio.delete({
-        where: { id: portfolioId },
+        where: {
+          id: input,
+          creatorId: userId,
+        },
       });
     }),
 });

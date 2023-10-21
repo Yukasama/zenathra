@@ -34,7 +34,7 @@ export default async function page({ params: { id } }: Props) {
 
   if (!dbUser) return notFound();
 
-  const user = await caller.user.get({ id });
+  const user = await caller.user.getbyId(id);
 
   return (
     <>

@@ -19,7 +19,12 @@ interface Props {
   isAuthenticated: boolean;
   symbolId: string;
   symbol: string;
-  portfolios: PortfolioWithStocks[] | undefined;
+  portfolios:
+    | Pick<
+        PortfolioWithStocks,
+        "id" | "title" | "color" | "stocks" | "public"
+      >[]
+    | undefined;
 }
 
 export default function StockPortfolioAddModal({

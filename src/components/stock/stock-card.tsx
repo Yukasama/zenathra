@@ -24,7 +24,12 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   quote: Quote | null;
   stock: Pick<Stock, "id" | "symbol" | "image"> | undefined;
   isAuthenticated: boolean;
-  portfolios: PortfolioWithStocks[] | undefined;
+  portfolios:
+    | Pick<
+        PortfolioWithStocks,
+        "id" | "title" | "color" | "stocks" | "public"
+      >[]
+    | undefined;
 }
 
 const StockPortfolioAddModal = dynamic(

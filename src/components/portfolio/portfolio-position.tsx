@@ -11,7 +11,7 @@ import { StockImage } from "../stock/stock-image";
 import { Button } from "../ui/button";
 
 interface Props {
-  stock: Stock;
+  stock: Pick<Stock, "id" | "symbol" | "image" | "companyName">;
   portfolio: Pick<Portfolio, "id">;
 }
 

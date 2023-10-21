@@ -3,7 +3,10 @@ import { Card } from "../ui/card";
 import { LineChart } from "lucide-react";
 
 interface Props {
-  stock: Stock | null;
+  stock: Pick<
+    Stock,
+    "peRatioTTM" | "netIncomePerShareTTM" | "priceToBookRatioTTM"
+  > | null;
 }
 
 export default function StockMetrics({ stock }: Props) {

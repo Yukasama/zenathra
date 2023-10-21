@@ -56,11 +56,7 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
         variant: "destructive",
       });
 
-    const payload = {
-      portfolioId: portfolio.id,
-    };
-
-    deletePortfolio(payload);
+    deletePortfolio(portfolio.id);
   }
 
   return (

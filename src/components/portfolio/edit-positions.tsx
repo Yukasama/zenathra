@@ -14,7 +14,7 @@ import { Portfolio, Stock } from "@prisma/client";
 import PortfolioPosition from "./portfolio-position";
 
 interface Props {
-  stocks: Stock[];
+  stocks: Pick<Stock, "id" | "symbol" | "image" | "companyName">[];
   portfolio: Pick<Portfolio, "id">;
 }
 

@@ -88,31 +88,23 @@ export const userRouter = router({
 
     return { url: stripeSession.url };
   }),
-  get: publicProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      })
-    )
-    .query(async ({ input }) => {
-      const client = await createKindeManagementAPIClient();
+  getbyId: publicProcedure.input(z.string()).query(async ({ input }) => {
+    const client = await createKindeManagementAPIClient();
 
-      const user = await client.usersApi.getUserData({ id: input.id });
+    const user = await client.usersApi.getUserData({ id: input });
 
-      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+    if (!user) throw new TRPCError({ code: "NOT_FOUND" });
 
-      return {
-        given_name: user.firstName ?? null,
-        family_name: user.lastName ?? null,
-        picture: user.picture ?? null,
-      };
-    }),
+    return {
+      given_name: user.firstName ?? null,
+      family_name: user.lastName ?? null,
+      picture: user.picture ?? null,
+    };
+  }),
   update: privateProcedure
     .input(UserUpdateSchema)
     .mutation(async ({ ctx, input }) => {
       const { userId } = ctx;
-
-      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
 
       const dbUser = await db.user.findFirst({
         select: { id: true },
@@ -123,7 +115,7 @@ export const userRouter = router({
 
       const client = await createKindeManagementAPIClient();
 
-      // Running sequential because both requests are required to be successful
+      // Running sequential because both operations are required to be successful
       client.usersApi.updateUser({
         id: userId,
         updateUserRequest: {

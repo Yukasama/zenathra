@@ -43,26 +43,28 @@ export default function PriceChart({
   const [mounted, setMounted] = useState<boolean>(false);
   const [timeFrame, setTimeFrame] = useState<string>("1D");
 
+  const [domain, setDomain] = useState([0, 0]);
+  const [startPrice, setStartPrice] = useState<number>(0);
+  const [transformedData, setTransformedData] = useState<any[]>([]);
+
   useEffect(() => setMounted(true), []);
 
   const { data: results, isFetched } = trpc.stock.history.useQuery(symbols);
 
-  let [minDomain, maxDomain] = [0, 0];
-  let startPrice = 0;
-  let transformedData: any[] = [];
-
   // results[timeFrame] is undefined when the query is not yet fetched
   if (isFetched) {
-    [minDomain, maxDomain] = computeDomain(results[timeFrame]);
-    startPrice = Number(results[timeFrame][0].close);
-    transformedData = results[timeFrame].map((item: any) => {
-      const uv = Number(item.close);
-      return {
-        name: item.date,
-        uvAbove: uv >= startPrice ? uv : null,
-        uvBelow: uv < startPrice ? uv : null,
-      };
-    });
+    setDomain(computeDomain(results[timeFrame]));
+    setStartPrice(Number(results[timeFrame][0].close));
+    setTransformedData(
+      results[timeFrame].map((item: any) => {
+        const uv = Number(item.close);
+        return {
+          name: item.date,
+          uvAbove: uv >= startPrice ? uv : null,
+          uvBelow: uv < startPrice ? uv : null,
+        };
+      })
+    );
   }
 
   const CustomTooltip = ({
@@ -168,7 +170,7 @@ export default function PriceChart({
               </defs>
               <XAxis dataKey="name" fontSize={12} />
               <YAxis
-                domain={[minDomain, maxDomain]}
+                domain={domain}
                 fontSize={12}
                 tickFormatter={(value) => `${value.toFixed(2)}`}
               />

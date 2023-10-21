@@ -21,7 +21,6 @@ import { Button } from "@/components/ui/button";
 
 const EditTitle = dynamic(() => import("@/components/portfolio/edit-title"), {
   ssr: false,
-  loading: () => null,
 });
 
 const EditVisibility = dynamic(
@@ -65,8 +64,15 @@ export async function generateMetadata({ params: { id } }: Props) {
 
 export default async function page({ params: { id } }: Props) {
   const portfolio = await db.portfolio.findFirst({
-    include: {
-      stocks: { select: { stockId: true } },
+    select: {
+      id: true,
+      title: true,
+      public: true,
+      creatorId: true,
+      createdAt: true,
+      stocks: {
+        select: { stockId: true },
+      },
     },
     where: { id },
   });
@@ -98,6 +104,14 @@ export default async function page({ params: { id } }: Props) {
     );
 
   const stocks = await db.stock.findMany({
+    select: {
+      id: true,
+      symbol: true,
+      companyName: true,
+      image: true,
+      peRatioTTM: true,
+      sector: true,
+    },
     where: { id: { in: portfolio.stocks.map((s) => s.stockId) } },
   });
 
@@ -123,7 +137,6 @@ export default async function page({ params: { id } }: Props) {
                 </div>
               )}
             </div>
-
             {portfolio.creatorId === user?.id && (
               <PortfolioAddModal portfolio={portfolio} />
             )}

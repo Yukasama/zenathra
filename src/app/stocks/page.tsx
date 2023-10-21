@@ -28,8 +28,16 @@ export default async function page() {
       where: { symbol: actives?.[0] },
     }),
     db.portfolio.findMany({
+      select: {
+        id: true,
+        title: true,
+        public: true,
+        color: true,
+        stocks: {
+          select: { stockId: true },
+        },
+      },
       where: { creatorId: getUser()?.id },
-      include: { stocks: true },
     }),
   ]);
 

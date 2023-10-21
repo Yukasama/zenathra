@@ -11,7 +11,10 @@ import { trpc } from "@/app/_trpc/client";
 import PortfolioImage from "../portfolio/portfolio-image";
 
 interface Props {
-  portfolio: PortfolioWithStocks;
+  portfolio: Pick<
+    PortfolioWithStocks,
+    "id" | "title" | "color" | "public" | "stocks"
+  >;
   symbolId: string;
 }
 

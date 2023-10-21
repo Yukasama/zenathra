@@ -51,7 +51,7 @@ export function StockInfoLoading() {
 }
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  stock: Stock;
+  stock: Pick<Stock, "id" | "symbol" | "website" | "image" | "companyName">;
 }
 
 export default async function StockInfo({ stock }: Props) {
@@ -60,7 +60,11 @@ export default async function StockInfo({ stock }: Props) {
   const [quote, portfolios] = await Promise.all([
     getQuote(stock.symbol),
     db.portfolio.findMany({
-      include: {
+      select: {
+        id: true,
+        title: true,
+        public: true,
+        color: true,
         stocks: {
           select: { stockId: true },
         },

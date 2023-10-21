@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import Skeleton from "../ui/skeleton";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  stock: Stock;
+  stock: Pick<Stock, "symbol">;
 }
 
 export function StockAfterHoursLoading() {
