@@ -4,6 +4,7 @@ import StockCardList, {
 } from "@/components/stock/stock-card-list";
 import { buttonVariants } from "@/components/ui/button";
 import { db } from "@/db";
+import { cn } from "@/lib/utils";
 import {
   LoginLink,
   getKindeServerSession,
@@ -37,7 +38,11 @@ export default async function page() {
             <LoginLink className={buttonVariants({ variant: "subtle" })}>
               Sign In
             </LoginLink>
-            <LoginLink className="bg-gradient-to-br from-[#837afd] to-[#cc5eff] hover:from-[#7268ff] hover:to-[#c64aff]">
+            <LoginLink
+              className={cn(
+                buttonVariants(),
+                "bg-gradient-to-br from-[#837afd] to-[#cc5eff] hover:from-[#7268ff] hover:to-[#c64aff]"
+              )}>
               Get started
               <MoveRight className="w-4 h-4" />
             </LoginLink>
