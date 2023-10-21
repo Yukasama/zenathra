@@ -52,20 +52,24 @@ export default function PriceChart({
   const { data: results, isFetched } = trpc.stock.history.useQuery(symbols);
 
   // results[timeFrame] is undefined when the query is not yet fetched
-  if (isFetched) {
-    setDomain(computeDomain(results[timeFrame]));
-    setStartPrice(Number(results[timeFrame][0].close));
-    setTransformedData(
-      results[timeFrame].map((item: any) => {
-        const uv = Number(item.close);
-        return {
-          name: item.date,
-          uvAbove: uv >= startPrice ? uv : null,
-          uvBelow: uv < startPrice ? uv : null,
-        };
-      })
-    );
-  }
+  useEffect(() => {
+    if (isFetched && results) {
+      setDomain(computeDomain(results[timeFrame]));
+      setStartPrice(Number(results[timeFrame][0].close));
+      setTransformedData(
+        results[timeFrame].map((item: any) => {
+          const uv = Number(item.close);
+          return {
+            name: item.date,
+            uvAbove: uv >= startPrice ? uv : null,
+            uvBelow: uv < startPrice ? uv : null,
+          };
+        })
+      );
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFetched]);
 
   const CustomTooltip = ({
     active,
@@ -104,13 +108,6 @@ export default function PriceChart({
   };
 
   const timeFrames = ["1D", "5D", "1M", "6M", "1Y", "5Y", "ALL"];
-
-  // This temporary hides the warning for the reference line support
-  const error = console.error;
-  console.error = (...args: any) => {
-    if (/defaultProps/.test(args[0])) return;
-    error(...args);
-  };
 
   return (
     <Card

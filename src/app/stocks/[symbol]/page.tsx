@@ -51,6 +51,7 @@ export default async function page({ params: { symbol } }: Props) {
     select: {
       id: true,
       symbol: true,
+      website: true,
       companyName: true,
       image: true,
       eye: true,
