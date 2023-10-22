@@ -68,7 +68,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
             <AccordionTrigger>Getting started</AccordionTrigger>
             <AccordionContent>
               <div className="grid grid-cols-2 gap-3">
-                <Card className="hover:bg-slate-900 h-32 cursor-pointer">
+                <Card className="hover:bg-slate-100 dark:hover:bg-slate-900 h-32 cursor-pointer">
                   <SheetClose asChild>
                     <Link
                       href="/screener"
@@ -79,7 +79,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                   </SheetClose>
                 </Card>
                 {user && (
-                  <Card className="hover:bg-slate-900 h-32 cursor-pointer">
+                  <Card className="hover:bg-slate-100 dark:hover:bg-slate-900 h-32 cursor-pointer">
                     <SheetClose asChild>
                       <Link
                         href="/portfolio"
@@ -90,7 +90,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                     </SheetClose>
                   </Card>
                 )}
-                <Card className="hover:bg-slate-900 h-32 cursor-pointer">
+                <Card className="hover:bg-slate-100 dark:hover:bg-slate-900 h-32 cursor-pointer">
                   <SheetClose asChild>
                     <Link
                       href={user ? "/settings/profile" : "/api/auth/login"}
@@ -100,7 +100,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                     </Link>
                   </SheetClose>
                 </Card>
-                <Card className="hover:bg-slate-900 h-32 cursor-pointer">
+                <Card className="hover:bg-slate-100 dark:hover:bg-slate-900 h-32 cursor-pointer">
                   <SheetClose asChild>
                     <Link
                       href="/stocks"
@@ -120,7 +120,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                 {navLinks.map((link) => (
                   <Card
                     key={link.title}
-                    className="hover:bg-slate-900 h-32 cursor-pointer">
+                    className="hover:bg-slate-100 dark:hover:bg-slate-900 h-32 cursor-pointer">
                     <SheetClose asChild>
                       <Link
                         href={link.href}
@@ -153,7 +153,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
             </AccordionTrigger>
           </AccordionItem>
         </Accordion>
-        <div className="f-col justify-between h-full">
+        <div className="f-col gap-3">
           {user &&
             portfolios?.map((portfolio) => (
               <SheetClose key={portfolio.id} asChild>

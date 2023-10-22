@@ -7,7 +7,6 @@ export const env = createEnv({
   },
   server: {
     DATABASE_URL: z.string().url(),
-    DIRECT_DATABASE_URL: z.string().url(),
     NODE_ENV: z.enum(["development", "test", "production"]),
     KINDE_CLIENT_ID: z.string(),
     KINDE_CLIENT_SECRET: z.string(),
@@ -23,7 +22,6 @@ export const env = createEnv({
   runtimeEnv: {
     NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
     DATABASE_URL: process.env.DATABASE_URL,
-    DIRECT_DATABASE_URL: process.env.DIRECT_DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     KINDE_CLIENT_ID: process.env.KINDE_CLIENT_ID,
     KINDE_CLIENT_SECRET: process.env.KINDE_CLIENT_SECRET,

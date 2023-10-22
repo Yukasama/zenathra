@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { trpc } from "../_trpc/client";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
 export default function Page() {
   const router = useRouter();
@@ -10,13 +11,11 @@ export default function Page() {
   const searchParams = useSearchParams();
   const origin = searchParams.get("origin");
 
-  trpc.user.authCallback.useQuery(undefined, {
+  trpc.user.authCallback.useMutation({
     onError: (err) => {
       if (err.data?.code === "UNAUTHORIZED") router.push("/api/auth/login");
     },
-    onSuccess: ({ success }) => {
-      if (success) router.push(origin ? `/${origin}` : "/");
-    },
+    onSuccess: () => router.push(origin ? `/${origin}` : "/"),
     retry: true,
     retryDelay: 500,
   });
@@ -27,6 +26,9 @@ export default function Page() {
         <Loader2 className="h-8 w-8 animate-spin text-zinc-800" />
         <h3 className="font-semibold text-xl">Setting up your account...</h3>
         <p>You will be redirected automatically.</p>
+        <Link href="/" className="text-slate-400 text-sm hover:underline">
+          Not redirected automatically?
+        </Link>
       </div>
     </div>
   );

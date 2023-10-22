@@ -12,7 +12,7 @@ import { UserUpdateSchema } from "@/lib/validators/user";
 import { z } from "zod";
 
 export const userRouter = router({
-  authCallback: publicProcedure.query(async () => {
+  authCallback: publicProcedure.mutation(async () => {
     const { getUser } = getKindeServerSession();
     const user = getUser();
 
@@ -30,10 +30,8 @@ export const userRouter = router({
           email: user.email,
         },
       });
-
-    return { success: true };
   }),
-  getKindeSession: publicProcedure.query(async () => {
+  getKindeSession: privateProcedure.query(async () => {
     const { getUser, isAuthenticated, getPermissions, getOrganization } =
       getKindeServerSession();
     const user = getUser();
