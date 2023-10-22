@@ -127,7 +127,7 @@ export default function StockCard({
           />
         </div>
       )}
-      <div className="absolute bottom-0 opacity-70 left-0 w-full -z-0">
+      <div className="absolute bottom-0 opacity-70 left-0 w-full -z-0 pointer-events-none">
         <SmallChart quote={quote} height={150} />
       </div>
       <Link
