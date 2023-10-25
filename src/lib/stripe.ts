@@ -22,6 +22,12 @@ export async function getUserSubscriptionPlan() {
   }
 
   const dbUser = await db.user.findFirst({
+    select: {
+      stripeCustomerId: true,
+      stripeSubscriptionId: true,
+      stripeCurrentPeriodEnd: true,
+      stripePriceId: true,
+    },
     where: { id: user.id },
   });
 

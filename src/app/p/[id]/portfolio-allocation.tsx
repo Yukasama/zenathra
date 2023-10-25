@@ -9,9 +9,14 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
 import { Stock } from "@prisma/client";
-import Skeleton from "../ui/skeleton";
+import Skeleton from "../../../components/ui/skeleton";
 
 const BASE_COLORS = [
   "#0088FE",

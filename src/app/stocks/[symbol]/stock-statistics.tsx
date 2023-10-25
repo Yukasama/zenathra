@@ -4,14 +4,14 @@ import React from "react";
 import { db } from "@/db";
 import StockKeyMetricsChart from "./stock-key-metrics-chart";
 import StockDividendChart from "./stock-dividend-chart";
-import Skeleton from "../ui/skeleton";
+import Skeleton from "../../../components/ui/skeleton";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "../../../components/ui/card";
 
 export function StockStatisticsLoading() {
   return (

@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "../../../components/ui/card";
 import {
   Table,
   TableBody,
@@ -13,14 +13,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
+} from "../../../components/ui/table";
 import { getQuotes } from "@/lib/fmp/quote";
-import { StockImage } from "../stock/stock-image";
+import { StockImage } from "../../../components/stock/stock-image";
 import { PortfolioWithStocks } from "@/types/db";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import dynamic from "next/dynamic";
-import Skeleton from "../ui/skeleton";
-import { Button, buttonVariants } from "../ui/button";
+import Skeleton from "../../../components/ui/skeleton";
+import { Button, buttonVariants } from "../../../components/ui/button";
 import { Pencil } from "lucide-react";
 import { Stock } from "@prisma/client";
 

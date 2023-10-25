@@ -11,13 +11,16 @@ export default function Page() {
   const searchParams = useSearchParams();
   const origin = searchParams.get("origin");
 
-  trpc.user.authCallback.useMutation({
+  trpc.user.authCallback.useQuery(undefined, {
     onError: (err) => {
       if (err.data?.code === "UNAUTHORIZED") router.push("/api/auth/login");
     },
-    onSuccess: () => router.push(origin ? `/${origin}` : "/"),
+    onSuccess: ({ success }) => {
+      if (success) router.push(origin ? `/${origin}` : "/");
+    },
     retry: true,
     retryDelay: 500,
+    enabled: true,
   });
 
   return (

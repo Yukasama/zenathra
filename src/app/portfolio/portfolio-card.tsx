@@ -1,5 +1,5 @@
 import Link from "next/link";
-import StockList from "../stock/stock-list";
+import StockList from "../../components/stock/stock-list";
 import { Suspense } from "react";
 import {
   Card,
@@ -8,33 +8,39 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "../../components/ui/card";
 import { PortfolioWithStocks } from "@/types/db";
 import { db } from "@/db";
-import { Button, buttonVariants } from "../ui/button";
+import { Button, buttonVariants } from "../../components/ui/button";
 import { BarChart, Plus, Trash } from "lucide-react";
 import dynamic from "next/dynamic";
-import PortfolioImage from "./portfolio-image";
+import PortfolioImage from "../../components/portfolio/portfolio-image";
 
-const PortfolioAddModal = dynamic(() => import("./portfolio-add-modal"), {
-  ssr: false,
-  loading: () => (
-    <Button variant="subtle" isLoading>
-      <Plus className="h-4 w-4" />
-      Add Stocks
-    </Button>
-  ),
-});
+const PortfolioAddModal = dynamic(
+  () => import("../../components/portfolio/portfolio-add-modal"),
+  {
+    ssr: false,
+    loading: () => (
+      <Button variant="subtle" isLoading>
+        <Plus className="h-4 w-4" />
+        Add Stocks
+      </Button>
+    ),
+  }
+);
 
-const PortfolioDeleteModal = dynamic(() => import("./portfolio-delete-modal"), {
-  ssr: false,
-  loading: () => (
-    <Button variant="destructive" isLoading>
-      <Trash className="h-4 w-4" />
-      Delete
-    </Button>
-  ),
-});
+const PortfolioDeleteModal = dynamic(
+  () => import("../../components/portfolio/portfolio-delete-modal"),
+  {
+    ssr: false,
+    loading: () => (
+      <Button variant="destructive" isLoading>
+        <Trash className="h-4 w-4" />
+        Delete
+      </Button>
+    ),
+  }
+);
 
 interface Props {
   portfolio: Pick<

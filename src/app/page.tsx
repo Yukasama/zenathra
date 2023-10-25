@@ -1,7 +1,7 @@
 import PageLayout from "@/components/shared/page-layout";
 import StockCardList, {
   StockCardListLoading,
-} from "@/components/stock/stock-card-list";
+} from "@/app/stocks/stock-card-list";
 import { buttonVariants } from "@/components/ui/button";
 import { db } from "@/db";
 import { cn } from "@/lib/utils";
@@ -19,7 +19,7 @@ export default async function page() {
 
   const symbols = ["AAPL", "MSFT", "GOOG", "TSLA", "NVDA", "AMZN"];
 
-  if (!isAuthenticated || !user)
+  if (!isAuthenticated())
     return (
       <div className="f-col gap-20 sm:gap-28 items-center">
         <div className="f-col z-10 items-center justify-center gap-3 sm:gap-5 mt-20 sm:mt-32">
@@ -71,6 +71,7 @@ export default async function page() {
     );
 
   const dbUser = await db.user.findFirst({
+    select: { id: true },
     where: { id: user?.id ?? undefined },
   });
 
@@ -78,7 +79,7 @@ export default async function page() {
 
   return (
     <PageLayout
-      title={`Welcome back, ${user.given_name} ${user.family_name ?? ""}!`}
+      title={`Welcome back, ${user?.given_name} ${user?.family_name ?? ""}!`}
       description="Your personal dashboard. Everything in one place.">
       <div className="mt-40 text-center text-3xl font-thin">Coming soon...</div>
     </PageLayout>

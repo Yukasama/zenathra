@@ -5,9 +5,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "../../../components/ui/card";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
-import StockListItem from "../stock/stock-list-item";
+import StockListItem from "../../../components/stock/stock-list-item";
 import { getQuotes } from "@/lib/fmp/quote";
 import _ from "lodash";
 

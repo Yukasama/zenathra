@@ -1,5 +1,5 @@
 import { Separator } from "../ui/separator";
-import { UserAvatar } from "@/components/user/user-avatar";
+import { UserAvatar } from "@/components/user-avatar";
 import {
   type KindeUser,
   LogoutLink,

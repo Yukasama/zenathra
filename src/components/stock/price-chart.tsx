@@ -17,9 +17,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
-import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { cn, computeDomain } from "@/lib/utils";
-import Skeleton from "./ui/skeleton";
+import Skeleton from "../ui/skeleton";
 import { trpc } from "@/app/_trpc/client";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
@@ -69,7 +69,7 @@ export default function PriceChart({
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFetched]);
+  }, [isFetched, timeFrame]);
 
   const CustomTooltip = ({
     active,
@@ -107,7 +107,7 @@ export default function PriceChart({
     return null;
   };
 
-  const timeFrames = ["1D", "5D", "1M", "6M", "1Y", "5Y", "ALL"];
+  const timeFrames = ["1D", "5D", "1M", "6M", "1Y", "5Y", "All"];
 
   return (
     <Card

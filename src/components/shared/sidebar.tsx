@@ -16,7 +16,7 @@ import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import { buttonVariants } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { Card } from "../ui/card";
-import { UserAvatar } from "../user/user-avatar";
+import { UserAvatar } from "../user-avatar";
 import PortfolioImage from "../portfolio/portfolio-image";
 import { useRouter } from "next/navigation";
 import {
@@ -27,6 +27,7 @@ import {
 } from "../ui/accordion";
 import Link from "next/link";
 import { navLinks } from "@/config/site";
+import { SITE } from "@/config/site";
 
 interface Props {
   user: KindeUser | null;
@@ -55,7 +56,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <CompanyLogo px={35} />
-            <p className="text-lg">Elysium</p>
+            <p className="text-lg">{SITE.name}</p>
           </div>
         </div>
         <Searchbar
@@ -176,8 +177,8 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
             <Card className="flex items-center p-2 px-3 gap-2.5">
               <UserAvatar user={user} />
               <div>
-                <p className="font-medium">{user.given_name}</p>
-                <p className="text-sm text-slate-400">{user.email}</p>
+                <p className="font-medium truncate max-w-[200px]">{user.given_name}</p>
+                <p className="text-sm text-slate-400 truncate max-w-[200px]">{user.email}</p>
               </div>
             </Card>
           )}

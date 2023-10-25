@@ -11,6 +11,7 @@ import { Timeout } from "@/lib/utils";
 import { env } from "@/env.mjs";
 import { ScreenerSchema, UploadStockSchema } from "@/lib/validators/stock";
 import { History } from "@/types/stock";
+import logger from "pino";
 
 export const stockRouter = router({
   query: publicProcedure.input(ScreenerSchema).query(async (opts) => {
@@ -118,7 +119,7 @@ export const stockRouter = router({
           if (symbols.length === 0) continue;
 
           await uploadStocks(symbols, user);
-          console.log(
+          logger().info(
             `[SUCCESS] Uploaded ${symbols.length} stocks including: '${
               symbols[0] ?? symbols[1] ?? "undefined"
             }'`
@@ -152,7 +153,7 @@ async function fetchHistory(symbol: string) {
       const relevantData = fetchedURLs[url];
       return [
         timeframe,
-        timeframe !== "ALL"
+        timeframe !== "All"
           ? relevantData
               .slice(
                 0,
@@ -302,21 +303,15 @@ async function uploadStocks(symbols: string[], user: KindeUser): Promise<void> {
               },
             });
           } catch (error: any) {
-            if (error.message.includes("Timed out"))
-              console.log("[ERROR] Timed out while uploading", symbol, year);
-            else
-              console.log(
-                "[ERROR] Uploading financials for",
-                symbol,
-                year,
-                "failed"
-              );
+            logger().error(
+              `[ERROR] Timed out while uploading: ${symbol}, ${year}" \n Error: ${error.message}`
+            );
           }
         }
       );
       await Promise.all(financialsPromises);
     } catch {
-      console.log("[ERROR] Uploading stock data for", symbol, "failed");
+      logger().error("[ERROR] Uploading stock data for", symbol, "failed")
     }
   });
   await Promise.all(promises);

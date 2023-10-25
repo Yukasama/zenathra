@@ -53,7 +53,7 @@ export default function page() {
           <p className="my-5">
             <strong>Company</strong> (referred to as either &quot;the
             Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in
-            this Agreement) refers to elysium.
+            this Agreement) refers to zenethra.
           </p>
         </li>
         <li>
@@ -112,12 +112,12 @@ export default function page() {
         </li>
         <li>
           <p className="my-5">
-            <strong>Website</strong> refers to elysium, accessible from{" "}
+            <strong>Website</strong> refers to zenethra, accessible from{" "}
             <a
-              href="www.elysium.com"
+              href="www.zenethra.com"
               rel="external nofollow noopener"
               target="_blank">
-              www.elysium.com
+              www.zenethra.com
             </a>
           </p>
         </li>
@@ -564,10 +564,10 @@ export default function page() {
           <p className="my-5">
             By visiting this page on our website:{" "}
             <a
-              href="https://www.elysium.com/contact"
+              href="https://www.zenethra.com/contact"
               rel="external nofollow noopener"
               target="_blank">
-              https://www.elysium.com/contact
+              https://www.zenethra.com/contact
             </a>
           </p>
         </li>

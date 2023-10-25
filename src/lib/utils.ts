@@ -48,7 +48,7 @@ export function constructMetadata({
       images: [{ url: image }],
     },
     icons,
-    metadataBase: new URL("https://elysium-two.vercel.app"),
+    metadataBase: new URL("https://www.zenethra.com"),
     themeColor: "#FFF",
     ...(noIndex && {
       robots: {

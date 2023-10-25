@@ -5,7 +5,7 @@ import "server-only";
 
 // export async function getTar(symbol: string) {
 //   try {
-//     const { data } = await axios.post(symbol, "ALL");
+//     const { data } = await axios.post(symbol, "All");
 //     const history: History[] = data;
 
 //     const close: number[] = history.map((h: History) => h.close);

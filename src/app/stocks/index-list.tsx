@@ -1,13 +1,13 @@
 import { getIndexQuotes } from "@/lib/fmp/quote";
-import StockPrice from "./stock-price";
+import StockPrice from "../../components/stock/stock-price";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import Skeleton from "../ui/skeleton";
+} from "../../components/ui/card";
+import Skeleton from "../../components/ui/skeleton";
 
 export function IndexListLoading() {
   return (

@@ -1,14 +1,14 @@
 "use client";
 
 import { Portfolio, Stock } from "@prisma/client";
-import { Card } from "../ui/card";
+import { Card } from "../../../components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { trpc } from "@/app/_trpc/client";
 import { useRouter } from "next/navigation";
 import { startTransition } from "react";
 import { Minus } from "lucide-react";
-import { StockImage } from "../stock/stock-image";
-import { Button } from "../ui/button";
+import { StockImage } from "../../../components/stock/stock-image";
+import { Button } from "../../../components/ui/button";
 
 interface Props {
   stock: Pick<Stock, "id" | "symbol" | "image" | "companyName">;

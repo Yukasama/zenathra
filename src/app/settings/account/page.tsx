@@ -4,7 +4,7 @@ import { Layers } from "lucide-react";
 import dynamic from "next/dynamic";
 
 const DeleteUserModal = dynamic(
-  () => import("@/components/user/delete-user-modal"),
+  () => import("@/app/settings/account/delete-user-modal"),
   {
     ssr: false,
     loading: () => (

@@ -1,4 +1,4 @@
-import StockCard, { StockCardLoading } from "./stock-card";
+import StockCard, { StockCardLoading } from "../../components/stock/stock-card";
 import { getQuotes } from "@/lib/fmp/quote";
 import { db } from "@/db";
 import {
@@ -7,8 +7,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import Skeleton from "../ui/skeleton";
+} from "../../components/ui/card";
+import Skeleton from "../../components/ui/skeleton";
 import { PortfolioWithStocks } from "@/types/db";
 
 interface Props {

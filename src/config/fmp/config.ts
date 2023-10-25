@@ -33,7 +33,7 @@ export const TIMEFRAMES: Record<
   "6M": { url: "historical-price-full", limit: 126 },
   "1Y": { url: "historical-price-full", limit: 252 },
   "5Y": { url: "historical-price-full", limit: 1500 },
-  ALL: { url: "historical-price-full", limit: 0 },
+  All: { url: "historical-price-full", limit: 5000 },
 };
 
 export function historyUrls(symbol: string, url: string) {

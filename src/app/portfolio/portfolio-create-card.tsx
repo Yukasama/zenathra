@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { startTransition } from "react";
-import { Button, buttonVariants } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
-import { Input } from "../ui/input";
+import { Button, buttonVariants } from "../../components/ui/button";
+import { Checkbox } from "../../components/ui/checkbox";
+import { Input } from "../../components/ui/input";
 import { Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { FieldValues, useForm } from "react-hook-form";
@@ -17,8 +17,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
-import { Card } from "../ui/card";
+} from "../../components/ui/dialog";
+import { Card } from "../../components/ui/card";
 import {
   Form,
   FormField,
@@ -27,7 +27,7 @@ import {
   FormControl,
   FormDescription,
   FormMessage,
-} from "../ui/form";
+} from "../../components/ui/form";
 import { motion } from "framer-motion";
 import { ANIMATION_VARIANTS } from "@/config/motion";
 import { trpc } from "@/app/_trpc/client";

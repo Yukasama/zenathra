@@ -1,4 +1,4 @@
-import PortfolioWrapper from "@/components/portfolio/portfolio-wrapper";
+import PortfolioWrapper from "@/app/settings/portfolio/portfolio-wrapper";
 import { StockListLoading } from "@/components/stock/stock-list";
 import { Separator } from "@/components/ui/separator";
 import { db } from "@/db";

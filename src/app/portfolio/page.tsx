@@ -1,5 +1,5 @@
-import PortfolioCard from "@/components/portfolio/portfolio-card";
-import PortfolioCreateCard from "@/components/portfolio/portfolio-create-card";
+import PortfolioCard from "@/app/portfolio/portfolio-card";
+import PortfolioCreateCard from "@/app/portfolio/portfolio-create-card";
 import { db } from "@/db";
 import { getUser } from "@/lib/auth";
 import PageLayout from "@/components/shared/page-layout";

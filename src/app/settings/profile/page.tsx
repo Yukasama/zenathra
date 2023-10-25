@@ -5,19 +5,22 @@ import { getUser } from "@/lib/auth";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 
-const ProfileForm = dynamic(() => import("@/components/user/profile-form"), {
-  ssr: false,
-  loading: () => (
-    <div className="f-col gap-3 w-full">
-      {[...Array(4)].map((_, i) => (
-        <>
-          <Skeleton key={i} className="h-5" />
-          <Skeleton className="h-12 w-full" />
-        </>
-      ))}
-    </div>
-  ),
-});
+const ProfileForm = dynamic(
+  () => import("@/app/settings/profile/profile-form"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="f-col gap-3 w-full">
+        {[...Array(4)].map((_, i) => (
+          <>
+            <Skeleton key={i} className="h-5" />
+            <Skeleton className="h-12 w-full" />
+          </>
+        ))}
+      </div>
+    ),
+  }
+);
 
 export default async function page() {
   const user = getUser()!;

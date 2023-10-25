@@ -2,12 +2,12 @@ import Link from "next/link";
 import React from "react";
 import { ChevronsDown, ChevronsUp } from "lucide-react";
 import { getQuote } from "@/lib/fmp/quote";
-import { StockImage } from "./stock-image";
+import { StockImage } from "../../../components/stock/stock-image";
 import { Stock } from "@prisma/client";
 import { db } from "@/db";
-import { Card } from "../ui/card";
-import Skeleton from "../ui/skeleton";
-import { Button, buttonVariants } from "../ui/button";
+import { Card } from "../../../components/ui/card";
+import Skeleton from "../../../components/ui/skeleton";
+import { Button, buttonVariants } from "../../../components/ui/button";
 import dynamic from "next/dynamic";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 

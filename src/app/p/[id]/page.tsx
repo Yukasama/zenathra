@@ -1,12 +1,12 @@
 import { Suspense } from "react";
-import PriceChart from "@/components/price-chart";
+import PriceChart from "@/components/stock/price-chart";
 import { db } from "@/db";
 import { notFound } from "next/navigation";
 import PageLayout from "@/components/shared/page-layout";
 import PortfolioAssets, {
   PortfolioAssetsLoading,
-} from "@/components/portfolio/portfolio-assets";
-import PortfolioAllocation from "@/components/portfolio/portfolio-allocation";
+} from "@/app/p/[id]/portfolio-assets";
+import PortfolioAllocation from "@/app/p/[id]/portfolio-allocation";
 import { EyeOff } from "lucide-react";
 import {
   Card,
@@ -19,7 +19,7 @@ import dynamic from "next/dynamic";
 import Skeleton from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 
-const EditTitle = dynamic(() => import("@/components/portfolio/edit-title"), {
+const EditTitle = dynamic(() => import("@/app/p/[id]/edit-title"), {
   ssr: false,
 });
 
@@ -42,7 +42,9 @@ const PortfolioAddModal = dynamic(
 export const revalidate = 30;
 
 export async function generateStaticParams() {
-  const data = await db.portfolio.findMany({ select: { id: true } });
+  const data = await db.portfolio.findMany({
+    select: { id: true },
+  });
 
   return data.map((portfolio) => ({ id: portfolio.id }));
 }
@@ -53,7 +55,14 @@ interface Props {
 
 export async function generateMetadata({ params: { id } }: Props) {
   const user = getUser();
-  const portfolio = await db.portfolio.findFirst({ where: { id } });
+  const portfolio = await db.portfolio.findFirst({
+    select: {
+      title: true,
+      public: true,
+      creatorId: true,
+    },
+    where: { id },
+  });
 
   if (!portfolio) return { title: "Portfolio not found" };
   if (!portfolio.public && user?.id !== portfolio.creatorId)

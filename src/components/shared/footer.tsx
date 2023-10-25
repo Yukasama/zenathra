@@ -10,7 +10,7 @@ export default function Footer() {
       <div className="f-col lg:flex-row items-center justify-between gap-1">
         <div className="flex items-center gap-3 mb-3 lg:mb-0">
           <CompanyLogo px={30} />
-          <CardTitle className="text-xl">Elysium</CardTitle>
+          <CardTitle className="text-xl">{SITE.name}</CardTitle>
         </div>
         <div className="flex items-center gap-5">
           <p className="text-[13px] text-slate-500">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button, buttonVariants } from "../ui/button";
+import { Button, buttonVariants } from "../../../components/ui/button";
 import { startTransition, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { Trash2 } from "lucide-react";
@@ -14,8 +14,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "../ui/input";
-import { CardDescription } from "../ui/card";
+import { Input } from "../../../components/ui/input";
+import { CardDescription } from "../../../components/ui/card";
 import { trpc } from "@/app/_trpc/client";
 import axios from "axios";
 import { cn } from "@/lib/utils";

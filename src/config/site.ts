@@ -6,19 +6,19 @@ import {
 } from "lucide-react";
 
 export const SITE = {
-  name: "Elysium",
+  name: "Zenethra",
   description:
     "A stock market analysis tool that provides a visual representation of the market's performance.",
-  url: "https://elysium.com",
+  url: "https://www.zenethra.com",
   links: {
     twitter: "https://twitter.com/yukasama",
     github: "https://github.com/yukasama",
     linkedin: "https://www.linkedin.com/in/yukasama",
-    youtube: "https://www.youtube.com/channel/elysium",
-    instagram: "https://www.instagram.com/elysium",
+    youtube: "https://www.youtube.com/channel/zenethra",
+    instagram: "https://www.instagram.com/zenethra",
   },
   keywords: [
-    "elysium",
+    "zenethra",
     "stocks",
     "stock market",
     "stock market tool",

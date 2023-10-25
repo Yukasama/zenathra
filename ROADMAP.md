@@ -1,4 +1,4 @@
-## Elysium Development Aims
+## Zenethra Development Aims
 
 ### Short Term
 * Kinde session invalidation on data change

@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Pencil } from "lucide-react";
-import { buttonVariants } from "../ui/button";
+import { buttonVariants } from "../../../components/ui/button";
 import { Portfolio, Stock } from "@prisma/client";
 import PortfolioPosition from "./portfolio-position";
 

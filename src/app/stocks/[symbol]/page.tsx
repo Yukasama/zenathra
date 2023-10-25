@@ -1,10 +1,10 @@
 import StockList, { StockListLoading } from "@/components/stock/stock-list";
-import StockMetrics from "@/components/stock/stock-metrics";
-import StockEye from "@/components/stock/stock-eye";
+import StockMetrics from "@/app/stocks/[symbol]/stock-metrics";
+import StockEye from "@/app/stocks/[symbol]/stock-eye";
 import StockAfterHours, {
   StockAfterHoursLoading,
-} from "@/components/stock/stock-after-hours";
-import StockInfo, { StockInfoLoading } from "@/components/stock/stock-info";
+} from "@/app/stocks/[symbol]/stock-after-hours";
+import StockInfo, { StockInfoLoading } from "@/app/stocks/[symbol]/stock-info";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { db } from "@/db";
@@ -12,8 +12,8 @@ import { Separator } from "@/components/ui/separator";
 import PageLayout from "@/components/shared/page-layout";
 import StockStatistics, {
   StockStatisticsLoading,
-} from "@/components/stock/stock-statistics";
-import PriceChart from "@/components/price-chart";
+} from "@/app/stocks/[symbol]/stock-statistics";
+import PriceChart from "@/components/stock/price-chart";
 import { StockImage } from "@/components/stock/stock-image";
 import { getUser } from "@/lib/auth";
 import { getQuote } from "@/lib/fmp/quote";
@@ -70,6 +70,7 @@ export default async function page({ params: { symbol } }: Props) {
   if (user) {
     const tenSecondsAgo = new Date(new Date().getTime() - 10000);
     const recentEntry = await db.userRecentStocks.findFirst({
+      select: { id: true },
       where: {
         userId: user?.id ?? undefined,
         stockId: stock.id,

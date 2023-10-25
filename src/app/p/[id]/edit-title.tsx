@@ -21,13 +21,13 @@ import {
   FormControl,
   FormDescription,
   FormMessage,
-} from "../ui/form";
+} from "../../../components/ui/form";
 import { trpc } from "@/app/_trpc/client";
 import { toast } from "@/hooks/use-toast";
 import { startTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Input } from "../../../components/ui/input";
+import { Button } from "../../../components/ui/button";
 import { DialogClose } from "@radix-ui/react-dialog";
 
 interface Props {

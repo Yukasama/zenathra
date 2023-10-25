@@ -1,5 +1,5 @@
 import { Lock } from "lucide-react";
-import { Card } from "../ui/card";
+import { Card } from "../../../components/ui/card";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface Props {

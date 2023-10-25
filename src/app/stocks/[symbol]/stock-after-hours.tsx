@@ -1,9 +1,9 @@
 import { Stock } from "@prisma/client";
 import { ChevronsUp, ChevronsDown } from "lucide-react";
 import { getQuote } from "@/lib/fmp/quote";
-import { Card, CardDescription } from "../ui/card";
+import { Card, CardDescription } from "../../../components/ui/card";
 import { cn } from "@/lib/utils";
-import Skeleton from "../ui/skeleton";
+import Skeleton from "../../../components/ui/skeleton";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   stock: Pick<Stock, "symbol">;

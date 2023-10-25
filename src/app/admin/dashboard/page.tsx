@@ -1,4 +1,4 @@
-import AdminAddStocks from "@/components/admin-add-stocks";
+import AdminAddStocks from "@/app/admin/dashboard/admin-add-stocks";
 import PageLayout from "@/components/shared/page-layout";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";

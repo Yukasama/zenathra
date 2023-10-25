@@ -33,7 +33,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const StockPortfolioAddModal = dynamic(
-  () => import("./stock-portfolio-add-modal"),
+  () => import("../../app/stocks/[symbol]/stock-portfolio-add-modal"),
   {
     ssr: false,
     loading: () => (

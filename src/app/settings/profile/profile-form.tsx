@@ -21,7 +21,7 @@ import { trpc } from "@/app/_trpc/client";
 import { UserUpdateSchema } from "@/lib/validators/user";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import { User } from "@prisma/client";
-import { Textarea } from "../ui/textarea";
+import { Textarea } from "../../../components/ui/textarea";
 
 interface Props {
   user: Pick<KindeUser, "given_name" | "family_name">;

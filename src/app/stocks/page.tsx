@@ -1,12 +1,12 @@
 import { getDailys, getQuote } from "@/lib/fmp/quote";
-import StockCardList from "@/components/stock/stock-card-list";
-import IndexList from "@/components/stock/index-list";
-import { IndexListLoading } from "@/components/stock/index-list";
-import { StockCardListLoading } from "@/components/stock/stock-card-list";
+import StockCardList from "@/app/stocks/stock-card-list";
+import IndexList from "@/app/stocks/index-list";
+import { IndexListLoading } from "@/app/stocks/index-list";
+import { StockCardListLoading } from "@/app/stocks/stock-card-list";
 import { Suspense } from "react";
 import PageLayout from "@/components/shared/page-layout";
 import { db } from "@/db";
-import PriceChart from "@/components/price-chart";
+import PriceChart from "@/components/stock/price-chart";
 import { StockImage } from "@/components/stock/stock-image";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 

@@ -1,4 +1,5 @@
 import {
+  KindeUser,
   createKindeManagementAPIClient,
   getKindeServerSession,
 } from "@kinde-oss/kinde-auth-nextjs/server";
@@ -12,7 +13,7 @@ import { UserUpdateSchema } from "@/lib/validators/user";
 import { z } from "zod";
 
 export const userRouter = router({
-  authCallback: publicProcedure.mutation(async () => {
+  authCallback: publicProcedure.query(async () => {
     const { getUser } = getKindeServerSession();
     const user = getUser();
 
@@ -30,6 +31,8 @@ export const userRouter = router({
           email: user.email,
         },
       });
+
+    return { success: true };
   }),
   getKindeSession: privateProcedure.query(async () => {
     const { getUser, isAuthenticated, getPermissions, getOrganization } =
@@ -97,7 +100,7 @@ export const userRouter = router({
       given_name: user.firstName ?? null,
       family_name: user.lastName ?? null,
       picture: user.picture ?? null,
-    };
+    } as Pick<KindeUser, "given_name" | "family_name" | "picture">;
   }),
   update: privateProcedure
     .input(UserUpdateSchema)
