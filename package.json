@@ -20,6 +20,7 @@
     "eslint": "8.52.0"
   },
   "dependencies": {
+    "@cloudflare/next-on-pages": "^1.7.2",
     "@hookform/resolvers": "^3.3.2",
     "@kinde-oss/kinde-auth-nextjs": "^1.8.24",
     "@nextui-org/checkbox": "^2.0.22",
