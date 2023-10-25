@@ -8,7 +8,7 @@ import {
   SlidersHorizontal,
   User,
 } from "lucide-react";
-import CompanyLogo from "../company-logo";
+import CompanyLogo from "./company-logo";
 import { RecentStocks } from "@/types/db";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Portfolio } from "@prisma/client";
@@ -16,7 +16,7 @@ import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import { buttonVariants } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { Card } from "../ui/card";
-import { UserAvatar } from "../user-avatar";
+import { UserAvatar } from "./user-avatar";
 import PortfolioImage from "../portfolio/portfolio-image";
 import { useRouter } from "next/navigation";
 import {
@@ -177,8 +177,12 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
             <Card className="flex items-center p-2 px-3 gap-2.5">
               <UserAvatar user={user} />
               <div>
-                <p className="font-medium truncate max-w-[200px]">{user.given_name}</p>
-                <p className="text-sm text-slate-400 truncate max-w-[200px]">{user.email}</p>
+                <p className="font-medium truncate max-w-[200px]">
+                  {user.given_name}
+                </p>
+                <p className="text-sm text-slate-400 truncate max-w-[200px]">
+                  {user.email}
+                </p>
               </div>
             </Card>
           )}

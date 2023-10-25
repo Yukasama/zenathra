@@ -1,6 +1,6 @@
 import { Quote } from "@/types/stock";
 import Link from "next/link";
-import StockPrice from "./stock-price";
+import StockPrice from "../../app/stocks/[symbol]/stock-price";
 import {
   Card,
   CardContent,
@@ -33,7 +33,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const StockPortfolioAddModal = dynamic(
-  () => import("../../app/stocks/[symbol]/stock-portfolio-add-modal"),
+  () => import("./stock-portfolio-add-modal"),
   {
     ssr: false,
     loading: () => (

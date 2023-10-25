@@ -93,7 +93,7 @@ export default async function page({ params: { symbol } }: Props) {
         <div className="flex f-col md:flex-row gap-5">
           <div className="relative f-col gap-2">
             <Suspense fallback={<StockInfoLoading />}>
-                <StockInfo stock={stock} />
+              <StockInfo stock={stock} />
             </Suspense>
             <Suspense fallback={<StockAfterHoursLoading />}>
               <StockAfterHours stock={stock} />

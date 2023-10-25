@@ -35,6 +35,8 @@ import { trpc } from "../_trpc/client";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
+export const runtime = "edge";
+
 interface Props {
   searchParams: { [key: string]: string | string[] | undefined };
 }

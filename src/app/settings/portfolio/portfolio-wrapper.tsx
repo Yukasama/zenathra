@@ -3,7 +3,7 @@ import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import PortfolioItem from "./portfolio-item";
 
 interface Props {
-  user: Pick<KindeUser, "id">;
+  user: Pick<KindeUser, "id"> | null;
 }
 
 export default async function PortfolioWrapper({ user }: Props) {
@@ -15,7 +15,7 @@ export default async function PortfolioWrapper({ user }: Props) {
       color: true,
       createdAt: true,
     },
-    where: { creatorId: user.id },
+    where: { creatorId: user?.id },
   });
 
   return (

@@ -8,10 +8,12 @@ const DeleteUserModal = dynamic(
   {
     ssr: false,
     loading: () => (
-      <Button variant="destructive" className="self-start" isLoading></Button>
+      <Button variant="destructive" className="self-start" isLoading />
     ),
   }
 );
+
+export const runtime = "edge";
 
 export default function page() {
   return (

@@ -13,6 +13,8 @@ import { MoveRight } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
+export const runtime = "edge";
+
 export default async function page() {
   const { getUser, isAuthenticated } = getKindeServerSession();
   const user = getUser();

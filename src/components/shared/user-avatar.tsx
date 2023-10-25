@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 
 interface Props extends AvatarProps {
-  user: Pick<KindeUser, "given_name" | "picture"> | undefined;
+  user: Pick<KindeUser, "given_name" | "picture"> | null | undefined;
   fallbackFontSize?: number;
 }
 

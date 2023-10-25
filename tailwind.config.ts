@@ -1,5 +1,5 @@
-const { fontFamily } = require("tailwindcss/defaultTheme");
-const { nextui } = require("@nextui-org/theme");
+import { fontFamily } from "tailwindcss/defaultTheme";
+import { nextui } from "@nextui-org/theme";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -7,7 +7,7 @@ module.exports = {
   content: [
     "./src/app/**/*.{ts,tsx}",
     "./src/components/**/*.{ts,tsx}",
-    "./node_modules/@nextui-org/theme/dist/components/(checkbox|skeleton|spinner).js",
+    "./node_modules/@nextui-org/theme/dist/components/(checkbox|spinner).js",
   ],
   mode: "jit",
   theme: {

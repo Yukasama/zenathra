@@ -21,11 +21,11 @@ import { trpc } from "@/app/_trpc/client";
 import { UserUpdateSchema } from "@/lib/validators/user";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import { User } from "@prisma/client";
-import { Textarea } from "../../../components/ui/textarea";
+import { Textarea } from "../../components/ui/textarea";
 
 interface Props {
-  user: Pick<KindeUser, "given_name" | "family_name">;
-  dbUser: Pick<User, "biography">;
+  user: Pick<KindeUser, "given_name" | "family_name"> | null;
+  dbUser: Pick<User, "biography"> | null;
 }
 
 export default function ProfileForm({ user, dbUser }: Props) {
@@ -34,9 +34,9 @@ export default function ProfileForm({ user, dbUser }: Props) {
   const form = useForm({
     resolver: zodResolver(UserUpdateSchema),
     defaultValues: {
-      givenName: user.given_name ?? "",
-      familyName: user.family_name ?? "",
-      biography: dbUser.biography ?? "",
+      givenName: user?.given_name ?? "",
+      familyName: user?.family_name ?? "",
+      biography: dbUser?.biography ?? "",
     },
   });
 

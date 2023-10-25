@@ -1,5 +1,5 @@
 import { getIndexQuotes } from "@/lib/fmp/quote";
-import StockPrice from "../../components/stock/stock-price";
+import StockPrice from "./[symbol]/stock-price";
 import {
   Card,
   CardContent,

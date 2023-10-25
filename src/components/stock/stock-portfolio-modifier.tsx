@@ -3,12 +3,12 @@
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { startTransition } from "react";
-import { Button } from "../../../components/ui/button";
+import { Button } from "../ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import { PortfolioWithStocks } from "@/types/db";
-import { Card } from "../../../components/ui/card";
+import { Card } from "../ui/card";
 import { trpc } from "@/app/_trpc/client";
-import PortfolioImage from "../../../components/portfolio/portfolio-image";
+import PortfolioImage from "../portfolio/portfolio-image";
 
 interface Props {
   portfolio: Pick<

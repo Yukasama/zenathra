@@ -1,20 +1,13 @@
 import PortfolioWrapper from "@/app/settings/portfolio/portfolio-wrapper";
 import { StockListLoading } from "@/components/stock/stock-list";
 import { Separator } from "@/components/ui/separator";
-import { db } from "@/db";
 import { getUser } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
+export const runtime = "edge";
+
 export default async function page() {
-  const user = getUser()!;
-
-  const dbUser = await db.user.findFirst({
-    select: { biography: true },
-    where: { id: user.id ?? undefined },
-  });
-
-  if (!dbUser) return redirect("/");
+  const user = getUser();
 
   return (
     <div className="f-col gap-4 w-full">

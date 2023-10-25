@@ -1,19 +1,13 @@
 import { authMiddleware } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export const config = {
-  matcher: [
-    "/portfolio",
-    "/settings/:path*",
-    "/dashboard/:path*",
-    "/auth-callback",
-  ],
+  matcher: ["/portfolio", "/settings/:path*", "/auth-callback"],
 };
 
 export default authMiddleware;
 
-
 // import { NextRequest, NextResponse } from 'next/server'
- 
+
 // export function middleware(request: NextRequest) {
 //   const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
 //   const cspHeader = `
@@ -29,7 +23,7 @@ export default authMiddleware;
 //     block-all-mixed-content;
 //     upgrade-insecure-requests;
 // `
- 
+
 //   const requestHeaders = new Headers(request.headers)
 //   requestHeaders.set('x-nonce', nonce)
 //   requestHeaders.set(
@@ -37,7 +31,7 @@ export default authMiddleware;
 //     // Replace newline characters and spaces
 //     cspHeader.replace(/\s{2,}/g, ' ').trim()
 //   )
- 
+
 //   return NextResponse.next({
 //     headers: requestHeaders,
 //     request: {

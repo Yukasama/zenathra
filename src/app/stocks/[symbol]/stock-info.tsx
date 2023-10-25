@@ -12,7 +12,7 @@ import dynamic from "next/dynamic";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 const StockPortfolioAddModal = dynamic(
-  () => import("./stock-portfolio-add-modal"),
+  () => import("../../../components/stock/stock-portfolio-add-modal"),
   {
     ssr: false,
     loading: () => <Button variant="subtle" isLoading />,

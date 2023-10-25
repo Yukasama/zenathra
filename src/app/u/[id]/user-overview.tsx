@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserAvatar } from "@/components/user-avatar";
+import { UserAvatar } from "@/components/shared/user-avatar";
 import { Calendar } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
