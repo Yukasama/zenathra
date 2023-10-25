@@ -51,7 +51,7 @@
     "@trpc/next": "^10.42.0",
     "@trpc/react-query": "^10.42.0",
     "@trpc/server": "^10.42.0",
-    "autoprefixer": "10.4.14",
+    "autoprefixer": "10.4.16",
     "axios": "^1.5.1",
     "class-variance-authority": "^0.6.1",
     "clsx": "^1.2.1",
