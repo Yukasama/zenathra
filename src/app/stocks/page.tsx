@@ -53,13 +53,11 @@ export default async function page() {
           />
         )}
         <Suspense fallback={<IndexListLoading />}>
-          {/* @ts-expect-error Server Component */}
           <IndexList />
         </Suspense>
       </div>
 
       <Suspense fallback={<StockCardListLoading />}>
-        {/* @ts-expect-error Server Component */}
         <StockCardList
           symbols={actives}
           title="Most Active"
@@ -70,7 +68,6 @@ export default async function page() {
       </Suspense>
 
       <Suspense fallback={<StockCardListLoading />}>
-        {/* @ts-expect-error Server Component */}
         <StockCardList
           symbols={winners}
           title="Daily Winners"
@@ -81,7 +78,6 @@ export default async function page() {
       </Suspense>
 
       <Suspense fallback={<StockCardListLoading />}>
-        {/* @ts-expect-error Server Component */}
         <StockCardList
           symbols={losers}
           title="Daily Underperformers"

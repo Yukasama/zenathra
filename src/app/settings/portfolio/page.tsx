@@ -23,7 +23,6 @@ export default async function page() {
         <Separator />
       </div>
       <Suspense fallback={<StockListLoading className="w-full" />}>
-        {/* @ts-expect-error Server Component */}
         <PortfolioWrapper user={user} />
       </Suspense>
     </div>

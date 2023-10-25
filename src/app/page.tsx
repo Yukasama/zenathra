@@ -50,7 +50,6 @@ export default async function page() {
         </div>
         <div className="w-5/6 sm:w-4/5">
           <Suspense fallback={<StockCardListLoading />}>
-            {/* @ts-expect-error Server Component */}
             <StockCardList symbols={symbols} isAuthenticated={false} />
           </Suspense>
         </div>

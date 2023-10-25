@@ -8,11 +8,16 @@ import {
   ModifyPortfolioSchema,
 } from "@/lib/validators/portfolio";
 
-const BASE_COLORS = ["#0088FE", "#00C49F", "#A463F2", "#20B2AA", "#7C4DFF"];
-
 function getRandomColor(): string {
-  const randomIndex = Math.floor(Math.random() * BASE_COLORS.length);
-  return BASE_COLORS[randomIndex];
+  const PORTFOLIO_COLORS = [
+    "#0088FE",
+    "#00C49F",
+    "#A463F2",
+    "#20B2AA",
+    "#7C4DFF",
+  ];
+  const randomIndex = Math.floor(Math.random() * PORTFOLIO_COLORS.length);
+  return PORTFOLIO_COLORS[randomIndex];
 }
 
 export const portfolioRouter = router({
@@ -110,7 +115,7 @@ export const portfolioRouter = router({
     .input(z.string()) // Portfolio ID
     .mutation(async ({ ctx, input }) => {
       const { userId } = ctx;
-      
+
       await db.portfolio.delete({
         where: {
           id: input,

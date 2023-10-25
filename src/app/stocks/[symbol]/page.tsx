@@ -93,11 +93,9 @@ export default async function page({ params: { symbol } }: Props) {
         <div className="flex f-col md:flex-row gap-5">
           <div className="relative f-col gap-2">
             <Suspense fallback={<StockInfoLoading />}>
-              {/* @ts-expect-error Server Component */}
-              <StockInfo stock={stock} />
+                <StockInfo stock={stock} />
             </Suspense>
             <Suspense fallback={<StockAfterHoursLoading />}>
-              {/* @ts-expect-error Server Component */}
               <StockAfterHours stock={stock} />
             </Suspense>
           </div>
@@ -113,7 +111,6 @@ export default async function page({ params: { symbol } }: Props) {
             image={<StockImage src={stock.image} px={40} className="bg-card" />}
           />
           <Suspense fallback={<StockListLoading limit={4} />}>
-            {/* @ts-expect-error Server Component */}
             <StockList
               symbols={stock?.peersList?.split(",")}
               title="Peers"
@@ -125,7 +122,6 @@ export default async function page({ params: { symbol } }: Props) {
         </div>
         <Separator />
         <Suspense fallback={<StockStatisticsLoading />}>
-          {/* @ts-expect-error Server Component */}
           <StockStatistics stock={stock} />
         </Suspense>
       </div>

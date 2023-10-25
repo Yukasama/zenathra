@@ -164,7 +164,6 @@ export default async function page({ params: { id } }: Props) {
           </div>
           <div className="flex">
             <Suspense fallback={<PortfolioAssetsLoading />}>
-              {/* @ts-expect-error Server Component */}
               <PortfolioAssets
                 user={user}
                 portfolio={portfolio}

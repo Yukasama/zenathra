@@ -31,7 +31,6 @@ export default async function page() {
           <Suspense
             key={portfolio.id}
             fallback={<Card className="animate-pulse-right min-h-72" />}>
-            {/* @ts-expect-error Server Component */}
             <PortfolioCard portfolio={portfolio} />
           </Suspense>
         ))}

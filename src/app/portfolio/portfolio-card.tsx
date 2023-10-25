@@ -80,7 +80,6 @@ export default async function PortfolioCard({ portfolio }: Props) {
           fallback={[...Array(3)].map((_, i) => (
             <Card key={i} className="animate-pulse-right h-12 p-2 mb-2" />
           ))}>
-          {/* @ts-expect-error Server Component */}
           <StockList
             symbols={symbols.map((s) => s.symbol)}
             error="No Stocks in this Portfolio"

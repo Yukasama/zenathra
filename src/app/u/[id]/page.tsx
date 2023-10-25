@@ -40,11 +40,9 @@ export default async function page({ params: { id } }: Props) {
           <p className="text-slate-400">{dbUser?.biography}</p>
         </div>
         <Suspense fallback={<StockListLoading className="w-full" />}>
-          {/* @ts-expect-error Server Component */}
           <PortfolioList user={{ id }} />
         </Suspense>
         <Suspense fallback={<StockListLoading className="w-full" />}>
-          {/* @ts-expect-error Server Component */}
           <RecentStocks user={{ id }} />
         </Suspense>
       </div>

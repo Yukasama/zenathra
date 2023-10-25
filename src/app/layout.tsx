@@ -23,7 +23,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         )}>
         <Provider>
           <div className="h-screen overflow-auto">
-            {/* @ts-expect-error Server Component */}
             <Navbar />
             <main className="min-h-screen">{children}</main>
             <Footer />
