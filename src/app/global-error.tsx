@@ -7,6 +7,8 @@ interface Props {
   reset: () => void;
 }
 
+export const runtime = "edge";
+
 export default function GlobalError({ reset }: Props) {
   return (
     <html>
