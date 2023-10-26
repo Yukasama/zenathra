@@ -1,3 +1,5 @@
+"use client";
+
 interface Props {
   statusCode: number | undefined;
 }
