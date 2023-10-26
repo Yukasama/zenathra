@@ -46,7 +46,7 @@ export default function AdminAddStocks() {
 
   const stocks = ["All", "US500", "AAPL", "MSFT", "TSLA"];
 
-  const { mutate: uploadStocks, isLoading } = trpc.stock.upload.useMutation({
+  const { mutate: uploadStocks, isLoading } = trpc.database.upload.useMutation({
     onError: () =>
       toast({
         title: "Oops! Something went wrong.",
