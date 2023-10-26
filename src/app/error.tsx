@@ -7,8 +7,6 @@ interface Props {
   reset: () => void;
 }
 
-export const runtime = "edge";
-
 export default function Error({ reset }: Props) {
   return (
     <div className="f-box mt-[360px]">

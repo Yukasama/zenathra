@@ -20,6 +20,8 @@ import { getQuote } from "@/lib/fmp/quote";
 
 export const revalidate = 30;
 
+export const runtime = "edge";
+
 // export async function generateStaticParams() {
 //   const data = await db.stock.findMany({
 //     select: { symbol: true },

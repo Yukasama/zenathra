@@ -14,8 +14,6 @@ const k2d = K2D({
   weight: ["100", "200", "300", "400", "500", "600"],
 });
 
-export const runtime = "edge";
-
 export const metadata: Metadata = constructMetadata();
 
 export default async function RootLayout({ children }: PropsWithChildren) {

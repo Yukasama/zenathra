@@ -18,8 +18,6 @@ const ProfileForm = dynamic(() => import("@/app/settings/profile-form"), {
   ),
 });
 
-export const runtime = "edge";
-
 export default async function page() {
   const user = getUser();
 

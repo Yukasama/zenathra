@@ -39,6 +39,8 @@ interface Props {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
+export const runtime = "edge";
+
 export default function Page({ searchParams }: Props) {
   const router = useRouter();
 

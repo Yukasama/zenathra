@@ -10,6 +10,8 @@ import {
 import SettingsItem from "@/app/settings/settings-item";
 import SettingsUserSection from "@/app/settings/settings-user-section";
 
+export const runtime = "edge";
+
 export default function Layout({ children }: PropsWithChildren) {
   const tabs = [
     {
