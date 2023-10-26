@@ -1,10 +1,11 @@
+import "server-only";
+
 import { db } from "@/db";
 import axios from "axios";
 import { FMP_API_URL, TIMEFRAMES, historyUrls } from "@/config/fmp/config";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import { env } from "@/env.mjs";
 import logger from "pino";
-
 
 export async function fetchHistory(symbol: string) {
   const fetchedURLs: Record<string, any> = {};
@@ -54,7 +55,10 @@ function MergeArrays(arrays: Record<string, any>[][]): Record<string, any>[] {
   return result;
 }
 
-export async function uploadStocks(symbols: string[], user: KindeUser): Promise<void> {
+export async function uploadStocks(
+  symbols: string[],
+  user: KindeUser
+): Promise<void> {
   if (!symbols.length) throw new Error("ArgumentError: No symbols provided");
 
   const financialUrls = symbols.map((symbol) => [
