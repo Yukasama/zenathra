@@ -13,8 +13,6 @@ const DeleteUserModal = dynamic(
   }
 );
 
-export const runtime = "edge";
-
 export default function page() {
   return (
     <div className="f-col gap-4 w-full">

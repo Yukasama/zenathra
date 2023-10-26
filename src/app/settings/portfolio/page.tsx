@@ -4,8 +4,6 @@ import { Separator } from "@/components/ui/separator";
 import { getUser } from "@/lib/auth";
 import { Suspense } from "react";
 
-export const runtime = "edge";
-
 export default async function page() {
   const user = getUser();
 

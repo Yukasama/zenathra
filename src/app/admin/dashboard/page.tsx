@@ -3,8 +3,6 @@ import PageLayout from "@/components/shared/page-layout";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 
-export const runtime = "edge";
-
 export default async function page() {
   const { getPermission } = getKindeServerSession();
 

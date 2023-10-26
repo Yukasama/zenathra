@@ -41,8 +41,6 @@ const PortfolioAddModal = dynamic(
 
 export const revalidate = 30;
 
-export const runtime = "edge";
-
 // export async function generateStaticParams() {
 //   const data = await db.portfolio.findMany({
 //     select: { id: true },

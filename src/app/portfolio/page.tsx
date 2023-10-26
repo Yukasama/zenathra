@@ -7,8 +7,6 @@ import { PLANS } from "@/config/stripe";
 import { Suspense } from "react";
 import { Card } from "@/components/ui/card";
 
-export const runtime = "edge";
-
 export default async function page() {
   const user = getUser();
 
