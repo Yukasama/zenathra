@@ -43,13 +43,13 @@ export const revalidate = 30;
 
 export const runtime = "edge";
 
-export async function generateStaticParams() {
-  const data = await db.portfolio.findMany({
-    select: { id: true },
-  });
+// export async function generateStaticParams() {
+//   const data = await db.portfolio.findMany({
+//     select: { id: true },
+//   });
 
-  return data.map((portfolio) => ({ id: portfolio.id }));
-}
+//   return data.map((portfolio) => ({ id: portfolio.id }));
+// }
 
 interface Props {
   params: { id: string };

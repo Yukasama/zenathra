@@ -12,8 +12,6 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export const revalidate = 30;
 
-export const runtime = "edge";
-
 export default async function page() {
   const [actives, winners, losers] = await Promise.all([
     getDailys("actives"),

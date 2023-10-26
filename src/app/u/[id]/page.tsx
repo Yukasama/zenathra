@@ -10,13 +10,15 @@ interface Props {
   params: { id: string };
 }
 
-export async function generateStaticParams() {
-  const users = await db.user.findMany({
-    select: { id: true },
-  });
+export const runtime = "edge";
 
-  return users.map((user) => ({ id: user.id }));
-}
+// export async function generateStaticParams() {
+//   const users = await db.user.findMany({
+//     select: { id: true },
+//   });
+
+//   return users.map((user) => ({ id: user.id }));
+// }
 
 export default async function page({ params: { id } }: Props) {
   const dbUser = await db.user.findFirst({

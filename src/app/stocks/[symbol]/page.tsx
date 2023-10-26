@@ -20,15 +20,13 @@ import { getQuote } from "@/lib/fmp/quote";
 
 export const revalidate = 30;
 
-export const runtime = "edge";
+// export async function generateStaticParams() {
+//   const data = await db.stock.findMany({
+//     select: { symbol: true },
+//   });
 
-export async function generateStaticParams() {
-  const data = await db.stock.findMany({
-    select: { symbol: true },
-  });
-
-  return data.map((stock) => ({ symbol: stock.symbol }));
-}
+//   return data.map((stock) => ({ symbol: stock.symbol }));
+// }
 
 interface Props {
   params: { symbol: string };
