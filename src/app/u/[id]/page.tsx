@@ -10,6 +10,8 @@ interface Props {
   params: { id: string };
 }
 
+export const runtime = "edge";
+
 export async function generateStaticParams() {
   const users = await db.user.findMany({
     select: { id: true },

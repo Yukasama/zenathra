@@ -1,5 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 
+export const runtime = "edge";
+
 export default async function page() {
   return (
     <div className="f-col gap-4 w-full">

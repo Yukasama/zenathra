@@ -311,7 +311,7 @@ async function uploadStocks(symbols: string[], user: KindeUser): Promise<void> {
       );
       await Promise.all(financialsPromises);
     } catch {
-      logger().error("[ERROR] Uploading stock data for", symbol, "failed")
+      logger().error("[ERROR] Uploading stock data for", symbol, "failed");
     }
   });
   await Promise.all(promises);
