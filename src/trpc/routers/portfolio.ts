@@ -7,18 +7,7 @@ import {
   EditPortfolioSchema,
   ModifyPortfolioSchema,
 } from "@/lib/validators/portfolio";
-
-function getRandomColor(): string {
-  const PORTFOLIO_COLORS = [
-    "#0088FE",
-    "#00C49F",
-    "#A463F2",
-    "#20B2AA",
-    "#7C4DFF",
-  ];
-  const randomIndex = Math.floor(Math.random() * PORTFOLIO_COLORS.length);
-  return PORTFOLIO_COLORS[randomIndex];
-}
+import { getRandomColor } from "@/lib/utils";
 
 export const portfolioRouter = router({
   create: privateProcedure
