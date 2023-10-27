@@ -3,7 +3,6 @@ import "server-only";
 import { FMP_API_URL, FMP, FMP_URLS } from "@/config/fmp/config";
 import { indexQuotes, quote } from "@/config/fmp/simulation";
 import { env } from "@/env.mjs";
-import axios from "axios";
 import { Quote } from "@/types/stock";
 
 export async function getDailys(
@@ -36,7 +35,7 @@ export async function getIndexQuotes(): Promise<Quote[] | null> {
 
     if (FMP.simulation) return indexQuotes;
 
-    const { data } = await axios.get(FMP_URLS["indexQuotes"]);
+    const data = await fetch(FMP_URLS["indexQuotes"]).then((res) => res.json());
 
     const results = data.filter((result: any) =>
       requiredIndexes.includes(result.symbol)
@@ -57,7 +56,7 @@ export async function getQuote(
 
     const url = `${FMP_API_URL}v3/quote/${symbol}?apikey=${env.FMP_API_KEY}`;
 
-    const { data } = await axios.get(url);
+    const data = await fetch(url).then((res) => res.json());
 
     return data[0];
   } catch {
@@ -75,9 +74,7 @@ export async function getQuotes(symbols: string[]): Promise<Quote[] | null> {
       env.FMP_API_KEY
     }`;
 
-    const { data } = await axios.get(url);
-
-    return data;
+    return await fetch(url).then((res) => res.json());
   } catch {
     return null;
   }
@@ -96,7 +93,7 @@ export async function getSymbols(
 
     const url = FMP_URLS[symbolSet];
 
-    const { data } = await axios.get(url);
+    const data = await fetch(url).then((res) => res.json());
 
     const results = data
       .filter(

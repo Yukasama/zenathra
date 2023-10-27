@@ -1,8 +1,8 @@
 import { getDailys, getQuote } from "@/lib/fmp/quote";
-import StockCardList from "@/app/stocks/stock-card-list";
+import StockCardList from "@/components/stock/stock-card-list";
 import IndexList from "@/app/stocks/index-list";
 import { IndexListLoading } from "@/app/stocks/index-list";
-import { StockCardListLoading } from "@/app/stocks/stock-card-list";
+import { StockCardListLoading } from "@/components/stock/stock-card-list";
 import { Suspense } from "react";
 import PageLayout from "@/components/shared/page-layout";
 import { db } from "@/db";

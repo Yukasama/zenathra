@@ -17,7 +17,6 @@ import {
 import { Input } from "../../../components/ui/input";
 import { CardDescription } from "../../../components/ui/card";
 import { trpc } from "@/app/_trpc/client";
-import axios from "axios";
 import { cn } from "@/lib/utils";
 
 export default function DeleteUserModal() {
@@ -35,7 +34,7 @@ export default function DeleteUserModal() {
     onSuccess: async () => {
       startTransition(() => router.refresh());
 
-      await axios.get("/api/auth/logout");
+      await fetch("/api/auth/logout");
     },
   });
 

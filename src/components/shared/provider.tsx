@@ -8,7 +8,7 @@ import { PropsWithChildren, useState } from "react";
 import { NextUIProvider } from "@nextui-org/system";
 import { ThemeProvider } from "next-themes";
 
-const Providers = ({ children }: PropsWithChildren) => {
+export default function Provider({ children }: PropsWithChildren) {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
     trpc.createClient({
@@ -29,6 +29,4 @@ const Providers = ({ children }: PropsWithChildren) => {
       </QueryClientProvider>
     </trpc.Provider>
   );
-};
-
-export default Providers;
+}

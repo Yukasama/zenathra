@@ -31,6 +31,19 @@ export default async function RecentStocks({ user }: Props) {
     take: 5,
   });
 
+  if (!recentStocks)
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Stocks</CardTitle>
+          <CardDescription>Stocks that were recently viewed</CardDescription>
+        </CardHeader>
+        <CardContent className="f-box">
+          <p className="text-lg text-slate-400">No stocks explored yet.</p>
+        </CardContent>
+      </Card>
+    );
+
   const uniqueStocks = _.uniqBy(recentStocks, "stock.symbol");
 
   const quotes = await getQuotes(recentStocks.map(({ stock }) => stock.symbol));

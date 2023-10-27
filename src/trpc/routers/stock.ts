@@ -2,7 +2,6 @@ import { publicProcedure, adminProcedure, router } from "../trpc";
 import { db } from "@/db";
 import { z } from "zod";
 import { buildFilter } from "@/config/screener/build-filter";
-import axios from "axios";
 import { TIMEFRAMES, historyUrls } from "@/config/fmp/config";
 import { ScreenerSchema } from "@/lib/validators/stock";
 import { History } from "@/types/stock";
@@ -79,7 +78,9 @@ export const stockRouter = router({
     }),
   dailyHistory: publicProcedure.input(z.string()).query(async (opts) => {
     const { url } = TIMEFRAMES["1D"];
-    const { data } = await axios.get(historyUrls(opts.input, url));
+    const data = await fetch(historyUrls(opts.input, url)).then((res) =>
+      res.json()
+    );
     return data as History[];
   }),
   upload: adminProcedure

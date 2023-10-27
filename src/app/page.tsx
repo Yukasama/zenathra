@@ -1,7 +1,7 @@
 import PageLayout from "@/components/shared/page-layout";
 import StockCardList, {
   StockCardListLoading,
-} from "@/app/stocks/stock-card-list";
+} from "@/components/stock/stock-card-list";
 import { buttonVariants } from "@/components/ui/button";
 import { db } from "@/db";
 import { cn } from "@/lib/utils";

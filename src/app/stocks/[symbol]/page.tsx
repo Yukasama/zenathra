@@ -18,20 +18,18 @@ import { StockImage } from "@/components/stock/stock-image";
 import { getUser } from "@/lib/auth";
 import { getQuote } from "@/lib/fmp/quote";
 
-export const revalidate = 30;
-
-export const runtime = "edge";
-
-// export async function generateStaticParams() {
-//   const data = await db.stock.findMany({
-//     select: { symbol: true },
-//   });
-
-//   return data.map((stock) => ({ symbol: stock.symbol }));
-// }
-
 interface Props {
   params: { symbol: string };
+}
+
+export const revalidate = 30;
+
+export async function generateStaticParams() {
+  const data = await db.stock.findMany({
+    select: { symbol: true },
+  });
+
+  return data.map((stock) => ({ symbol: stock.symbol }));
 }
 
 export async function generateMetadata({ params: { symbol } }: Props) {
@@ -92,7 +90,7 @@ export default async function page({ params: { symbol } }: Props) {
   return (
     <PageLayout>
       <div className="w-full f-col gap-3">
-        <div className="flex f-col md:flex-row gap-5">
+        <div className="flex f-col md:flex-row gap-4">
           <div className="relative f-col gap-2">
             <Suspense fallback={<StockInfoLoading />}>
               <StockInfo stock={stock} />
@@ -101,11 +99,13 @@ export default async function page({ params: { symbol } }: Props) {
               <StockAfterHours stock={stock} />
             </Suspense>
           </div>
-          <StockMetrics stock={stock} />
-          <StockEye eye={stock.eye} user={user} />
+          <div className="f-col lg:flex-row gap-4">
+            <StockMetrics stock={stock} />
+            <StockEye eye={stock.eye} user={user} />
+          </div>
         </div>
         <Separator />
-        <div className="flex f-col md:flex-row gap-5">
+        <div className="f-col lg:flex-row gap-4">
           <PriceChart
             symbols={symbol}
             title={`${symbol} Chart`}

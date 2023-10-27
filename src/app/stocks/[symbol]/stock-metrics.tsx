@@ -30,7 +30,7 @@ export default function StockMetrics({ stock }: Props) {
 
   return (
     <Card className="f-col py-1">
-      <div className="mt-3">
+      <div className="sm:mt-3">
         {data.map((d) => (
           <div
             key={d.title}

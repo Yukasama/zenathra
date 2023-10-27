@@ -31,7 +31,6 @@ export function constructMetadata({
   description = SITE.description,
   image = "/logo.png",
   icons = "/favicon.ico",
-  noIndex = false,
 }: {
   title?: string;
   description?: string;
@@ -49,13 +48,6 @@ export function constructMetadata({
     },
     icons,
     metadataBase: new URL("https://www.zenethra.com"),
-    themeColor: "#FFF",
-    ...(noIndex && {
-      robots: {
-        index: false,
-        follow: false,
-      },
-    }),
   };
 }
 

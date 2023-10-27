@@ -1,7 +1,6 @@
 import "server-only";
 
 import { db } from "@/db";
-import axios from "axios";
 import { FMP_API_URL, TIMEFRAMES, historyUrls } from "@/config/fmp/config";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import { env } from "@/env.mjs";
@@ -13,7 +12,7 @@ export async function fetchHistory(symbol: string) {
   for (let timeframe of Object.keys(TIMEFRAMES)) {
     const { url } = TIMEFRAMES[timeframe];
     if (!fetchedURLs[url]) {
-      const { data } = await axios.get(historyUrls(symbol, url));
+      const data = await fetch(historyUrls(symbol, url)).then((res) => res.json());
       fetchedURLs[url] = url.includes("price-full") ? data.historical : data;
     }
   }

@@ -19,6 +19,10 @@ import dynamic from "next/dynamic";
 import Skeleton from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 
+interface Props {
+  params: { id: string };
+}
+
 const EditTitle = dynamic(() => import("@/app/p/[id]/edit-title"), {
   ssr: false,
 });
@@ -41,18 +45,12 @@ const PortfolioAddModal = dynamic(
 
 export const revalidate = 30;
 
-export const runtime = "edge";
+export async function generateStaticParams() {
+  const data = await db.portfolio.findMany({
+    select: { id: true },
+  });
 
-// export async function generateStaticParams() {
-//   const data = await db.portfolio.findMany({
-//     select: { id: true },
-//   });
-
-//   return data.map((portfolio) => ({ id: portfolio.id }));
-// }
-
-interface Props {
-  params: { id: string };
+  return data.map((portfolio) => ({ id: portfolio.id }));
 }
 
 export async function generateMetadata({ params: { id } }: Props) {

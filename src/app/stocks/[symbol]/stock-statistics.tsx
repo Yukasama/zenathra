@@ -87,7 +87,7 @@ export default async function StockStatistics({ stock }: Props) {
   }));
 
   return (
-    <div className="f-col gap-5 lg:flex-row">
+    <div className="f-col items-start lg:items-start gap-4 lg:flex-row">
       <StockKeyMetricsChart companyName={stock.companyName} data={statConfig} />
       <StockMarginChart companyName={stock.companyName} data={marginConfig} />
       <StockDividendChart
