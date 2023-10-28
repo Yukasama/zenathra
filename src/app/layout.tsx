@@ -6,7 +6,6 @@ import { cn, constructMetadata } from "@/lib/utils";
 import { K2D } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import { PropsWithChildren } from "react";
-
 import "./globals.css";
 
 const k2d = K2D({

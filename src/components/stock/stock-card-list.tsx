@@ -72,7 +72,7 @@ export default async function StockCardList({
     }),
   ]);
 
-  if (!quotes) return <StockCardListLoading />;
+  if (!quotes || !quotes.length) return <StockCardListLoading />;
 
   if (!Array.isArray(stocks) && stocks) stocks = [stocks];
 
