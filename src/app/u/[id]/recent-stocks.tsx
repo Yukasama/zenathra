@@ -31,7 +31,7 @@ export default async function RecentStocks({ user }: Props) {
     take: 5,
   });
 
-  if (!recentStocks)
+  if (!recentStocks || !recentStocks.length)
     return (
       <Card>
         <CardHeader>
