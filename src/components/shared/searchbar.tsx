@@ -89,7 +89,7 @@ export default function Searchbar({
     <>
       <div
         className={cn(
-          `border bg-card text-slate-400 p-2 rounded-md ${
+          `bg-gradient-to-br from-[#dd6942] to-[#e09c4e] text-white p-2 px-3 rounded-md ${
             responsive ? "hidden md:flex" : "flex"
           }  items-center justify-between w-60 cursor-pointer`,
           className
@@ -147,7 +147,7 @@ export default function Searchbar({
                       <StockImage src={stock.image} px={25} />
                       <div>
                         <p className="font-medium">{stock.symbol}</p>
-                        <p className="text-[12px] text-slate-500 truncate w-[150px]">
+                        <p className="text-[12px] text-zinc-500 truncate w-[150px]">
                           {stock.companyName}
                         </p>
                       </div>
@@ -158,7 +158,7 @@ export default function Searchbar({
             )}
             {isFetching ? (
               <div className="p-5 f-box">
-                <Loader className="h-5 w-5 animate-spin text-slate-500 text-center" />
+                <Loader className="h-5 w-5 animate-spin text-zinc-500 text-center" />
               </div>
             ) : !results?.length ? (
               <CommandEmpty>No results found.</CommandEmpty>
@@ -178,7 +178,7 @@ export default function Searchbar({
                           <StockImage src={stock.image} px={25} />
                           <div>
                             <p className="font-medium">{stock.symbol}</p>
-                            <p className="text-[12px] text-slate-500 truncate w-[150px]">
+                            <p className="text-[12px] text-zinc-500 truncate w-[150px]">
                               {stock.companyName}
                             </p>
                           </div>

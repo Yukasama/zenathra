@@ -118,7 +118,7 @@ export default async function PortfolioAssets({
                       <StockImage src={stock.image} px={30} />
                       <div className="f-col">
                         <p className="font-medium">{stock.symbol}</p>
-                        <p className="text-[13px] w-[80px] lg:w-[120px] truncate text-slate-400">
+                        <p className="text-[13px] w-[80px] lg:w-[120px] truncate text-zinc-400">
                           {stock.companyName}
                         </p>
                       </div>

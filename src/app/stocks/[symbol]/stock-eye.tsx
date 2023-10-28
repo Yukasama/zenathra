@@ -56,12 +56,12 @@ export default function StockEye({ user, eye }: Props) {
                     y1="0%"
                     x2="100%"
                     y2="0%">
-                    <stop offset="0%" stopColor="#8e17e8" />
-                    <stop offset="100%" stopColor="#0a74bf" />
+                    <stop offset="0%" stopColor="#fda37a" />
+                    <stop offset="100%" stopColor="#ffcc5e" />
                   </linearGradient>
                 </defs>
                 <circle
-                  className="animate-appear-down fill-white dark:fill-slate-950"
+                  className="animate-appear-down fill-background"
                   cx="60"
                   cy="60"
                   r="54"
@@ -76,7 +76,7 @@ export default function StockEye({ user, eye }: Props) {
                 <p className="text-center text-[27px] font-thin">
                   {user ? value : <Lock className="mb-1.5 h-6" />}
                 </p>
-                <p className="text-center text-[13px] font-light text-blue-500">
+                <p className="text-center text-[13px] font-light text-primary">
                   {user ? score : "Locked"}
                 </p>
               </div>
@@ -84,9 +84,7 @@ export default function StockEye({ user, eye }: Props) {
             <div className="f-col items-center gap-3">
               {categories.map((category) => (
                 <div key={category.title} className="flex items-end">
-                  <p className="w-28 text-sm text-slate-400">
-                    {category.title}
-                  </p>
+                  <p className="w-28 text-sm text-zinc-400">{category.title}</p>
                   <p
                     className={`${
                       category.value < 2

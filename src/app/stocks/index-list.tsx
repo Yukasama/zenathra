@@ -46,7 +46,7 @@ export default async function IndexList() {
             <div key={q.symbol} className="flex justify-between">
               <div>
                 <h2 className="font-medium">{q.symbol}</h2>
-                <p className="w-[100px] truncate text-sm text-slate-500">
+                <p className="w-[100px] truncate text-sm text-zinc-500">
                   {q.name}
                 </p>
               </div>

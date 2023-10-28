@@ -39,7 +39,7 @@ export default async function RecentStocks({ user }: Props) {
           <CardDescription>Stocks that were recently viewed</CardDescription>
         </CardHeader>
         <CardContent className="f-box">
-          <p className="text-lg text-slate-400">No stocks explored yet.</p>
+          <p className="text-lg text-zinc-400">No stocks explored yet.</p>
         </CardContent>
       </Card>
     );

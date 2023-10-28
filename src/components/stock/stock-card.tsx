@@ -77,7 +77,7 @@ export function StockCardLoading() {
           <div
             className={cn(
               buttonVariants({ size: "xs" }),
-              "text-blue-500 bg-slate-900"
+              "text-primary bg-zinc-900"
             )}>
             Placeholder
           </div>
@@ -86,7 +86,7 @@ export function StockCardLoading() {
           <div
             className={cn(
               buttonVariants({ size: "xs" }),
-              "text-blue-500 bg-slate-900"
+              "text-primary bg-zinc-900"
             )}>
             Placeholder
           </div>
@@ -115,7 +115,7 @@ export default function StockCard({
     <Card
       className={cn(
         className,
-        "relative min-w-[300px] min-h-[210px] lg:min-h-[250px] overflow-hidden hover:scale-[1.01] transition duration-300"
+        "relative min-w-[300px] min-h-[210px] lg:min-h-[250px] overflow-hidden hover:scale-[1.01] transition duration-300 z-[1]"
       )}>
       {stock && (
         <div className="absolute top-4 right-4">

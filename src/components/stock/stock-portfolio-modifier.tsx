@@ -57,7 +57,7 @@ export default function StockPortfolioModifier({ portfolio, symbolId }: Props) {
         <PortfolioImage portfolio={portfolio} />
         <div>
           <p className="w-[220px] truncate font-semibold">{portfolio.title}</p>
-          <p className="text-slate-400 text-[13px]">
+          <p className="text-zinc-400 text-[13px]">
             {portfolio.public ? "Public" : "Private"}
           </p>
         </div>

@@ -34,8 +34,8 @@ export default function StockMetrics({ stock }: Props) {
         {data.map((d) => (
           <div
             key={d.title}
-            className="flex items-center gap-2 p-2 px-5 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors duration-150">
-            <p className="w-40 text-[15px] text-slate-500 dark:text-slate-200">
+            className="flex items-center gap-2 p-2 px-5 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors duration-150">
+            <p className="w-40 text-[15px] text-zinc-500 dark:text-zinc-200">
               {d.title}
             </p>
             <p

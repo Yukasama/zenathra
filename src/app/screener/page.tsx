@@ -245,7 +245,7 @@ export default function Page({ searchParams }: Props) {
             <CardContent className="space-y-3">
               {descriptive.map((filter) => (
                 <div className="f-col" key={filter.id + resetCounter}>
-                  <p className="font-medium text-sm m-1 text-slate-400">
+                  <p className="font-medium text-sm m-1 text-zinc-400">
                     {filter.label}
                   </p>
                   <Select
@@ -281,7 +281,7 @@ export default function Page({ searchParams }: Props) {
             <CardContent className="f-col gap-4">
               {fundamental.map((filter) => (
                 <div className="f-col" key={filter.id + resetCounter}>
-                  <p className="font-medium text-sm m-1 text-slate-400">
+                  <p className="font-medium text-sm m-1 text-zinc-400">
                     {filter.label}
                   </p>
                   <div className="flex gap-4">
@@ -345,7 +345,7 @@ export default function Page({ searchParams }: Props) {
             <CardContent className="f-col gap-4">
               {technical.map((filter) => (
                 <div className="f-col" key={filter.id + resetCounter}>
-                  <p className="font-medium text-sm m-1 text-slate-400">
+                  <p className="font-medium text-sm m-1 text-zinc-400">
                     {filter.label}
                   </p>
                   <div className="flex gap-4">
@@ -426,7 +426,7 @@ export default function Page({ searchParams }: Props) {
               <h3 className="font-medium text-center text-lg">
                 No Stocks matching the query
               </h3>
-              <p className="text-sm text-center text-slate-400">
+              <p className="text-sm text-center text-zinc-400">
                 Please select a combination of other filters
               </p>
             </div>
@@ -436,12 +436,12 @@ export default function Page({ searchParams }: Props) {
                 <div className="f-col hidden-scrollbar max-h-[800px] gap-2 overflow-scroll">
                   {results?.map((stock) => (
                     <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
-                      <Card className="flex h-[60px] px-4 hover:bg-slate-100 dark:hover:bg-slate-900">
+                      <Card className="flex h-[60px] px-4 hover:bg-zinc-100 dark:hover:bg-zinc-900">
                         <div className="col-span-3 flex items-center gap-4">
                           <StockImage src={stock.image} px={30} />
                           <div className="f-col">
                             <p className="font-medium">{stock.symbol}</p>
-                            <p className="text-sm text-slate-500">
+                            <p className="text-sm text-zinc-500">
                               {stock.companyName}
                             </p>
                           </div>
@@ -455,12 +455,12 @@ export default function Page({ searchParams }: Props) {
                 <div className="f-col hidden-scrollbar h-[800px] gap-2 overflow-scroll">
                   {results?.map((stock) => (
                     <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
-                      <Card className="flex h-[60px] p-2 px-4 hover:bg-slate-100 dark:hover:bg-slate-900">
+                      <Card className="flex h-[60px] p-2 px-4 hover:bg-zinc-100 dark:hover:bg-zinc-900">
                         <div className="col-span-3 flex items-center gap-4">
                           <StockImage src={stock.image} px={30} />
                           <div className="f-col">
                             <p className="font-medium">{stock.symbol}</p>
-                            <p className="text-sm text-slate-500">
+                            <p className="text-sm text-zinc-500">
                               {stock.companyName}
                             </p>
                           </div>

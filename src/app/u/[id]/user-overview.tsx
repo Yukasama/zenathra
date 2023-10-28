@@ -22,7 +22,7 @@ export default function UserOverview({ id, createdAt }: Props) {
   return (
     <Skeleton isLoaded={isFetched}>
       <div className="relative">
-        <div className="bg-gradient-to-br from-blue-500 to-purple-600 h-24 lg:h-40"></div>
+        <div className="bg-gradient-to-br from-primary to-secondary h-24 lg:h-40"></div>
         <UserAvatar
           user={user}
           fallbackFontSize={48}
@@ -35,9 +35,9 @@ export default function UserOverview({ id, createdAt }: Props) {
                 <CardTitle className="text-2xl lg:text-3xl font-medium">
                   {`${user?.given_name} ${user?.family_name}`}
                 </CardTitle>
-                <div className="text-slate-500 flex items-center gap-2">
+                <div className="text-zinc-500 flex items-center gap-2">
                   <Calendar className="h-5 w-5" />
-                  <p className="text-slate-600">Joined on {createdAt}</p>
+                  <p className="text-zinc-600">Joined on {createdAt}</p>
                 </div>
               </div>
               <Link

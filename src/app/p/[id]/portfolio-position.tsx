@@ -38,7 +38,7 @@ export default function PortfolioPosition({ stock, portfolio }: Props) {
         <StockImage px={30} src={stock.image} />
         <div>
           <h3 className="text-sm font-medium">{stock.symbol}</h3>
-          <p className="text-slate-400 text-sm">{stock.companyName}</p>
+          <p className="text-zinc-400 text-sm">{stock.companyName}</p>
         </div>
       </div>
 

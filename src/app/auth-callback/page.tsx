@@ -31,7 +31,7 @@ export default function Page() {
         <Loader2 className="h-8 w-8 animate-spin text-zinc-800" />
         <h3 className="font-semibold text-xl">Setting up your account...</h3>
         <p>You will be redirected automatically.</p>
-        <Link href="/" className="text-slate-400 text-sm hover:underline">
+        <Link href="/" className="text-zinc-400 text-sm hover:underline">
           Not redirected automatically?
         </Link>
       </div>

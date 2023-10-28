@@ -46,12 +46,12 @@ export default async function PortfolioList({ user }: Props) {
       <CardContent>
         {portfolios.map((portfolio) => (
           <Link key={portfolio.id} href={`/p/${portfolio.id}`}>
-            <Card className="p-2 h-12 flex items-center w-full hover:bg-slate-900">
+            <Card className="p-2 h-12 flex items-center w-full hover:bg-zinc-900">
               <div className="flex items-center gap-2">
                 <PortfolioImage portfolio={portfolio} px={35} />
                 <div>
                   <p className="text-sm">{portfolio.title}</p>
-                  <p className="text-[12px] text-slate-500">
+                  <p className="text-[12px] text-zinc-500">
                     Created on {portfolio.createdAt.toISOString().split("T")[0]}
                   </p>
                 </div>

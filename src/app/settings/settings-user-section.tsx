@@ -14,7 +14,7 @@ export default function SettingsUserSection() {
       />
       <div className="f-col">
         <h3 className="text-2xl font-medium">{`${user?.given_name} ${user?.family_name}`}</h3>
-        <p className="text-slate-500 text-sm">
+        <p className="text-zinc-500 text-sm">
           User Settings associated with your account
         </p>
       </div>

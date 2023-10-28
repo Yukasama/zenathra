@@ -68,7 +68,7 @@ export default function StockDividendChart({
             <CardDescription>Dividend Data for {companyName}</CardDescription>
           </CardHeader>
           <CardContent className="f-box">
-            <p className="text-xl text-slate-400 font-medium mt-20">
+            <p className="text-xl text-zinc-400 font-medium mt-20">
               Never Payed Dividends
             </p>
           </CardContent>

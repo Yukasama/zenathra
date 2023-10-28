@@ -50,7 +50,7 @@ export default async function StockList({
       <div
         className={cn(
           className,
-          "text-xl text-center font-medium text-slate-600"
+          "text-xl text-center font-medium text-zinc-600"
         )}>
         {error}
       </div>

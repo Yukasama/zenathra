@@ -31,7 +31,7 @@ export function UserAvatar({
         </div>
       ) : (
         <AvatarFallback>
-          <div className="h-full w-full f-box bg-blue-500">
+          <div className="h-full w-full f-box bg-primary">
             <p
               className="font-medium text-white"
               style={{ fontSize: fallbackFontSize }}>

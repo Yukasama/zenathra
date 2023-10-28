@@ -56,7 +56,7 @@ export default async function StockCardList({
   if (!symbols)
     return (
       <Card className="border-none">
-        <CardContent className="f-box text-slate-400">
+        <CardContent className="f-box text-zinc-400">
           Stocks could not be loaded.
         </CardContent>
       </Card>

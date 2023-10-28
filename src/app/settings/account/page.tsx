@@ -19,7 +19,7 @@ export default function page() {
       <div className="f-col gap-1">
         <h2 className="font-light text-2xl">Export Data</h2>
         <Separator />
-        <small className="text-slate-500 text-sm">
+        <small className="text-zinc-500 text-sm">
           Export all portfolio, stock and profile data we have stored in our
           database (Functionality coming soon)
         </small>
@@ -33,7 +33,7 @@ export default function page() {
       <div className="f-col gap-1 mt-8">
         <h2 className="font-light text-2xl">Delete Account</h2>
         <Separator />
-        <small className="text-slate-500 text-sm">
+        <small className="text-zinc-500 text-sm">
           Once you delete your account, there is no way to recover it. Please be
           sure you want to delete your account before proceeding.
         </small>

@@ -6,21 +6,21 @@ import { Icons } from "./icons";
 
 export default function Footer() {
   return (
-    <Card className="bg-slate-50 dark:bg-slate-900 rounded-none p-6 lg:p-4 px-10 lg:px-20 w-full">
+    <Card className="bg-zinc-50 dark:bg-zinc-900 rounded-none p-6 lg:p-4 px-10 lg:px-20 w-full">
       <div className="f-col lg:flex-row items-center justify-between gap-1">
         <div className="flex items-center gap-3 mb-3 lg:mb-0">
           <CompanyLogo px={30} />
           <CardTitle className="text-xl">{SITE.name}</CardTitle>
         </div>
         <div className="flex items-center gap-5">
-          <p className="text-[13px] text-slate-500">
+          <p className="text-[13px] text-zinc-500">
             &copy; 2023 {SITE.name[0].toUpperCase() + SITE.name.slice(1)}
           </p>
           {footerLinks.map((link) => (
             <Link
               key={link.name}
               href={link.url}
-              className="text-[13px] text-slate-500 hover:underline">
+              className="text-[13px] text-zinc-500 hover:underline">
               {link.name}
             </Link>
           ))}

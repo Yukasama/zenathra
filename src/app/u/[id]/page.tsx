@@ -37,7 +37,7 @@ export default async function page({ params: { id } }: Props) {
       />
       <div className="f-col lg:grid lg:grid-cols-3 p-6 gap-6">
         <div className="f-box">
-          <p className="text-slate-400">{dbUser?.biography}</p>
+          <p className="text-zinc-400">{dbUser?.biography}</p>
         </div>
         <Suspense fallback={<StockListLoading className="w-full" />}>
           <PortfolioList user={{ id }} />

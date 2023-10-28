@@ -29,7 +29,7 @@ export function StockInfoLoading() {
             <p className="mr-10 w-[200px] truncate text-[17px] font-medium"></p>
           </Skeleton>
           <Skeleton>
-            <p className="text-slate-400 text-[13px]"></p>
+            <p className="text-zinc-400 text-[13px]"></p>
           </Skeleton>
         </div>
       </div>
@@ -86,7 +86,7 @@ export default async function StockInfo({ stock }: Props) {
           <p className="mr-10 w-[200px] truncate text-[17px] font-medium">
             {stock.symbol}
           </p>
-          <p className="text-slate-400 text-[13px]">{stock.companyName}</p>
+          <p className="text-zinc-400 text-[13px]">{stock.companyName}</p>
         </div>
       </div>
       <div className="flex items-center gap-1 px-2">

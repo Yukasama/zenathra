@@ -153,7 +153,7 @@ export default function PortfolioAddModal({ portfolio }: Props) {
                         <StockImage src={result.image} px={30} />
                         <div className="f-col">
                           <p className="text-sm font-medium">{result.symbol}</p>
-                          <p className="w-[200px] text-[12px] text-slate-600">
+                          <p className="w-[200px] text-[12px] text-zinc-600">
                             {result.companyName}
                           </p>
                         </div>

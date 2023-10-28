@@ -29,9 +29,9 @@ export default function ThemeToggle({
             theme === "light" ? setTheme("dark") : setTheme("light")
           }>
           {theme === "light" ? (
-            <Moon className="h-[18px] text-slate-600 dark:text-slate-300" />
+            <Moon className="h-[18px] text-zinc-600 dark:text-zinc-300" />
           ) : (
-            <Sun className="h-[18px] text-slate-600 dark:text-slate-300" />
+            <Sun className="h-[18px] text-zinc-600 dark:text-zinc-300" />
           )}
         </Button>
       )}
