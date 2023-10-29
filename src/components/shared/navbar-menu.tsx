@@ -22,7 +22,7 @@ interface Props {
 
 export default function NavbarMenu({ user }: Props) {
   return (
-    <NavigationMenu className="hidden lg:flex">
+    <NavigationMenu className="hidden lg:flex flex-1">
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>

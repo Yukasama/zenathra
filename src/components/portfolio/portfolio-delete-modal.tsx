@@ -1,6 +1,6 @@
 "use client";
 
-import { Portfolio } from "@prisma/client";
+import type { Portfolio } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/button";
 import { startTransition, useState } from "react";

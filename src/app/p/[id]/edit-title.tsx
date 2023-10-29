@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/dialog";
 import { EditPortfolioSchema } from "@/lib/validators/portfolio";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Portfolio } from "@prisma/client";
+import type { Portfolio } from "@prisma/client";
 import { Pencil } from "lucide-react";
-import { useForm, FieldValues } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   Form,
   FormField,
@@ -27,7 +27,7 @@ import { toast } from "@/hooks/use-toast";
 import { startTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "../../../components/ui/input";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@nextui-org/button";
 import { DialogClose } from "@radix-ui/react-dialog";
 
 interface Props {
@@ -36,7 +36,6 @@ interface Props {
 
 export default function EditTitle({ portfolio }: Props) {
   const router = useRouter();
-
   const form = useForm({
     resolver: zodResolver(EditPortfolioSchema),
     defaultValues: { title: "" },
@@ -56,15 +55,6 @@ export default function EditTitle({ portfolio }: Props) {
     },
   });
 
-  function onSubmit(data: FieldValues) {
-    const payload = {
-      portfolioId: portfolio.id,
-      title: data.title,
-    };
-
-    editTitle(payload);
-  }
-
   return (
     <Dialog>
       <DialogTrigger>
@@ -80,7 +70,14 @@ export default function EditTitle({ portfolio }: Props) {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(() =>
+              editTitle({
+                portfolioId: portfolio.id,
+                title: form.getValues()["title"],
+              })
+            )}
+            className="space-y-6">
             <FormField
               control={form.control}
               name="title"
@@ -104,7 +101,10 @@ export default function EditTitle({ portfolio }: Props) {
               )}
             />
             <DialogClose>
-              <Button variant="subtle" isLoading={isLoading}>
+              <Button
+                className="bg-primary rounded-md"
+                type="submit"
+                isLoading={isLoading}>
                 <Pencil className="h-4 w-4" />
                 Change Title
               </Button>

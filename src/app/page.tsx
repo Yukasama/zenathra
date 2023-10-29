@@ -3,14 +3,13 @@ import PageLayout from "@/components/shared/page-layout";
 import StockCardList, {
   StockCardListLoading,
 } from "@/components/stock/stock-card-list";
-import { buttonVariants } from "@/components/ui/button";
 import { SITE } from "@/config/site";
 import { db } from "@/db";
-import { cn } from "@/lib/utils";
 import {
   LoginLink,
   getKindeServerSession,
 } from "@kinde-oss/kinde-auth-nextjs/server";
+import { Button } from "@nextui-org/button";
 import { MoveRight } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -40,19 +39,20 @@ export default async function page() {
           </h2>
           <p className="text-zinc-400/90 text-md w-3/4 max-w-[600px] text-center">
             Manage a wide range of stocks from various industries and sectors,
-            ensuring a diversified and balanced investment approach
+            ensuring a diversified and balanced investment approach.
           </p>
           <div className="flex gap-3 mt-2">
-            <LoginLink className={buttonVariants({ variant: "subtle" })}>
-              Sign In
+            <LoginLink>
+              <Button className="bg-zinc-200 dark:bg-white text-black rounded-md">
+                Sign In
+              </Button>
             </LoginLink>
-            <LoginLink
-              className={cn(
-                buttonVariants(),
-                "bg-gradient-to-br from-[#ff8b55] to-[#fdc243] hover:from-[#dd6942] hover:to-[#e09c4e]"
-              )}>
-              Get started
-              <MoveRight className="w-4 h-4" />
+            <LoginLink>
+              <Button
+                className="gradient rounded-md text-white"
+                endContent={<MoveRight className="w-4 h-4" />}>
+                Get started
+              </Button>
             </LoginLink>
           </div>
         </div>

@@ -40,7 +40,6 @@ interface Props {
 
 export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
   const router = useRouter();
-
   const form = useForm({
     resolver: zodResolver(CreatePortfolioSchema),
     defaultValues: {
@@ -72,12 +71,10 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
         variant: "destructive",
       });
 
-    const payload = {
+    createPortfolio({
       title: data.title,
       public: data.public,
-    };
-
-    createPortfolio(payload);
+    });
   }
 
   return (
@@ -88,8 +85,9 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
           initial="hidden"
           animate="visible"
           exit="exit"
-          whileTap="tap">
-          <Card className="f-box cursor-pointer min-h-72 h-full hover:bg-zinc-100 dark:hover:bg-zinc-900">
+          whileTap="tap"
+          className={numberOfPortfolios === 0 ? "h-72" : ""}>
+          <Card className="f-box cursor-pointer h-full hover:bg-zinc-100 dark:hover:bg-zinc-900">
             <div
               className={cn(
                 buttonVariants({ size: "sm" }),

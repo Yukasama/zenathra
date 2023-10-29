@@ -22,7 +22,7 @@ import dynamic from "next/dynamic";
 import Skeleton from "../../../components/ui/skeleton";
 import { Button, buttonVariants } from "../../../components/ui/button";
 import { Pencil } from "lucide-react";
-import { Stock } from "@prisma/client";
+import type { Stock } from "@prisma/client";
 
 const EditPositions = dynamic(() => import("./edit-positions"), {
   ssr: false,

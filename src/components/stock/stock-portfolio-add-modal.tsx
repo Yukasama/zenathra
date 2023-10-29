@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "../ui/button";
+import { Button } from "@nextui-org/button";
 import { Plus } from "lucide-react";
 import { useCustomToasts } from "@/hooks/use-custom-toasts";
 import { toast } from "@/hooks/use-toast";
@@ -44,15 +44,21 @@ export default function StockPortfolioAddModal({
   return (
     <>
       {!isAuthenticated ? (
-        <Button variant="subtle" size="xs" onClick={handleClick}>
-          <Plus className="h-4" />
-        </Button>
+        <Button
+          isIconOnly
+          size="sm"
+          className="gradient rounded-md"
+          startContent={<Plus className="h-4" />}
+          onClick={handleClick}
+        />
       ) : (
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="subtle" size="xs">
-              <Plus className="h-4" />
-            </Button>
+            <Button
+              isIconOnly
+              size="sm"
+              className="gradient rounded-md"
+              startContent={<Plus className="h-4" />}></Button>
           </DialogTrigger>
           <DialogContent className="rounded-md max-w-[375px]">
             <DialogHeader>

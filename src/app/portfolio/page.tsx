@@ -17,7 +17,7 @@ export const metadata = {
 
 const PortfolioCreateCard = dynamic(() => import("./portfolio-create-card"), {
   ssr: false,
-  loading: () => <Skeleton className="min-h-72"></Skeleton>,
+  loading: () => <Skeleton className="h-72"></Skeleton>,
 });
 
 export default async function page() {
@@ -39,7 +39,7 @@ export default async function page() {
 
   return (
     <PageLayout title="My Portfolios" description="Manage your portfolios here">
-      <div className="f-col gap-6 md:grid md:grid-cols-2 xl:gap-8 xl:grid-cols-3">
+      <div className="f-col gap-6 md:grid md:grid-cols-2 xl:gap-8 xl:grid-cols-3 min-h-72 grid-auto-rows:min-content">
         {portfolios.map((portfolio) => (
           <Suspense
             key={portfolio.id}

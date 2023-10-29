@@ -11,10 +11,9 @@ import {
 import CompanyLogo from "./company-logo";
 import { RecentStocks } from "@/types/db";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
-import { Portfolio } from "@prisma/client";
+import type { Portfolio } from "@prisma/client";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
-import { buttonVariants } from "../ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "@nextui-org/button";
 import { Card } from "../ui/card";
 import { UserAvatar } from "./user-avatar";
 import PortfolioImage from "../portfolio/portfolio-image";
@@ -41,16 +40,11 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
   return (
     <Sheet>
       <SheetTrigger>
-        <div
-          className={cn(
-            buttonVariants({
-              size: "xs",
-              variant: "link",
-            }),
-            "border"
-          )}>
-          <Menu className="h-5" />
-        </div>
+        <Button
+          isIconOnly
+          variant="ghost"
+          startContent={<Menu className="h-5" />}
+        />
       </SheetTrigger>
       <SheetContent side="left" className="f-col gap-4 rounded-r-xl">
         <div className="flex items-center justify-between">

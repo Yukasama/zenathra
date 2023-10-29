@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Pencil } from "lucide-react";
 import { buttonVariants } from "../../../components/ui/button";
-import { Portfolio, Stock } from "@prisma/client";
+import type { Portfolio, Stock } from "@prisma/client";
 import PortfolioPosition from "./portfolio-position";
 
 interface Props {

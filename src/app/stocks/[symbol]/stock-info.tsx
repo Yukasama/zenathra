@@ -3,7 +3,7 @@ import React from "react";
 import { ChevronsDown, ChevronsUp } from "lucide-react";
 import { getQuote } from "@/lib/fmp/quote";
 import { StockImage } from "../../../components/stock/stock-image";
-import { Stock } from "@prisma/client";
+import type { Stock } from "@prisma/client";
 import { db } from "@/db";
 import { Card } from "../../../components/ui/card";
 import Skeleton from "../../../components/ui/skeleton";
@@ -15,7 +15,7 @@ const StockPortfolioAddModal = dynamic(
   () => import("../../../components/stock/stock-portfolio-add-modal"),
   {
     ssr: false,
-    loading: () => <Button variant="subtle" isLoading />,
+    loading: () => <Button variant="subtle" size="sm" isLoading />,
   }
 );
 

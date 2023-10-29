@@ -18,7 +18,7 @@ import { getUser } from "@/lib/auth";
 import dynamic from "next/dynamic";
 import Skeleton from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { SITE } from "@/config/site";
+import NewAssets from "./new-assets";
 
 interface Props {
   params: { id: string };
@@ -27,7 +27,6 @@ interface Props {
 const EditTitle = dynamic(() => import("@/app/p/[id]/edit-title"), {
   ssr: false,
 });
-
 const EditVisibility = dynamic(
   () => import("@/components/portfolio/edit-visibility"),
   {
@@ -35,7 +34,6 @@ const EditVisibility = dynamic(
     loading: () => <Skeleton className="h-10 w-16" />,
   }
 );
-
 const PortfolioAddModal = dynamic(
   () => import("@/components/portfolio/portfolio-add-modal"),
   {
@@ -55,7 +53,6 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params: { id } }: Props) {
-  const user = getUser();
   const portfolio = await db.portfolio.findFirst({
     select: {
       title: true,
@@ -66,10 +63,13 @@ export async function generateMetadata({ params: { id } }: Props) {
   });
 
   if (!portfolio) return { title: "Portfolio not found" };
+
+  const user = getUser();
+
   if (!portfolio.public && user?.id !== portfolio.creatorId)
     return { title: "This portfolio is private" };
 
-  return { title: `${portfolio.title} | ${SITE.name}` };
+  return { title: portfolio.title };
 }
 
 export default async function page({ params: { id } }: Props) {
@@ -122,11 +122,13 @@ export default async function page({ params: { id } }: Props) {
       peRatioTTM: true,
       sector: true,
     },
-    where: { id: { in: portfolio.stocks.map((s) => s.stockId) } },
+    where: {
+      id: { in: portfolio.stocks.map((s) => s.stockId) },
+    },
   });
 
   return (
-    <PageLayout className="f-col gap-4">
+    <PageLayout className="f-col gap-4 bg-zinc-100 dark:bg-zinc-900/60">
       <Card>
         <CardHeader>
           <div className="flex justify-between">
@@ -165,11 +167,7 @@ export default async function page({ params: { id } }: Props) {
           </div>
           <div className="flex">
             <Suspense fallback={<PortfolioAssetsLoading />}>
-              <PortfolioAssets
-                user={user}
-                portfolio={portfolio}
-                stocks={stocks}
-              />
+              <NewAssets stocks={stocks} />
             </Suspense>
           </div>
         </div>

@@ -1,8 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FieldValues, useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import { Button } from "@nextui-org/button";
 import {
   Form,
   FormControl,
@@ -21,8 +21,8 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { UploadStockSchema } from "@/lib/validators/stock";
-import { Checkbox } from "../../../components/ui/checkbox";
-import { Slider } from "../../../components/ui/slider";
+import { Checkbox } from "@nextui-org/checkbox";
+import { Slider } from "@/components/ui/slider";
 import { Upload } from "lucide-react";
 import {
   Card,
@@ -30,10 +30,12 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../../../components/ui/card";
+} from "@/components/ui/card";
 import { trpc } from "@/app/_trpc/client";
 
 export default function AdminAddStocks() {
+  const stocks = ["All", "US500", "AAPL", "MSFT", "TSLA"];
+
   const form = useForm({
     resolver: zodResolver(UploadStockSchema),
     defaultValues: {
@@ -43,8 +45,6 @@ export default function AdminAddStocks() {
       pullTimes: 1,
     },
   });
-
-  const stocks = ["All", "US500", "AAPL", "MSFT", "TSLA"];
 
   const { mutate: uploadStocks, isLoading } = trpc.stock.upload.useMutation({
     onError: () =>
@@ -60,26 +60,17 @@ export default function AdminAddStocks() {
       }),
   });
 
-  function onSubmit(data: FieldValues) {
-    const payload = {
-      stock: data.stock,
-      clean: data.clean,
-      skip: data.skip,
-      pullTimes: data.pullTimes,
-    };
-
-    uploadStocks(payload);
-  }
-
   return (
-    <Card className="w-[400px] sm:w-[500px]">
+    <Card className="border-none bg-zinc-900/60 w-[400px] sm:w-[500px]">
       <CardHeader>
         <CardTitle>Upload Stocks</CardTitle>
         <CardDescription>Upload stock data to the database</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(() => uploadStocks(form.getValues()))}
+            className="space-y-6">
             <FormField
               control={form.control}
               name="stock"
@@ -115,12 +106,9 @@ export default function AdminAddStocks() {
               control={form.control}
               name="skip"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormItem className="flex flex-row items-start space-x-1 space-y-0 rounded-md border p-4 bg-card">
                   <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <Checkbox checked={field.value} onChange={field.onChange} />
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel className="text-black dark:text-white">
@@ -137,12 +125,9 @@ export default function AdminAddStocks() {
               control={form.control}
               name="clean"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormItem className="flex flex-row items-start space-x-1 space-y-0 rounded-md border p-4 bg-card">
                   <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <Checkbox checked={field.value} onChange={field.onChange} />
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel className="text-black dark:text-white">
@@ -159,7 +144,7 @@ export default function AdminAddStocks() {
               control={form.control}
               name="pullTimes"
               render={({ field }) => (
-                <FormItem className="f-col items-start space-y-3 rounded-md border p-4">
+                <FormItem className="f-col items-start space-y-3 rounded-md border p-4 bg-card">
                   <div className="space-y-1 leading-none">
                     <FormLabel className="text-black dark:text-white">
                       Pull Times
@@ -186,8 +171,11 @@ export default function AdminAddStocks() {
                 </FormItem>
               )}
             />
-            <Button variant="subtle" isLoading={isLoading}>
-              <Upload className="h-4 w-4" />
+            <Button
+              className="bg-primary rounded-md"
+              isLoading={isLoading}
+              type="submit">
+              {!isLoading && <Upload className="h-4 w-4" />}
               Upload
             </Button>
           </form>

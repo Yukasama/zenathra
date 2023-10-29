@@ -39,7 +39,10 @@ export function constructMetadata({
   noIndex?: boolean;
 } = {}): Metadata {
   return {
-    title,
+    title: {
+      default: title,
+      template: "%s | " + title,
+    },
     description,
     openGraph: {
       title,
@@ -47,17 +50,17 @@ export function constructMetadata({
       images: [{ url: image }],
     },
     icons,
-    metadataBase: new URL(`https://www.${SITE.name.toLowerCase()}.com`),
+    metadataBase: new URL(`https://www.${title.toLowerCase()}.com`),
   };
 }
 
 export function getRandomColor(): string {
   const PORTFOLIO_COLORS = [
-    "#0088FE",
-    "#00C49F",
-    "#A463F2",
-    "#20B2AA",
-    "#7C4DFF",
+    "#FF6347",
+    "#FFA07A",
+    "#FFD700",
+    "#FF8C00",
+    "#DB7093",
   ];
   const randomIndex = Math.floor(Math.random() * PORTFOLIO_COLORS.length);
   return PORTFOLIO_COLORS[randomIndex];

@@ -93,7 +93,7 @@ export default function Searchbar({
         variants={ANIMATION_VARIANTS}
         whileTap="tap"
         className={cn(
-          `bg-gradient-to-br from-[#dd6942] to-[#e09c4e] text-white p-2 px-3 rounded-md ${
+          `gradient text-white p-2 px-3 rounded-md ${
             responsive ? "hidden md:flex" : "flex"
           }  items-center justify-between w-60 cursor-pointer`,
           className

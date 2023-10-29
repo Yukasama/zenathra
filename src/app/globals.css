@@ -86,6 +86,9 @@
   .f-col {
     @apply flex flex-col;
   }
+  .gradient {
+    @apply bg-gradient-to-br from-[#ff8b55] to-[#fdc243] hover:from-[#dd6942] hover:to-[#e09c4e];
+  }
 }
 
 @layer utilities {

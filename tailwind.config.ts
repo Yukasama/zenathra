@@ -7,7 +7,7 @@ module.exports = {
   content: [
     "./src/app/**/*.{ts,tsx}",
     "./src/components/**/*.{ts,tsx}",
-    "./node_modules/@nextui-org/theme/dist/components/(button|checkbox|spinner).js",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   mode: "jit",
   theme: {

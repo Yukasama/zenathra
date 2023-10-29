@@ -2,7 +2,6 @@ import Link from "next/link";
 import ThemeToggle from "./theme-toggle";
 import Searchbar from "./searchbar";
 import { buttonVariants } from "../ui/button";
-import { cn } from "@/lib/utils";
 import { db } from "@/db";
 import _ from "lodash";
 import CompanyLogo from "./company-logo";
@@ -14,20 +13,16 @@ import dynamic from "next/dynamic";
 import { UserAccountNav } from "./user-account-nav";
 import { Menu } from "lucide-react";
 import NavbarMenu from "./navbar-menu";
+import { Button } from "@nextui-org/button";
 
 const Sidebar = dynamic(() => import("./sidebar"), {
   ssr: false,
   loading: () => (
-    <div
-      className={cn(
-        buttonVariants({
-          size: "xs",
-          variant: "link",
-        }),
-        "border"
-      )}>
-      <Menu className="h-5" />
-    </div>
+    <Button
+      isIconOnly
+      variant="bordered"
+      startContent={<Menu className="h-5" />}
+    />
   ),
 });
 
@@ -64,8 +59,8 @@ export default async function Navbar() {
   const uniqueStocks = _.uniqBy(recentStocks, "stock.symbol");
 
   return (
-    <div className="sticky top-0 h-16 z-20 flex w-full items-center justify-between gap-4 p-2 px-4 border-b bg-card/50">
-      <div className="flex items-center gap-5">
+    <div className="sticky top-0 h-16 z-20 flex w-full items-center justify-between gap-4 p-2 px-6 border-b bg-card/50">
+      <div className="flex items-center gap-5 flex-1">
         <Sidebar
           user={user}
           portfolios={portfolios}
@@ -81,7 +76,7 @@ export default async function Navbar() {
 
       <NavbarMenu user={user} />
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 flex-1 justify-end">
         <div className="md:hidden flex">
           <Searchbar recentStocks={uniqueStocks} />
         </div>

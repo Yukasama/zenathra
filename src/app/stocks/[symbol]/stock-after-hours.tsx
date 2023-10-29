@@ -1,4 +1,4 @@
-import { Stock } from "@prisma/client";
+import type { Stock } from "@prisma/client";
 import { ChevronsUp, ChevronsDown } from "lucide-react";
 import { getQuote } from "@/lib/fmp/quote";
 import { Card, CardDescription } from "../../../components/ui/card";

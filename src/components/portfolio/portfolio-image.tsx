@@ -1,4 +1,4 @@
-import { Portfolio } from "@prisma/client";
+import type { Portfolio } from "@prisma/client";
 
 interface Props {
   portfolio: Pick<Portfolio, "title" | "color">;

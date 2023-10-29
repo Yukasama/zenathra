@@ -1,10 +1,5 @@
-import { SITE } from "@/config/site";
-
+export const metadata = { title: "Contact" };
 export const runtime = "edge";
-
-export const metadata = {
-  title: `${SITE.name} | Contact`,
-};
 
 export default function page() {
   return (

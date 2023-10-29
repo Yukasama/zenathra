@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { trpc } from "@/app/_trpc/client";
 import { UserUpdateSchema } from "@/lib/validators/user";
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { Textarea } from "../../components/ui/textarea";
 
 interface Props {

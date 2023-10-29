@@ -1,4 +1,4 @@
-import { Portfolio } from "@prisma/client";
+import type { Portfolio } from "@prisma/client";
 
 export interface PortfolioWithStocks extends Portfolio {
   stocks: StockInPortfolio[];

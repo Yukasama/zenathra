@@ -1,4 +1,4 @@
-import { Stock } from "@prisma/client";
+import type { Stock } from "@prisma/client";
 import { Card } from "../../../components/ui/card";
 import { LineChart } from "lucide-react";
 
