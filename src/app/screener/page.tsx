@@ -29,7 +29,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import PageLayout from "@/components/shared/page-layout";
 import { StockImage } from "@/components/stock/stock-image";
 import { trpc } from "../_trpc/client";
 import { useRouter } from "next/navigation";
@@ -38,8 +37,6 @@ import { cn } from "@/lib/utils";
 interface Props {
   searchParams: { [key: string]: string | string[] | undefined };
 }
-
-export const runtime = "edge";
 
 export default function Page({ searchParams }: Props) {
   const router = useRouter();
@@ -213,7 +210,7 @@ export default function Page({ searchParams }: Props) {
   ];
 
   return (
-    <PageLayout className="flex f-col gap-5 lg:flex-row">
+    <>
       <Button
         variant="subtle"
         onClick={() => resetFilters()}
@@ -495,6 +492,6 @@ export default function Page({ searchParams }: Props) {
           )}
         </div>
       </Tabs>
-    </PageLayout>
+    </>
   );
 }

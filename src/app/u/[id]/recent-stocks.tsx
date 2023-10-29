@@ -38,13 +38,16 @@ export default async function RecentStocks({ user }: Props) {
           <CardTitle>Recent Stocks</CardTitle>
           <CardDescription>Stocks that were recently viewed</CardDescription>
         </CardHeader>
-        <CardContent className="f-box">
+        <CardContent>
           <p className="text-lg text-zinc-400">No stocks explored yet.</p>
         </CardContent>
       </Card>
     );
 
-  const uniqueStocks = _.uniqBy(recentStocks, "stock.symbol");
+  const uniqueStocks = _.uniqBy(recentStocks, "stock.symbol").slice(
+    0,
+    recentStocks.length > 7 ? 7 : recentStocks.length
+  );
 
   const quotes = await getQuotes(recentStocks.map(({ stock }) => stock.symbol));
 

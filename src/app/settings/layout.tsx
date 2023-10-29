@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import {
   UserIcon,
   Grid,
@@ -15,7 +15,7 @@ export const runtime = "edge";
 export default function Layout({ children }: PropsWithChildren) {
   const tabs = [
     {
-      id: "profile",
+      id: "settings",
       label: "Public Profile",
       icon: <UserIcon className="text-zinc-400 h-4 w-4" />,
     },
@@ -55,7 +55,7 @@ export default function Layout({ children }: PropsWithChildren) {
             <SettingsItem key={tab.id} {...tab} />
           ))}
         </div>
-        <div className="flex px-4 p-2 flex-1">{children}</div>S
+        <div className="flex px-4 p-2 flex-1">{children}</div>
       </div>
     </div>
   );

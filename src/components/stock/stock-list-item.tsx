@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   stock: Pick<Stock, "symbol" | "image"> | undefined;
-  quote: Quote | undefined;
+  quote: Quote | null | undefined;
 }
 
 export default function StockListItem({ stock, quote, className }: Props) {

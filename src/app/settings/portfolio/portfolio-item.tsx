@@ -26,7 +26,7 @@ export default function PortfolioItem({ portfolio }: Props) {
           </div>
         </div>
       </Link>
-      <div className="h-full border-l sm:self-end sm:border-l-0 lg:border-l p-2 px-4 f-box">
+      <div className="h-full border-l sm:self-end sm:border-l-0 w-40 lg:border-l p-2 px-4 f-box">
         <EditVisibility portfolio={portfolio} />
       </div>
     </Card>

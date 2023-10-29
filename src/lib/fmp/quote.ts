@@ -64,8 +64,12 @@ export async function getQuote(
   }
 }
 
-export async function getQuotes(symbols: string[]): Promise<Quote[] | null> {
+export async function getQuotes(
+  symbols: string[] | undefined
+): Promise<Quote[] | null> {
   try {
+    if (!symbols) return null;
+
     if (FMP.simulation) return [quote, quote, quote, quote, quote];
 
     if (symbols.length > 20) symbols = symbols.slice(0, 20);
@@ -74,7 +78,11 @@ export async function getQuotes(symbols: string[]): Promise<Quote[] | null> {
       env.FMP_API_KEY
     }`;
 
-    return await fetch(url).then((res) => res.json());
+    const result = await fetch(url).then((res) => res.json());
+
+    if (result["Error Message"]) return null;
+
+    return result;
   } catch {
     return null;
   }

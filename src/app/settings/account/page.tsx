@@ -1,7 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { SITE } from "@/config/site";
 import { Layers } from "lucide-react";
 import dynamic from "next/dynamic";
+
+export const metadata = {
+  title: `${SITE.name} | Account Settings`,
+};
 
 const DeleteUserModal = dynamic(
   () => import("@/app/settings/account/delete-user-modal"),

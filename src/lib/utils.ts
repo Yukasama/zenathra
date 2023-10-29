@@ -47,7 +47,7 @@ export function constructMetadata({
       images: [{ url: image }],
     },
     icons,
-    metadataBase: new URL("https://www.zenethra.com"),
+    metadataBase: new URL(`https://www.${SITE.name.toLowerCase()}.com`),
   };
 }
 

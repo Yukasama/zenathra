@@ -1,4 +1,4 @@
-## Zenethra Development Aims
+## Zenathra Development Aims
 
 ### Short Term
 * Kinde session invalidation on data change

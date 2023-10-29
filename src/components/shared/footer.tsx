@@ -13,9 +13,7 @@ export default function Footer() {
           <CardTitle className="text-xl">{SITE.name}</CardTitle>
         </div>
         <div className="flex items-center gap-5">
-          <p className="text-[13px] text-zinc-500">
-            &copy; 2023 {SITE.name[0].toUpperCase() + SITE.name.slice(1)}
-          </p>
+          <p className="text-[13px] text-zinc-500">&copy; 2023 {SITE.name}</p>
           {footerLinks.map((link) => (
             <Link
               key={link.name}

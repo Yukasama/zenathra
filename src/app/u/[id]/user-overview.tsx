@@ -8,6 +8,7 @@ import Link from "next/link";
 import { trpc } from "@/app/_trpc/client";
 import { notFound } from "next/navigation";
 import Skeleton from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 interface Props {
   id: string;
@@ -22,7 +23,7 @@ export default function UserOverview({ id, createdAt }: Props) {
   return (
     <Skeleton isLoaded={isFetched}>
       <div className="relative">
-        <div className="bg-gradient-to-br from-primary to-secondary h-24 lg:h-40"></div>
+        <div className="bg-gradient-to-br from-primary to-yellow-600 h-24 lg:h-40"></div>
         <UserAvatar
           user={user}
           fallbackFontSize={48}
@@ -42,9 +43,12 @@ export default function UserOverview({ id, createdAt }: Props) {
               </div>
               <Link
                 href="/settings/profile"
-                className={buttonVariants({
-                  variant: "subtle",
-                })}>
+                className={cn(
+                  buttonVariants({
+                    variant: "subtle",
+                  }),
+                  "whitespace-nowrap"
+                )}>
                 Edit Profile
               </Link>
             </div>

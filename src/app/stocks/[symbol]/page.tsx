@@ -17,6 +17,7 @@ import PriceChart from "@/components/stock/price-chart";
 import { StockImage } from "@/components/stock/stock-image";
 import { getUser } from "@/lib/auth";
 import { getQuote } from "@/lib/fmp/quote";
+import { SITE } from "@/config/site";
 
 interface Props {
   params: { symbol: string };
@@ -43,7 +44,7 @@ export async function generateMetadata({ params: { symbol } }: Props) {
 
   if (!stock) return { title: "Stock not found" };
 
-  return { title: `$${quote?.price} - ${stock.companyName}` };
+  return { title: `$${quote?.price} - ${stock.companyName} | ${SITE.name}` };
 }
 
 export default async function page({ params: { symbol } }: Props) {

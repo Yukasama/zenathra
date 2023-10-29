@@ -6,19 +6,19 @@ import {
 } from "lucide-react";
 
 export const SITE = {
-  name: "Zenethra",
+  name: "Zenathra",
   description:
     "A stock market analysis tool that provides a visual representation of the market's performance.",
-  url: "https://www.zenethra.com",
+  url: "https://www.zenathra.com",
   links: {
     twitter: "https://twitter.com/yukasama",
     github: "https://github.com/yukasama",
     linkedin: "https://www.linkedin.com/in/yukasama",
-    youtube: "https://www.youtube.com/channel/zenethra",
-    instagram: "https://www.instagram.com/zenethra",
+    youtube: "https://www.youtube.com/channel/zenathra",
+    instagram: "https://www.instagram.com/zenathra",
   },
   keywords: [
-    "zenethra",
+    "zenathra",
     "stocks",
     "stock market",
     "stock market tool",
@@ -51,7 +51,7 @@ export const navLinks = [
   },
   {
     title: "Economic Calendar",
-    href: "/calendar",
+    href: "/economic-calendar",
     description: "Track key financial events to guide your investment choices.",
     icon: Calendar,
   },
@@ -64,7 +64,7 @@ export const footerLinks = [
   },
   {
     name: "Privacy",
-    url: "/privacy",
+    url: "/privacy-policy",
   },
   {
     name: "Terms",

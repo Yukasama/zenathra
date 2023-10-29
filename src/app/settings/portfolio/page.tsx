@@ -3,6 +3,11 @@ import { StockListLoading } from "@/components/stock/stock-list";
 import { Separator } from "@/components/ui/separator";
 import { getUser } from "@/lib/auth";
 import { Suspense } from "react";
+import { SITE } from "@/config/site";
+
+export const metadata = {
+  title: `${SITE.name} | Portfolio Settings`,
+};
 
 export default async function page() {
   const user = getUser();

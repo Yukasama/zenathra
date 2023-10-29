@@ -4,11 +4,23 @@ await import("./src/env.mjs");
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: [
-      "financialmodelingprep.com",
-      "lh3.googleusercontent.com",
-      "scontent-frt3-2.xx.fbcdn.net",
-      "avatars.githubusercontent.com",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "financialmodelingprep.com",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "scontent-frt3-2.xx.fbcdn.net",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+      },
     ],
   },
 };

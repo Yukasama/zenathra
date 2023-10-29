@@ -43,22 +43,27 @@ export default async function PortfolioList({ user }: Props) {
         <CardTitle>Portfolios</CardTitle>
         <CardDescription>List of all portfolios</CardDescription>
       </CardHeader>
-      <CardContent>
-        {portfolios.map((portfolio) => (
-          <Link key={portfolio.id} href={`/p/${portfolio.id}`}>
-            <Card className="p-2 h-12 flex items-center w-full hover:bg-zinc-900">
-              <div className="flex items-center gap-2">
-                <PortfolioImage portfolio={portfolio} px={35} />
-                <div>
-                  <p className="text-sm">{portfolio.title}</p>
-                  <p className="text-[12px] text-zinc-500">
-                    Created on {portfolio.createdAt.toISOString().split("T")[0]}
-                  </p>
+      <CardContent className="f-col gap-2">
+        {portfolios.length ? (
+          portfolios.map((portfolio) => (
+            <Link key={portfolio.id} href={`/p/${portfolio.id}`}>
+              <Card className="p-2 h-12 flex items-center w-full hover:bg-zinc-900">
+                <div className="flex items-center gap-2">
+                  <PortfolioImage portfolio={portfolio} px={35} />
+                  <div>
+                    <p className="text-sm">{portfolio.title}</p>
+                    <p className="text-[12px] text-zinc-500">
+                      Created on{" "}
+                      {portfolio.createdAt.toISOString().split("T")[0]}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Card>
-          </Link>
-        ))}
+              </Card>
+            </Link>
+          ))
+        ) : (
+          <p className="text-lg text-zinc-400">No portfolios created yet.</p>
+        )}
       </CardContent>
     </Card>
   );

@@ -18,6 +18,7 @@ import { getUser } from "@/lib/auth";
 import dynamic from "next/dynamic";
 import Skeleton from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { SITE } from "@/config/site";
 
 interface Props {
   params: { id: string };
@@ -68,7 +69,7 @@ export async function generateMetadata({ params: { id } }: Props) {
   if (!portfolio.public && user?.id !== portfolio.creatorId)
     return { title: "This portfolio is private" };
 
-  return { title: `${portfolio.title} - Portfolio` };
+  return { title: `${portfolio.title} | ${SITE.name}` };
 }
 
 export default async function page({ params: { id } }: Props) {

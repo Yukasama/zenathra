@@ -3,6 +3,11 @@ import Skeleton from "@/components/ui/skeleton";
 import { db } from "@/db";
 import { getUser } from "@/lib/auth";
 import dynamic from "next/dynamic";
+import { SITE } from "@/config/site";
+
+export const metadata = {
+  title: `${SITE.name} | Profile Settings`,
+};
 
 const ProfileForm = dynamic(() => import("@/app/settings/profile-form"), {
   ssr: false,

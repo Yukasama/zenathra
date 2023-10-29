@@ -2,7 +2,6 @@
 
 import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import {
-  Bell,
   HelpCircle,
   LayoutDashboard,
   ListOrdered,
@@ -38,11 +37,6 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
       href: "/portfolio",
       icon: <ListOrdered className="w-5 h-5 mr-2 text-zinc-400" />,
       separator: true,
-    },
-    {
-      label: "Notifications",
-      href: "/notifications",
-      icon: <Bell className="w-5 h-5 mr-2 text-zinc-400" />,
     },
     {
       label: "Settings",

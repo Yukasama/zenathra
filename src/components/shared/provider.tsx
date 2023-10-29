@@ -4,7 +4,7 @@ import { trpc } from "@/app/_trpc/client";
 import { absoluteUrl } from "@/lib/utils";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
-import { PropsWithChildren, useState } from "react";
+import { type PropsWithChildren, useState } from "react";
 import { NextUIProvider } from "@nextui-org/system";
 import { ThemeProvider } from "next-themes";
 

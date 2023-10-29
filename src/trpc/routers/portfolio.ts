@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { privateProcedure, router } from "../trpc";
+import { privateProcedure, publicProcedure, router } from "../trpc";
 import { db } from "@/db";
 import { TRPCError } from "@trpc/server";
 import {
@@ -10,6 +10,13 @@ import {
 import { getRandomColor } from "@/lib/utils";
 
 export const portfolioRouter = router({
+  getAllPublic: publicProcedure.query(async () => {
+    return await db.portfolio.findMany({
+      select: { id: true },
+      where: { public: true },
+      orderBy: { title: "asc" },
+    });
+  }),
   create: privateProcedure
     .input(CreatePortfolioSchema)
     .mutation(async ({ ctx, input }) => {

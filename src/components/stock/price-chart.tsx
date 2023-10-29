@@ -42,27 +42,29 @@ export default function PriceChart({
 }: Props) {
   const [mounted, setMounted] = useState<boolean>(false);
   const [timeFrame, setTimeFrame] = useState<string>("1D");
-
   const [domain, setDomain] = useState([0, 0]);
   const [startPrice, setStartPrice] = useState<number>(0);
-  const [transformedData, setTransformedData] = useState<any[]>([]);
+  const [results, setResults] = useState<any[]>([]);
+  const [positive, setPositive] = useState<boolean>(true);
 
   useEffect(() => setMounted(true), []);
 
-  const { data: results, isFetched } = trpc.stock.history.useQuery(symbols);
+  const { data, isFetched } = trpc.stock.history.useQuery(symbols);
 
   // results[timeFrame] is undefined when the query is not yet fetched
   useEffect(() => {
-    if (isFetched && results) {
-      setDomain(computeDomain(results[timeFrame]));
-      setStartPrice(Number(results[timeFrame][0].close));
-      setTransformedData(
-        results[timeFrame].map((item: any) => {
-          const uv = Number(item.close);
+    if (isFetched && data) {
+      setDomain(computeDomain(data[timeFrame]));
+      setStartPrice(Number(data[timeFrame][0].close));
+      setPositive(
+        Number(data[timeFrame][data[timeFrame].length - 1].close) >=
+          Number(data[timeFrame][0].close)
+      );
+      setResults(
+        data[timeFrame].map((item: any) => {
           return {
             name: item.date,
-            uvAbove: uv >= startPrice ? uv : null,
-            uvBelow: uv < startPrice ? uv : null,
+            uv: item.close,
           };
         })
       );
@@ -85,17 +87,16 @@ export default function PriceChart({
         <Card className="p-2">
           <p className="text-[15px]">{label}</p>
           <p
-            className="text-sm text-[#19E363]"
-            style={{
-              color: payload[0].value >= startPrice ? "#19E363" : "#e6221e",
-            }}>
+            className={`text-sm ${
+              positive ? "text-[#19E363]" : "text-[#e6221e]"
+            }`}>
             ${payload[0].value.toFixed(2)} (
             <span className="text-[12px]">
-              {(payload[0].value / Number(results[timeFrame][0].close)) * 100 -
+              {(payload[0].value / Number(data[timeFrame][0].close)) * 100 -
                 100 >
                 0 && "+"}
               {(
-                (payload[0].value / Number(results[timeFrame][0].close)) * 100 -
+                (payload[0].value / Number(data[timeFrame][0].close)) * 100 -
                 100
               ).toFixed(2)}
               %)
@@ -153,16 +154,20 @@ export default function PriceChart({
               className="bg-card"
               width={width ?? 500}
               height={height ?? 250}
-              data={transformedData}
+              data={results}
               margin={{ top: 5, right: 40, left: 0, bottom: 5 }}>
               <defs>
-                <linearGradient id="colorUvAbove" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#19E363" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#19E363" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="colorUvBelow" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#e6221e" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#e6221e" stopOpacity={0} />
+                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor={positive ? "#19E363" : "#e6221e"}
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor={positive ? "#19E363" : "#e6221e"}
+                    stopOpacity={0}
+                  />
                 </linearGradient>
               </defs>
               <XAxis dataKey="name" fontSize={12} />
@@ -180,18 +185,10 @@ export default function PriceChart({
               />
               <Area
                 type="monotone"
-                dataKey="uvAbove"
-                stroke="#19E363"
+                dataKey="uv"
+                stroke={positive ? "#19E363" : "#e6221e"}
                 fillOpacity={1}
-                fill="url(#colorUvAbove)"
-                animationDuration={500}
-              />
-              <Area
-                type="linear"
-                dataKey="uvBelow"
-                stroke="#e6221e"
-                fillOpacity={1}
-                fill="url(#colorUvBelow)"
+                fill="url(#colorUv)"
                 animationDuration={500}
               />
             </AreaChart>

@@ -4,6 +4,7 @@ import StockCardList, {
   StockCardListLoading,
 } from "@/components/stock/stock-card-list";
 import { buttonVariants } from "@/components/ui/button";
+import { SITE } from "@/config/site";
 import { db } from "@/db";
 import { cn } from "@/lib/utils";
 import {
@@ -15,6 +16,10 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 export const runtime = "edge";
+
+export const metadata = {
+  title: `${SITE.name} | Home`,
+};
 
 export default async function page() {
   const { getUser, isAuthenticated } = getKindeServerSession();
@@ -44,7 +49,7 @@ export default async function page() {
             <LoginLink
               className={cn(
                 buttonVariants(),
-                "bg-gradient-to-br from-[#fda37a] to-[#ffcc5e] hover:from-[#ff9868] hover:to-[#ffc64a]"
+                "bg-gradient-to-br from-[#ff8b55] to-[#fdc243] hover:from-[#dd6942] hover:to-[#e09c4e]"
               )}>
               Get started
               <MoveRight className="w-4 h-4" />

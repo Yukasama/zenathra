@@ -1,12 +1,14 @@
-import Footer from "@/components/shared/footer";
-import Navbar from "@/components/shared/navbar";
 import Provider from "@/components/shared/provider";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { cn, constructMetadata } from "@/lib/utils";
 import { K2D } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
+import dynamic from "next/dynamic";
 import "./globals.css";
+
+const Navbar = dynamic(() => import("@/components/shared/navbar"));
+const Footer = dynamic(() => import("@/components/shared/footer"));
 
 const k2d = K2D({
   subsets: ["latin"],

@@ -5,10 +5,16 @@ import { Suspense } from "react";
 import RecentStocks from "@/app/u/[id]/recent-stocks";
 import { StockListLoading } from "@/components/stock/stock-list";
 import UserOverview from "./user-overview";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SITE } from "@/config/site";
 
 interface Props {
   params: { id: string };
 }
+
+export const metadata = {
+  title: `${SITE.name} | User Profile`,
+};
 
 export async function generateStaticParams() {
   const users = await db.user.findMany({
@@ -36,9 +42,14 @@ export default async function page({ params: { id } }: Props) {
         createdAt={dbUser?.createdAt.toISOString().split("T")[0]}
       />
       <div className="f-col lg:grid lg:grid-cols-3 p-6 gap-6">
-        <div className="f-box">
-          <p className="text-zinc-400">{dbUser?.biography}</p>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Biography</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-zinc-400">{dbUser?.biography}</p>
+          </CardContent>
+        </Card>
         <Suspense fallback={<StockListLoading className="w-full" />}>
           <PortfolioList user={{ id }} />
         </Suspense>

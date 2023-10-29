@@ -1,4 +1,10 @@
+import { SITE } from "@/config/site";
+
 export const runtime = "edge";
+
+export const metadata = {
+  title: `${SITE.name} | Privacy Policy`,
+};
 
 export default function page() {
   return (
@@ -55,7 +61,7 @@ export default function page() {
           <p className="my-5">
             <strong>Company</strong> (referred to as either &quot;the
             Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in
-            this Agreement) refers to zenethra.
+            this Agreement) refers to {SITE.name}.
           </p>
         </li>
         <li>
@@ -114,12 +120,12 @@ export default function page() {
         </li>
         <li>
           <p className="my-5">
-            <strong>Website</strong> refers to zenethra, accessible from{" "}
+            <strong>Website</strong> refers to {SITE.name}, accessible from{" "}
             <a
-              href="www.zenethra.com"
+              href={`www.${SITE.name.toLowerCase()}.com`}
               rel="external nofollow noopener"
               target="_blank">
-              www.zenethra.com
+              www.{SITE.name.toLowerCase()}.com
             </a>
           </p>
         </li>
@@ -566,10 +572,10 @@ export default function page() {
           <p className="my-5">
             By visiting this page on our website:{" "}
             <a
-              href="https://www.zenethra.com/contact"
+              href={`https://www.${SITE.name.toLowerCase()}.com/contact`}
               rel="external nofollow noopener"
               target="_blank">
-              https://www.zenethra.com/contact
+              https://www.{SITE.name.toLowerCase()}.com/contact
             </a>
           </p>
         </li>

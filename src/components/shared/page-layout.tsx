@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { CardDescription, CardTitle } from "../ui/card";
-import React, { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 
 interface Props
   extends React.HTMLAttributes<HTMLDivElement>,

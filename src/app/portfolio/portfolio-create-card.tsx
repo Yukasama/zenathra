@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { startTransition } from "react";
-import { Button, buttonVariants } from "../../components/ui/button";
-import { Checkbox } from "../../components/ui/checkbox";
+import { buttonVariants } from "../../components/ui/button";
+import { Button } from "@nextui-org/button";
+import { Checkbox } from "@nextui-org/checkbox";
 import { Input } from "../../components/ui/input";
 import { Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
@@ -32,7 +33,6 @@ import { motion } from "framer-motion";
 import { ANIMATION_VARIANTS } from "@/config/motion";
 import { trpc } from "@/app/_trpc/client";
 import { CreatePortfolioSchema } from "@/lib/validators/portfolio";
-import { DialogClose } from "@radix-ui/react-dialog";
 
 interface Props {
   numberOfPortfolios?: number;
@@ -89,7 +89,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
           animate="visible"
           exit="exit"
           whileTap="tap">
-          <Card className="f-box cursor-pointer h-72 hover:bg-zinc-100 dark:hover:bg-zinc-900">
+          <Card className="f-box cursor-pointer min-h-72 h-full hover:bg-zinc-100 dark:hover:bg-zinc-900">
             <div
               className={cn(
                 buttonVariants({ size: "sm" }),
@@ -135,12 +135,9 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
               control={form.control}
               name="public"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormItem className="flex flex-row items-start space-x-1 space-y-0 rounded-md border p-4">
                   <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <Checkbox checked={field.value} onChange={field.onChange} />
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel className="text-black dark:text-white">
@@ -153,12 +150,13 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
                 </FormItem>
               )}
             />
-            <DialogClose>
-              <Button variant="subtle" isLoading={isLoading}>
-                <Plus className="h-4 w-4" />
-                Create Portfolio
-              </Button>
-            </DialogClose>
+            <Button
+              className="bg-primary"
+              type="submit"
+              isLoading={isLoading}
+              startContent={!isLoading && <Plus className="h-4 w-4" />}>
+              Create Portfolio
+            </Button>
           </form>
         </Form>
       </DialogContent>

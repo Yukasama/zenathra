@@ -2,7 +2,7 @@
 
 import { Portfolio } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { Button, buttonVariants } from "../ui/button";
+import { Button } from "@nextui-org/button";
 import { startTransition, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { Trash2 } from "lucide-react";
@@ -18,8 +18,6 @@ import {
 import { Input } from "../ui/input";
 import { CardDescription } from "../ui/card";
 import { trpc } from "@/app/_trpc/client";
-import { DialogClose } from "@radix-ui/react-dialog";
-import { cn } from "@/lib/utils";
 
 type Props = {
   portfolio: Pick<Portfolio, "id" | "title">;
@@ -62,16 +60,10 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div
-          className={cn(
-            buttonVariants({
-              variant: "destructive",
-            }),
-            "cursor-pointer"
-          )}>
+        <Button className="bg-red-500 rounded-md">
           <Trash2 className="h-4 w-4" />
           Delete
-        </div>
+        </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[375px] rounded-md">
         <DialogHeader>
@@ -90,15 +82,13 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
           </CardDescription>
         </div>
         <DialogFooter>
-          <DialogClose>
-            <Button
-              variant="destructive"
-              isLoading={isLoading}
-              onClick={onSubmit}>
-              <Trash2 className="h-4 w-4" />
-              Delete Portfolio
-            </Button>
-          </DialogClose>
+          <Button
+            className="bg-red-500 rounded-md"
+            isLoading={isLoading}
+            onClick={onSubmit}>
+            <Trash2 className="h-4 w-4" />
+            Delete Portfolio
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

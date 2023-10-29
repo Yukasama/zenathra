@@ -11,18 +11,25 @@ import {
 } from "../../components/ui/card";
 import { PortfolioWithStocks } from "@/types/db";
 import { db } from "@/db";
-import { Button, buttonVariants } from "../../components/ui/button";
-import { BarChart, Plus, Trash } from "lucide-react";
+import { buttonVariants } from "../../components/ui/button";
+import { Button } from "@nextui-org/button";
+import { BarChart } from "lucide-react";
 import dynamic from "next/dynamic";
 import PortfolioImage from "../../components/portfolio/portfolio-image";
+
+interface Props {
+  portfolio: Pick<
+    PortfolioWithStocks,
+    "id" | "title" | "public" | "color" | "stocks"
+  >;
+}
 
 const PortfolioAddModal = dynamic(
   () => import("../../components/portfolio/portfolio-add-modal"),
   {
     ssr: false,
     loading: () => (
-      <Button variant="subtle" isLoading>
-        <Plus className="h-4 w-4" />
+      <Button className="bg-primary" isLoading>
         Add Stocks
       </Button>
     ),
@@ -34,20 +41,12 @@ const PortfolioDeleteModal = dynamic(
   {
     ssr: false,
     loading: () => (
-      <Button variant="destructive" isLoading>
-        <Trash className="h-4 w-4" />
+      <Button color="danger" isLoading>
         Delete
       </Button>
     ),
   }
 );
-
-interface Props {
-  portfolio: Pick<
-    PortfolioWithStocks,
-    "id" | "title" | "public" | "color" | "stocks"
-  >;
-}
 
 export default async function PortfolioCard({ portfolio }: Props) {
   const symbols = await db.stock.findMany({
@@ -60,7 +59,7 @@ export default async function PortfolioCard({ portfolio }: Props) {
   });
 
   return (
-    <Card className="min-h-72">
+    <Card className="min-h-72 h-full f-col justify-between">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

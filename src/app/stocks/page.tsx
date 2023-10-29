@@ -9,6 +9,11 @@ import { db } from "@/db";
 import PriceChart from "@/components/stock/price-chart";
 import { StockImage } from "@/components/stock/stock-image";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { SITE } from "@/config/site";
+
+export const metadata = {
+  title: `${SITE.name} | Stocks on the Move`,
+};
 
 export const revalidate = 30;
 
