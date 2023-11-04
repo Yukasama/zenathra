@@ -8,12 +8,74 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum UserRole {
+  user
+  admin
+}
+
+enum VerificationType {
+  email
+  forgotPassword
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  expires      DateTime
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  token   String           @unique
+  expires DateTime
+  type    VerificationType
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
 model User {
-  id        String   @id @unique
-  email     String   @unique
-  biography String   @default("My beautiful biography.")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String    @id @unique
+  name           String?
+  username       String?   @unique
+  email          String    @unique
+  emailVerified  DateTime?
+  image          String?
+  hashedPassword String?
+  biography      String    @default("My beautiful biography.")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  role               UserRole            @default(user)
+  accounts           Account[]
+  sessions           Session[]
+  verificationTokens VerificationToken[]
 
   portfolios        Portfolio[]
   recentStocks      UserRecentStocks[]

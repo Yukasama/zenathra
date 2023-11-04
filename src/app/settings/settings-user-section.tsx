@@ -2,8 +2,8 @@ import { getUser } from "@/lib/auth";
 import React from "react";
 import { UserAvatar } from "../../components/shared/user-avatar";
 
-export default function SettingsUserSection() {
-  const user = getUser();
+export default async function SettingsUserSection() {
+  const user = await getUser();
 
   return (
     <div className="flex gap-4 items-center">

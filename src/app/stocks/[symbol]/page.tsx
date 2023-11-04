@@ -66,7 +66,7 @@ export default async function page({ params: { symbol } }: Props) {
 
   if (!stock) return notFound();
 
-  const user = getUser();
+  const user = await getUser();
 
   if (user) {
     const tenSecondsAgo = new Date(new Date().getTime() - 10000);

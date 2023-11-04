@@ -47,21 +47,23 @@ export default function AdminAddStocks() {
   });
 
   const { mutate: uploadStocks, isLoading } = trpc.stock.upload.useMutation({
-    onError: () =>
+    onError: () => {
       toast({
         title: "Oops! Something went wrong.",
         description: `${form.getValues("stock")} could not be uploaded.`,
         variant: "destructive",
-      }),
-    onSuccess: () =>
+      });
+    },
+    onSuccess: () => {
       toast({
         title: `${form.getValues("stock")} uploaded.`,
         description: "Files were successfully added to the database.",
-      }),
+      });
+    },
   });
 
   return (
-    <Card className="border-none bg-zinc-900/60 w-[400px] sm:w-[500px]">
+    <Card className="border-none bg-zinc-100 dark:bg-zinc-900/70 w-[400px] sm:w-[500px]">
       <CardHeader>
         <CardTitle>Upload Stocks</CardTitle>
         <CardDescription>Upload stock data to the database</CardDescription>
@@ -172,7 +174,7 @@ export default function AdminAddStocks() {
               )}
             />
             <Button
-              className="bg-primary rounded-md"
+              className="bg-primary rounded-md text-white"
               isLoading={isLoading}
               type="submit">
               {!isLoading && <Upload className="h-4 w-4" />}

@@ -24,7 +24,7 @@ const ProfileForm = dynamic(() => import("@/app/settings/profile-form"), {
 });
 
 export default async function page() {
-  const user = getUser();
+  const user = await getUser();
 
   const dbUser = await db.user.findFirst({
     select: { biography: true },

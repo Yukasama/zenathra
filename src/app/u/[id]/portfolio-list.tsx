@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default async function PortfolioList({ user }: Props) {
-  const sessionUser = getUser();
+  const sessionUser = await getUser();
 
   const profileBelongsToUser = sessionUser?.id === user.id;
 

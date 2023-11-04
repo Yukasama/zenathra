@@ -22,7 +22,7 @@ export const metadata = {
 
 export default async function page() {
   const { getUser, isAuthenticated } = getKindeServerSession();
-  const user = getUser();
+  const user = await getUser();
 
   const symbols = ["AAPL", "MSFT", "GOOG", "TSLA", "NVDA", "AMZN"];
 

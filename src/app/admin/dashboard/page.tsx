@@ -8,8 +8,11 @@ export const runtime = "edge";
 
 export default async function page() {
   const { getPermission } = getKindeServerSession();
+  const permissions = await getPermission("(upload:stocks)");
 
-  if (!getPermission("(upload:stocks)").isGranted) redirect("/");
+  if (!permissions.isGranted) {
+    redirect("/");
+  }
 
   return (
     <PageLayout

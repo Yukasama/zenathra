@@ -28,7 +28,10 @@ const Sidebar = dynamic(() => import("./sidebar"), {
 
 export default async function Navbar() {
   const { getUser, getPermission } = getKindeServerSession();
-  const user = getUser();
+  const [user, permissions] = await Promise.all([
+    getUser(),
+    getPermission("(upload:stocks)"),
+  ]);
 
   const [portfolios, recentStocks] = await Promise.all([
     db.portfolio.findMany({
@@ -81,12 +84,7 @@ export default async function Navbar() {
           <Searchbar recentStocks={uniqueStocks} />
         </div>
         <ThemeToggle />
-        {user && (
-          <UserAccountNav
-            user={user}
-            isAdmin={getPermission("(upload:stocks)").isGranted}
-          />
-        )}
+        {user && <UserAccountNav user={user} isAdmin={permissions.isGranted} />}
         {!user && (
           <LoginLink className={buttonVariants({ variant: "subtle" })}>
             Sign In

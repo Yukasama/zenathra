@@ -10,7 +10,7 @@ export const metadata = {
 };
 
 export default async function page() {
-  const user = getUser();
+  const user = await getUser();
 
   return (
     <div className="f-col gap-4 w-full">

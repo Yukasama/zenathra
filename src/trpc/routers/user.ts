@@ -9,13 +9,14 @@ import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { getUserSubscriptionPlan, stripe } from "@/lib/stripe";
 import { PLANS } from "@/config/stripe";
-import { UserUpdateSchema } from "@/lib/validators/user";
+import { CreateUserSchema, UserUpdateSchema } from "@/lib/validators/user";
 import { z } from "zod";
+import { createToken } from "@/lib/create-token";
 
 export const userRouter = router({
   authCallback: publicProcedure.query(async () => {
     const { getUser } = getKindeServerSession();
-    const user = getUser();
+    const user = await getUser();
 
     if (!user.id || !user.email) throw new TRPCError({ code: "UNAUTHORIZED" });
 
@@ -37,7 +38,7 @@ export const userRouter = router({
   getKindeSession: privateProcedure.query(async () => {
     const { getUser, isAuthenticated, getPermissions, getOrganization } =
       getKindeServerSession();
-    const user = getUser();
+    const user = await getUser();
     const authenticated = isAuthenticated();
     const permissions = getPermissions();
     const organization = getOrganization();
@@ -102,6 +103,38 @@ export const userRouter = router({
       picture: user.picture ?? null,
     } as Pick<KindeUser, "given_name" | "family_name" | "picture">;
   }),
+  create: publicProcedure
+    .input(CreateUserSchema)
+    .mutation(async ({ input }) => {
+      const existingUser = await db.user.findFirst({
+        select: { id: true },
+        where: { input.email },
+      });
+
+      if (existingUser) return new TRPCError({ code: "ALREADY_EXISTS" });
+
+    // Hash password 12 times
+    const hashedPassword = await bcryptjs.hash(password, 12);
+    const hashedToken = await createToken();
+
+    const createdUser = await db.user.create({
+      data: {
+        email,
+        hashedPassword,
+        verifyToken: hashedToken,
+        verifyTokenExpiry: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
+      },
+    });
+
+    const mailOptions = {
+      from: env.SMTP_MAIL,
+      to: email,
+      subject: "Verify your email",
+      html: `Verify your email here: ${env.NEXT_PUBLIC_VERCEL_URL}/verify-email?token=${hashedToken}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    }),
   update: privateProcedure
     .input(UserUpdateSchema)
     .mutation(async ({ ctx, input }) => {
@@ -144,4 +177,109 @@ export const userRouter = router({
       }),
     ]);
   }),
+  resetPassword: privateProcedure
+    .input(
+      z.object({
+        password: z.string().min(11),
+        token: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { userId } = ctx;
+
+      const user = await db.user.findFirst({
+        select: { id: true },
+        where: {
+          forgotPasswordToken: input.token,
+          forgotPasswordExpiry: { gte: new Date() },
+        },
+      });
+
+      if (!user) return new TRPCError({ code: "NOT_FOUND" });
+
+      const hashedPassword = await bcryptjs.hash(input.password, 12);
+
+      await db.user.update({
+        where: { id: user.id },
+        data: {
+          hashedPassword,
+          forgotPasswordToken: null,
+          forgotPasswordExpiry: null,
+        },
+      });
+    }),
+  verifyMail: publicProcedure
+    .input(
+      z.object({
+        token: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const user = await db.user.findFirst({
+        select: { id: true },
+        where: {
+          verifyToken: input.token,
+          verifyTokenExpiry: { gte: new Date() },
+        },
+      });
+
+      if (!user) return new TRPCError({ code: "NOT_FOUND" });
+
+      await db.user.update({
+        where: { id: user.id },
+        data: {
+          emailVerified: new Date(),
+          verifyToken: null,
+          verifyTokenExpiry: null,
+        },
+      });
+    }),
+  sendResetPassword: publicProcedure
+    .input(z.string())
+    .mutation(async ({ input }) => {
+      const hashToken = await createToken();
+
+      await db.user.update({
+        where: { email: input },
+        data: {
+          forgotPasswordToken: hashToken,
+          forgotPasswordExpiry: new Date(
+            Date.now() + tokenConfig.forgotPasswordExpiry
+          ),
+        },
+      });
+
+      const mailOptions = {
+        from: env.SMTP_MAIL,
+        to: email,
+        subject: "Reset your password",
+        html: `Reset your password here: ${env.NEXT_PUBLIC_VERCEL_URL}/reset-password?token=${hashToken}`,
+      };
+
+      await transporter.sendMail(mailOptions);
+    }),
+  sendVerifyEmail: privateProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      const hashToken = await createToken();
+
+      await db.user.update({
+        where: { email: session.user.email! },
+        data: {
+          verifyToken: hashedToken,
+          verifyTokenExpiry: new Date(
+            Date.now() + tokenConfig.verifyTokenExpiry
+          ),
+        },
+      });
+
+      const mailOptions = {
+        from: env.SMTP_MAIL,
+        to: session.user.email!,
+        subject: "Verify your email",
+        html: `Verify your email here: ${env.NEXT_PUBLIC_VERCEL_URL}/verify-email?token=${hashedToken}`,
+      };
+
+      await transporter.sendMail(mailOptions);
+    }),
 });

@@ -12,10 +12,14 @@ export default function Page() {
 
   trpc.user.authCallback.useQuery(undefined, {
     onError: (err) => {
-      if (err.data?.code === "UNAUTHORIZED") router.push("/api/auth/login");
+      if (err.data?.code === "UNAUTHORIZED") {
+        router.push("/api/auth/login");
+      }
     },
     onSuccess: ({ success }) => {
-      if (success) router.push(origin ? `/${origin}` : "/");
+      if (success) {
+        router.push(origin ? `/${origin}` : "/");
+      }
     },
     retry: true,
     retryDelay: 500,

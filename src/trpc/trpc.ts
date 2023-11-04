@@ -6,7 +6,7 @@ const middleware = t.middleware;
 
 const isAuth = middleware(async (opts) => {
   const { getUser } = getKindeServerSession();
-  const user = getUser();
+  const user = await getUser();
 
   if (!user || !user.id) throw new TRPCError({ code: "UNAUTHORIZED" });
 
@@ -20,9 +20,12 @@ const isAuth = middleware(async (opts) => {
 
 const isAdmin = middleware(async (opts) => {
   const { getUser, getPermission } = getKindeServerSession();
-  const user = getUser();
+  const [user, permissions] = await Promise.all([
+    getUser(),
+    getPermission("(upload:stocks)"),
+  ]);
 
-  if (!user || !user.id || !getPermission("(upload:stocks)").isGranted)
+  if (!user || !user.id || !permissions.isGranted)
     throw new TRPCError({ code: "UNAUTHORIZED" });
 
   return opts.next({

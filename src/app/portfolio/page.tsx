@@ -21,7 +21,7 @@ const PortfolioCreateCard = dynamic(() => import("./portfolio-create-card"), {
 });
 
 export default async function page() {
-  const user = getUser();
+  const user = await getUser();
 
   const portfolios = await db.portfolio.findMany({
     select: {
