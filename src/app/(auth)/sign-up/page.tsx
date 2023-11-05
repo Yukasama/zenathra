@@ -1,14 +1,12 @@
 "use client";
 
-import OAuth from "./oauth";
+import OAuth from "../oauth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FieldValues, useForm } from "react-hook-form";
-import { Button } from "../ui/button";
+import { useForm } from "react-hook-form";
+import { Button } from "@nextui-org/button";
 import { LogIn } from "lucide-react";
 import Link from "next/link";
-import { SignInProps } from "@/lib/validators/user";
-import { useMutation } from "@tanstack/react-query";
 import {
   Form,
   FormControl,
@@ -17,8 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "../ui/input";
-import axios, { AxiosError } from "axios";
+import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -26,12 +23,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "@/components/ui/card";
 import { useCustomToasts } from "@/hooks/use-custom-toasts";
 import { signIn } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
+import { trpc } from "@/app/_trpc/client";
+import { TRPCError } from "@trpc/server";
 
-const RegisterSchema = z
+const Schema = z
   .object({
     email: z.string().email("Please enter a valid email."),
     password: z
@@ -48,7 +47,7 @@ export default function SignUp() {
   const { defaultError } = useCustomToasts();
 
   const form = useForm({
-    resolver: zodResolver(RegisterSchema),
+    resolver: zodResolver(Schema),
     defaultValues: {
       email: "",
       password: "",
@@ -56,11 +55,9 @@ export default function SignUp() {
     },
   });
 
-  const { mutate: register, isLoading } = useMutation({
-    mutationFn: async (data: SignInProps) =>
-      await axios.post("/api/user/sign-up", { ...data }),
+  const { mutate: register, isLoading } = trpc.user.create.useMutation({
     onError: (err) => {
-      if (err instanceof AxiosError && err.response?.status === 409)
+      if (err instanceof TRPCError && err.code === "CONFLICT")
         return toast({
           title: "Oops! Something went wrong.",
           description: "E-Mail is already registered.",
@@ -68,21 +65,12 @@ export default function SignUp() {
         });
       defaultError();
     },
-    onSuccess: () => {
+    onSuccess: () =>
       signIn("credentials", {
         email: form.getValues("email"),
         password: form.getValues("password"),
-      });
-    },
+      }),
   });
-
-  function onSubmit(data: FieldValues) {
-    const payload: SignInProps = {
-      email: data.email,
-      password: data.password,
-    };
-    register(payload);
-  }
 
   return (
     <Card className="md:p-2 w-[400px]">
@@ -92,7 +80,9 @@ export default function SignUp() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="gap-2 f-col">
+          <form
+            onSubmit={form.handleSubmit(() => register(form.getValues()))}
+            className="gap-2 f-col">
             <FormField
               control={form.control}
               name="email"

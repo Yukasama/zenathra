@@ -3,12 +3,11 @@
 import { SignInResponse, signIn } from "next-auth/react";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, buttonVariants } from "../ui/button";
-import OAuth from "./oauth";
+import { Button, buttonVariants } from "@/components/ui/button";
+import OAuth from "../oauth";
 import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
 import { LogIn } from "lucide-react";
-import { SignInProps, SignInSchema } from "@/lib/validators/user";
 import { useMutation } from "@tanstack/react-query";
 import {
   Form,
@@ -18,7 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -26,17 +25,18 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { z } from "zod";
 
-export const CreateUserSchema = z.object({
+const Schema = z.object({
   email: z.string().email("Please enter a valid email."),
   password: z.string().min(1, "Please enter a valid password."),
 });
 
 export default function SignIn() {
   const form = useForm({
-    resolver: zodResolver(SignInSchema),
+    resolver: zodResolver(Schema),
     defaultValues: {
       email: "",
       password: "",
@@ -44,7 +44,7 @@ export default function SignIn() {
   });
 
   const { mutate: login, isLoading } = useMutation({
-    mutationFn: async (data: SignInProps) => {
+    mutationFn: async (data: FieldValues) => {
       const response = await signIn("credentials", {
         ...data,
         redirect: false,
@@ -54,7 +54,7 @@ export default function SignIn() {
     },
     onError: (err: string) =>
       toast({
-        title: "Oops! Something went wrong.",
+        title: "We have trouble signing you in.",
         description: `${err ?? "Please try again later."}`,
         variant: "destructive",
       }),
@@ -62,14 +62,6 @@ export default function SignIn() {
       if (!resp) window.location.reload();
     },
   });
-
-  function onSubmit(data: FieldValues) {
-    const payload: SignInProps = {
-      email: data.email,
-      password: data.password,
-    };
-    login(payload);
-  }
 
   return (
     <Card className="md:p-2 w-[400px]">
@@ -79,7 +71,9 @@ export default function SignIn() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="gap-3 f-col">
+          <form
+            onSubmit={form.handleSubmit(() => login(form.getValues()))}
+            className="gap-3 f-col">
             <FormField
               control={form.control}
               name="email"
@@ -126,7 +120,6 @@ export default function SignIn() {
               )}>
               Forgot Password?
             </Link>
-
             <Button
               className="bg-primary hover:bg-primary/70 mt-1"
               isLoading={isLoading}>
@@ -135,6 +128,7 @@ export default function SignIn() {
             </Button>
           </form>
         </Form>
+
         <div className="flex items-center my-3">
           <div className="flex-1 border"></div>
           <div className="f-box h-10 w-10 rounded-full border text-[12px] text-slate-400">

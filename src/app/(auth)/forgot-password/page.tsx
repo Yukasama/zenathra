@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightCircle } from "lucide-react";
 import {
@@ -15,8 +15,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useMutation } from "@tanstack/react-query";
-import { UserMailProps, UserMailSchema } from "@/lib/validators/user";
 import {
   Card,
   CardContent,
@@ -27,30 +25,26 @@ import {
 } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { trpc } from "@/app/_trpc/client";
+import { z } from "zod";
 
 export default function Page() {
   const [sent, setSent] = useState<boolean>(false);
 
   const form = useForm({
-    resolver: zodResolver(UserMailSchema),
+    resolver: zodResolver(z.string().email()),
     defaultValues: { email: "" },
   });
 
-  const { mutate: sendMail, isLoading } = trpc.user.sendResetPassword.useMutation({
-    onError: () => {
-      toast({
-        title: "Oops! Something went wrong.",
-        description: "E-Mail could not be sent.",
-        variant: "destructive",
-      });
-    },
-    onSuccess: () => setSent(true),
-  });
-
-  function onSubmit(data: FieldValues) {
-    const payload: UserMailProps = { email: data.email };
-    sendMail(payload);
-  }
+  const { mutate: sendMail, isLoading } =
+    trpc.user.sendResetPassword.useMutation({
+      onError: () =>
+        toast({
+          title: "Oops! Something went wrong.",
+          description: "E-Mail could not be sent.",
+          variant: "destructive",
+        }),
+      onSuccess: () => setSent(true),
+    });
 
   return (
     <Card className="md:p-2 w-[400px]">
@@ -66,7 +60,9 @@ export default function Page() {
         {!sent && (
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(onSubmit)}
+              onSubmit={form.handleSubmit(() =>
+                sendMail(form.getValues().email)
+              )}
               className="gap-3 f-col">
               <FormField
                 control={form.control}

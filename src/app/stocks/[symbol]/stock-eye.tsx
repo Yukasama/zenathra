@@ -1,15 +1,15 @@
 import { Lock } from "lucide-react";
 import { Card } from "../../../components/ui/card";
-import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import type { User } from "next-auth";
 
 interface Props {
-  user: KindeUser | null;
+  user: Pick<User, "id"> | undefined;
   eye: number | null;
 }
 

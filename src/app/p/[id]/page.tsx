@@ -25,9 +25,7 @@ export default async function page({ params: { id } }: Props) {
     where: { id },
   });
 
-  if (!portfolio) {
-    return notFound();
-  }
+  if (!portfolio) return notFound();
 
   const stocks = await db.stock.findMany({
     select: {

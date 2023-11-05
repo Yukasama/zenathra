@@ -1,43 +1,40 @@
 "use client";
 
-import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { SignInResponse, signIn } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
-import { Icons } from "../shared/icons";
+import { Button } from "@/components/ui/button";
+import { Icons } from "@/components/shared/icons";
+import { useMutation } from "@tanstack/react-query";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   provider: "google" | "facebook" | "github";
 }
 
 export default function OAuth({ provider, className, ...props }: Props) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const onSubmit = async () => {
-    setIsLoading(true);
-
-    try {
-      await signIn(provider);
-    } catch (error) {
+  const { mutate: login, isLoading } = useMutation({
+    mutationFn: async () => {
+      const response = await signIn(provider);
+      if (response?.error) throw new Error(response?.error);
+      return response as SignInResponse;
+    },
+    onError: (err: string) =>
       toast({
-        title: "Error",
-        description: `There was an error logging in with ${
-          provider[0].toUpperCase() + provider.slice(1)
-        }`,
+        title: "We have trouble signing you in.",
+        description: `${err ?? "Please try again later."}`,
         variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      }),
+    onSettled: (res, resp) => {
+      if (!resp) window.location.reload();
+    },
+  });
 
   return (
     <div className={cn("flex justify-center w-full", className)} {...props}>
       <Button
         isLoading={isLoading}
         className="w-full bg-slate-900 hover:bg-slate-900/70 border"
-        onClick={onSubmit}>
+        onClick={() => login()}>
         {provider === "google" ? (
           <Icons.google className="h-[18px] mr-1" />
         ) : provider === "facebook" ? (

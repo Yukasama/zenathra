@@ -3,12 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightCircle } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
-import { ResetPasswordProps } from "@/lib/validators/user";
-import axios, { AxiosError } from "axios";
 import { toast } from "@/hooks/use-toast";
 import {
   Form,
@@ -28,8 +25,9 @@ import {
 } from "@/components/ui/card";
 import { startTransition } from "react";
 import { useCustomToasts } from "@/hooks/use-custom-toasts";
+import { trpc } from "@/app/_trpc/client";
 
-const ResetPasswordSchema = z
+const Schema = z
   .object({
     password: z
       .string()
@@ -48,38 +46,21 @@ export default function Page() {
   const { defaultError } = useCustomToasts();
 
   const form = useForm({
-    resolver: zodResolver(ResetPasswordSchema),
+    resolver: zodResolver(Schema),
     defaultValues: {
       password: "",
       confPassword: "",
     },
   });
 
-  const { mutate: updatePassword, isLoading } = useMutation({
-    mutationFn: async (payload: ResetPasswordProps) =>
-      await axios.post("/api/user/reset-password", payload),
-    onError: (err) => {
-      if (err instanceof AxiosError && err.response?.status === 401)
-        return toast({
-          title: "Unauthorized.",
-          description: "You are not authorized to pursue this action.",
-          variant: "destructive",
-        });
-      defaultError();
-    },
-    onSuccess: () => {
-      startTransition(() => router.push("/"));
-      toast({ description: "Password updated successfully." });
-    },
-  });
-
-  function onSubmit(data: FieldValues) {
-    const payload: ResetPasswordProps = {
-      password: data.password,
-      token,
-    };
-    updatePassword(payload);
-  }
+  const { mutate: resetPassword, isLoading } =
+    trpc.user.resetPassword.useMutation({
+      onError: () => defaultError(),
+      onSuccess: () => {
+        startTransition(() => router.push("/"));
+        toast({ description: "Password updated successfully." });
+      },
+    });
 
   return (
     <Card className="md:p-2 w-[400px]">
@@ -89,7 +70,14 @@ export default function Page() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="gap-3 f-col">
+          <form
+            onSubmit={form.handleSubmit(() =>
+              resetPassword({
+                password: form.getValues("password"),
+                token,
+              })
+            )}
+            className="gap-3 f-col">
             <FormField
               control={form.control}
               name="password"

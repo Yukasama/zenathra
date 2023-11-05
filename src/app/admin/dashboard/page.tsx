@@ -1,18 +1,19 @@
-import AdminAddStocks from "@/app/admin/dashboard/admin-add-stocks";
 import PageLayout from "@/components/shared/page-layout";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { getUser } from "@/lib/auth";
+import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
+
+const AdminAddStocks = dynamic(
+  () => import("@/app/admin/dashboard/admin-add-stocks"),
+  { ssr: false }
+);
 
 export const metadata = { title: "Admin Dashboard" };
 export const runtime = "edge";
 
 export default async function page() {
-  const { getPermission } = getKindeServerSession();
-  const permissions = await getPermission("(upload:stocks)");
-
-  if (!permissions.isGranted) {
-    redirect("/");
-  }
+  const user = await getUser();
+  if (!user?.role) redirect("/");
 
   return (
     <PageLayout

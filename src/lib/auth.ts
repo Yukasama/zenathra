@@ -10,7 +10,6 @@ import { SITE } from "@/config/site";
 import { env } from "@/env.mjs";
 import Google from "next-auth/providers/google";
 import { nanoid } from "nanoid";
-import { redirect } from "next/navigation";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
@@ -118,13 +117,6 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user }) {
       const dbUser = await db.user.findFirst({
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          image: true,
-          username: true,
-        },
         where: { email: token.email },
       });
 
@@ -142,16 +134,12 @@ export const authOptions: NextAuthOptions = {
       return dbUser;
     },
     redirect() {
-      return "http://localhost:3000/";
+      return "/";
     },
   },
 };
 
-export const getAuthSession = async () => await getServerSession(authOptions);
-
-export const checkAuth = async () => {
-  const session = await getAuthSession();
-  if (!session) {
-    redirect("/sign-in");
-  }
-};
+export async function getUser() {
+  const session = await getServerSession(authOptions);
+  return session?.user;
+}

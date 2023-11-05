@@ -1,24 +1,28 @@
-import {
-  KindeUser,
-  createKindeManagementAPIClient,
-  getKindeServerSession,
-} from "@kinde-oss/kinde-auth-nextjs/server";
 import { privateProcedure, publicProcedure, router } from "../trpc";
 import { absoluteUrl } from "@/lib/utils";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { getUserSubscriptionPlan, stripe } from "@/lib/stripe";
 import { PLANS } from "@/config/stripe";
-import { CreateUserSchema, UserUpdateSchema } from "@/lib/validators/user";
+import {
+  CreateUserSchema,
+  ResetPasswordSchema,
+  UserUpdateSchema,
+} from "@/lib/validators/user";
 import { z } from "zod";
 import { createToken } from "@/lib/create-token";
+import bcryptjs from "bcryptjs";
+import { getUser } from "@/lib/auth";
+import { tokenConfig } from "@/config/token";
+import { env } from "@/env.mjs";
+import { transporter } from "@/lib/mail";
 
 export const userRouter = router({
   authCallback: publicProcedure.query(async () => {
-    const { getUser } = getKindeServerSession();
     const user = await getUser();
 
-    if (!user.id || !user.email) throw new TRPCError({ code: "UNAUTHORIZED" });
+    if (!user?.id || !user?.email)
+      throw new TRPCError({ code: "UNAUTHORIZED" });
 
     const dbUser = await db.user.findFirst({
       select: { id: true },
@@ -35,22 +39,8 @@ export const userRouter = router({
 
     return { success: true };
   }),
-  getKindeSession: privateProcedure.query(async () => {
-    const { getUser, isAuthenticated, getPermissions, getOrganization } =
-      getKindeServerSession();
-    const user = await getUser();
-    const authenticated = isAuthenticated();
-    const permissions = getPermissions();
-    const organization = getOrganization();
-
-    return { user, authenticated, permissions, organization };
-  }),
   createStripeSession: privateProcedure.mutation(async ({ ctx }) => {
     const { userId } = ctx;
-
-    const billingUrl = absoluteUrl("/dashboard/billing");
-
-    if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
 
     const dbUser = await db.user.findFirst({
       select: {
@@ -62,6 +52,7 @@ export const userRouter = router({
 
     if (!dbUser) throw new TRPCError({ code: "UNAUTHORIZED" });
 
+    const billingUrl = absoluteUrl("/dashboard/billing");
     const subscriptionPlan = await getUserSubscriptionPlan();
 
     if (subscriptionPlan.isSubscribed && dbUser.stripeCustomerId) {
@@ -90,196 +81,185 @@ export const userRouter = router({
 
     return { url: stripeSession.url };
   }),
-  getbyId: publicProcedure.input(z.string()).query(async ({ input }) => {
-    const client = await createKindeManagementAPIClient();
-
-    const user = await client.usersApi.getUserData({ id: input });
-
-    if (!user) throw new TRPCError({ code: "NOT_FOUND" });
-
-    return {
-      given_name: user.firstName ?? null,
-      family_name: user.lastName ?? null,
-      picture: user.picture ?? null,
-    } as Pick<KindeUser, "given_name" | "family_name" | "picture">;
-  }),
   create: publicProcedure
     .input(CreateUserSchema)
     .mutation(async ({ input }) => {
       const existingUser = await db.user.findFirst({
         select: { id: true },
-        where: { input.email },
+        where: { email: input.email },
       });
 
-      if (existingUser) return new TRPCError({ code: "ALREADY_EXISTS" });
+      if (existingUser) {
+        throw new TRPCError({ code: "CONFLICT" });
+      }
 
-    // Hash password 12 times
-    const hashedPassword = await bcryptjs.hash(password, 12);
-    const hashedToken = await createToken();
+      const [hashedPassword, hashedToken] = await Promise.all([
+        bcryptjs.hash(input.password, 12),
+        createToken(),
+      ]);
 
-    const createdUser = await db.user.create({
-      data: {
-        email,
-        hashedPassword,
-        verifyToken: hashedToken,
-        verifyTokenExpiry: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
-      },
-    });
+      const mailOptions = {
+        from: env.SMTP_MAIL,
+        to: input.email,
+        subject: "Verify your email",
+        html: `Verify your email here: ${env.NEXT_PUBLIC_VERCEL_URL}/verify-email?token=${hashedToken}`,
+      };
 
-    const mailOptions = {
-      from: env.SMTP_MAIL,
-      to: email,
-      subject: "Verify your email",
-      html: `Verify your email here: ${env.NEXT_PUBLIC_VERCEL_URL}/verify-email?token=${hashedToken}`,
-    };
-
-    await transporter.sendMail(mailOptions);
+      await Promise.all([
+        db.user.create({
+          data: {
+            email: input.email,
+            hashedPassword,
+            verificationTokens: {
+              create: {
+                token: hashedToken,
+                expires: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
+                type: "verify",
+              },
+            },
+          },
+        }),
+        transporter.sendMail(mailOptions),
+      ]);
     }),
   update: privateProcedure
     .input(UserUpdateSchema)
     .mutation(async ({ ctx, input }) => {
       const { userId } = ctx;
 
-      const dbUser = await db.user.findFirst({
-        select: { id: true },
+      await db.user.update({
         where: { id: userId },
-      });
-
-      if (!dbUser) throw new TRPCError({ code: "UNAUTHORIZED" });
-
-      const client = await createKindeManagementAPIClient();
-
-      // Running sequential because both operations are required to be successful
-      client.usersApi.updateUser({
-        id: userId,
-        updateUserRequest: {
-          givenName: input.givenName,
-          familyName: input.familyName,
+        data: {
+          ...(input.username !== undefined && { username: input.username }),
+          ...(input.email !== undefined && { email: input.email }),
+          ...(input.biography !== undefined && { biography: input.biography }),
         },
-      });
-
-      db.user.update({
-        where: { id: userId },
-        data: { biography: input.biography },
       });
     }),
   delete: privateProcedure.mutation(async ({ ctx }) => {
     const { userId } = ctx;
 
-    if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
-
-    const client = await createKindeManagementAPIClient();
-
-    await Promise.all([
-      client.usersApi.deleteUser({ id: userId }),
-      db.user.delete({
-        where: { id: userId },
-      }),
-    ]);
+    await db.user.delete({
+      where: { id: userId },
+    });
   }),
   resetPassword: privateProcedure
-    .input(
-      z.object({
-        password: z.string().min(11),
-        token: z.string(),
-      })
-    )
+    .input(ResetPasswordSchema)
     .mutation(async ({ ctx, input }) => {
       const { userId } = ctx;
 
-      const user = await db.user.findFirst({
-        select: { id: true },
+      const verificationToken = await db.verificationToken.findFirst({
+        select: { token: true },
         where: {
-          forgotPasswordToken: input.token,
-          forgotPasswordExpiry: { gte: new Date() },
+          userId: userId,
+          expires: { gte: new Date() },
+          type: "forgotPassword",
         },
       });
 
-      if (!user) return new TRPCError({ code: "NOT_FOUND" });
+      if (
+        !verificationToken ||
+        !bcryptjs.compareSync(input.token, verificationToken.token)
+      ) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
 
       const hashedPassword = await bcryptjs.hash(input.password, 12);
 
       await db.user.update({
-        where: { id: user.id },
+        where: { id: userId },
         data: {
           hashedPassword,
-          forgotPasswordToken: null,
-          forgotPasswordExpiry: null,
+          verificationTokens: {
+            delete: {
+              token: verificationToken.token,
+            },
+          },
         },
       });
     }),
-  verifyMail: publicProcedure
-    .input(
-      z.object({
-        token: z.string(),
-      })
-    )
+  verify: publicProcedure
+    .input(z.string()) // Verify Token
     .mutation(async ({ input }) => {
-      const user = await db.user.findFirst({
-        select: { id: true },
+      const verificationToken = await db.verificationToken.findFirst({
+        select: { token: true, userId: true },
         where: {
-          verifyToken: input.token,
-          verifyTokenExpiry: { gte: new Date() },
+          token: input,
+          expires: { gte: new Date() },
+          type: "verify",
         },
       });
 
-      if (!user) return new TRPCError({ code: "NOT_FOUND" });
+      if (
+        !verificationToken ||
+        !bcryptjs.compareSync(input, verificationToken.token)
+      ) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
 
       await db.user.update({
-        where: { id: user.id },
+        where: { id: verificationToken.userId },
         data: {
           emailVerified: new Date(),
-          verifyToken: null,
-          verifyTokenExpiry: null,
+          verificationTokens: {
+            delete: {
+              token: verificationToken.token,
+            },
+          },
         },
       });
     }),
   sendResetPassword: publicProcedure
-    .input(z.string())
+    .input(z.string().email()) // Email where to send reset password link
     .mutation(async ({ input }) => {
       const hashToken = await createToken();
 
       await db.user.update({
         where: { email: input },
         data: {
-          forgotPasswordToken: hashToken,
-          forgotPasswordExpiry: new Date(
-            Date.now() + tokenConfig.forgotPasswordExpiry
-          ),
+          verificationTokens: {
+            create: {
+              token: hashToken,
+              expires: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
+              type: "forgotPassword",
+            },
+          },
         },
       });
 
       const mailOptions = {
         from: env.SMTP_MAIL,
-        to: email,
+        to: input,
         subject: "Reset your password",
         html: `Reset your password here: ${env.NEXT_PUBLIC_VERCEL_URL}/reset-password?token=${hashToken}`,
       };
 
       await transporter.sendMail(mailOptions);
     }),
-  sendVerifyEmail: privateProcedure
-    .input(z.string())
-    .mutation(async ({ ctx, input }) => {
-      const hashToken = await createToken();
+  sendVerification: privateProcedure.mutation(async ({ ctx }) => {
+    const { user } = ctx;
+    const hashedToken = await createToken();
 
-      await db.user.update({
-        where: { email: session.user.email! },
-        data: {
-          verifyToken: hashedToken,
-          verifyTokenExpiry: new Date(
-            Date.now() + tokenConfig.verifyTokenExpiry
-          ),
+    await db.user.update({
+      where: { email: user.email ?? undefined },
+      data: {
+        verificationTokens: {
+          create: {
+            token: hashedToken,
+            expires: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
+            type: "verify",
+          },
         },
-      });
+      },
+    });
 
-      const mailOptions = {
-        from: env.SMTP_MAIL,
-        to: session.user.email!,
-        subject: "Verify your email",
-        html: `Verify your email here: ${env.NEXT_PUBLIC_VERCEL_URL}/verify-email?token=${hashedToken}`,
-      };
+    const mailOptions = {
+      from: env.SMTP_MAIL,
+      to: user.email ?? undefined,
+      subject: "Verify your email",
+      html: `Verify your email here: ${env.NEXT_PUBLIC_VERCEL_URL}/verify-email?token=${hashedToken}`,
+    };
 
-      await transporter.sendMail(mailOptions);
-    }),
+    await transporter.sendMail(mailOptions);
+  }),
 });

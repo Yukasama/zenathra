@@ -2,9 +2,9 @@ import "server-only";
 
 import { db } from "@/db";
 import { FMP_API_URL, TIMEFRAMES, historyUrls } from "@/config/fmp/config";
-import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import { env } from "@/env.mjs";
 import logger from "pino";
+import { User } from "@prisma/client";
 
 export async function fetchHistory(symbol: string) {
   const fetchedURLs: Record<string, any> = {};
@@ -12,7 +12,9 @@ export async function fetchHistory(symbol: string) {
   for (let timeframe of Object.keys(TIMEFRAMES)) {
     const { url } = TIMEFRAMES[timeframe];
     if (!fetchedURLs[url]) {
-      const data = await fetch(historyUrls(symbol, url)).then((res) => res.json());
+      const data = await fetch(historyUrls(symbol, url)).then((res) =>
+        res.json()
+      );
       fetchedURLs[url] = url.includes("price-full") ? data.historical : data;
     }
   }
@@ -54,10 +56,7 @@ function MergeArrays(arrays: Record<string, any>[][]): Record<string, any>[] {
   return result;
 }
 
-export async function uploadStocks(
-  symbols: string[],
-  user: KindeUser
-): Promise<void> {
+export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
   if (!symbols.length) throw new Error("ArgumentError: No symbols provided");
 
   const financialUrls = symbols.map((symbol) => [
@@ -104,7 +103,7 @@ export async function uploadStocks(
     }
   });
 
-  const stocks: any[] = await Promise.all(
+  const stocks = await Promise.all(
     profileUrls.map(async (urls) => {
       try {
         const responses = await Promise.all(

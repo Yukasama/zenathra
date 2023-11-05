@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { privateProcedure, publicProcedure, router } from "../trpc";
+import { privateProcedure, router } from "../trpc";
 import { db } from "@/db";
 import { TRPCError } from "@trpc/server";
 import {
@@ -10,13 +10,6 @@ import {
 import { getRandomColor } from "@/lib/utils";
 
 export const portfolioRouter = router({
-  getAllPublic: publicProcedure.query(async () => {
-    return await db.portfolio.findMany({
-      select: { id: true },
-      where: { public: true },
-      orderBy: { title: "asc" },
-    });
-  }),
   create: privateProcedure
     .input(CreatePortfolioSchema)
     .mutation(async ({ ctx, input }) => {
@@ -34,23 +27,19 @@ export const portfolioRouter = router({
   edit: privateProcedure
     .input(EditPortfolioSchema)
     .mutation(async ({ ctx, input }) => {
-      try {
-        const { userId } = ctx;
-        const { portfolioId, title, public: isPublic } = input;
+      const { userId } = ctx;
+      const { portfolioId, title, public: isPublic } = input;
 
-        await db.portfolio.update({
-          where: {
-            id: portfolioId,
-            creatorId: userId,
-          },
-          data: {
-            ...(title !== undefined && { title: title }),
-            ...(isPublic !== undefined && { public: isPublic }),
-          },
-        });
-      } catch {
-        throw new TRPCError({ code: "NOT_FOUND" });
-      }
+      await db.portfolio.update({
+        where: {
+          id: portfolioId,
+          creatorId: userId,
+        },
+        data: {
+          ...(title !== undefined && { title: title }),
+          ...(isPublic !== undefined && { public: isPublic }),
+        },
+      });
     }),
   add: privateProcedure
     .input(ModifyPortfolioSchema)

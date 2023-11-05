@@ -27,8 +27,8 @@ export default async function page() {
   const user = await getUser();
 
   const dbUser = await db.user.findFirst({
-    select: { biography: true },
-    where: { id: user?.id ?? undefined },
+    select: { email: true, username: true, biography: true },
+    where: { id: user?.id },
   });
 
   return (
@@ -41,7 +41,7 @@ export default async function page() {
         </small>
       </div>
 
-      <ProfileForm user={user} dbUser={dbUser} />
+      <ProfileForm user={dbUser} />
     </div>
   );
 }

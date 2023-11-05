@@ -17,9 +17,7 @@ export default function Page() {
       }
     },
     onSuccess: ({ success }) => {
-      if (success) {
-        router.push(origin ? `/${origin}` : "/");
-      }
+      if (success) router.push(origin ? `/${origin}` : "/");
     },
     retry: true,
     retryDelay: 500,

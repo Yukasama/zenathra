@@ -6,13 +6,13 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/card";
-import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import StockListItem from "../../../components/stock/stock-list-item";
 import { getQuotes } from "@/lib/fmp/quote";
 import _ from "lodash";
+import type { User } from "next-auth";
 
 interface Props {
-  user: Pick<KindeUser, "id">;
+  user: Pick<User, "id">;
 }
 
 export default async function RecentStocks({ user }: Props) {

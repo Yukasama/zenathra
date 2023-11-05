@@ -15,12 +15,6 @@ import logger from "pino";
 import { uploadStocks } from "@/lib/stock-upload";
 
 export const stockRouter = router({
-  getAll: publicProcedure.query(async () => {
-    return await db.stock.findMany({
-      select: { symbol: true },
-      orderBy: { companyName: "asc" },
-    });
-  }),
   query: publicProcedure.input(ScreenerSchema).query(async (opts) => {
     const filter = buildFilter(opts.input);
 

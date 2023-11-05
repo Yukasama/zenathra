@@ -6,7 +6,7 @@ import { SITE } from "@/config/site";
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 export const Timeout = async (ms: number) =>
-  await new Promise<void>((resolve) => setTimeout(resolve, ms));
+  await new Promise((resolve) => setTimeout(resolve, ms));
 
 export function absoluteUrl(path: string) {
   if (typeof window !== "undefined") return path;

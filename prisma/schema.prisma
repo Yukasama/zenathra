@@ -14,7 +14,7 @@ enum UserRole {
 }
 
 enum VerificationType {
-  email
+  verify
   forgotPassword
 }
 
@@ -61,10 +61,10 @@ model VerificationToken {
 }
 
 model User {
-  id             String    @id @unique
+  id             String    @id @default(cuid())
   name           String?
   username       String?   @unique
-  email          String    @unique
+  email          String?    @unique
   emailVerified  DateTime?
   image          String?
   hashedPassword String?

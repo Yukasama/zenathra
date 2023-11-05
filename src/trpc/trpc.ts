@@ -1,11 +1,10 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { getUser } from "@/lib/auth";
 import { TRPCError, initTRPC } from "@trpc/server";
 
 const t = initTRPC.create();
 const middleware = t.middleware;
 
 const isAuth = middleware(async (opts) => {
-  const { getUser } = getKindeServerSession();
   const user = await getUser();
 
   if (!user || !user.id) throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -19,13 +18,9 @@ const isAuth = middleware(async (opts) => {
 });
 
 const isAdmin = middleware(async (opts) => {
-  const { getUser, getPermission } = getKindeServerSession();
-  const [user, permissions] = await Promise.all([
-    getUser(),
-    getPermission("(upload:stocks)"),
-  ]);
+  const user = await getUser();
 
-  if (!user || !user.id || !permissions.isGranted)
+  if (!user || !user.id || user.role !== "admin")
     throw new TRPCError({ code: "UNAUTHORIZED" });
 
   return opts.next({

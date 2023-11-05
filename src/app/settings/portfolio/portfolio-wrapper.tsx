@@ -1,9 +1,9 @@
 import { db } from "@/db";
-import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import PortfolioItem from "./portfolio-item";
+import type { User } from "@prisma/client";
 
 interface Props {
-  user: Pick<KindeUser, "id"> | null;
+  user: Pick<User, "id"> | undefined;
 }
 
 export default async function PortfolioWrapper({ user }: Props) {

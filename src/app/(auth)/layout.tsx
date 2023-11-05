@@ -2,12 +2,11 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { PropsWithChildren } from "react";
 
-interface Props {
-  children: React.ReactNode;
-}
+export const runtime = "edge";
 
-export default function Layout({ children }: Props) {
+export default function Layout({ children }: PropsWithChildren) {
   return (
     <div className="f-box fixed left-0 top-0 z-20 h-screen w-screen bg-card">
       <Link

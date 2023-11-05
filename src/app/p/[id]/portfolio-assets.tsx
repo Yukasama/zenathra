@@ -17,12 +17,11 @@ import {
 import { getQuotes } from "@/lib/fmp/quote";
 import { StockImage } from "../../../components/stock/stock-image";
 import { PortfolioWithStocks } from "@/types/db";
-import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import dynamic from "next/dynamic";
 import Skeleton from "../../../components/ui/skeleton";
 import { Button, buttonVariants } from "../../../components/ui/button";
 import { Pencil } from "lucide-react";
-import type { Stock } from "@prisma/client";
+import type { Stock, User } from "@prisma/client";
 
 const EditPositions = dynamic(() => import("./edit-positions"), {
   ssr: false,
@@ -38,7 +37,7 @@ interface Props {
     PortfolioWithStocks,
     "id" | "title" | "creatorId" | "public" | "createdAt" | "stocks"
   >;
-  user: KindeUser | null;
+  user: User | null;
 }
 
 export function PortfolioAssetsLoading() {

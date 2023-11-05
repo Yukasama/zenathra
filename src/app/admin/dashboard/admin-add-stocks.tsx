@@ -47,19 +47,17 @@ export default function AdminAddStocks() {
   });
 
   const { mutate: uploadStocks, isLoading } = trpc.stock.upload.useMutation({
-    onError: () => {
+    onError: () =>
       toast({
         title: "Oops! Something went wrong.",
         description: `${form.getValues("stock")} could not be uploaded.`,
         variant: "destructive",
-      });
-    },
-    onSuccess: () => {
+      }),
+    onSuccess: () =>
       toast({
         title: `${form.getValues("stock")} uploaded.`,
         description: "Files were successfully added to the database.",
-      });
-    },
+      }),
   });
 
   return (

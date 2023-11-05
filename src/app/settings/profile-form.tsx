@@ -1,9 +1,9 @@
 "use client";
 
 import { startTransition } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "@/hooks/use-toast";
 import { HardDrive } from "lucide-react";
@@ -19,28 +19,26 @@ import {
 import { Input } from "@/components/ui/input";
 import { trpc } from "@/app/_trpc/client";
 import { UserUpdateSchema } from "@/lib/validators/user";
-import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import type { User } from "@prisma/client";
 import { Textarea } from "../../components/ui/textarea";
 
 interface Props {
-  user: Pick<KindeUser, "given_name" | "family_name"> | null;
-  dbUser: Pick<User, "biography"> | null;
+  user: Pick<User, "email" | "username" | "biography"> | null;
 }
 
-export default function ProfileForm({ user, dbUser }: Props) {
+export default function ProfileForm({ user }: Props) {
   const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(UserUpdateSchema),
     defaultValues: {
-      givenName: user?.given_name ?? "",
-      familyName: user?.family_name ?? "",
-      biography: dbUser?.biography ?? "",
+      username: user?.username ?? "",
+      email: user?.email ?? "",
+      biography: user?.biography ?? "",
     },
   });
 
-  const { mutate: updateUsername, isLoading } = trpc.user.update.useMutation({
+  const { mutate: update, isLoading } = trpc.user.update.useMutation({
     onError: () =>
       toast({
         title: "Oops! Something went wrong.",
@@ -49,35 +47,26 @@ export default function ProfileForm({ user, dbUser }: Props) {
       }),
     onSuccess: () => {
       startTransition(() => router.refresh());
-
       toast({ description: "Profile updated successfully." });
     },
   });
 
-  function onSubmit(data: FieldValues) {
-    const payload = {
-      givenName: data.givenName,
-      familyName: data.familyName,
-      biography: data.biography,
-    };
-
-    updateUsername(payload);
-  }
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="gap-3 f-col">
+      <form
+        onSubmit={form.handleSubmit(() => update(form.getValues()))}
+        className="gap-3 f-col">
         <FormField
           control={form.control}
-          name="givenName"
+          name="username"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-black dark:text-white">
-                First Name
+                Username
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Enter your first name..."
+                  placeholder="Enter your username..."
                   {...field}
                   required
                 />
@@ -88,15 +77,16 @@ export default function ProfileForm({ user, dbUser }: Props) {
         />
         <FormField
           control={form.control}
-          name="familyName"
+          name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-black dark:text-white">
-                Last Name
+                Email
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Enter your last name..."
+                  placeholder="Enter your email..."
+                  type="email"
                   {...field}
                   required
                 />
@@ -126,7 +116,7 @@ export default function ProfileForm({ user, dbUser }: Props) {
             </FormItem>
           )}
         />
-        <Button className="self-start" variant="subtle" isLoading={isLoading}>
+        <Button className="self-start" type="submit" isLoading={isLoading}>
           <HardDrive className="h-4 w-4" />
           Save
         </Button>

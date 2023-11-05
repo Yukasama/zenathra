@@ -1,25 +1,24 @@
 "use client";
 
 import { toast } from "@/hooks/use-toast";
-import { useMutation } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
 import { CheckCircle, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { startTransition, useEffect, useState } from "react";
 import { Spinner } from "@nextui-org/spinner";
 import { useCustomToasts } from "@/hooks/use-custom-toasts";
+import { trpc } from "@/app/_trpc/client";
+import { TRPCError } from "@trpc/server";
 
 export default function Page() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const { defaultError } = useCustomToasts();
-
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
+  const { defaultError } = useCustomToasts();
 
   useEffect(() => {
     setMounted(true);
-    if (token?.length > 0) verifyEmail();
+    if (token?.length > 0) verifyEmail(token);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -28,11 +27,9 @@ export default function Page() {
     mutate: verifyEmail,
     isLoading,
     isSuccess,
-  } = useMutation({
-    mutationFn: async () =>
-      await axios.post("/api/user/verify-email", { token }),
+  } = trpc.user.verify.useMutation({
     onError: (err) => {
-      if (err instanceof AxiosError && err.response?.status === 404)
+      if (err instanceof TRPCError && err.code === "NOT_FOUND")
         return toast({
           title: "Oops! Something went wrong.",
           description: "Email verification not found or expired.",
