@@ -1,3 +1,4 @@
+import { db } from "@/db";
 import { getUser } from "@/lib/auth";
 import { TRPCError, initTRPC } from "@trpc/server";
 
@@ -19,8 +20,12 @@ const isAuth = middleware(async (opts) => {
 
 const isAdmin = middleware(async (opts) => {
   const user = await getUser();
+  const dbUser = await db.user.findFirst({
+    select: { role: true },
+    where: { id: user?.id },
+  });
 
-  if (!user || !user.id || user.role !== "admin")
+  if (!user || !user.id || dbUser?.role !== "admin")
     throw new TRPCError({ code: "UNAUTHORIZED" });
 
   return opts.next({

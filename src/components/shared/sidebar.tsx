@@ -6,11 +6,10 @@ import {
   FilePlus2,
   Menu,
   SlidersHorizontal,
-  User,
+  User as UserIcon,
 } from "lucide-react";
 import CompanyLogo from "./company-logo";
 import { RecentStocks } from "@/types/db";
-import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import type { Portfolio } from "@prisma/client";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "@nextui-org/button";
@@ -27,9 +26,10 @@ import {
 import Link from "next/link";
 import { navLinks } from "@/config/site";
 import { SITE } from "@/config/site";
+import type { User } from "next-auth";
 
 interface Props {
-  user: KindeUser | null;
+  user: User | undefined;
   portfolios: Pick<Portfolio, "id" | "title" | "color" | "public">[] | null;
   recentStocks: RecentStocks | null;
 }
@@ -90,7 +90,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                     <Link
                       href={user ? "/settings/profile" : "/api/auth/login"}
                       className="f-col items-center justify-center gap-1 h-full w-full font-medium">
-                      <User className="h-7 w-7" />
+                      <UserIcon className="h-7 w-7" />
                       {user ? "Edit Profile" : "Create Account"}
                     </Link>
                   </SheetClose>
@@ -172,7 +172,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
               <UserAvatar user={user} />
               <div>
                 <p className="font-medium truncate max-w-[200px]">
-                  {user.given_name}
+                  {user.username}
                 </p>
                 <p className="text-sm text-zinc-400 truncate max-w-[200px]">
                   {user.email}

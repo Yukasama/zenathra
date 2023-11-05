@@ -77,5 +77,10 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/portfolio", "/settings/:path*", "/auth-callback"],
+  matcher: [
+    "/portfolio",
+    "/settings/:path*",
+    "/auth-callback",
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
 };

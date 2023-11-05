@@ -5,15 +5,13 @@ import { buttonVariants } from "../ui/button";
 import { db } from "@/db";
 import _ from "lodash";
 import CompanyLogo from "./company-logo";
-import {
-  LoginLink,
-  getKindeServerSession,
-} from "@kinde-oss/kinde-auth-nextjs/server";
 import dynamic from "next/dynamic";
 import { UserAccountNav } from "./user-account-nav";
 import { Menu } from "lucide-react";
 import NavbarMenu from "./navbar-menu";
 import { Button } from "@nextui-org/button";
+import { getUser } from "@/lib/auth";
+import { cn } from "@/lib/utils";
 
 const Sidebar = dynamic(() => import("./sidebar"), {
   ssr: false,
@@ -27,13 +25,13 @@ const Sidebar = dynamic(() => import("./sidebar"), {
 });
 
 export default async function Navbar() {
-  const { getUser, getPermission } = getKindeServerSession();
-  const [user, permissions] = await Promise.all([
-    getUser(),
-    getPermission("(upload:stocks)"),
-  ]);
+  const user = await getUser();
 
-  const [portfolios, recentStocks] = await Promise.all([
+  const [dbUser, portfolios, recentStocks] = await Promise.all([
+    db.user.findFirst({
+      select: { role: true },
+      where: { id: user?.id },
+    }),
     db.portfolio.findMany({
       select: {
         id: true,
@@ -84,11 +82,18 @@ export default async function Navbar() {
           <Searchbar recentStocks={uniqueStocks} />
         </div>
         <ThemeToggle />
-        {user && <UserAccountNav user={user} isAdmin={permissions.isGranted} />}
+        {user && (
+          <UserAccountNav user={user} isAdmin={dbUser?.role === "admin"} />
+        )}
         {!user && (
-          <LoginLink className={buttonVariants({ variant: "subtle" })}>
+          <Link
+            href="/sign-in"
+            className={cn(
+              buttonVariants({ variant: "subtle" }),
+              "whitespace-nowrap"
+            )}>
             Sign In
-          </LoginLink>
+          </Link>
         )}
       </div>
     </div>

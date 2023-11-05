@@ -14,10 +14,10 @@ import {
 } from "@/components/ui/navigation-menu";
 import { navLinks } from "@/config/site";
 import { SlidersHorizontal } from "lucide-react";
-import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
+import { User } from "next-auth";
 
 interface Props {
-  user: KindeUser | null;
+  user: Pick<User, "id"> | undefined;
 }
 
 export default function NavbarMenu({ user }: Props) {
