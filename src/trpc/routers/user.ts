@@ -14,8 +14,8 @@ import { createToken } from "@/lib/create-token";
 import bcryptjs from "bcryptjs";
 import { getUser } from "@/lib/auth";
 import { tokenConfig } from "@/config/token";
-import { env } from "@/env.mjs";
-import { transporter } from "@/lib/mail";
+import { sendMail } from "@/lib/mail";
+import { nanoid } from "nanoid";
 
 export const userRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -98,18 +98,12 @@ export const userRouter = router({
         createToken(),
       ]);
 
-      const mailOptions = {
-        from: env.SMTP_MAIL,
-        to: input.email,
-        subject: "Verify your email",
-        html: `Verify your email here: ${env.NEXT_PUBLIC_VERCEL_URL}/verify-email?token=${hashedToken}`,
-      };
-
       await Promise.all([
         db.user.create({
           data: {
             email: input.email,
             hashedPassword,
+            username: nanoid(10),
             verificationTokens: {
               create: {
                 token: hashedToken,
@@ -119,7 +113,11 @@ export const userRouter = router({
             },
           },
         }),
-        transporter.sendMail(mailOptions),
+        sendMail({
+          to: input.email,
+          type: "verify",
+          token: hashedToken,
+        }),
       ]);
     }),
   update: privateProcedure
@@ -227,14 +225,11 @@ export const userRouter = router({
         },
       });
 
-      const mailOptions = {
-        from: env.SMTP_MAIL,
+      await sendMail({
         to: input,
-        subject: "Reset your password",
-        html: `Reset your password here: ${env.NEXT_PUBLIC_VERCEL_URL}/reset-password?token=${hashToken}`,
-      };
-
-      await transporter.sendMail(mailOptions);
+        type: "forgotPassword",
+        token: hashToken,
+      });
     }),
   sendVerification: privateProcedure.mutation(async ({ ctx }) => {
     const { user } = ctx;
@@ -253,13 +248,10 @@ export const userRouter = router({
       },
     });
 
-    const mailOptions = {
-      from: env.SMTP_MAIL,
+    await sendMail({
       to: user.email ?? undefined,
-      subject: "Verify your email",
-      html: `Verify your email here: ${env.NEXT_PUBLIC_VERCEL_URL}/verify-email?token=${hashedToken}`,
-    };
-
-    await transporter.sendMail(mailOptions);
+      type: "verify",
+      token: hashedToken,
+    });
   }),
 });

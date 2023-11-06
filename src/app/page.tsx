@@ -12,7 +12,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export const metadata = {
   title: `${SITE.name} | Home`,

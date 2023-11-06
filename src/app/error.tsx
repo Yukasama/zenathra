@@ -7,7 +7,7 @@ interface Props {
   reset: () => void;
 }
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export default function Error({ reset }: Props) {
   return (

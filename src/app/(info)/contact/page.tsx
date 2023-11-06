@@ -1,5 +1,5 @@
 export const metadata = { title: "Contact" };
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export default function page() {
   return (

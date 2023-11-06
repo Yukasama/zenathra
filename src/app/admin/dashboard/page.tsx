@@ -9,7 +9,7 @@ const AdminAddStocks = dynamic(
 );
 
 export const metadata = { title: "Admin Dashboard" };
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export default async function page() {
   const user = await getUser();

@@ -8,17 +8,15 @@ import dynamic from "next/dynamic";
 import { UserAccountNav } from "./user-account-nav";
 import { Menu } from "lucide-react";
 import NavbarMenu from "./navbar-menu";
-import { Button } from "@nextui-org/button";
+import { Button, buttonVariants } from "../ui/button";
 import { getUser } from "@/lib/auth";
 
 const Sidebar = dynamic(() => import("./sidebar"), {
   ssr: false,
   loading: () => (
-    <Button
-      isIconOnly
-      variant="bordered"
-      startContent={<Menu className="h-5" />}
-    />
+    <div className={buttonVariants({ variant: "subtle", size: "xs" })}>
+      <Menu className="h-5" />
+    </div>
   ),
 });
 
@@ -85,8 +83,9 @@ export default async function Navbar() {
         )}
         {!user && (
           <Link href="/sign-in">
-            <Button className="whitespace-nowrap">Sign In</Button>
-            Sign In
+            <Button className="whitespace-nowrap bg-primary text-white">
+              Sign In
+            </Button>
           </Link>
         )}
       </div>

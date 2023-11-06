@@ -1,7 +1,7 @@
 import { SITE } from "@/config/site";
 
 export const metadata = { title: "Privacy Policy" };
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export default function page() {
   return (

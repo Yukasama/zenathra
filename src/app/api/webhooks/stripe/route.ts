@@ -3,7 +3,7 @@ import { stripe } from "@/lib/stripe";
 import { headers } from "next/headers";
 import type Stripe from "stripe";
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export async function POST(request: Request) {
   const body = await request.text();

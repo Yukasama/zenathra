@@ -3,17 +3,19 @@ import type { Session, User } from "next-auth";
 // eslint-disable-next-line no-var, no-unused-vars
 import type { JWT } from "next-auth/jwt";
 
+type UserId = string;
+
 declare module "next-auth/jwt" {
   // eslint-disable-next-line no-var, no-unused-vars
   interface JWT {
-    id: string;
+    id: UserId;
     username?: string | null;
   }
 }
 
 declare module "next-auth" {
   interface User extends User {
-    id: string;
+    id: UserId;
     username?: string | null;
   }
 

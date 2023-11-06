@@ -63,6 +63,7 @@ export default function SignUp() {
           description: "E-Mail is already registered.",
           variant: "destructive",
         });
+      console.log(err.message);
       defaultError();
     },
     onSuccess: () =>
@@ -142,7 +143,8 @@ export default function SignUp() {
             />
             <Button
               className="bg-primary hover:bg-primary/70 mt-3"
-              isLoading={isLoading}>
+              isLoading={isLoading}
+              type="submit">
               <LogIn className="h-4 w-4" />
               Sign Up
             </Button>
