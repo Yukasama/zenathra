@@ -1,7 +1,6 @@
 import Link from "next/link";
 import ThemeToggle from "./theme-toggle";
 import Searchbar from "./searchbar";
-import { buttonVariants } from "../ui/button";
 import { db } from "@/db";
 import _ from "lodash";
 import CompanyLogo from "./company-logo";
@@ -11,7 +10,6 @@ import { Menu } from "lucide-react";
 import NavbarMenu from "./navbar-menu";
 import { Button } from "@nextui-org/button";
 import { getUser } from "@/lib/auth";
-import { cn } from "@/lib/utils";
 
 const Sidebar = dynamic(() => import("./sidebar"), {
   ssr: false,
@@ -86,12 +84,8 @@ export default async function Navbar() {
           <UserAccountNav user={user} isAdmin={dbUser?.role === "admin"} />
         )}
         {!user && (
-          <Link
-            href="/sign-in"
-            className={cn(
-              buttonVariants({ variant: "subtle" }),
-              "whitespace-nowrap"
-            )}>
+          <Link href="/sign-in">
+            <Button className="whitespace-nowrap">Sign In</Button>
             Sign In
           </Link>
         )}

@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { withAuth } from "next-auth/middleware";
+import { auth } from "./lib/auth";
 import { getToken } from "next-auth/jwt";
 
-export default withAuth(
-  async function middleware(req) {
+export default auth(
+  (req) => {
     const path = req.nextUrl.pathname;
-    const token = await getToken({ req });
+    const token = await auth({ req });
     const isAuth = !!token;
 
     const authRoutes = ["/sign-in", "/sign-up", "/forgot-password"];

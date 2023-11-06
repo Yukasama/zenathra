@@ -66,7 +66,7 @@ export default async function page({ params: { id } }: Props) {
                 </div>
               </div>
               <Link
-                href="/settings/profile"
+                href="/settings"
                 className={cn(
                   buttonVariants({
                     variant: "subtle",

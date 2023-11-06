@@ -1,17 +1,20 @@
-import { NextAuthOptions, getServerSession } from "next-auth";
+import NextAuth from "next-auth";
 import Facebook from "next-auth/providers/facebook";
 import GitHub from "next-auth/providers/github";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/db";
 import Credentials from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
+import bcryptjs from "bcryptjs";
 import EmailProvider from "next-auth/providers/email";
 import { SITE } from "@/config/site";
 import { env } from "@/env.mjs";
 import Google from "next-auth/providers/google";
 import { nanoid } from "nanoid";
 
-export const authOptions: NextAuthOptions = {
+export const {
+  handlers: { GET, POST },
+  auth,
+} = NextAuth({
   adapter: PrismaAdapter(db),
   session: {
     strategy: "jwt",
@@ -21,88 +24,45 @@ export const authOptions: NextAuthOptions = {
     error: "/sign-in",
   },
   providers: [
-    Google({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
-      allowDangerousEmailAccountLinking: true,
-    }),
-    Facebook({
-      clientId: env.FACEBOOK_APP_ID,
-      clientSecret: env.FACEBOOK_APP_SECRET,
-      allowDangerousEmailAccountLinking: true,
-    }),
-    GitHub({
-      clientId: env.GITHUB_CLIENT_ID,
-      clientSecret: env.GITHUB_CLIENT_SECRET,
-      allowDangerousEmailAccountLinking: true,
-    }),
+    Google({ allowDangerousEmailAccountLinking: true }),
+    Facebook({ allowDangerousEmailAccountLinking: true }),
+    GitHub({ allowDangerousEmailAccountLinking: true }),
     Credentials({
-      name: "credentials",
       credentials: {
         email: { label: "email", type: "email" },
         password: { label: "password", type: "password" },
       },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password)
-          throw new Error("Invalid email or password");
+      async authorize({ email, password }) {
+        if (!email || !password) throw new Error("Invalid email or password");
 
-        const user = await db.user.findUnique({
-          where: { email: credentials.email },
+        const user = await db.user.findFirst({
+          where: { email },
         });
 
         if (!user || !user?.hashedPassword)
-          throw new Error("Invalid email or password");
+          throw new Error("Invalid email or password.");
 
-        const isCorrectPassword = await bcrypt.compare(
-          credentials.password,
+        const isCorrectPassword = await bcryptjs.compare(
+          password,
           user.hashedPassword
         );
 
-        if (!isCorrectPassword) throw new Error("Invalid email or password");
+        if (!isCorrectPassword) throw new Error("Invalid email or password.");
 
         return user;
       },
     }),
-    // EmailProvider({
-    //   from: config.postmark.smtpFrom,
-    //   sendVerificationRequest: async ({ identifier, url, provider }) => {
-    //     const user = await db.user.findUnique({
-    //       where: {
-    //         email: identifier,
-    //       },
-    //       select: {
-    //         emailVerified: true,
-    //       },
-    //     });
-
-    //     const templateId = user?.emailVerified
-    //       ? config.postmark.signinTemplate
-    //       : config.postmark.activationTemplate;
-    //     if (!templateId) {
-    //       throw new Error("Missing template id");
-    //     }
-
-    //     const result = await postmarkClient.sendEmailWithTemplate({
-    //       TemplateId: parseInt(templateId),
-    //       To: identifier,
-    //       From: provider.from as string,
-    //       TemplateModel: {
-    //         action_url: url,
-    //         product_name: site.name,
-    //       },
-    //       Headers: [
-    //         {
-    //           Name: "X-Entity-Ref-ID",
-    //           Value: new Date().getTime() + "",
-    //         },
-    //       ],
-    //     });
-
-    //     if (result.ErrorCode) {
-    //       throw new Error(result.Message);
-    //     }
-    //   },
-    // }),
+    EmailProvider({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT,
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: process.env.EMAIL_FROM,
+    }),
   ],
   callbacks: {
     async session({ token, session }) {
@@ -137,7 +97,7 @@ export const authOptions: NextAuthOptions = {
       return "/";
     },
   },
-};
+});
 
 export async function getUser() {
   const session = await getServerSession(authOptions);
