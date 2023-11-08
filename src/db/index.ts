@@ -1,18 +1,19 @@
-import { env } from "@/env.mjs";
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
+import "server-only";
 
-function makePrisma() {
-  return new PrismaClient({
-    datasources: { db: { url: env.ACCELERATE_URL } },
-  }).$extends(withAccelerate());
+import { PrismaClient } from "@prisma/client";
+
+declare global {
+  // eslint-disable-next-line no-var, no-unused-vars
+  var cachedPrisma: PrismaClient;
+}
+let prisma: PrismaClient;
+if (process.env.NODE_ENV === "production") {
+  prisma = new PrismaClient();
+} else {
+  if (!global.cachedPrisma) {
+    global.cachedPrisma = new PrismaClient();
+  }
+  prisma = global.cachedPrisma;
 }
 
-const globalForPrisma = global as unknown as {
-  prisma: ReturnType<typeof makePrisma>;
-};
-
-export const db = globalForPrisma.prisma ?? makePrisma();
-
-if (process.env.NODE_ENV !== "production")
-  globalForPrisma.prisma = makePrisma();
+export const db = prisma;

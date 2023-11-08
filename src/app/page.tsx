@@ -45,10 +45,9 @@ export default async function page() {
               </Button>
             </Link>
             <Link href="/sign-in">
-              <Button
-                className="gradient rounded-md text-white"
-                endContent={<MoveRight className="w-4 h-4" />}>
+              <Button className="gradient rounded-md text-white">
                 Get started
+                <MoveRight className="w-4 h-4" />
               </Button>
             </Link>
           </div>

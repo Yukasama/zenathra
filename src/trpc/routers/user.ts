@@ -104,13 +104,14 @@ export const userRouter = router({
             email: input.email,
             hashedPassword,
             username: nanoid(10),
-            verificationTokens: {
-              create: {
-                token: hashedToken,
-                expires: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
-                type: "verify",
-              },
-            },
+          },
+        }),
+        db.verificationToken.create({
+          data: {
+            token: hashedToken,
+            identifier: input.email,
+            expires: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
+            type: "verify",
           },
         }),
         sendMail({
@@ -144,12 +145,12 @@ export const userRouter = router({
   resetPassword: privateProcedure
     .input(ResetPasswordSchema)
     .mutation(async ({ ctx, input }) => {
-      const { userId } = ctx;
+      const { user } = ctx;
 
       const verificationToken = await db.verificationToken.findFirst({
         select: { token: true },
         where: {
-          userId: userId,
+          identifier: user.email ?? undefined,
           expires: { gte: new Date() },
           type: "forgotPassword",
         },
@@ -164,23 +165,21 @@ export const userRouter = router({
 
       const hashedPassword = await bcryptjs.hash(input.password, 12);
 
-      await db.user.update({
-        where: { id: userId },
-        data: {
-          hashedPassword,
-          verificationTokens: {
-            delete: {
-              token: verificationToken.token,
-            },
-          },
-        },
-      });
+      await Promise.all([
+        db.user.update({
+          where: { id: user.id },
+          data: { hashedPassword },
+        }),
+        db.verificationToken.delete({
+          where: { token: verificationToken.token },
+        }),
+      ]);
     }),
   verify: publicProcedure
     .input(z.string()) // Verify Token
     .mutation(async ({ input }) => {
       const verificationToken = await db.verificationToken.findFirst({
-        select: { token: true, userId: true },
+        select: { token: true, identifier: true },
         where: {
           token: input,
           expires: { gte: new Date() },
@@ -191,37 +190,30 @@ export const userRouter = router({
       if (
         !verificationToken ||
         !bcryptjs.compareSync(input, verificationToken.token)
-      ) {
+      )
         throw new TRPCError({ code: "NOT_FOUND" });
-      }
 
-      await db.user.update({
-        where: { id: verificationToken.userId },
-        data: {
-          emailVerified: new Date(),
-          verificationTokens: {
-            delete: {
-              token: verificationToken.token,
-            },
-          },
-        },
-      });
+      await Promise.all([
+        db.user.update({
+          where: { email: verificationToken.identifier },
+          data: { emailVerified: new Date() },
+        }),
+        db.verificationToken.delete({
+          where: { token: verificationToken.token },
+        }),
+      ]);
     }),
   sendResetPassword: publicProcedure
     .input(z.string().email()) // Email where to send reset password link
     .mutation(async ({ input }) => {
       const hashToken = await createToken();
 
-      await db.user.update({
-        where: { email: input },
+      await db.verificationToken.create({
         data: {
-          verificationTokens: {
-            create: {
-              token: hashToken,
-              expires: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
-              type: "forgotPassword",
-            },
-          },
+          token: hashToken,
+          identifier: input,
+          expires: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
+          type: "forgotPassword",
         },
       });
 
@@ -235,16 +227,14 @@ export const userRouter = router({
     const { user } = ctx;
     const hashedToken = await createToken();
 
-    await db.user.update({
-      where: { email: user.email ?? undefined },
+    if (!user.email) throw new TRPCError({ code: "BAD_REQUEST" });
+
+    db.verificationToken.create({
       data: {
-        verificationTokens: {
-          create: {
-            token: hashedToken,
-            expires: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
-            type: "verify",
-          },
-        },
+        token: hashedToken,
+        identifier: user.email,
+        expires: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
+        type: "verify",
       },
     });
 

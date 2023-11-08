@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthOptions, getServerSession } from "next-auth";
 import Facebook from "next-auth/providers/facebook";
 import GitHub from "next-auth/providers/github";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { db } from "@/db";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";

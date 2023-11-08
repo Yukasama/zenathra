@@ -7,7 +7,6 @@ export const env = createEnv({
   },
   server: {
     DATABASE_URL: z.string().url(),
-    ACCELERATE_URL: z.string().url(),
     NODE_ENV: z.enum(["development", "test", "production"]),
     NEXTAUTH_SECRET:
       process.env.NODE_ENV === "production"
@@ -32,7 +31,6 @@ export const env = createEnv({
   runtimeEnv: {
     NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
     DATABASE_URL: process.env.DATABASE_URL,
-    ACCELERATE_URL: process.env.ACCELERATE_URL,
     NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
