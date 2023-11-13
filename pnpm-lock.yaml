@@ -198,8 +198,8 @@ dependencies:
     specifier: ^0.32.6
     version: 0.32.6
   stripe:
-    specifier: ^14.2.0
-    version: 14.2.0
+    specifier: ^14.4.0
+    version: 14.4.0
   tailwind-merge:
     specifier: ^1.14.0
     version: 1.14.0
@@ -8556,8 +8556,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /stripe@14.2.0:
-    resolution: {integrity: sha512-lMjDOyJbt+NVSDvkTathSP7uEV35l7oU8UrhBJrYD8lUi43BWujq8E9QHd3o9D2KPBR1Cze5DCw5s1btnLfdMA==}
+  /stripe@14.4.0:
+    resolution: {integrity: sha512-E3IxDo/Bvu0TtYrKfAf8lEYd0beTjFSN4xemuw2oEfUyxFpJyrzRZOw50HIEXFYYHWNDORicd8G8R4joCbN3/Q==}
     engines: {node: '>=12.*'}
     dependencies:
       '@types/node': 20.8.9
