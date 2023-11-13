@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
 
-// export const runtime = "edge";
+export const runtime = "edge";
 
 export default function Layout({ children }: PropsWithChildren) {
   return (

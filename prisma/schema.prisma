@@ -1,11 +1,10 @@
-generator client {
-  provider = "prisma-client-js"
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
-datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+generator client {
+  provider = "prisma-client-js"
 }
 
 enum UserRole {
@@ -35,7 +34,6 @@ model Account {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@index([userId])
 }
 
 model Session {
@@ -45,33 +43,31 @@ model Session {
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
 }
 
 model VerificationToken {
-  token      String           @unique
   identifier String
+  token      String           @unique
   expires    DateTime
   type       VerificationType
+
+  @@unique([identifier, token])
 }
 
 model User {
-  id             String    @id @default(cuid())
-  name           String?
-  username       String?   @unique
-  email          String?   @unique
-  emailVerified  DateTime?
-  image          String?
-  hashedPassword String?
-  biography      String    @default("My beautiful biography.")
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  username      String?   @unique
+  image         String?
+  biography     String    @default("My beautiful biography.")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  role          UserRole  @default(user)
 
-  role     UserRole  @default(user)
-  accounts Account[]
-  sessions Session[]
-
+  accounts          Account[]
+  sessions          Session[]
   portfolios        Portfolio[]
   recentStocks      UserRecentStocks[]
   createdStocks     Stock[]

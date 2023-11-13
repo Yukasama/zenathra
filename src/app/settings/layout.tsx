@@ -11,7 +11,7 @@ import SettingsItem from "@/app/settings/settings-item";
 import { UserAvatar } from "@/components/shared/user-avatar";
 import { getUser } from "@/lib/auth";
 
-// export const runtime = "edge";
+export const runtime = "edge";
 
 export default async function Layout({ children }: PropsWithChildren) {
   const user = await getUser();
@@ -58,7 +58,7 @@ export default async function Layout({ children }: PropsWithChildren) {
           className="h-12 w-12 border"
         />
         <div className="f-col">
-          <h3 className="text-2xl font-medium">{user?.username}</h3>
+          <h3 className="text-2xl font-medium">{user?.name}</h3>
           <p className="text-zinc-500 text-sm">
             User Settings associated with your account
           </p>

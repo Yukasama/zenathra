@@ -11,11 +11,9 @@ import {
 } from "@/lib/validators/user";
 import { z } from "zod";
 import { createToken } from "@/lib/create-token";
-import bcryptjs from "bcryptjs";
 import { getUser } from "@/lib/auth";
 import { tokenConfig } from "@/config/token";
 import { sendMail } from "@/lib/mail";
-import { nanoid } from "nanoid";
 
 export const userRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -103,7 +101,6 @@ export const userRouter = router({
           data: {
             email: input.email,
             hashedPassword,
-            username: nanoid(10),
           },
         }),
         db.verificationToken.create({

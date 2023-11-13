@@ -9,7 +9,7 @@ import dynamic from "next/dynamic";
 import Skeleton from "@/components/ui/skeleton";
 import { SITE } from "@/config/site";
 
-// export const runtime = "edge";
+export const runtime = "edge";
 
 export const metadata = {
   title: `${SITE.name} | Your Portfolios`,

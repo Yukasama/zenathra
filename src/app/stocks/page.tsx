@@ -17,7 +17,7 @@ export const metadata = {
 
 export const revalidate = 30;
 
-// export const runtime = "edge";
+export const runtime = "edge";
 
 export default async function page() {
   const [actives, winners, losers] = await Promise.all([

@@ -1,6 +1,6 @@
 "use client";
 
-import { SignInResponse, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -13,20 +13,13 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 
 export default function OAuth({ provider, className, ...props }: Props) {
   const { mutate: login, isLoading } = useMutation({
-    mutationFn: async () => {
-      const response = await signIn(provider);
-      if (response?.error) throw new Error(response?.error);
-      return response as SignInResponse;
-    },
+    mutationFn: async () => await signIn(provider),
     onError: (err: string) =>
       toast({
         title: "We have trouble signing you in.",
         description: `${err ?? "Please try again later."}`,
         variant: "destructive",
       }),
-    onSettled: (res, resp) => {
-      if (!resp) window.location.reload();
-    },
   });
 
   return (

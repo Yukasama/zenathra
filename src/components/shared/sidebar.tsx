@@ -30,12 +30,16 @@ import { buttonVariants } from "../ui/button";
 
 interface Props {
   user: User | undefined;
-  portfolios: Pick<Portfolio, "id" | "title" | "color" | "public">[] | null;
+  portfolios:
+    | Pick<Portfolio, "id" | "title" | "color" | "public">[]
+    | undefined;
   recentStocks: RecentStocks | null;
 }
 
 export default function Sidebar({ user, portfolios, recentStocks }: Props) {
   const router = useRouter();
+
+  console.log(user);
 
   return (
     <Sheet>

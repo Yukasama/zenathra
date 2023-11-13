@@ -63,7 +63,6 @@ export default function SignUp() {
           description: "E-Mail is already registered.",
           variant: "destructive",
         });
-      console.log(err.message);
       defaultError();
     },
     onSuccess: () =>

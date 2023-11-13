@@ -1,6 +1,6 @@
 "use client";
 
-import { SignInResponse, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -50,16 +50,19 @@ export default function SignIn() {
         redirect: false,
       });
       if (response?.error) throw new Error(response?.error);
-      return response as SignInResponse;
+      return response;
     },
-    onError: (err: string) =>
+    onError: (err) => {
       toast({
         title: "We have trouble signing you in.",
         description: `${err ?? "Please try again later."}`,
         variant: "destructive",
-      }),
-    onSettled: (res, resp) => {
-      if (!resp) window.location.reload();
+      });
+    },
+    onSettled: (response) => {
+      if (response?.url) {
+        window.location.reload();
+      }
     },
   });
 

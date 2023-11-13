@@ -1,5 +1,5 @@
 export const metadata = { title: "Economic Calendar" };
-// export const runtime = "edge";
+export const runtime = "edge";
 
 export default function page() {
   return (
