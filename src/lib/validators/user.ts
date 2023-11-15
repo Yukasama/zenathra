@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const UserUpdateSchema = z.object({
-  familyName: z.string(),
-  givenName: z.string(),
-  biography: z.string(),
+  username: z.string().optional(),
+  email: z.string().optional(),
+  biography: z.string().optional(),
 });
 
 export type UserUpdateProps = z.infer<typeof UserUpdateSchema>;

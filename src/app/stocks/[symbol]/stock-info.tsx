@@ -3,13 +3,13 @@ import React from "react";
 import { ChevronsDown, ChevronsUp } from "lucide-react";
 import { getQuote } from "@/lib/fmp/quote";
 import { StockImage } from "../../../components/stock/stock-image";
-import type { Stock } from "@prisma/client";
+import { Stock } from "@prisma/client";
 import { db } from "@/db";
 import { Card } from "../../../components/ui/card";
 import Skeleton from "../../../components/ui/skeleton";
 import { Button, buttonVariants } from "../../../components/ui/button";
 import dynamic from "next/dynamic";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { getUser } from "@/lib/auth";
 
 const StockPortfolioAddModal = dynamic(
   () => import("../../../components/stock/stock-portfolio-add-modal"),
@@ -55,7 +55,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export default async function StockInfo({ stock }: Props) {
-  const { getUser, isAuthenticated } = getKindeServerSession();
+  const user = await getUser();
 
   const [quote, portfolios] = await Promise.all([
     getQuote(stock.symbol),
@@ -69,7 +69,7 @@ export default async function StockInfo({ stock }: Props) {
           select: { stockId: true },
         },
       },
-      where: { creatorId: getUser()?.id ?? undefined },
+      where: { creatorId: user?.id },
     }),
   ]);
 
@@ -109,7 +109,7 @@ export default async function StockInfo({ stock }: Props) {
       </div>
       <div className="absolute right-3 top-3 flex">
         <StockPortfolioAddModal
-          isAuthenticated={isAuthenticated()}
+          isAuthenticated={!!user}
           symbolId={stock.id}
           symbol={stock.symbol}
           portfolios={portfolios}

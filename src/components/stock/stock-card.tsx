@@ -15,7 +15,7 @@ import { buttonVariants } from "../ui/button";
 import React from "react";
 import Skeleton from "../ui/skeleton";
 import SmallChart from "./small-chart";
-import type { Stock } from "@prisma/client";
+import { Stock } from "@prisma/client";
 import { PortfolioWithStocks } from "@/types/db";
 import dynamic from "next/dynamic";
 import { Loader2 } from "lucide-react";

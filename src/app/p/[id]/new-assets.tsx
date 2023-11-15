@@ -19,7 +19,7 @@ import { Button } from "@nextui-org/button";
 import { Pagination } from "@nextui-org/pagination";
 import { Chip } from "@nextui-org/chip";
 import { Search, Plus, MoreVertical } from "lucide-react";
-import type { Stock } from "@prisma/client";
+import { Stock } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 
 interface Props {

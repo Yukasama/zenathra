@@ -1,8 +1,8 @@
-import type { Portfolio } from "@prisma/client";
-import { Card } from "../../../components/ui/card";
-import PortfolioImage from "../../../components/portfolio/portfolio-image";
+import { Portfolio } from "@prisma/client";
+import { Card } from "@/components/ui/card";
+import PortfolioImage from "@/components/portfolio/portfolio-image";
 import Link from "next/link";
-import EditVisibility from "../../../components/portfolio/edit-visibility";
+import EditVisibility from "@/components/portfolio/edit-visibility";
 
 interface Props {
   portfolio: Pick<Portfolio, "id" | "title" | "public" | "color" | "createdAt">;

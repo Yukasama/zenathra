@@ -16,10 +16,7 @@ export default function CompanyLogo({
   return (
     <div
       className={cn("f-box rounded-full", className)}
-      style={{
-        width: px,
-        height: px,
-      }}
+      style={{ width: px, height: px }}
       {...props}>
       <Image
         className={cn("rounded-full", className)}

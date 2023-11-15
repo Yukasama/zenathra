@@ -6,17 +6,17 @@ import {
   CardDescription,
   CardContent,
 } from "../../../components/ui/card";
-import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import PortfolioImage from "../../../components/portfolio/portfolio-image";
 import Link from "next/link";
 import { getUser } from "@/lib/auth";
+import { User } from "next-auth";
 
 interface Props {
-  user: Pick<KindeUser, "id">;
+  user: Pick<User, "id">;
 }
 
 export default async function PortfolioList({ user }: Props) {
-  const sessionUser = getUser();
+  const sessionUser = await getUser();
 
   const profileBelongsToUser = sessionUser?.id === user.id;
 

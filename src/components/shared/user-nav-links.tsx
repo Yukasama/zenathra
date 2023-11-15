@@ -1,20 +1,20 @@
 "use client";
 
-import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
 import {
   HelpCircle,
   LayoutDashboard,
   ListOrdered,
   Settings,
   Settings2,
-  User,
+  User as UserIcon,
 } from "lucide-react";
 import { SheetClose } from "../ui/sheet";
 import { Separator } from "../ui/separator";
 import { useRouter } from "next/navigation";
+import { User } from "next-auth";
 
 interface Props {
-  user: KindeUser;
+  user: User;
   isAdmin?: boolean;
 }
 
@@ -25,7 +25,7 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
     {
       label: "My Profile",
       href: `/u/${user.id}`,
-      icon: <User className="w-5 h-5 mr-2 text-zinc-400" />,
+      icon: <UserIcon className="w-5 h-5 mr-2 text-zinc-400" />,
     },
     {
       label: "Dashboard",

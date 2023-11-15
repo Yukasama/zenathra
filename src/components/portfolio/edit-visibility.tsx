@@ -1,6 +1,6 @@
 "use client";
 
-import type { Portfolio } from "@prisma/client";
+import { Portfolio } from "@prisma/client";
 import { trpc } from "@/app/_trpc/client";
 import { toast } from "@/hooks/use-toast";
 import { startTransition } from "react";

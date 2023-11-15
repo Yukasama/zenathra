@@ -1,69 +1,64 @@
 import Link from "next/link";
 import ThemeToggle from "./theme-toggle";
 import Searchbar from "./searchbar";
-import { buttonVariants } from "../ui/button";
 import { db } from "@/db";
-import _ from "lodash";
+import { uniqBy } from "lodash";
 import CompanyLogo from "./company-logo";
-import {
-  LoginLink,
-  getKindeServerSession,
-} from "@kinde-oss/kinde-auth-nextjs/server";
 import dynamic from "next/dynamic";
 import { UserAccountNav } from "./user-account-nav";
 import { Menu } from "lucide-react";
 import NavbarMenu from "./navbar-menu";
-import { Button } from "@nextui-org/button";
+import { Button, buttonVariants } from "../ui/button";
+import { getUser } from "@/lib/auth";
 
 const Sidebar = dynamic(() => import("./sidebar"), {
   ssr: false,
   loading: () => (
-    <Button
-      isIconOnly
-      variant="bordered"
-      startContent={<Menu className="h-5" />}
-    />
+    <div className={buttonVariants({ variant: "subtle", size: "xs" })}>
+      <Menu className="h-5" />
+    </div>
   ),
 });
 
 export default async function Navbar() {
-  const { getUser, getPermission } = getKindeServerSession();
-  const user = getUser();
-
-  const [portfolios, recentStocks] = await Promise.all([
-    db.portfolio.findMany({
-      select: {
-        id: true,
-        title: true,
-        color: true,
-        public: true,
+  const user = await getUser();
+  const dbUser = await db.user.findFirst({
+    select: {
+      role: true,
+      portfolios: {
+        select: {
+          id: true,
+          title: true,
+          color: true,
+          public: true,
+        },
+        orderBy: { title: "asc" },
       },
-      where: { creatorId: user?.id ?? undefined },
-      orderBy: { title: "asc" },
-    }),
-    db.userRecentStocks.findMany({
-      select: {
-        stock: {
-          select: {
-            symbol: true,
-            image: true,
-            companyName: true,
+      recentStocks: {
+        select: {
+          stock: {
+            select: {
+              symbol: true,
+              image: true,
+              companyName: true,
+            },
           },
         },
+        take: 10,
       },
-      where: { userId: user?.id ?? undefined },
-      take: 10,
-    }),
-  ]);
+    },
+    where: { id: user?.id },
+  });
 
-  const uniqueStocks = _.uniqBy(recentStocks, "stock.symbol");
+  const isAdmin = dbUser?.role === "admin";
+  const uniqueStocks = uniqBy(dbUser?.recentStocks, "stock.symbol");
 
   return (
     <div className="sticky top-0 h-16 z-20 flex w-full items-center justify-between gap-4 p-2 px-6 border-b bg-card/50">
       <div className="flex items-center gap-5 flex-1">
         <Sidebar
           user={user}
-          portfolios={portfolios}
+          portfolios={dbUser?.portfolios}
           recentStocks={uniqueStocks}
         />
         <Link href="/">
@@ -81,16 +76,13 @@ export default async function Navbar() {
           <Searchbar recentStocks={uniqueStocks} />
         </div>
         <ThemeToggle />
-        {user && (
-          <UserAccountNav
-            user={user}
-            isAdmin={getPermission("(upload:stocks)").isGranted}
-          />
-        )}
+        {user && <UserAccountNav user={user} isAdmin={isAdmin} />}
         {!user && (
-          <LoginLink className={buttonVariants({ variant: "subtle" })}>
-            Sign In
-          </LoginLink>
+          <Link href="/sign-in">
+            <Button className="whitespace-nowrap bg-primary text-white">
+              Sign In
+            </Button>
+          </Link>
         )}
       </div>
     </div>

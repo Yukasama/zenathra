@@ -1,4 +1,4 @@
-import type { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { ScreenerProps } from "@/lib/validators/stock";
 
 export function buildFilter(screener: ScreenerProps) {

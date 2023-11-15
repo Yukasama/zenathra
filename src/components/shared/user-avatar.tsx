@@ -4,10 +4,10 @@ import { AvatarProps } from "@radix-ui/react-avatar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import type { KindeUser } from "@kinde-oss/kinde-auth-nextjs/server";
+import { User } from "next-auth";
 
 interface Props extends AvatarProps {
-  user: Pick<KindeUser, "given_name" | "picture"> | null | undefined;
+  user: Pick<User, "name" | "image"> | undefined;
   fallbackFontSize?: number;
 }
 
@@ -19,11 +19,11 @@ export function UserAvatar({
 }: Props) {
   return (
     <Avatar className={cn(className, "border")} {...props}>
-      {user?.picture ? (
+      {user?.image ? (
         <div className="relative aspect-square h-full w-full">
           <Image
             fill
-            src={user.picture}
+            src={user.image}
             sizes="100%"
             alt="profile picture"
             referrerPolicy="no-referrer"
@@ -35,7 +35,7 @@ export function UserAvatar({
             <p
               className="font-medium text-white"
               style={{ fontSize: fallbackFontSize }}>
-              {user?.given_name?.[0].toUpperCase() ?? "N/A"}
+              {user?.name?.[0].toUpperCase()}
             </p>
           </div>
         </AvatarFallback>

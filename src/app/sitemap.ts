@@ -1,12 +1,21 @@
 import { SITE } from "@/config/site";
-import { caller } from "@/trpc";
+import { db } from "@/db";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const url = `https://www.${SITE.name}.com/`;
+  const url = `https://www.${SITE.name.toLowerCase()}.com/`;
 
-  const stocks = await caller.stock.getAll();
-  const portfolios = await caller.portfolio.getAllPublic();
+  const [stocks, portfolios] = await Promise.all([
+    db.stock.findMany({
+      select: { symbol: true },
+      orderBy: { symbol: "asc" },
+    }),
+    db.portfolio.findMany({
+      select: { id: true },
+      where: { public: true },
+      orderBy: { title: "asc" },
+    }),
+  ]);
 
   return [
     {

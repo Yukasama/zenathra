@@ -61,7 +61,7 @@ export default function AdminAddStocks() {
   });
 
   return (
-    <Card className="border-none bg-zinc-900/60 w-[400px] sm:w-[500px]">
+    <Card className="border-none bg-zinc-100 dark:bg-zinc-900/70 w-[400px] sm:w-[500px]">
       <CardHeader>
         <CardTitle>Upload Stocks</CardTitle>
         <CardDescription>Upload stock data to the database</CardDescription>
@@ -172,7 +172,7 @@ export default function AdminAddStocks() {
               )}
             />
             <Button
-              className="bg-primary rounded-md"
+              className="bg-primary rounded-md text-white"
               isLoading={isLoading}
               type="submit">
               {!isLoading && <Upload className="h-4 w-4" />}

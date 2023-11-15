@@ -1,6 +1,6 @@
 "use client";
 
-import type { Portfolio, Stock } from "@prisma/client";
+import { Portfolio, Stock } from "@prisma/client";
 import { Card } from "../../../components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { trpc } from "@/app/_trpc/client";

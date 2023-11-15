@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Quote } from "@/types/stock";
 import React from "react";
-import type { Stock } from "@prisma/client";
+import { Stock } from "@prisma/client";
 import { Card } from "../ui/card";
 import { StockImage } from "./stock-image";
 import { cn } from "@/lib/utils";
