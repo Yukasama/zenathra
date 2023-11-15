@@ -1,9 +1,6 @@
 import { Separator } from "@/components/ui/separator";
-import { SITE } from "@/config/site";
 
-export const metadata = {
-  title: `${SITE.name} | Billing Information`,
-};
+export const metadata = { title: "Billing Information" };
 
 export default async function page() {
   return (

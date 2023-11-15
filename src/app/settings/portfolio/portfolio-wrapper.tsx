@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import PortfolioItem from "./portfolio-item";
-import type { User } from "@prisma/client";
+import { User } from "@prisma/client";
 
 interface Props {
   user: Pick<User, "id"> | undefined;

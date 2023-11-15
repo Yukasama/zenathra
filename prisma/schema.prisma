@@ -1,6 +1,8 @@
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("ACCELERATE_URL")
+  directUrl    = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 generator client {
@@ -12,13 +14,9 @@ enum UserRole {
   admin
 }
 
-enum VerificationType {
-  verify
-  forgotPassword
-}
-
 model Account {
   id                String  @id @default(cuid())
+  userId            String
   type              String
   provider          String
   providerAccountId String
@@ -29,27 +27,26 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
   id           String   @id @default(cuid())
+  userId       String
   sessionToken String   @unique
   expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
 }
 
 model VerificationToken {
   identifier String
-  token      String           @unique
+  token      String   @unique
   expires    DateTime
-  type       VerificationType
 
   @@unique([identifier, token])
 }

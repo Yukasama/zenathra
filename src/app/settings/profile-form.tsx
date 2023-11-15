@@ -19,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { trpc } from "@/app/_trpc/client";
 import { UserUpdateSchema } from "@/lib/validators/user";
-import type { User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { Textarea } from "../../components/ui/textarea";
 
 interface Props {

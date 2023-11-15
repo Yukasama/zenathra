@@ -1,5 +1,5 @@
 import StockMarginChart from "./stock-margin-chart";
-import type { Stock } from "@prisma/client";
+import { Stock } from "@prisma/client";
 import React from "react";
 import { db } from "@/db";
 import StockKeyMetricsChart from "./stock-key-metrics-chart";

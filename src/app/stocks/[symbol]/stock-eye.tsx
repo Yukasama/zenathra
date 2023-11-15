@@ -6,7 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { User } from "next-auth";
+import { User } from "next-auth";
 
 interface Props {
   user: Pick<User, "id"> | undefined;

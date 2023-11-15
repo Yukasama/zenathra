@@ -21,7 +21,7 @@ import dynamic from "next/dynamic";
 import Skeleton from "../../../components/ui/skeleton";
 import { Button, buttonVariants } from "../../../components/ui/button";
 import { Pencil } from "lucide-react";
-import type { Stock, User } from "@prisma/client";
+import { Stock, User } from "@prisma/client";
 
 const EditPositions = dynamic(() => import("./edit-positions"), {
   ssr: false,

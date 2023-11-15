@@ -9,7 +9,7 @@ import {
 import StockListItem from "../../../components/stock/stock-list-item";
 import { getQuotes } from "@/lib/fmp/quote";
 import _ from "lodash";
-import type { User } from "next-auth";
+import { User } from "next-auth";
 
 interface Props {
   user: Pick<User, "id">;

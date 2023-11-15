@@ -1,12 +1,8 @@
 import PageLayout from "@/components/shared/page-layout";
-import { SITE } from "@/config/site";
 import type { PropsWithChildren } from "react";
 
+export const metadata = { title: "Stock Screener" };
 export const runtime = "edge";
-
-export const metadata = {
-  title: `${SITE.name} | Stock Screener`,
-};
 
 export default function Layout({ children }: PropsWithChildren) {
   return (

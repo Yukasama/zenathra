@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/card";
-import type { Stock } from "@prisma/client";
+import { Stock } from "@prisma/client";
 import Skeleton from "../../../components/ui/skeleton";
 
 const BASE_COLORS = [

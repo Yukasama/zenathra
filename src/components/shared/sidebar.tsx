@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import CompanyLogo from "./company-logo";
 import { RecentStocks } from "@/types/db";
-import type { Portfolio } from "@prisma/client";
+import { Portfolio } from "@prisma/client";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Card } from "../ui/card";
 import { UserAvatar } from "./user-avatar";
@@ -25,7 +25,7 @@ import {
 import Link from "next/link";
 import { navLinks } from "@/config/site";
 import { SITE } from "@/config/site";
-import type { User } from "next-auth";
+import { User } from "next-auth";
 import { buttonVariants } from "../ui/button";
 
 interface Props {
@@ -38,8 +38,6 @@ interface Props {
 
 export default function Sidebar({ user, portfolios, recentStocks }: Props) {
   const router = useRouter();
-
-  console.log(user);
 
   return (
     <Sheet>
@@ -174,7 +172,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
               <UserAvatar user={user} />
               <div>
                 <p className="font-medium truncate max-w-[200px]">
-                  {user.username}
+                  {user.name}
                 </p>
                 <p className="text-sm text-zinc-400 truncate max-w-[200px]">
                   {user.email}

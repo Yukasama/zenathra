@@ -4,16 +4,16 @@ import Facebook from "next-auth/providers/facebook";
 import GitHub from "next-auth/providers/github";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/db";
-// import EmailProvider from "next-auth/providers/email";
+// import Email from "next-auth/providers/email";
 // import { env } from "@/env.mjs";
 
 export const authConfig = {
-  adapter: PrismaAdapter(db),
+  adapter: PrismaAdapter(db as any),
   providers: [
     Google,
     Facebook,
     GitHub,
-    // EmailProvider({
+    // Email({
     //   server: {
     //     host: env.EMAIL_SERVER_HOST,
     //     port: Number(env.EMAIL_SERVER_PORT),
@@ -38,12 +38,15 @@ export const authConfig = {
       );
 
       if (isProtected && !isLoggedIn) {
-        const redirectUrl = new URL("/api/auth/signin", nextUrl.origin);
+        const redirectUrl = new URL("/sign-in", nextUrl.origin);
         redirectUrl.searchParams.append("callbackUrl", nextUrl.href);
         return Response.redirect(redirectUrl);
       }
 
       return true;
+    },
+    async redirect({ url, baseUrl }) {
+      return url.startsWith(baseUrl) ? url : baseUrl;
     },
   },
 } satisfies NextAuthConfig;

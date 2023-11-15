@@ -9,12 +9,7 @@ const isAuth = middleware(async (opts) => {
   const user = await getUser();
   if (!user?.id) throw new TRPCError({ code: "UNAUTHORIZED" });
 
-  return opts.next({
-    ctx: {
-      userId: user.id,
-      user,
-    },
-  });
+  return opts.next({ ctx: { user } });
 });
 
 const isAdmin = middleware(async (opts) => {
@@ -27,16 +22,10 @@ const isAdmin = middleware(async (opts) => {
   if (!user?.id || dbUser?.role !== "admin")
     throw new TRPCError({ code: "UNAUTHORIZED" });
 
-  return opts.next({
-    ctx: {
-      userId: user.id,
-      user,
-    },
-  });
+  return opts.next({ ctx: { user } });
 });
 
 export const router = t.router;
-
 export const publicProcedure = t.procedure;
 export const privateProcedure = t.procedure.use(isAuth);
 export const adminProcedure = t.procedure.use(isAdmin);

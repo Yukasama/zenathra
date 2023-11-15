@@ -13,13 +13,11 @@ export const portfolioRouter = router({
   create: privateProcedure
     .input(CreatePortfolioSchema)
     .mutation(async ({ ctx, input }) => {
-      const { user } = ctx;
-
       await db.portfolio.create({
         data: {
           ...input,
-          public: input.public,
-          creatorId: user.id,
+          public: !!input.public,
+          creatorId: ctx.user.id,
           color: getRandomColor(),
         },
       });
@@ -27,16 +25,15 @@ export const portfolioRouter = router({
   edit: privateProcedure
     .input(EditPortfolioSchema)
     .mutation(async ({ ctx, input }) => {
-      const { userId } = ctx;
       const { portfolioId, title, public: isPublic } = input;
 
       await db.portfolio.update({
         where: {
           id: portfolioId,
-          creatorId: userId,
+          creatorId: ctx.user.id,
         },
         data: {
-          ...(title !== undefined && { title: title }),
+          ...(title && { title }),
           ...(isPublic !== undefined && { public: isPublic }),
         },
       });
@@ -44,7 +41,6 @@ export const portfolioRouter = router({
   add: privateProcedure
     .input(ModifyPortfolioSchema)
     .mutation(async ({ ctx, input }) => {
-      const { userId } = ctx;
       const { portfolioId, stockIds } = input;
 
       let portfolio = await db.portfolio.findFirst({
@@ -56,19 +52,17 @@ export const portfolioRouter = router({
         },
         where: {
           id: portfolioId,
-          creatorId: userId,
+          creatorId: ctx.user.id,
         },
       });
-
       if (!portfolio) throw new TRPCError({ code: "NOT_FOUND" });
 
       const stocksInDatabase = await db.stock.findMany({
         select: { id: true },
         where: { id: { in: stockIds } },
       });
-
+      
       const portfolioStockIds = portfolio.stocks.map((stock) => stock.stockId);
-
       const newStocks = stocksInDatabase
         .map((stock) => stock.id)
         .filter((id) => !portfolioStockIds.includes(id));
@@ -83,28 +77,25 @@ export const portfolioRouter = router({
   remove: privateProcedure
     .input(ModifyPortfolioSchema)
     .mutation(async ({ ctx, input }) => {
-      const { userId } = ctx;
       const { portfolioId, stockIds } = input;
 
       await db.stockInPortfolio.deleteMany({
         where: {
           portfolioId: portfolioId,
           portfolio: {
-            creatorId: userId,
+            creatorId: ctx.user.id,
           },
           stockId: { in: stockIds },
         },
       });
     }),
   delete: privateProcedure
-    .input(z.string()) // Portfolio ID
-    .mutation(async ({ ctx, input }) => {
-      const { userId } = ctx;
-
+    .input(z.string())
+    .mutation(async ({ ctx, input: portfolioId }) => {
       await db.portfolio.delete({
         where: {
-          id: input,
-          creatorId: userId,
+          id: portfolioId,
+          creatorId: ctx.user.id,
         },
       });
     }),

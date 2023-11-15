@@ -28,17 +28,18 @@ export function UserAccountNav({ user, isAdmin }: Props) {
       <SheetTrigger>
         <UserAvatar user={user} className="h-8 w-8" />
       </SheetTrigger>
+
       <SheetContent className="rounded-l-xl">
         <div className="flex items-center gap-2 p-2 mb-1">
           <UserAvatar user={user} className="h-9 w-9" />
           <div className="f-col">
-            <p className="font-medium">{user.username}</p>
+            <p className="font-medium">{user.name}</p>
             <p className="w-[200px] truncate text-sm text-muted-foreground">
               {user.email}
             </p>
           </div>
         </div>
-
+        
         <UserNavLinks user={user} isAdmin={isAdmin} />
         <Separator className="my-2" />
         <LogoutLink />

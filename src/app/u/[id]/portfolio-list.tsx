@@ -9,7 +9,7 @@ import {
 import PortfolioImage from "../../../components/portfolio/portfolio-image";
 import Link from "next/link";
 import { getUser } from "@/lib/auth";
-import type { User } from "next-auth";
+import { User } from "next-auth";
 
 interface Props {
   user: Pick<User, "id">;

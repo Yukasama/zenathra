@@ -1,8 +1,9 @@
 import "server-only";
 
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcryptjs";
+import { randomUUID } from "crypto";
 
 export async function createToken() {
-  const token = crypto.randomUUID();
-  return await bcryptjs.hash(token, 10);
+  const token = randomUUID();
+  return await bcrypt.hash(token, 10);
 }

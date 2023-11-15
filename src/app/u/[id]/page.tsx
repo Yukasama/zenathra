@@ -56,7 +56,7 @@ export default async function page({ params: { id } }: Props) {
             <div className="flex justify-between">
               <div className="f-col gap-1">
                 <CardTitle className="text-2xl lg:text-3xl font-medium">
-                  ${user?.username}
+                  ${user?.name}
                 </CardTitle>
                 <div className="text-zinc-500 flex items-center gap-2">
                   <Calendar className="h-5 w-5" />

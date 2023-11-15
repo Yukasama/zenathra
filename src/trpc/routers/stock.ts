@@ -15,8 +15,9 @@ import logger from "pino";
 import { uploadStocks } from "@/lib/stock-upload";
 
 export const stockRouter = router({
-  query: publicProcedure.input(ScreenerSchema).query(async (opts) => {
-    const filter = buildFilter(opts.input);
+  query: publicProcedure.input(ScreenerSchema).query(async ({ input }) => {
+    const filter = buildFilter(input);
+    const { cursor, take } = input;
 
     return await db.stock.findMany({
       select: {
@@ -26,12 +27,12 @@ export const stockRouter = router({
         sector: true,
       },
       where: filter,
-      take: opts.input.take,
-      skip: (Number(opts.input.cursor) - 1) * opts.input.take,
+      take: take,
+      skip: (Number(cursor) - 1) * take,
       orderBy: { companyName: "asc" },
     });
   }),
-  search: publicProcedure.input(z.string()).query(async (opts) => {
+  search: publicProcedure.input(z.string()).query(async ({ input: search }) => {
     return await db.stock.findMany({
       select: {
         id: true,
@@ -41,19 +42,18 @@ export const stockRouter = router({
       },
       where: {
         OR: [
-          { symbol: { contains: opts.input } },
-          { companyName: { contains: opts.input } },
+          { symbol: { contains: search } },
+          { companyName: { contains: search } },
         ],
       },
       take: 10,
     });
   }),
   history: publicProcedure
-    // Input is either a stock symbol or an array of symbols
     .input(z.string().or(z.array(z.string())))
-    .query(async (opts) => {
-      if (Array.isArray(opts.input)) {
-        const data = await Promise.all(opts.input.map(fetchHistory));
+    .query(async ({ input: symbols }) => {
+      if (Array.isArray(symbols)) {
+        const data = await Promise.all(symbols.map(fetchHistory));
 
         // Merging symbol data to get average
         let result: any = {};
@@ -74,19 +74,20 @@ export const stockRouter = router({
         });
         return result;
       }
-      return await fetchHistory(opts.input);
+      return await fetchHistory(symbols);
     }),
-  dailyHistory: publicProcedure.input(z.string()).query(async (opts) => {
-    const { url } = TIMEFRAMES["1D"];
-    const data = await fetch(historyUrls(opts.input, url)).then((res) =>
-      res.json()
-    );
-    return data as History[];
-  }),
+  dailyHistory: publicProcedure
+    .input(z.string())
+    .query(async ({ input: symbol }) => {
+      const { url } = TIMEFRAMES["1D"];
+      const data = await fetch(historyUrls(symbol, url)).then((res) =>
+        res.json()
+      );
+      return data as History[];
+    }),
   upload: adminProcedure
     .input(UploadStockSchema)
     .mutation(async ({ ctx, input }) => {
-      const { user } = ctx;
       const { stock, skip, clean, pullTimes } = input;
 
       let alreadySymbols: string[] = [];
@@ -113,7 +114,7 @@ export const stockRouter = router({
             symbols = symbols.filter((s) => !alreadySymbols.includes(s));
           if (symbols.length === 0) continue;
 
-          await uploadStocks(symbols, user);
+          await uploadStocks(symbols, ctx.user);
           logger().info(
             `[SUCCESS] Uploaded ${symbols.length} stocks including: '${
               symbols[0] ?? symbols[1] ?? "undefined"
@@ -123,7 +124,7 @@ export const stockRouter = router({
           if (currentIteration !== totalIterations)
             await Timeout(Number(FMP.timeout));
         }
-      } else await uploadStocks([stock], user);
+      } else await uploadStocks([stock], ctx.user);
 
       if (clean)
         await db.stock.deleteMany({

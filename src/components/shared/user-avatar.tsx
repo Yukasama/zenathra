@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { User } from "next-auth";
 
 interface Props extends AvatarProps {
-  user: Pick<User, "name" | "username" | "image"> | undefined;
+  user: Pick<User, "name" | "image"> | undefined;
   fallbackFontSize?: number;
 }
 
@@ -35,8 +35,7 @@ export function UserAvatar({
             <p
               className="font-medium text-white"
               style={{ fontSize: fallbackFontSize }}>
-              {user?.name?.[0].toUpperCase() ??
-                user?.username?.[0].toUpperCase()}
+              {user?.name?.[0].toUpperCase()}
             </p>
           </div>
         </AvatarFallback>

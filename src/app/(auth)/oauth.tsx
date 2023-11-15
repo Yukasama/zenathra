@@ -26,7 +26,7 @@ export default function OAuth({ provider, className, ...props }: Props) {
     <div className={cn("flex justify-center w-full", className)} {...props}>
       <Button
         isLoading={isLoading}
-        className="w-full bg-slate-900 hover:bg-slate-900/70 border"
+        className="w-full bg-zinc-900 hover:bg-zinc-900/70 border"
         onClick={() => login()}>
         {provider === "google" ? (
           <Icons.google className="h-[18px] mr-1" />

@@ -3,7 +3,7 @@ import React from "react";
 import { ChevronsDown, ChevronsUp } from "lucide-react";
 import { getQuote } from "@/lib/fmp/quote";
 import { StockImage } from "../../../components/stock/stock-image";
-import type { Stock } from "@prisma/client";
+import { Stock } from "@prisma/client";
 import { db } from "@/db";
 import { Card } from "../../../components/ui/card";
 import Skeleton from "../../../components/ui/skeleton";

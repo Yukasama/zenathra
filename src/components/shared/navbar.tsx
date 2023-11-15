@@ -22,7 +22,6 @@ const Sidebar = dynamic(() => import("./sidebar"), {
 
 export default async function Navbar() {
   const user = await getUser();
-  console.log(user);
   const dbUser = await db.user.findFirst({
     select: {
       role: true,

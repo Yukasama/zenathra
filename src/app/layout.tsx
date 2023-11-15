@@ -1,5 +1,5 @@
 import Provider from "@/components/shared/provider";
-import type { Metadata } from "next";
+import { Metadata } from "next";
 import { cn, constructMetadata } from "@/lib/utils";
 import { K2D } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";

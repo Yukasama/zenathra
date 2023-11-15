@@ -3,6 +3,7 @@ import { createEnv } from "@t3-oss/env-nextjs";
 
 export const env = createEnv({
   server: {
+    ACCELERATE_URL: z.string().url(),
     DATABASE_URL: z.string().url(),
     AUTH_SECRET: z.string(),
     AUTH_GOOGLE_ID: z.string(),
@@ -22,6 +23,7 @@ export const env = createEnv({
     FMP_API_KEY: z.string(),
   },
   runtimeEnv: {
+    ACCELERATE_URL: process.env.ACCELERATE_URL,
     DATABASE_URL: process.env.DATABASE_URL,
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
