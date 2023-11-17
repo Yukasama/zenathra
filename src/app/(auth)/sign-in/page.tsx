@@ -1,46 +1,57 @@
-import OAuth from "../oauth";
+import OAuth from "./oauth";
 import Link from "next/link";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import CompanyLogo from "@/components/shared/company-logo";
+import { getUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { Button } from "@nextui-org/button";
+import { ArrowLeft } from "lucide-react";
 
 export const metadata = { title: "Sign In" };
+export const runtime = "edge";
 
-export default function SignIn() {
+export default async function page() {
+  const user = await getUser();
+  
+  if (user) {
+    redirect("/");
+  }
+
   return (
-    <Card className="md:p-2 w-[400px]">
-      <CardHeader className="flex">
-        <div className="flex items-center gap-3.5">
-          <CompanyLogo px={50} />
-          <div className="f-col gap-1">
-            <CardTitle>Sign In</CardTitle>
-            <CardDescription>Log in to your account</CardDescription>
+    <div className="f-box fixed left-0 top-0 z-20 h-screen w-screen bg-card">
+      {/* Back Button */}
+      <Link href="/">
+        <Button className="absolute top-5 left-5">
+          <ArrowLeft className="h-4 w-4" />
+          Back
+        </Button>
+      </Link>
+
+      {/* Content */}
+      <Card className="md:p-2 w-[400px] border-none bg-zinc-100 dark:bg-zinc-900/70">
+        <CardHeader>
+          <div className="flex items-center gap-3.5">
+            <CompanyLogo px={50} />
+            <div className="f-col gap-1">
+              <CardTitle>Sign In</CardTitle>
+              <CardDescription>or create a new account</CardDescription>
+            </div>
           </div>
-        </div>
-      </CardHeader>
+        </CardHeader>
 
-      <CardContent className="f-col gap-2">
-        <OAuth provider="google" />
-        <OAuth provider="facebook" />
-        <OAuth provider="github" />
-      </CardContent>
-
-      <CardFooter>
-        <div className="f-box gap-1 text-sm">
-          <p>New to our platform?</p>
-          <Link
-            href="/sign-up"
-            className="rounded-md p-1 px-1.5 font-medium text-blue-500 hover:bg-slate-100 dark:hover:bg-slate-900">
-            Sign Up.
-          </Link>
-        </div>
-      </CardFooter>
-    </Card>
+        {/* OAuth */}
+        <CardContent className="f-col gap-[9px]">
+          <OAuth provider="google" />
+          <OAuth provider="facebook" />
+          <OAuth provider="github" />
+        </CardContent>
+      </Card>
+    </div>
   );
 }

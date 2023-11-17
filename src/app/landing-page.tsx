@@ -27,12 +27,10 @@ export default function LandingPage() {
         </p>
         <div className="flex gap-3 mt-2">
           <Link href="/sign-in">
-            <Button className="bg-zinc-200 dark:bg-white text-black rounded-md">
-              Sign In
-            </Button>
+            <Button>Sign In</Button>
           </Link>
           <Link href="/sign-in">
-            <Button className="gradient rounded-md text-white">
+            <Button className="gradient text-white">
               Get started
               <MoveRight className="w-4 h-4" />
             </Button>

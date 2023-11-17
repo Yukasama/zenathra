@@ -45,8 +45,8 @@ export const authConfig = {
 
       return true;
     },
-    async redirect({ url, baseUrl }) {
-      return url.startsWith(baseUrl) ? url : baseUrl;
+    async redirect({ baseUrl }) {
+      return baseUrl;
     },
   },
 } satisfies NextAuthConfig;

@@ -5,6 +5,9 @@ import { SITE } from "@/config/site";
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
+export const capitalize = (text: string): string =>
+  text.charAt(0).toUpperCase() + text.slice(1);
+
 export const Timeout = async (ms: number) =>
   await new Promise((resolve) => setTimeout(resolve, ms));
 

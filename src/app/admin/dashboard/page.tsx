@@ -1,13 +1,8 @@
 import PageLayout from "@/components/shared/page-layout";
 import { db } from "@/db";
 import { getUser } from "@/lib/auth";
-import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
-
-const AdminAddStocks = dynamic(
-  () => import("@/app/admin/dashboard/admin-add-stocks"),
-  { ssr: false }
-);
+import AdminAddStocks from "./admin-add-stocks";
 
 export const metadata = { title: "Admin Dashboard" };
 export const runtime = "edge";
@@ -19,7 +14,6 @@ export default async function page() {
     select: { role: true },
     where: { id: user?.id },
   });
-
   if (!dbUser?.role) redirect("/");
 
   return (

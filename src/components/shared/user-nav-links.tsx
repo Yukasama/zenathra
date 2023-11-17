@@ -44,11 +44,6 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
       icon: <Settings className="w-5 h-5 mr-2 text-zinc-400" />,
       separator: true,
     },
-    {
-      label: "Support",
-      href: "/support",
-      icon: <HelpCircle className="w-5 h-5 mr-2 text-zinc-400" />,
-    },
   ];
 
   return (

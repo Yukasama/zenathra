@@ -1,6 +1,6 @@
 import { Quote } from "@/types/stock";
 import Link from "next/link";
-import StockPrice from "../../app/stocks/[symbol]/stock-price";
+import StockPrice from "../../app/(stock)/stocks/[symbol]/stock-price";
 import {
   Card,
   CardContent,
