@@ -132,7 +132,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
           <AccordionItem value="dashboard">
             <AccordionTrigger asLink>
               <SheetClose asChild>
-                <Link href="/dashboard" className="w-full py-4 text-start">
+                <Link href="/" className="w-full py-4 text-start">
                   Dashboard
                 </Link>
               </SheetClose>

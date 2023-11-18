@@ -6,6 +6,7 @@ import { PortfolioAssetsLoading } from "@/app/(portfolio)/p/[id]/portfolio-asset
 import PortfolioAllocation from "@/app/(portfolio)/p/[id]/portfolio-allocation";
 import NewAssets from "./new-assets";
 import { getQuotes } from "@/lib/fmp/quote";
+import PortfolioChart from "./portfolio-chart";
 
 interface Props {
   params: { id: string };
@@ -26,7 +27,9 @@ export default async function page({ params: { id } }: Props) {
     where: { id },
   });
 
-  if (!portfolio) return notFound();
+  if (!portfolio) {
+    return notFound();
+  }
 
   const stocks = await db.stock.findMany({
     select: {
@@ -52,8 +55,9 @@ export default async function page({ params: { id } }: Props) {
   return (
     <div className="f-col gap-6">
       <div className="f-col lg:flex-row gap-4">
-        <PriceChart
-          symbols={stocks.map((s) => s.symbol)}
+        <PortfolioChart
+          portfolioId={id}
+          portfolioCreatedAt={portfolio.createdAt.toDateString()}
           title="Portfolio Chart"
           description="Chart of all portfolio positions"
         />

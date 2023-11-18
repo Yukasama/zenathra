@@ -9,12 +9,18 @@ export const runtime = "edge";
 
 export default async function page() {
   const user = await getUser();
-  if (!user) return <LandingPage />;
+
+  if (!user) {
+    return <LandingPage />;
+  }
 
   const userExists = await db.user.count({
     where: { id: user?.id ?? undefined },
   });
-  if (!userExists) redirect("/auth-callback?origin=/");
+
+  if (!userExists) {
+    redirect("/auth-callback?origin=/");
+  }
 
   return <Dashboard user={user} />;
 }

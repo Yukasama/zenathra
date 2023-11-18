@@ -29,7 +29,7 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
     },
     {
       label: "Dashboard",
-      href: "/dashboard",
+      href: "/",
       icon: <LayoutDashboard className="w-5 h-5 mr-2 text-zinc-400" />,
     },
     {
@@ -42,7 +42,6 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
       label: "Settings",
       href: "/settings",
       icon: <Settings className="w-5 h-5 mr-2 text-zinc-400" />,
-      separator: true,
     },
   ];
 

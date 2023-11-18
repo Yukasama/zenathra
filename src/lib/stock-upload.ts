@@ -6,13 +6,13 @@ import { env } from "@/env.mjs";
 import logger from "pino";
 import { User } from "@prisma/client";
 
-export async function fetchHistory(symbol: string) {
+export async function fetchHistory(symbol: string, from?: Date) {
   const fetchedURLs: Record<string, any> = {};
 
   for (let timeframe of Object.keys(TIMEFRAMES)) {
     const { url } = TIMEFRAMES[timeframe];
     if (!fetchedURLs[url]) {
-      const data = await fetch(historyUrls(symbol, url)).then((res) =>
+      const data = await fetch(historyUrls(symbol, url, from)).then((res) =>
         res.json()
       );
       fetchedURLs[url] = url.includes("price-full") ? data.historical : data;
@@ -38,26 +38,36 @@ export async function fetchHistory(symbol: string) {
 }
 
 function MergeArrays(arrays: Record<string, any>[][]): Record<string, any>[] {
-  if (!Array.isArray(arrays) || !arrays.every((array) => Array.isArray(array)))
+  if (
+    !Array.isArray(arrays) ||
+    !arrays.every((array) => Array.isArray(array))
+  ) {
     return [];
+  }
 
   const result: Record<string, any>[] = [];
   for (const array of arrays) {
-    if (!array.every((item) => typeof item === "object" && item.date))
+    if (!array.every((item) => typeof item === "object" && item.date)) {
       throw new Error(
         "Each sub-array must contain objects with a 'date' property."
       );
+    }
     for (const item of array) {
       const existingItem = result.find((i) => i.date === item.date);
-      if (existingItem) Object.assign(existingItem, item);
-      else result.push(item);
+      if (existingItem) {
+        Object.assign(existingItem, item);
+      } else {
+        result.push(item);
+      }
     }
   }
   return result;
 }
 
 export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
-  if (!symbols.length) throw new Error("ArgumentError: No symbols provided");
+  if (!symbols.length) {
+    throw new Error("ArgumentError: No symbols provided");
+  }
 
   const financialUrls = symbols.map((symbol) => [
     `${FMP_API_URL}v3/income-statement/${symbol}?limit=120&apikey=${env.FMP_API_KEY}`,
@@ -95,7 +105,9 @@ export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
     try {
       if (result.status === "fulfilled") {
         const res = MergeArrays(result.value);
-        if (res.length) return res;
+        if (res.length) {
+          return res;
+        }
       }
       return [];
     } catch {
@@ -143,7 +155,9 @@ export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
 
       const statementsByYear = combinedData[i].reduce((acc, statement) => {
         const year = statement.date.split("-")[0];
-        if (!acc[year]) acc[year] = [];
+        if (!acc[year]) {
+          acc[year] = [];
+        }
         acc[year].push(statement);
         return acc;
       }, {});

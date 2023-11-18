@@ -1,4 +1,4 @@
-import { privateProcedure, publicProcedure, router } from "../trpc";
+import { privateProcedure, router } from "../trpc";
 import { absoluteUrl } from "@/lib/utils";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
@@ -13,16 +13,21 @@ import { UserUpdateSchema } from "@/lib/validators/user";
 
 export const userRouter = router({
   createStripeSession: privateProcedure.mutation(async ({ ctx }) => {
+    const { user } = ctx;
+
     const dbUser = await db.user.findFirst({
       select: {
         id: true,
         stripeCustomerId: true,
       },
-      where: { id: ctx.user.id },
+      where: { id: user.id },
     });
-    if (!dbUser) throw new TRPCError({ code: "UNAUTHORIZED" });
 
-    const billingUrl = absoluteUrl("/dashboard/billing");
+    if (!dbUser) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+
+    const billingUrl = absoluteUrl("/billing");
     const subscriptionPlan = await getUserSubscriptionPlan();
 
     if (subscriptionPlan.isSubscribed && dbUser.stripeCustomerId) {
@@ -30,6 +35,7 @@ export const userRouter = router({
         customer: dbUser.stripeCustomerId,
         return_url: billingUrl,
       });
+
       return { url: stripeSession.url };
     }
 
@@ -53,20 +59,22 @@ export const userRouter = router({
   update: privateProcedure
     .input(UserUpdateSchema)
     .mutation(async ({ ctx, input }) => {
-      const { email, username, biography } = input;
+      const { user } = ctx;
+      const { username, biography } = input;
 
       await db.user.update({
-        where: { id: ctx.user.id },
+        where: { id: user.id },
         data: {
           ...(username && { username }),
-          ...(email && { email }),
           ...(biography && { biography }),
         },
       });
     }),
   delete: privateProcedure.mutation(async ({ ctx }) => {
+    const { user } = ctx;
+
     await db.user.delete({
-      where: { id: ctx.user.id },
+      where: { id: user.id },
     });
   }),
   // verify: publicProcedure
@@ -97,7 +105,11 @@ export const userRouter = router({
   //     ]);
   //   }),
   // sendVerification: privateProcedure.mutation(async ({ ctx }) => {
-  //   if (!ctx.user.email) throw new TRPCError({ code: "BAD_REQUEST" });
+  //   const { user } = ctx;
+
+  //   if (!ctx.user.email) {
+  //     throw new TRPCError({ code: "BAD_REQUEST" });
+  //   }
 
   //   const hashedToken = await createToken();
   //   await db.verificationToken.create({

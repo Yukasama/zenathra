@@ -7,13 +7,9 @@ import { Suspense } from "react";
 import { Card } from "@/components/ui/card";
 import dynamic from "next/dynamic";
 import Skeleton from "@/components/ui/skeleton";
-import { SITE } from "@/config/site";
 
+export const metadata = { title: "Your Portfolios" };
 export const runtime = "edge";
-
-export const metadata = {
-  title: `${SITE.name} | Your Portfolios`,
-};
 
 const PortfolioCreateCard = dynamic(() => import("./portfolio-create-card"), {
   ssr: false,

@@ -44,7 +44,9 @@ export async function generateMetadata({ params: { symbol } }: Props) {
     getQuote(symbol),
   ]);
 
-  if (!stock) return { title: "Stock not found" };
+  if (!stock) {
+    return { title: "Stock not found" };
+  }
 
   return { title: `$${quote?.price} - ${stock.companyName} | ${SITE.name}` };
 }
@@ -66,7 +68,9 @@ export default async function page({ params: { symbol } }: Props) {
     where: { symbol: symbol },
   });
 
-  if (!stock) return notFound();
+  if (!stock) {
+    return notFound();
+  }
 
   const user = await getUser();
 
@@ -81,13 +85,14 @@ export default async function page({ params: { symbol } }: Props) {
       },
     });
 
-    if (!recentEntry)
+    if (!recentEntry) {
       await db.userRecentStocks.create({
         data: {
           userId: user?.id!,
           stockId: stock.id,
         },
       });
+    }
   }
 
   return (
@@ -110,7 +115,7 @@ export default async function page({ params: { symbol } }: Props) {
         <Separator />
         <div className="f-col lg:flex-row gap-4">
           <PriceChart
-            symbols={symbol}
+            symbol={symbol}
             title={`${symbol} Chart`}
             description={`Price Chart of ${stock.companyName}`}
             image={<StockImage src={stock.image} px={40} className="bg-card" />}

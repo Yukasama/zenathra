@@ -17,15 +17,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
-import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn, computeDomain } from "@/lib/utils";
-import Skeleton from "../ui/skeleton";
+import Skeleton from "@/components/ui/skeleton";
 import { trpc } from "@/app/_trpc/client";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
   description?: string;
-  symbol: string;
+  portfolioId: string;
+  portfolioCreatedAt: string;
   image?: React.ReactNode;
   height?: number;
   width?: number;
@@ -34,7 +35,8 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export default function PriceChart({
   title,
   description,
-  symbol,
+  portfolioId,
+  portfolioCreatedAt,
   image,
   height,
   width,
@@ -47,7 +49,7 @@ export default function PriceChart({
   const [results, setResults] = useState<any[]>([]);
   const [positive, setPositive] = useState<boolean>(true);
 
-  const { data, isFetched } = trpc.stock.history.useQuery(symbol);
+  const { data, isFetched } = trpc.portfolio.history.useQuery(portfolioId);
 
   useEffect(() => setMounted(true), []);
 
@@ -107,7 +109,20 @@ export default function PriceChart({
     return null;
   };
 
-  const timeFrames = ["1D", "5D", "1M", "6M", "1Y", "5Y", "All"];
+  const portfolioCreated = new Date(portfolioCreatedAt).getTime();
+  const today = new Date().getTime();
+  const diff = today - portfolioCreated;
+  const existsSince = diff / (1000 * 60 * 60 * 24);
+
+  const timeFrames = {
+    "1D": true,
+    "5D": existsSince > 2,
+    "1M": existsSince > 6,
+    "6M": existsSince > 31,
+    "1Y": existsSince > 150,
+    "5Y": existsSince > 1500,
+    All: existsSince > 31,
+  };
 
   return (
     <Card
@@ -133,10 +148,11 @@ export default function PriceChart({
 
           <Tabs defaultValue="1D">
             <TabsList className={`${!isFetched && "bg-transparent gap-[1px]"}`}>
-              {timeFrames.map((timeFrame) => (
+              {Object.entries(timeFrames).map(([timeFrame, disabled]) => (
                 <Skeleton key={timeFrame} isLoaded={isFetched}>
                   <TabsTrigger
                     onClick={() => setTimeFrame(timeFrame)}
+                    disabled={!disabled}
                     value={timeFrame}>
                     {timeFrame}
                   </TabsTrigger>

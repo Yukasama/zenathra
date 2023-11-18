@@ -7,20 +7,25 @@ const middleware = t.middleware;
 
 const isAuth = middleware(async (opts) => {
   const user = await getUser();
-  if (!user?.id) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+  if (!user?.id) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
 
   return opts.next({ ctx: { user } });
 });
 
 const isAdmin = middleware(async (opts) => {
   const user = await getUser();
+  
   const dbUser = await db.user.findFirst({
     select: { role: true },
     where: { id: user?.id },
   });
 
-  if (!user?.id || dbUser?.role !== "admin")
+  if (!user?.id || dbUser?.role !== "admin") {
     throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
 
   return opts.next({ ctx: { user } });
 });

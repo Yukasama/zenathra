@@ -36,12 +36,12 @@ export const TIMEFRAMES: Record<
   All: { url: "historical-price-full", limit: 5000 },
 };
 
-export function historyUrls(symbol: string, url: string) {
+export function historyUrls(symbol: string, url: string, from?: Date) {
   return `${FMP_API_URL}v3/${url}/${symbol}?${
     url.includes("price-full")
-      ? "from=1975-01-01&"
-      : url.includes("4hour")
-      ? "from=2020-01-01&"
+      ? "from=1975-01-01"
+      : from
+      ? `from=${from.toDateString().split("T")[0]}`
       : ""
-  }apikey=${process.env.FMP_API_KEY}`;
+  }&apikey=${process.env.FMP_API_KEY}`;
 }

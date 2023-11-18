@@ -53,7 +53,7 @@ export default async function page() {
       <div className="f-col md:flex-row gap-4 md:gap-7">
         {quote && (
           <PriceChart
-            symbols={quote.symbol}
+            symbol={quote.symbol}
             title={quote.symbol}
             description={`Price Chart of ${quote?.name}`}
             image={<StockImage src={stock?.image} px={40} />}

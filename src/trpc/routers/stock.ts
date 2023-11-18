@@ -16,8 +16,10 @@ import { uploadStocks } from "@/lib/stock-upload";
 
 export const stockRouter = router({
   query: publicProcedure.input(ScreenerSchema).query(async ({ input }) => {
-    const filter = buildFilter(input);
     const { cursor, take } = input;
+
+    const filter = buildFilter(input);
+    const paginationSkip = (cursor - 1) * take;
 
     return await db.stock.findMany({
       select: {
@@ -28,7 +30,7 @@ export const stockRouter = router({
       },
       where: filter,
       take: take,
-      skip: (Number(cursor) - 1) * take,
+      skip: paginationSkip,
       orderBy: { companyName: "asc" },
     });
   }),
@@ -50,31 +52,9 @@ export const stockRouter = router({
     });
   }),
   history: publicProcedure
-    .input(z.string().or(z.array(z.string())))
-    .query(async ({ input: symbols }) => {
-      if (Array.isArray(symbols)) {
-        const data = await Promise.all(symbols.map(fetchHistory));
-
-        // Merging symbol data to get average
-        let result: any = {};
-        data.forEach((symbolData: any) => {
-          Object.keys(symbolData).forEach((range) => {
-            if (!result[range]) result[range] = [];
-
-            symbolData[range].forEach((entry: any, entryIndex: any) => {
-              if (!result[range][entryIndex]) {
-                result[range][entryIndex] = {
-                  date: entry.date,
-                  close: 0,
-                };
-              }
-              result[range][entryIndex].close += entry.close / data.length;
-            });
-          });
-        });
-        return result;
-      }
-      return await fetchHistory(symbols);
+    .input(z.string())
+    .query(async ({ input: symbol }) => {
+      return await fetchHistory(symbol);
     }),
   dailyHistory: publicProcedure
     .input(z.string())
@@ -100,8 +80,9 @@ export const stockRouter = router({
 
       if (stock === "All" || stock === "US500") {
         const symbolArray = await getSymbols(stock, pullTimes);
-        if (!symbolArray)
+        if (!symbolArray) {
           throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        }
 
         const totalIterations = symbolArray.length;
         let currentIteration = 0;
@@ -110,9 +91,12 @@ export const stockRouter = router({
           currentIteration++;
 
           symbols = symbols.filter((s) => s && s !== null && s !== undefined);
-          if (skip)
+          if (skip) {
             symbols = symbols.filter((s) => !alreadySymbols.includes(s));
-          if (symbols.length === 0) continue;
+          }
+          if (symbols.length === 0) {
+            continue;
+          }
 
           await uploadStocks(symbols, ctx.user);
           logger().info(
@@ -121,14 +105,18 @@ export const stockRouter = router({
             }'`
           );
 
-          if (currentIteration !== totalIterations)
+          if (currentIteration !== totalIterations) {
             await Timeout(Number(FMP.timeout));
+          }
         }
-      } else await uploadStocks([stock], ctx.user);
+      } else {
+        await uploadStocks([stock], ctx.user);
+      }
 
-      if (clean)
+      if (clean) {
         await db.stock.deleteMany({
           where: { errorMessage: { not: null } },
         });
+      }
     }),
 });
