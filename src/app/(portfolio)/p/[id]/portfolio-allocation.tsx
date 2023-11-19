@@ -33,7 +33,9 @@ const BASE_COLORS = [
 
 function generateColors(num: number): string[] {
   let colors: string[] = [];
-  while (colors.length < num) colors = colors.concat(BASE_COLORS);
+  while (colors.length < num) {
+    colors = colors.concat(BASE_COLORS);
+  }
   return colors.slice(0, num);
 }
 

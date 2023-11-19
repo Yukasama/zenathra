@@ -9,6 +9,8 @@ import { notFound } from "next/navigation";
 import { SkeletonButton } from "@/components/ui/skeleton";
 import dynamic from "next/dynamic";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import ChangeTitle from "./change-title";
 
 const EditTitle = dynamic(() => import("@/app/(portfolio)/p/[id]/edit-title"), {
   ssr: false,
@@ -130,7 +132,9 @@ export default async function Layout({ children, params: { id } }: Props) {
         <div className="flex items-center justify-between px-2">
           <div>
             <div className="flex items-center gap-2">
-              <CardTitle className="text-2xl">{portfolio.title}</CardTitle>
+              <CardTitle className="text-2xl">
+                <ChangeTitle portfolio={portfolio} />
+              </CardTitle>
               {user?.id === portfolio.creatorId && (
                 <EditTitle portfolio={portfolio} />
               )}
