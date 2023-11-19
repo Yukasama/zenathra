@@ -11,7 +11,9 @@ interface MailOptions {
 const resend = new Resend(env.EMAIL_SERVER_PASSWORD);
 
 export const sendMail = async ({ to, token }: MailOptions) => {
-  if (!to) throw new Error("No email provided");
+  if (!to) {
+    throw new Error("No email provided.");
+  }
 
   await resend.emails.send({
     from: env.EMAIL_FROM,

@@ -5,7 +5,7 @@ import Link from "next/link";
 import EditVisibility from "@/components/portfolio/edit-visibility";
 
 interface Props {
-  portfolio: Pick<Portfolio, "id" | "title" | "public" | "color" | "createdAt">;
+  portfolio: Pick<Portfolio, "id" | "title" | "isPublic" | "color" | "createdAt">;
 }
 
 export default function PortfolioItem({ portfolio }: Props) {
@@ -21,7 +21,7 @@ export default function PortfolioItem({ portfolio }: Props) {
               {portfolio.title}
             </h2>
             <p className="text-gray-500 text-sm">
-              {portfolio.public ? "Public" : "Private"}
+              {portfolio.isPublic ? "Public" : "Private"}
             </p>
           </div>
         </div>

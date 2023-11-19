@@ -23,7 +23,7 @@ export default async function page() {
     select: {
       id: true,
       title: true,
-      public: true,
+      isPublic: true,
       createdAt: true,
       color: true,
       stocks: {

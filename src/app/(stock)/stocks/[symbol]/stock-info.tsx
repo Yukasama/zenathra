@@ -63,7 +63,7 @@ export default async function StockInfo({ stock }: Props) {
       select: {
         id: true,
         title: true,
-        public: true,
+        isPublic: true,
         color: true,
         stocks: {
           select: { stockId: true },

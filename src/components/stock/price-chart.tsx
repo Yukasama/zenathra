@@ -47,7 +47,7 @@ export default function PriceChart({
   const [results, setResults] = useState<any[]>([]);
   const [positive, setPositive] = useState<boolean>(true);
 
-  const { data, isFetched } = trpc.stock.history.useQuery(symbol);
+  const { data, isFetched } = trpc.stock.history.useQuery({ symbol });
 
   useEffect(() => setMounted(true), []);
 

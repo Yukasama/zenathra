@@ -17,7 +17,7 @@ interface Props {
   portfolios?:
     | Pick<
         PortfolioWithStocks,
-        "id" | "title" | "color" | "stocks" | "public"
+        "id" | "title" | "color" | "stocks" | "isPublic"
       >[]
     | undefined;
   title?: string;

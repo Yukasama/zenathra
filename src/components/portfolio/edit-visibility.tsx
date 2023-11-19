@@ -14,7 +14,7 @@ import {
 } from "../ui/select";
 
 interface Props {
-  portfolio: Pick<Portfolio, "id" | "public">;
+  portfolio: Pick<Portfolio, "id" | "isPublic">;
 }
 
 export default function EditVisibility({ portfolio }: Props) {
@@ -32,7 +32,7 @@ export default function EditVisibility({ portfolio }: Props) {
 
       toast({
         description: `Visibility successfully changed to ${
-          portfolio.public ? "private" : "public"
+          portfolio.isPublic ? "private" : "public"
         }.`,
       });
     },
@@ -43,21 +43,21 @@ export default function EditVisibility({ portfolio }: Props) {
       onValueChange={(e) =>
         editVisible({
           portfolioId: portfolio.id,
-          public: e === "Public" ? true : false,
+          isPublic: e === "Public" ? true : false,
         })
       }
       disabled={isLoading}
-      value={portfolio.public ? "Public" : "Private"}>
+      value={portfolio.isPublic ? "Public" : "Private"}>
       <SelectTrigger>
         <SelectValue placeholder="Private">
-          {portfolio.public ? "Public" : "Private"}
+          {portfolio.isPublic ? "Public" : "Private"}
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectItem
           className="cursor-pointer"
-          value={portfolio.public ? "Private" : "Public"}>
-          {portfolio.public ? "Private" : "Public"}
+          value={portfolio.isPublic ? "Private" : "Public"}>
+          {portfolio.isPublic ? "Private" : "Public"}
         </SelectItem>
       </SelectContent>
     </Select>

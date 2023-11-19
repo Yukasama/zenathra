@@ -38,7 +38,7 @@ export default async function page() {
       select: {
         id: true,
         title: true,
-        public: true,
+        isPublic: true,
         color: true,
         stocks: {
           select: { stockId: true },

@@ -3,16 +3,16 @@ import { db } from "@/db";
 import { z } from "zod";
 import { buildFilter } from "@/config/screener/build-filter";
 import { TIMEFRAMES, historyUrls } from "@/config/fmp/config";
-import { ScreenerSchema } from "@/lib/validators/stock";
+import { HistorySchema, ScreenerSchema } from "@/lib/validators/stock";
 import { History } from "@/types/stock";
-import { fetchHistory } from "@/lib/stock-upload";
+import { fetchHistory } from "@/lib/fmp/history";
 import { FMP } from "@/config/fmp/config";
 import { TRPCError } from "@trpc/server";
 import { getSymbols } from "@/lib/fmp/quote";
 import { Timeout } from "@/lib/utils";
 import { UploadStockSchema } from "@/lib/validators/stock";
 import logger from "pino";
-import { uploadStocks } from "@/lib/stock-upload";
+import { uploadStocks } from "@/lib/fmp/upload";
 
 export const stockRouter = router({
   query: publicProcedure.input(ScreenerSchema).query(async ({ input }) => {
@@ -51,35 +51,53 @@ export const stockRouter = router({
       take: 10,
     });
   }),
-  history: publicProcedure
-    .input(z.string())
-    .query(async ({ input: symbol }) => {
-      return await fetchHistory(symbol);
-    }),
-  dailyHistory: publicProcedure
-    .input(z.string())
-    .query(async ({ input: symbol }) => {
+  history: publicProcedure.input(HistorySchema).query(async ({ input }) => {
+    const { symbol, daily, allFields } = input;
+
+    if (daily) {
       const { url } = TIMEFRAMES["1D"];
       const data = await fetch(historyUrls(symbol, url)).then((res) =>
         res.json()
       );
-      return data as History[];
-    }),
+
+      if (allFields) {
+        return data as History[];
+      }
+
+      const returnData = data.map((item: History) => {
+        return {
+          date: item.date,
+          close: item.close,
+        };
+      });
+
+      return returnData as History[];
+    }
+
+    if (allFields) {
+      return await fetchHistory(symbol, undefined, true);
+    }
+
+    return await fetchHistory(symbol);
+  }),
   upload: adminProcedure
     .input(UploadStockSchema)
     .mutation(async ({ ctx, input }) => {
       const { stock, skip, clean, pullTimes } = input;
 
-      let alreadySymbols: string[] = [];
+      let alreadyInDb: string[] = [];
+
       if (skip) {
         const allStocks = await db.stock.findMany({
           select: { symbol: true },
         });
-        alreadySymbols = allStocks.map((stock) => stock.symbol);
+
+        alreadyInDb = allStocks.map((stock) => stock.symbol);
       }
 
       if (stock === "All" || stock === "US500") {
         const symbolArray = await getSymbols(stock, pullTimes);
+
         if (!symbolArray) {
           throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
         }
@@ -89,22 +107,25 @@ export const stockRouter = router({
 
         for (let symbols of symbolArray) {
           currentIteration++;
-
           symbols = symbols.filter((s) => s && s !== null && s !== undefined);
+
           if (skip) {
-            symbols = symbols.filter((s) => !alreadySymbols.includes(s));
+            symbols = symbols.filter((s) => !alreadyInDb.includes(s));
           }
+
           if (symbols.length === 0) {
             continue;
           }
 
           await uploadStocks(symbols, ctx.user);
+
           logger().info(
             `[SUCCESS] Uploaded ${symbols.length} stocks including: '${
               symbols[0] ?? symbols[1] ?? "undefined"
             }'`
           );
 
+          // FMP API has a limit of 300 requests per minute
           if (currentIteration !== totalIterations) {
             await Timeout(Number(FMP.timeout));
           }
@@ -114,9 +135,13 @@ export const stockRouter = router({
       }
 
       if (clean) {
-        await db.stock.deleteMany({
+        const deleted = await db.stock.deleteMany({
           where: { errorMessage: { not: null } },
         });
+
+        logger().info(
+          `[SUCCESS] Database cleared. Deleted ${deleted.count} stocks`
+        );
       }
     }),
 });

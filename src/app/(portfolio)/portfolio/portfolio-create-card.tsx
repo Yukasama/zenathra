@@ -44,7 +44,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
     resolver: zodResolver(CreatePortfolioSchema),
     defaultValues: {
       title: "",
-      public: false,
+      isPublic: false,
     },
   });
 
@@ -64,16 +64,17 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
     });
 
   function onSubmit(data: FieldValues) {
-    if (numberOfPortfolios >= 3)
+    if (numberOfPortfolios >= 3) {
       return toast({
         title: "Oops! Something went wrong.",
         description: "Maximum number of portfolios reached.",
         variant: "destructive",
       });
+    }
 
     createPortfolio({
       title: data.title,
-      public: data.public,
+      isPublic: data.isPublic,
     });
   }
 
@@ -131,7 +132,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
             />
             <FormField
               control={form.control}
-              name="public"
+              name="isPublic"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-1 space-y-0 rounded-md border p-4">
                   <FormControl>

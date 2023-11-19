@@ -11,7 +11,7 @@ export default async function PortfolioWrapper({ user }: Props) {
     select: {
       id: true,
       title: true,
-      public: true,
+      isPublic: true,
       color: true,
       createdAt: true,
     },

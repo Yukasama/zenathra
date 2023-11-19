@@ -1,68 +1,10 @@
 import "server-only";
 
 import { db } from "@/db";
-import { FMP_API_URL, TIMEFRAMES, historyUrls } from "@/config/fmp/config";
+import { FMP_API_URL } from "@/config/fmp/config";
 import { env } from "@/env.mjs";
 import logger from "pino";
 import { User } from "@prisma/client";
-
-export async function fetchHistory(symbol: string, from?: Date) {
-  const fetchedURLs: Record<string, any> = {};
-
-  for (let timeframe of Object.keys(TIMEFRAMES)) {
-    const { url } = TIMEFRAMES[timeframe];
-    if (!fetchedURLs[url]) {
-      const data = await fetch(historyUrls(symbol, url, from)).then((res) =>
-        res.json()
-      );
-      fetchedURLs[url] = url.includes("price-full") ? data.historical : data;
-    }
-  }
-
-  return Object.fromEntries(
-    Object.entries(TIMEFRAMES).map(([timeframe, { url, limit }]) => {
-      const relevantData = fetchedURLs[url];
-      return [
-        timeframe,
-        timeframe !== "All"
-          ? relevantData
-              .slice(
-                0,
-                relevantData.length < limit ? relevantData.length : limit
-              )
-              .reverse()
-          : relevantData.reverse(),
-      ];
-    })
-  );
-}
-
-function MergeArrays(arrays: Record<string, any>[][]): Record<string, any>[] {
-  if (
-    !Array.isArray(arrays) ||
-    !arrays.every((array) => Array.isArray(array))
-  ) {
-    return [];
-  }
-
-  const result: Record<string, any>[] = [];
-  for (const array of arrays) {
-    if (!array.every((item) => typeof item === "object" && item.date)) {
-      throw new Error(
-        "Each sub-array must contain objects with a 'date' property."
-      );
-    }
-    for (const item of array) {
-      const existingItem = result.find((i) => i.date === item.date);
-      if (existingItem) {
-        Object.assign(existingItem, item);
-      } else {
-        result.push(item);
-      }
-    }
-  }
-  return result;
-}
 
 export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
   if (!symbols.length) {
@@ -90,29 +32,25 @@ export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
       const jsonObjects = await Promise.all(
         urls.map(async (url) => {
           try {
-            const response = await fetch(url, { cache: "no-cache" });
-            return await response.json();
+            return await fetch(url, { cache: "no-cache" }).then((res) =>
+              res.json()
+            );
           } catch {
             return undefined;
           }
         })
       );
+
       return jsonObjects.filter((obj) => obj !== undefined);
     })
   );
 
   const combinedData = responses.map((result) => {
-    try {
-      if (result.status === "fulfilled") {
-        const res = MergeArrays(result.value);
-        if (res.length) {
-          return res;
-        }
-      }
-      return [];
-    } catch {
-      return [];
+    if (result.status === "fulfilled") {
+      return MergeArrays(result.value);
     }
+
+    return [];
   });
 
   const stocks = await Promise.all(
@@ -120,10 +58,12 @@ export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
       try {
         const responses = await Promise.all(
           urls.map(async (url) => {
-            const response = await fetch(url, { cache: "no-cache" });
-            return response.json();
+            return await fetch(url, { cache: "no-cache" }).then((res) =>
+              res.json()
+            );
           })
         );
+
         return responses.flat().reduce((acc, data) => {
           return { ...acc, ...data };
         }, {});
@@ -155,10 +95,13 @@ export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
 
       const statementsByYear = combinedData[i].reduce((acc, statement) => {
         const year = statement.date.split("-")[0];
+
         if (!acc[year]) {
           acc[year] = [];
         }
+
         acc[year].push(statement);
+
         return acc;
       }, {});
 
@@ -194,10 +137,43 @@ export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
           }
         }
       );
+
       await Promise.all(financialsPromises);
     } catch {
       logger().error("[ERROR] Uploading stock data for", symbol, "failed");
     }
   });
+
   await Promise.all(promises);
+}
+
+function MergeArrays(arrays: Record<string, any>[][]): Record<string, any>[] {
+  if (
+    !Array.isArray(arrays) ||
+    !arrays.every((array) => Array.isArray(array))
+  ) {
+    return [];
+  }
+
+  const result: Record<string, any>[] = [];
+
+  for (const array of arrays) {
+    if (!array.every((item) => typeof item === "object" && item.date)) {
+      throw new Error(
+        "Each sub-array must contain objects with a 'date' property."
+      );
+    }
+
+    for (const item of array) {
+      const existingItem = result.find((i) => i.date === item.date);
+
+      if (existingItem) {
+        Object.assign(existingItem, item);
+      } else {
+        result.push(item);
+      }
+    }
+  }
+
+  return result;
 }

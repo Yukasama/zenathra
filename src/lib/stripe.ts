@@ -18,7 +18,9 @@ export async function getUserSubscriptionPlan() {
     stripeCurrentPeriodEnd: null,
   };
 
-  if (!user?.id) return freePlan;
+  if (!user?.id) {
+    return freePlan;
+  }
 
   const dbUser = await db.user.findFirst({
     select: {
@@ -30,12 +32,14 @@ export async function getUserSubscriptionPlan() {
     where: { id: user.id },
   });
 
-  if (!dbUser) return freePlan;
+  if (!dbUser) {
+    return freePlan;
+  }
 
   const isSubscribed = Boolean(
     dbUser.stripePriceId &&
       dbUser.stripeCurrentPeriodEnd &&
-      dbUser.stripeCurrentPeriodEnd.getTime() + 86_400_000 > Date.now() // 86400000 = 1 day
+      dbUser.stripeCurrentPeriodEnd.getTime() + 86_400_000 > Date.now() // 1 day
   );
 
   const plan = isSubscribed

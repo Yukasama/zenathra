@@ -23,6 +23,12 @@ export const ScreenerSchema = z.object({
   marketCap: z.string(),
 });
 
+export const HistorySchema = z.object({
+  symbol: z.string(),
+  daily: z.boolean().optional(),
+  allFields: z.boolean().optional(),
+});
+
 export type UploadStockProps = z.infer<typeof UploadStockSchema>;
 
 export type ScreenerProps = z.infer<typeof ScreenerSchema>;

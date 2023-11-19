@@ -29,7 +29,7 @@ export default async function Navbar() {
           id: true,
           title: true,
           color: true,
-          public: true,
+          isPublic: true,
         },
         orderBy: { title: "asc" },
       },

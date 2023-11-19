@@ -9,7 +9,9 @@ export async function getDailys(
   action: "actives" | "winners" | "losers"
 ): Promise<string[] | null> {
   try {
-    if (FMP.simulation) return ["AAPL", "MSFT", "GOOG", "TSLA", "NVDA"];
+    if (FMP.simulation) {
+      return ["AAPL", "MSFT", "GOOG", "TSLA", "NVDA"];
+    }
 
     const response = await fetch(FMP_URLS[action]).then((res) => res.json());
 
@@ -33,7 +35,9 @@ export async function getIndexQuotes(): Promise<Quote[] | null> {
   try {
     const requiredIndexes = ["^GSPC", "^GDAXI", "^NDX", "^DJI"];
 
-    if (FMP.simulation) return indexQuotes;
+    if (FMP.simulation) {
+      return indexQuotes;
+    }
 
     const data = await fetch(FMP_URLS["indexQuotes"]).then((res) => res.json());
 
@@ -51,8 +55,13 @@ export async function getQuote(
   symbol: string | undefined
 ): Promise<Quote | null> {
   try {
-    if (!symbol) return null;
-    if (FMP.simulation) return quote;
+    if (!symbol) {
+      return null;
+    }
+
+    if (FMP.simulation) {
+      return quote;
+    }
 
     const url = `${FMP_API_URL}v3/quote/${symbol}?apikey=${env.FMP_API_KEY}`;
 
@@ -68,11 +77,17 @@ export async function getQuotes(
   symbols: string[] | undefined
 ): Promise<Quote[] | null> {
   try {
-    if (!symbols) return null;
+    if (FMP.simulation) {
+      return [quote, quote, quote, quote, quote];
+    }
 
-    if (FMP.simulation) return [quote, quote, quote, quote, quote];
+    if (!symbols) {
+      return null;
+    }
 
-    if (symbols.length > 20) symbols = symbols.slice(0, 20);
+    if (symbols.length > 20) {
+      symbols = symbols.slice(0, 20);
+    }
 
     const url = `${FMP_API_URL}v3/quote/${symbols.join(",")}?apikey=${
       env.FMP_API_KEY
@@ -80,7 +95,9 @@ export async function getQuotes(
 
     const result = await fetch(url).then((res) => res.json());
 
-    if (result["Error Message"]) return null;
+    if (result["Error Message"]) {
+      return null;
+    }
 
     return result;
   } catch {
@@ -93,11 +110,12 @@ export async function getSymbols(
   pullTimes = 1
 ): Promise<string[][] | null> {
   try {
-    if (FMP.simulation)
+    if (FMP.simulation) {
       return [
         ["AAPL", "MSFT", "GOOG"],
         ["TSLA", "NVDA", "META"],
       ];
+    }
 
     const url = FMP_URLS[symbolSet];
 
@@ -116,8 +134,9 @@ export async function getSymbols(
     const symbols = [];
 
     // Splitting the symbols into batches with length of FMP.docsPerPull
-    for (let i = 0; i < results.length; i += Number(FMP.docsPerPull))
+    for (let i = 0; i < results.length; i += Number(FMP.docsPerPull)) {
       symbols.push(results.slice(i, i + Number(FMP.docsPerPull)));
+    }
 
     return symbols;
   } catch {

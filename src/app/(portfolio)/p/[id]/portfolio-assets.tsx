@@ -39,7 +39,7 @@ interface Props {
   >[];
   portfolio: Pick<
     PortfolioWithStocks,
-    "id" | "title" | "creatorId" | "public" | "createdAt" | "stocks"
+    "id" | "title" | "creatorId" | "isPublic" | "createdAt" | "stocks"
   >;
   user: Pick<User, "id"> | null;
 }

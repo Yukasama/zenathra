@@ -20,7 +20,7 @@ import PortfolioImage from "../../../components/portfolio/portfolio-image";
 interface Props {
   portfolio: Pick<
     PortfolioWithStocks,
-    "id" | "title" | "public" | "color" | "stocks"
+    "id" | "title" | "isPublic" | "color" | "stocks"
   >;
 }
 
@@ -67,7 +67,7 @@ export default async function PortfolioCard({ portfolio }: Props) {
             <div>
               <CardTitle>{portfolio.title}</CardTitle>
               <CardDescription>
-                {portfolio.public ? "Public" : "Private"}
+                {portfolio.isPublic ? "Public" : "Private"}
               </CardDescription>
             </div>
           </div>

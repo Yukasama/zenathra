@@ -2,7 +2,7 @@
 
 import { trpc } from "@/app/_trpc/client";
 import { cn, computeDomain } from "@/lib/utils";
-import { Quote } from "@/types/stock";
+import { History, Quote } from "@/types/stock";
 import { useState, useEffect } from "react";
 import { Area, AreaChart, ResponsiveContainer, YAxis } from "recharts";
 import Skeleton from "../ui/skeleton";
@@ -19,13 +19,14 @@ export default function SmallChart({ quote, height, className }: Props) {
 
   useEffect(() => setMounted(true), []);
 
-  const { data: results, isFetched } = trpc.stock.dailyHistory.useQuery(
-    quote.symbol
-  );
+  const { data: results, isFetched } = trpc.stock.history.useQuery({
+    symbol: quote.symbol,
+    daily: true,
+  });
 
   useEffect(() => {
     if (isFetched && results) {
-      const data = results.map((result) => ({
+      const data = results.map((result: History) => ({
         name: result.date,
         uv: result.close,
       }));

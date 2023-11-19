@@ -5,15 +5,23 @@ import { SITE } from "@/config/site";
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export const capitalize = (text: string): string =>
+export function capitalize(text: string) {
   text.charAt(0).toUpperCase() + text.slice(1);
+}
 
-export const Timeout = async (ms: number) =>
+export async function Timeout(ms: number) {
   await new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 export function absoluteUrl(path: string) {
-  if (typeof window !== "undefined") return path;
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}${path}`;
+  if (typeof window !== "undefined") {
+    return path;
+  }
+
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}${path}`;
+  }
+
   return `http://localhost:${process.env.PORT ?? 3000}${path}`;
 }
 
@@ -29,35 +37,24 @@ export function computeDomain(data: any[]) {
   ];
 }
 
-export function constructMetadata({
-  title = SITE.name,
-  description = SITE.description,
-  image = "/logo.png",
-  icons = "/favicon.ico",
-}: {
-  title?: string;
-  description?: string;
-  image?: string;
-  icons?: string;
-  noIndex?: boolean;
-} = {}): Metadata {
+export function constructMetadata(): Metadata {
   return {
     title: {
-      default: title,
-      template: `%s | ${title}`,
+      default: SITE.name,
+      template: `%s | ${SITE.name}`,
     },
-    description,
+    description: SITE.description,
     openGraph: {
-      title,
-      description,
-      images: [{ url: image }],
+      title: SITE.name,
+      description: SITE.description,
+      images: [{ url: "/logo.png" }],
     },
-    icons,
-    metadataBase: new URL(`https://www.${title.toLowerCase()}.com`),
+    icons: "/favicon.ico",
+    metadataBase: new URL(SITE.url),
   };
 }
 
-export function getRandomColor(): string {
+export function getRandomColor() {
   const PORTFOLIO_COLORS = [
     "#FF6347",
     "#FFA07A",
@@ -66,6 +63,7 @@ export function getRandomColor(): string {
     "#DB7093",
   ];
   const randomIndex = Math.floor(Math.random() * PORTFOLIO_COLORS.length);
+
   return PORTFOLIO_COLORS[randomIndex];
 }
 

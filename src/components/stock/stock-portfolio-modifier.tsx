@@ -13,7 +13,7 @@ import PortfolioImage from "../portfolio/portfolio-image";
 interface Props {
   portfolio: Pick<
     PortfolioWithStocks,
-    "id" | "title" | "color" | "public" | "stocks"
+    "id" | "title" | "color" | "isPublic" | "stocks"
   >;
   symbolId: string;
 }
@@ -58,7 +58,7 @@ export default function StockPortfolioModifier({ portfolio, symbolId }: Props) {
         <div>
           <p className="w-[220px] truncate font-semibold">{portfolio.title}</p>
           <p className="text-zinc-400 text-[13px]">
-            {portfolio.public ? "Public" : "Private"}
+            {portfolio.isPublic ? "Public" : "Private"}
           </p>
         </div>
       </div>

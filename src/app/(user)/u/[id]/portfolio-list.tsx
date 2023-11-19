@@ -24,7 +24,7 @@ export default async function PortfolioList({ user }: Props) {
     select: {
       id: true,
       title: true,
-      public: true,
+      isPublic: true,
       color: true,
       createdAt: true,
       stocks: {
@@ -33,7 +33,7 @@ export default async function PortfolioList({ user }: Props) {
     },
     where: {
       creatorId: user.id,
-      ...(profileBelongsToUser ? {} : { public: true }),
+      ...(profileBelongsToUser ? {} : { isPublic: true }),
     },
   });
 

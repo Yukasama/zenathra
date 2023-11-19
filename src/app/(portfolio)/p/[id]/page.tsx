@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import PriceChart from "@/components/stock/price-chart";
 import { db } from "@/db";
 import { notFound } from "next/navigation";
 import { PortfolioAssetsLoading } from "@/app/(portfolio)/p/[id]/portfolio-assets";

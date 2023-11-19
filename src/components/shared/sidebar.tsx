@@ -31,7 +31,7 @@ import { buttonVariants } from "../ui/button";
 interface Props {
   user: User | undefined;
   portfolios:
-    | Pick<Portfolio, "id" | "title" | "color" | "public">[]
+    | Pick<Portfolio, "id" | "title" | "color" | "isPublic">[]
     | undefined;
   recentStocks: RecentStocks | null;
 }
@@ -160,7 +160,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                     <div>
                       <p className="font-medium">{portfolio.title}</p>
                       <p className="text-sm text-start text-zinc-400">
-                        {portfolio.public ? "Public" : "Private"}
+                        {portfolio.isPublic ? "Public" : "Private"}
                       </p>
                     </div>
                   </Card>

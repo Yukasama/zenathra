@@ -56,3 +56,5 @@ export const PLANS = [
     ],
   },
 ];
+
+export type PlanType = (typeof PLANS)[0];

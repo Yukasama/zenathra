@@ -1,31 +1,69 @@
 "use client";
 
+import { trpc } from "@/app/_trpc/client";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/hooks/use-toast";
+import { Spinner } from "@nextui-org/spinner";
 import { Portfolio } from "@prisma/client";
-import { Pencil } from "lucide-react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { startTransition, useState } from "react";
 
 interface Props {
-  portfolio: Pick<Portfolio, "title">;
+  portfolio: Pick<Portfolio, "id" | "title">;
 }
 
 export default function ChangeTitle({ portfolio }: Props) {
   const [title, setTitle] = useState(portfolio.title);
-  const [disabled, setDisabled] = useState(true);
+  const router = useRouter();
+
+  const { mutate: editTitle, isLoading } = trpc.portfolio.edit.useMutation({
+    onError: () => {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: `Failed to change portfolio title.`,
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      startTransition(() => router.refresh());
+    },
+  });
+
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+
+    if (!title) {
+      return setTitle(portfolio.title);
+    }
+
+    if (title === portfolio.title && isLoading) {
+      return;
+    }
+
+    if (title.length > 26) {
+      return toast({
+        title: "Oops! Something went wrong.",
+        description: "Title can be no longer than 25 characters.",
+        variant: "destructive",
+      });
+    }
+
+    editTitle({
+      portfolioId: portfolio.id,
+      title,
+    });
+  };
 
   return (
-    <div className="flex">
+    <form className="flex items-center gap-2" onSubmit={handleSubmit}>
       <Input
-        className="border-none h-7"
+        className="border-none h-7 text-lg hover:bg-zinc-200 dark:hover:bg-zinc-800"
         value={title}
-        disabled={disabled}
+        disabled={isLoading}
         onChange={(e) => setTitle(e.target.value)}
+        onBlur={handleSubmit}
       />
-      <div
-        onClick={() => setDisabled(false)}
-        className="f-box cursor-pointer hover:bg-zinc-600 ">
-        <Pencil className="h-4 w-4" />
-      </div>
-    </div>
+      {isLoading && <Spinner size="sm" />}
+    </form>
   );
 }

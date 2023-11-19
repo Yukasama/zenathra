@@ -27,7 +27,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   portfolios:
     | Pick<
         PortfolioWithStocks,
-        "id" | "title" | "color" | "stocks" | "public"
+        "id" | "title" | "color" | "stocks" | "isPublic"
       >[]
     | undefined;
 }

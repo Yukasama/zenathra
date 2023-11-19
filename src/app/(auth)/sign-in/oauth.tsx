@@ -20,12 +20,13 @@ const providerIcons = {
 export default function OAuth({ provider, className }: Props) {
   const { mutate: login, isLoading } = useMutation({
     mutationFn: async () => await signIn(provider),
-    onError: () =>
+    onError: () => {
       toast({
         title: "We have trouble signing you in.",
         description: "Please try again later.",
         variant: "destructive",
-      }),
+      });
+    },
   });
 
   return (

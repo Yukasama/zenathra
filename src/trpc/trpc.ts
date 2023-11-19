@@ -17,14 +17,18 @@ const isAuth = middleware(async (opts) => {
 
 const isAdmin = middleware(async (opts) => {
   const user = await getUser();
-  
+
   const dbUser = await db.user.findFirst({
     select: { role: true },
     where: { id: user?.id },
   });
 
-  if (!user?.id || dbUser?.role !== "admin") {
+  if (!user?.id) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  if (dbUser?.role !== "admin") {
+    throw new TRPCError({ code: "FORBIDDEN" });
   }
 
   return opts.next({ ctx: { user } });

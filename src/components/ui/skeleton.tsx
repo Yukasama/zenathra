@@ -31,6 +31,14 @@ export function SkeletonText() {
   );
 }
 
+export function SkeletonInput() {
+  return (
+    <Skeleton>
+      <div className="h-7 w-[200px]"></div>
+    </Skeleton>
+  );
+}
+
 export function SkeletonButton() {
   return (
     <Skeleton>
