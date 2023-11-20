@@ -45,8 +45,6 @@ interface Props extends PropsWithChildren {
   params: { id: string };
 }
 
-export const revalidate = 30;
-
 export async function generateStaticParams() {
   const data = await db.portfolio.findMany({
     select: { id: true },

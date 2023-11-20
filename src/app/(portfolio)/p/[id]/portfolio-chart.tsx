@@ -21,12 +21,12 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn, computeDomain } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
 import { trpc } from "@/app/_trpc/client";
+import { Portfolio } from "@prisma/client";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
   description?: string;
-  portfolioId: string;
-  portfolioCreatedAt: string;
+  portfolio: Pick<Portfolio, "id" | "createdAt">;
   image?: React.ReactNode;
   height?: number;
   width?: number;
@@ -35,8 +35,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export default function PriceChart({
   title,
   description,
-  portfolioId,
-  portfolioCreatedAt,
+  portfolio,
   image,
   height,
   width,
@@ -49,7 +48,7 @@ export default function PriceChart({
   const [results, setResults] = useState<any[]>([]);
   const [positive, setPositive] = useState<boolean>(true);
 
-  const { data, isFetched } = trpc.portfolio.history.useQuery(portfolioId);
+  const { data, isFetched } = trpc.portfolio.history.useQuery(portfolio.id);
 
   useEffect(() => setMounted(true), []);
 
@@ -109,7 +108,7 @@ export default function PriceChart({
     return null;
   };
 
-  const portfolioCreated = new Date(portfolioCreatedAt).getTime();
+  const portfolioCreated = new Date(portfolio.createdAt).getTime();
   const today = new Date().getTime();
   const diff = today - portfolioCreated;
   const existsSince = diff / (1000 * 60 * 60 * 24);

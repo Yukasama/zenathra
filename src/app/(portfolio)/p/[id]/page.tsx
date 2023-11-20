@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { PortfolioAssetsLoading } from "@/app/(portfolio)/p/[id]/portfolio-assets";
 import PortfolioAllocation from "@/app/(portfolio)/p/[id]/portfolio-allocation";
 import NewAssets from "./new-assets";
-import { getQuotes } from "@/lib/fmp/quote";
+import { getStockQuotes } from "@/lib/fmp/quote";
 import PortfolioChart from "./portfolio-chart";
 
 interface Props {
@@ -44,19 +44,13 @@ export default async function page({ params: { id } }: Props) {
     },
   });
 
-  const quotes = await getQuotes(stocks.map((stock) => stock.symbol));
-
-  const results = stocks.map((stock) => ({
-    ...stock,
-    ...quotes?.find((q) => q.symbol === stock.symbol),
-  }));
+  const stockQuotes = await getStockQuotes(stocks);
 
   return (
     <div className="f-col gap-6">
       <div className="f-col lg:flex-row gap-4">
         <PortfolioChart
-          portfolioId={id}
-          portfolioCreatedAt={portfolio.createdAt.toDateString()}
+          portfolio={portfolio}
           title="Portfolio Chart"
           description="Chart of all portfolio positions"
         />
@@ -64,7 +58,7 @@ export default async function page({ params: { id } }: Props) {
       </div>
       <div className="flex">
         <Suspense fallback={<PortfolioAssetsLoading />}>
-          <NewAssets stocks={stocks} />
+          <NewAssets stockQuotes={stockQuotes} />
         </Suspense>
       </div>
     </div>

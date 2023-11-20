@@ -27,9 +27,10 @@ import {
   SkeletonButton,
   SkeletonList,
 } from "@/components/ui/skeleton";
+import { StockQuote } from "@/types/db";
 
 interface Props {
-  stocks: Pick<Stock, "id" | "companyName" | "sector" | "peRatioTTM">[];
+  stockQuotes: Pick<StockQuote, "id" | "companyName" | "sector" | "peRatioTTM">[];
 }
 
 export function PortfolioAssetsLoading() {
@@ -55,7 +56,7 @@ const columnTranslation: any = {
   actions: "Actions",
 };
 
-export default function NewAssets({ stocks }: Props) {
+export default function NewAssets({ stockQuotes }: Props) {
   const [filterValue, setFilterValue] = useState("");
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
@@ -63,10 +64,10 @@ export default function NewAssets({ stocks }: Props) {
   const columns = ["companyName", "peRatioTTM", "sector", "actions"];
 
   const filteredStocks = useMemo(() => {
-    return stocks.filter((stock) =>
+    return stockQuotes.filter((stock) =>
       stock.companyName.toLowerCase().includes(filterValue.toLowerCase())
     );
-  }, [stocks, filterValue]);
+  }, [stockQuotes, filterValue]);
 
   const paginatedStocks = useMemo(() => {
     const start = (page - 1) * rowsPerPage;

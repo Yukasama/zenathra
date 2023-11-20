@@ -7,12 +7,15 @@ export function buildFilter(screener: ScreenerProps) {
   if (screener.exchange && screener.exchange !== "Any") {
     filter.exchangeShortName = screener.exchange;
   }
+
   if (screener.sector && screener.sector !== "Any") {
     filter.sector = screener.sector;
   }
+
   if (screener.industry && screener.industry !== "Any") {
     filter.industry = screener.industry;
   }
+
   if (screener.country && screener.country !== "Any") {
     filter.country = screener.country;
   }

@@ -1,4 +1,5 @@
-import { Portfolio } from "@prisma/client";
+import { Portfolio, Stock } from "@prisma/client";
+import { Quote } from "./stock";
 
 export interface PortfolioWithStocks extends Portfolio {
   stocks: StockInPortfolio[];
@@ -13,3 +14,5 @@ export type RecentStocks =
       };
     }[]
   | undefined;
+
+export type StockQuote = Stock & (Quote | undefined);

@@ -4,6 +4,8 @@ import { FMP_API_URL, FMP, FMP_URLS } from "@/config/fmp/config";
 import { indexQuotes, quote } from "@/config/fmp/simulation";
 import { env } from "@/env.mjs";
 import { Quote } from "@/types/stock";
+import { Stock } from "@prisma/client";
+import { StockQuote } from "@/types/db";
 
 export async function getDailys(
   action: "actives" | "winners" | "losers"
@@ -145,6 +147,19 @@ export async function getQuotes(
   } catch {
     return undefined;
   }
+}
+
+export async function getStockQuotes(
+  stocks: Pick<Stock, "symbol">[]
+): Promise<StockQuote[]> {
+  const quotes = await getQuotes(stocks.map((stock) => stock.symbol));
+
+  const results = stocks.map((stock) => ({
+    ...stock,
+    ...quotes?.find((q) => q.symbol === stock.symbol),
+  }));
+
+  return results;
 }
 
 export async function getSymbols(
