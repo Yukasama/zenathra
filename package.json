@@ -23,7 +23,7 @@
     "typescript": "5.2.2"
   },
   "dependencies": {
-    "@auth/core": "^0.18.1",
+    "@auth/core": "^0.18.2",
     "@auth/prisma-adapter": "^1.0.6",
     "@hookform/resolvers": "^3.3.2",
     "@nextui-org/accordion": "^2.0.28",
