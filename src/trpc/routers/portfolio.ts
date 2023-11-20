@@ -9,7 +9,7 @@ import {
 } from "@/lib/validators/portfolio";
 import { getRandomColor } from "@/lib/utils";
 import { getUser } from "@/lib/auth";
-import { MergeHistory } from "@/lib/merge-history";
+import { MergeHistory } from "@/lib/fmp/history";
 
 export const portfolioRouter = router({
   create: privateProcedure
@@ -125,7 +125,7 @@ export const portfolioRouter = router({
         throw new TRPCError({ code: "FORBIDDEN" });
       }
 
-      return MergeHistory(portfolioId);
+      return await MergeHistory(portfolioId);
     }),
   delete: privateProcedure
     .input(z.string())

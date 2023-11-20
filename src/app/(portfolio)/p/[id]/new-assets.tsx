@@ -115,7 +115,7 @@ export default function NewAssets({ stocks }: Props) {
     <div className="f-col">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
-          <Search size={18} />
+          <Search size={18} aria-label="Search" />
           <Input
             type="text"
             placeholder="Search by company name..."
@@ -127,7 +127,7 @@ export default function NewAssets({ stocks }: Props) {
         </Button>
       </div>
 
-      <Table className="h-[320px] min-w-[700px]">
+      <Table className="h-[320px] min-w-[700px]" aria-labelledby="Stocktable">
         <TableHeader>
           {columns.map((column) => (
             <TableColumn key={column}>{columnTranslation[column]}</TableColumn>

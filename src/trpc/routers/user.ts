@@ -6,7 +6,7 @@ import { getUserSubscriptionPlan, stripe } from "@/lib/stripe";
 import { PLANS } from "@/config/stripe";
 import { UserUpdateSchema } from "@/lib/validators/user";
 // import { z } from "zod";
-// import { createToken } from "@/lib/create-token";
+// import { createToken } from "@/lib/resend";
 // import { tokenConfig } from "@/config/token";
 // import { sendMail } from "@/lib/resend";
 // import bcrypt from "bcryptjs";

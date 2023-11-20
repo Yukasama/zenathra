@@ -8,15 +8,9 @@ import PageLayout from "@/components/shared/page-layout";
 import { db } from "@/db";
 import PriceChart from "@/components/stock/price-chart";
 import { StockImage } from "@/components/stock/stock-image";
-import { SITE } from "@/config/site";
 import { getUser } from "@/lib/auth";
 
-export const metadata = {
-  title: `${SITE.name} | Stocks on the Move`,
-};
-
-export const revalidate = 30;
-
+export const metadata = { title: "Stocks on the move" };
 export const runtime = "edge";
 
 export default async function page() {
@@ -26,13 +20,14 @@ export default async function page() {
     getDailys("losers"),
   ]);
 
+  const highlight = actives?.[0];
+
   const user = await getUser();
 
-  const [quote, stock, portfolios] = await Promise.all([
-    getQuote(actives?.[0]),
+  const [stock, portfolios] = await Promise.all([
     db.stock.findFirst({
       select: { image: true },
-      where: { symbol: actives?.[0] },
+      where: { symbol: actives?.[0].symbol },
     }),
     db.portfolio.findMany({
       select: {
@@ -51,11 +46,11 @@ export default async function page() {
   return (
     <PageLayout className="f-col gap-4 md:gap-7">
       <div className="f-col md:flex-row gap-4 md:gap-7">
-        {quote && (
+        {highlight?.symbol && (
           <PriceChart
-            symbol={quote.symbol}
-            title={quote.symbol}
-            description={`Price Chart of ${quote?.name}`}
+            symbol={highlight.symbol}
+            title={highlight.symbol}
+            description={`Price Chart of ${highlight?.name}`}
             image={<StockImage src={stock?.image} px={40} />}
           />
         )}

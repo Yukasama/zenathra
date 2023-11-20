@@ -16,7 +16,7 @@ export default async function page({ params: { id } }: Props) {
     select: {
       id: true,
       title: true,
-      public: true,
+      isPublic: true,
       creatorId: true,
       createdAt: true,
       stocks: {

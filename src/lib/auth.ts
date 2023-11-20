@@ -30,21 +30,6 @@ export const authConfig = {
       session.user.id = user.id;
       return session;
     },
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const paths = ["/portfolio", "/settings/:path*", "/auth-callback"];
-      const isProtected = paths.some((path) =>
-        nextUrl.pathname.startsWith(path)
-      );
-
-      if (isProtected && !isLoggedIn) {
-        const redirectUrl = new URL("/sign-in", nextUrl.origin);
-        redirectUrl.searchParams.append("callbackUrl", nextUrl.href);
-        return Response.redirect(redirectUrl);
-      }
-
-      return true;
-    },
     async redirect({ baseUrl }) {
       return baseUrl;
     },

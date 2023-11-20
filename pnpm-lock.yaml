@@ -114,17 +114,17 @@ dependencies:
     specifier: ^4.36.1
     version: 4.36.1(react-dom@18.2.0)(react@18.2.0)
   '@trpc/client':
-    specifier: ^10.43.3
-    version: 10.43.3(@trpc/server@10.43.3)
+    specifier: ^10.43.6
+    version: 10.43.6(@trpc/server@10.43.6)
   '@trpc/next':
-    specifier: ^10.43.3
-    version: 10.43.3(@tanstack/react-query@4.36.1)(@trpc/client@10.43.3)(@trpc/react-query@10.43.3)(@trpc/server@10.43.3)(next@14.0.3)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^10.43.6
+    version: 10.43.6(@tanstack/react-query@4.36.1)(@trpc/client@10.43.6)(@trpc/react-query@10.43.6)(@trpc/server@10.43.6)(next@14.0.3)(react-dom@18.2.0)(react@18.2.0)
   '@trpc/react-query':
-    specifier: ^10.43.3
-    version: 10.43.3(@tanstack/react-query@4.36.1)(@trpc/client@10.43.3)(@trpc/server@10.43.3)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^10.43.6
+    version: 10.43.6(@tanstack/react-query@4.36.1)(@trpc/client@10.43.6)(@trpc/server@10.43.6)(react-dom@18.2.0)(react@18.2.0)
   '@trpc/server':
-    specifier: ^10.43.3
-    version: 10.43.3
+    specifier: ^10.43.6
+    version: 10.43.6
   autoprefixer:
     specifier: ^10.4.16
     version: 10.4.16(postcss@8.4.31)
@@ -192,8 +192,8 @@ dependencies:
     specifier: ^1.2.0
     version: 1.2.0(react-dom@18.2.0)(react@18.2.0)
   recharts:
-    specifier: ^2.9.3
-    version: 2.9.3(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^2.10.1
+    version: 2.10.1(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0)
   resend:
     specifier: ^2.0.0
     version: 2.0.0
@@ -204,8 +204,8 @@ dependencies:
     specifier: ^0.32.6
     version: 0.32.6
   stripe:
-    specifier: ^14.4.0
-    version: 14.4.0
+    specifier: ^14.5.0
+    version: 14.5.0
   tailwind-merge:
     specifier: ^2.0.0
     version: 2.0.0
@@ -227,8 +227,8 @@ devDependencies:
     specifier: ^4.0.9
     version: 4.0.9
   '@types/node':
-    specifier: ^20.9.1
-    version: 20.9.1
+    specifier: ^20.9.2
+    version: 20.9.2
   '@types/nodemailer':
     specifier: ^6.4.14
     version: 6.4.14
@@ -3269,53 +3269,53 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  /@trpc/client@10.43.3(@trpc/server@10.43.3):
-    resolution: {integrity: sha512-r/aE1l2iybJMlXCf+KWqSQpIloOqw/3jQhZD8F4VpvczWPI5fEQCmZZuPHAz2L/PiGE5K/ZwXQrJsT207ZQ2AQ==}
+  /@trpc/client@10.43.6(@trpc/server@10.43.6):
+    resolution: {integrity: sha512-gQSxCQgPeBn/wqBEScu5Nq9UKqA16e965vWBj+BbdvI4URV72T44/yg0cl/E6xtBgycCVwdzwn7CuZaM8FA/VQ==}
     peerDependencies:
-      '@trpc/server': 10.43.3
+      '@trpc/server': 10.43.6
     dependencies:
-      '@trpc/server': 10.43.3
+      '@trpc/server': 10.43.6
     dev: false
 
-  /@trpc/next@10.43.3(@tanstack/react-query@4.36.1)(@trpc/client@10.43.3)(@trpc/react-query@10.43.3)(@trpc/server@10.43.3)(next@14.0.3)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-ioOqV5zJNi9iFibCfz0KqKNJsrONjBfF+JB3y845I+MKGZt7vhpBAJJucioLzhvnRwbwy4My3LTdjcyOsUtYUQ==}
+  /@trpc/next@10.43.6(@tanstack/react-query@4.36.1)(@trpc/client@10.43.6)(@trpc/react-query@10.43.6)(@trpc/server@10.43.6)(next@14.0.3)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-srV4twQKp8FohivGZ5wxNUdTzgPjjKeuNWG3Bpy5hVrIvg8VHDcglPMHS+3eWTUDDtCbhWpvANre+81B8b9Fgg==}
     peerDependencies:
       '@tanstack/react-query': ^4.18.0
-      '@trpc/client': 10.43.3
-      '@trpc/react-query': 10.43.3
-      '@trpc/server': 10.43.3
+      '@trpc/client': 10.43.6
+      '@trpc/react-query': 10.43.6
+      '@trpc/server': 10.43.6
       next: '*'
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
       '@tanstack/react-query': 4.36.1(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/client': 10.43.3(@trpc/server@10.43.3)
-      '@trpc/react-query': 10.43.3(@tanstack/react-query@4.36.1)(@trpc/client@10.43.3)(@trpc/server@10.43.3)(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/server': 10.43.3
+      '@trpc/client': 10.43.6(@trpc/server@10.43.6)
+      '@trpc/react-query': 10.43.6(@tanstack/react-query@4.36.1)(@trpc/client@10.43.6)(@trpc/server@10.43.6)(react-dom@18.2.0)(react@18.2.0)
+      '@trpc/server': 10.43.6
       next: 14.0.3(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
     dev: false
 
-  /@trpc/react-query@10.43.3(@tanstack/react-query@4.36.1)(@trpc/client@10.43.3)(@trpc/server@10.43.3)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-yTmORp8pJ15GV8rR2QTR6bIPxk/Vbtl2vLTDz+G5GipKc+9kSRRYaVqbwzFuaPf5NOMK/JYkIsyIpitabQ1n9A==}
+  /@trpc/react-query@10.43.6(@tanstack/react-query@4.36.1)(@trpc/client@10.43.6)(@trpc/server@10.43.6)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Twf0/wvcrDwmaJ6OLf0YVNwiv8+gtoSFyKYqe+5lMkFtUYSl+4KGvSqiN9ynbnofHCvuPgjJmjdS8pxYkcWxCw==}
     peerDependencies:
       '@tanstack/react-query': ^4.18.0
-      '@trpc/client': 10.43.3
-      '@trpc/server': 10.43.3
+      '@trpc/client': 10.43.6
+      '@trpc/server': 10.43.6
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
       '@tanstack/react-query': 4.36.1(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/client': 10.43.3(@trpc/server@10.43.3)
-      '@trpc/server': 10.43.3
+      '@trpc/client': 10.43.6(@trpc/server@10.43.6)
+      '@trpc/server': 10.43.6
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@trpc/server@10.43.3:
-    resolution: {integrity: sha512-U7HsNtgjupNvPzH6ho4rPlIXZ2t5PctOH6pmFX4jv4YJi98RjGuOhHUNhiiVb8KUw6Kuh5EHTAv7cUV+igbMuQ==}
+  /@trpc/server@10.43.6:
+    resolution: {integrity: sha512-ziN7UXGAycxe4i3FwJstTe6jzCcKBlPociCrC9XtfPzFpMTf0hNbRQQlFiZjJk23ZGQSVYDjk9RO4yIHt94mJg==}
     engines: {node: '>=18.0.0'}
     dev: false
 
@@ -3379,15 +3379,15 @@ packages:
     resolution: {integrity: sha512-y9euML0cim1JrykNxADLfaG0FgD1g/yTHwUs/Jg9ZIU7WKj2/4IW9Lbb1WZbvck78W/lfGXFfe+u2EGfIJXdLQ==}
     dev: true
 
-  /@types/node@20.9.1:
-    resolution: {integrity: sha512-HhmzZh5LSJNS5O8jQKpJ/3ZcrrlG6L70hpGqMIAoM9YVD0YBRNWYsfwcXq8VnSjlNpCpgLzMXdiPo+dxcvSmiA==}
+  /@types/node@20.9.2:
+    resolution: {integrity: sha512-WHZXKFCEyIUJzAwh3NyyTHYSR35SevJ6mZ1nWwJafKtiQbqRTIKSRcw3Ma3acqgsent3RRDqeVwpHntMk+9irg==}
     dependencies:
       undici-types: 5.26.5
 
   /@types/nodemailer@6.4.14:
     resolution: {integrity: sha512-fUWthHO9k9DSdPCSPRqcu6TWhYyxTBg382vlNIttSe9M7XfsT06y0f24KHXtbnijPGGRIcVvdKHTNikOI6qiHA==}
     dependencies:
-      '@types/node': 20.9.1
+      '@types/node': 20.9.2
     dev: true
 
   /@types/prop-types@15.7.10:
@@ -3663,7 +3663,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.22.1
-      caniuse-lite: 1.0.30001562
+      caniuse-lite: 1.0.30001563
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -3738,8 +3738,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001562
-      electron-to-chromium: 1.4.586
+      caniuse-lite: 1.0.30001563
+      electron-to-chromium: 1.4.588
       node-releases: 2.0.13
       update-browserslist-db: 1.0.13(browserslist@4.22.1)
     dev: false
@@ -3782,8 +3782,8 @@ packages:
     engines: {node: '>= 6'}
     dev: false
 
-  /caniuse-lite@1.0.30001562:
-    resolution: {integrity: sha512-kfte3Hym//51EdX4239i+Rmp20EsLIYGdPkERegTgU19hQWCRhsRFGKHTliUlsry53tv17K7n077Kqa0WJU4ng==}
+  /caniuse-lite@1.0.30001563:
+    resolution: {integrity: sha512-na2WUmOxnwIZtwnFI2CZ/3er0wdNzU7hN+cPYz/z2ajHThnkWjNBOpEPP4n+4r2WPM847JaMotaJE3bnfzjyKw==}
     dev: false
 
   /chalk@4.1.2:
@@ -3817,10 +3817,6 @@ packages:
     resolution: {integrity: sha512-jFI8IQw4hczaL4ALINxqLEXQbWcNjoSkloa4IaufXCJr6QawJyw7tuRysRsrE8w2p/4gGaxKIt/hX3qz/IbD1A==}
     dependencies:
       clsx: 2.0.0
-    dev: false
-
-  /classnames@2.3.2:
-    resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
     dev: false
 
   /client-only@0.0.1:
@@ -4176,8 +4172,8 @@ packages:
       semver: 7.5.4
     dev: false
 
-  /electron-to-chromium@1.4.586:
-    resolution: {integrity: sha512-qMa+E6yf1fNQbg3G66pHLXeJUP5CCCzNat1VPczOZOqgI2w4u+8y9sQnswMdGs5m4C1rOePq37EVBr/nsPQY7w==}
+  /electron-to-chromium@1.4.588:
+    resolution: {integrity: sha512-soytjxwbgcCu7nh5Pf4S2/4wa6UIu+A3p03U2yVr53qGxi1/VTR3ENI+p50v+UxqqZAfl48j3z55ud7VHIOr9w==}
     dev: false
 
   /emoji-regex@8.0.0:
@@ -5368,11 +5364,9 @@ packages:
     dependencies:
       js-tokens: 4.0.0
 
-  /lru-cache@10.0.2:
-    resolution: {integrity: sha512-Yj9mA8fPiVgOUpByoTZO5pNrcl5Yk37FcSHsUINpAsaBIEZIuqcCclDZJCVxqQShDsmYX8QG63svJiTbOATZwg==}
+  /lru-cache@10.0.3:
+    resolution: {integrity: sha512-B7gr+F6MkqB3uzINHXNctGieGsRTMwIBgxkp0yq/5BwcuDzD4A8wQpHQW6vDAm1uKSLQghmRdD9sKqf2vJ1cEg==}
     engines: {node: 14 || >=16.14}
-    dependencies:
-      semver: 7.5.4
     dev: false
 
   /lru-cache@6.0.0:
@@ -5512,7 +5506,7 @@ packages:
       '@next/env': 14.0.3
       '@swc/helpers': 0.5.2
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001562
+      caniuse-lite: 1.0.30001563
       postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -5715,7 +5709,7 @@ packages:
     resolution: {integrity: sha512-MkhCqzzBEpPvxxQ71Md0b1Kk51W01lrYvlMzSUaIzNsODdd7mqhiimSZlr+VegAz5Z6Vzt9Xg2ttE//XBhH3EQ==}
     engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
-      lru-cache: 10.0.2
+      lru-cache: 10.0.3
       minipass: 7.0.4
     dev: false
 
@@ -5761,7 +5755,7 @@ packages:
       on-exit-leak-free: 2.1.2
       pino-abstract-transport: 1.1.0
       pino-std-serializers: 6.2.2
-      process-warning: 2.3.0
+      process-warning: 2.3.1
       quick-format-unescaped: 4.0.4
       real-require: 0.2.0
       safe-stable-stringify: 2.4.3
@@ -5911,8 +5905,8 @@ packages:
       '@prisma/engines': 5.6.0
     dev: false
 
-  /process-warning@2.3.0:
-    resolution: {integrity: sha512-N6mp1+2jpQr3oCFMz6SeHRGbv6Slb20bRhj4v3xR99HqNToAcOe1MFOp4tytyzOfJn+QtN8Rf7U/h2KAn4kC6g==}
+  /process-warning@2.3.1:
+    resolution: {integrity: sha512-JjBvFEn7MwFbzUDa2SRtKJSsyO0LlER4V/FmwLMhBlXNbGgGxdyFCxIdMDLerWUycsVUyaoM9QFLvppFy4IWaQ==}
     dev: false
 
   /process@0.11.10:
@@ -6070,17 +6064,6 @@ packages:
       use-sidecar: 1.1.2(@types/react@18.2.37)(react@18.2.0)
     dev: false
 
-  /react-resize-detector@8.1.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-S7szxlaIuiy5UqLhLL1KY3aoyGHbZzsTpYal9eYMwCyKqoqoVLCmIgAgNyIM1FhnP2KyBygASJxdhejrzjMb+w==}
-    peerDependencies:
-      react: ^16.0.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      lodash: 4.17.21
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
   /react-smooth@2.0.5(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-BMP2Ad42tD60h0JW6BFaib+RJuV5dsXJK9Baxiv/HlNFjvRLqA9xrNKxVWnUIZPQfzUwGXIlU/dSYLU+54YGQA==}
     peerDependencies:
@@ -6195,22 +6178,21 @@ packages:
       decimal.js-light: 2.5.1
     dev: false
 
-  /recharts@2.9.3(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-B61sKrDlTxHvYwOCw8eYrD6rTA2a2hJg0avaY8qFI1ZYdHKvU18+J5u7sBMFg//wfJ/C5RL5+HsXt5e8tcJNLg==}
-    engines: {node: '>=12'}
+  /recharts@2.10.1(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-9bi0jIzxOTfEda+oYqgimKuYfApmBr0zKnAX8r4Iw56k3Saz/IQyBD4zohZL0eyzfz0oGFRH7alpJBgH1eC57g==}
+    engines: {node: '>=14'}
     peerDependencies:
       prop-types: ^15.6.0
       react: ^16.0.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      classnames: 2.3.2
+      clsx: 2.0.0
       eventemitter3: 4.0.7
       lodash: 4.17.21
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-is: 16.13.1
-      react-resize-detector: 8.1.0(react-dom@18.2.0)(react@18.2.0)
       react-smooth: 2.0.5(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0)
       recharts-scale: 0.4.5
       tiny-invariant: 1.3.1
@@ -6548,11 +6530,11 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /stripe@14.4.0:
-    resolution: {integrity: sha512-E3IxDo/Bvu0TtYrKfAf8lEYd0beTjFSN4xemuw2oEfUyxFpJyrzRZOw50HIEXFYYHWNDORicd8G8R4joCbN3/Q==}
+  /stripe@14.5.0:
+    resolution: {integrity: sha512-MTt0P0VYDAj2VZyZMW41AxcXVs9s06EDFIHYat4UUkluJgnBHo4T4E2byPhnxoJCPvdzWBwBLnhWbSOg//VTpA==}
     engines: {node: '>=12.*'}
     dependencies:
-      '@types/node': 20.9.1
+      '@types/node': 20.9.2
       qs: 6.11.2
     dev: false
 

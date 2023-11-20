@@ -2,6 +2,8 @@ import "server-only";
 
 import { env } from "@/env.mjs";
 import { Resend } from "resend";
+import bcrypt from "bcryptjs";
+import { randomUUID } from "crypto";
 
 interface MailOptions {
   to: string | string[] | undefined;
@@ -31,3 +33,8 @@ export const sendMail = async ({ to, token }: MailOptions) => {
     ],
   });
 };
+
+export async function createToken() {
+  const token = randomUUID();
+  return await bcrypt.hash(token, 10);
+}

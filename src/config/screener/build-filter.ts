@@ -4,14 +4,18 @@ import { ScreenerProps } from "@/lib/validators/stock";
 export function buildFilter(screener: ScreenerProps) {
   const filter: Prisma.StockWhereInput = {};
 
-  if (screener.exchange && screener.exchange !== "Any")
+  if (screener.exchange && screener.exchange !== "Any") {
     filter.exchangeShortName = screener.exchange;
-  if (screener.sector && screener.sector !== "Any")
+  }
+  if (screener.sector && screener.sector !== "Any") {
     filter.sector = screener.sector;
-  if (screener.industry && screener.industry !== "Any")
+  }
+  if (screener.industry && screener.industry !== "Any") {
     filter.industry = screener.industry;
-  if (screener.country && screener.country !== "Any")
+  }
+  if (screener.country && screener.country !== "Any") {
     filter.country = screener.country;
+  }
 
   if (screener.marketCap && screener.marketCap !== "Any") {
     const marketCapMapping: any = {
@@ -21,8 +25,9 @@ export function buildFilter(screener: ScreenerProps) {
       "Small (50 Mil.)": 50_000_000,
     };
 
-    if (screener.marketCap in marketCapMapping)
+    if (screener.marketCap in marketCapMapping) {
       filter.marketCapTTM = { gte: marketCapMapping[screener.marketCap] };
+    }
   }
 
   if (
@@ -32,17 +37,24 @@ export function buildFilter(screener: ScreenerProps) {
     const [left, right] = screener.peRatio;
     let peRatioFilter: Prisma.FloatFilter | undefined;
 
-    if (left === ">50") peRatioFilter = { lt: 50 };
-    else if (right === ">50") peRatioFilter = { gt: 50 };
-    else if (left !== "Any" && right !== "Any")
+    if (left === ">50") {
+      peRatioFilter = { lt: 50 };
+    } else if (right === ">50") {
+      peRatioFilter = { gt: 50 };
+    } else if (left !== "Any" && right !== "Any") {
       peRatioFilter = {
         lte: parseFloat(left),
         gte: parseFloat(right),
       };
-    else if (left !== "Any") peRatioFilter = { lte: Number(left) };
-    else if (right !== "Any") peRatioFilter = { gte: Number(right) };
+    } else if (left !== "Any") {
+      peRatioFilter = { lte: Number(left) };
+    } else if (right !== "Any") {
+      peRatioFilter = { gte: Number(right) };
+    }
 
-    if (peRatioFilter) filter.peRatioTTM = peRatioFilter;
+    if (peRatioFilter) {
+      filter.peRatioTTM = peRatioFilter;
+    }
   }
 
   if (
@@ -52,17 +64,24 @@ export function buildFilter(screener: ScreenerProps) {
     const [left, right] = screener.pegRatio;
     let pegRatioFilter: Prisma.FloatFilter | undefined;
 
-    if (left === ">10") pegRatioFilter = { lt: 10 };
-    else if (right === ">10") pegRatioFilter = { gt: 10 };
-    else if (left !== "Any" && right !== "Any")
+    if (left === ">10") {
+      pegRatioFilter = { lt: 10 };
+    } else if (right === ">10") {
+      pegRatioFilter = { gt: 10 };
+    } else if (left !== "Any" && right !== "Any") {
       pegRatioFilter = {
         lte: Number(left),
         gte: Number(right),
       };
-    else if (left !== "Any") pegRatioFilter = { lte: Number(left) };
-    else if (right !== "Any") pegRatioFilter = { gte: Number(right) };
+    } else if (left !== "Any") {
+      pegRatioFilter = { lte: Number(left) };
+    } else if (right !== "Any") {
+      pegRatioFilter = { gte: Number(right) };
+    }
 
-    if (pegRatioFilter) filter.pegRatioTTM = pegRatioFilter;
+    if (pegRatioFilter) {
+      filter.pegRatioTTM = pegRatioFilter;
+    }
   }
 
   return filter;

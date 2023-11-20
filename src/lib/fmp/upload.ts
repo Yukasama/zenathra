@@ -8,7 +8,7 @@ import { User } from "@prisma/client";
 
 export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
   if (!symbols.length) {
-    throw new Error("ArgumentError: No symbols provided");
+    throw new Error("No symbols provided.");
   }
 
   const financialUrls = symbols.map((symbol) => [
