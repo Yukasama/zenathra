@@ -1,47 +1,43 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../../../components/ui/card";
+"use client";
+
+import { useState, useMemo, startTransition } from "react";
 import {
   Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
   TableHeader,
+  TableColumn,
+  TableBody,
   TableRow,
-} from "../../../../components/ui/table";
-import { getQuotes } from "@/lib/fmp/quote";
-import { StockImage } from "../../../../components/stock/stock-image";
-import { PortfolioWithStocks } from "@/types/db";
-import dynamic from "next/dynamic";
+  TableCell,
+} from "@nextui-org/table";
 import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@nextui-org/dropdown";
+import { Button } from "@nextui-org/button";
+import { Pagination } from "@nextui-org/pagination";
+import { Chip } from "@nextui-org/chip";
+import { Search, Plus, MoreVertical } from "lucide-react";
+import { Portfolio, Stock } from "@prisma/client";
+import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import {
+  SkeletonText,
   SkeletonButton,
   SkeletonList,
-  SkeletonText,
-} from "../../../../components/ui/skeleton";
-import { Button } from "../../../../components/ui/button";
-import { Stock } from "@prisma/client";
-import { User } from "next-auth";
-
-const EditPositions = dynamic(() => import("./edit-positions"), {
-  ssr: false,
-  loading: () => <Button variant="subtle" isLoading />,
-});
+} from "@/components/ui/skeleton";
+import { StockQuote } from "@/types/db";
+import { trpc } from "@/app/_trpc/client";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface Props {
-  stocks: Pick<
-    Stock,
-    "id" | "symbol" | "companyName" | "image" | "peRatioTTM"
+  stockQuotes: Pick<
+    StockQuote,
+    "id" | "symbol" | "companyName" | "sector" | "peRatioTTM"
   >[];
-  portfolio: Pick<
-    PortfolioWithStocks,
-    "id" | "title" | "creatorId" | "isPublic" | "createdAt" | "stocks"
-  >;
-  user: Pick<User, "id"> | null;
+  portfolio: Pick<Portfolio, "id">;
 }
 
 export function PortfolioAssetsLoading() {
@@ -60,81 +56,133 @@ export function PortfolioAssetsLoading() {
   );
 }
 
-export default async function PortfolioAssets({
-  stocks,
-  portfolio,
-  user,
-}: Props) {
-  const quotes = await getQuotes(stocks.map((stock) => stock.symbol));
+const columnTranslation: any = {
+  companyName: "Name",
+  peRatioTTM: "P/E Ratio",
+  sector: "Sector",
+  actions: "Actions",
+};
 
-  const results = stocks.map((stock) => ({
-    ...stock,
-    ...quotes?.find((q) => q.symbol === stock.symbol),
-  }));
+export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
+  const [filterValue, setFilterValue] = useState("");
+  const [page, setPage] = useState(1);
+  const router = useRouter();
+
+  const rowsPerPage = 5;
+  const columns = ["companyName", "peRatioTTM", "sector", "actions"];
+
+  const { mutate: remove, isLoading } = trpc.portfolio.remove.useMutation({
+    onError: () =>
+      toast({
+        title: "Oops! Something went wrong.",
+        description: `Failed to remove position.`,
+        variant: "destructive",
+      }),
+    onSuccess: () => {
+      startTransition(() => router.refresh());
+    },
+  });
+
+  const filteredStocks = useMemo(() => {
+    return stockQuotes.filter((stock) =>
+      stock.companyName.toLowerCase().includes(filterValue.toLowerCase())
+    );
+  }, [stockQuotes, filterValue]);
+
+  const paginatedStocks = useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    return filteredStocks.slice(start, end);
+  }, [filteredStocks, page, rowsPerPage]);
+
+  const renderCell = (
+    stock: Pick<
+      Stock,
+      "id" | "symbol" | "companyName" | "sector" | "peRatioTTM"
+    >,
+    columnKey: string
+  ) => {
+    switch (columnKey) {
+      case "companyName":
+        return <p>{stock.companyName}</p>;
+      case "peRatioTTM":
+        return <p>{stock.peRatioTTM?.toFixed(2)}</p>;
+      case "sector":
+        return (
+          <Chip color="primary" size="sm" variant="flat">
+            <p className="text-white">{stock[columnKey]}</p>
+          </Chip>
+        );
+      case "actions":
+        return (
+          <div className="relative flex justify-end items-center gap-2">
+            <Dropdown>
+              <DropdownTrigger>
+                <Button size="sm" isIconOnly>
+                  <MoreVertical size={18} />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu>
+                <DropdownItem>View</DropdownItem>
+                <DropdownItem>Edit</DropdownItem>
+                <DropdownItem
+                  color="danger"
+                  onClick={() =>
+                    remove({
+                      portfolioId: portfolio.id,
+                      stockIds: [stock.id],
+                    })
+                  }>
+                  Delete
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="f-col gap-1.5">
-            <CardTitle>Assets</CardTitle>
-            <CardDescription>Positions in your portfolio</CardDescription>
-          </div>
-          {portfolio.creatorId === user?.id && (
-            <EditPositions stocks={stocks} portfolio={portfolio} />
-          )}
+    <div className="f-col">
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center gap-2">
+          <Search size={18} aria-label="Search" />
+          <Input
+            type="text"
+            placeholder="Search by company name..."
+            value={filterValue}
+            onChange={(e) => setFilterValue(e.target.value)}></Input>
         </div>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableCaption>A list of your current positions.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[120px] lg:w-[160px]">Symbol</TableHead>
-              <TableHead className="w-[110px] lg:w-[130px] text-center">
-                Price (24h)
-              </TableHead>
-              <TableHead className="text-right">P/E (ttm)</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {results
-              .slice(0, results.length > 5 ? 5 : results.length)
-              .map((stock) => (
-                <TableRow key={stock.symbol}>
-                  <TableCell className="font-medium">
-                    <div className="flex items-center gap-2">
-                      <StockImage src={stock.image} px={30} />
-                      <div className="f-col">
-                        <p className="font-medium">{stock.symbol}</p>
-                        <p className="text-[13px] w-[80px] lg:w-[120px] truncate text-zinc-400">
-                          {stock.companyName}
-                        </p>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="f-col justify-end items-center">
-                      <p>${stock.price ? stock.price.toFixed(2) : "N/A"}</p>
-                      <p
-                        className={`text-[13px] ${
-                          stock.changesPercentage! > 0
-                            ? "text-green-500"
-                            : "text-red-500"
-                        }`}>
-                        {stock.changesPercentage! > 0 && "+"}
-                        {stock.changesPercentage?.toFixed(2)}%
-                      </p>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {stock.peRatioTTM ? stock.peRatioTTM.toFixed(2) : "N/A"}
-                  </TableCell>
-                </TableRow>
+        <Button className="bg-primary">
+          Add New <Plus size={18} />
+        </Button>
+      </div>
+
+      <Table className="h-[320px] min-w-[700px]" aria-labelledby="Stocktable">
+        <TableHeader>
+          {columns.map((column) => (
+            <TableColumn key={column}>{columnTranslation[column]}</TableColumn>
+          ))}
+        </TableHeader>
+        <TableBody isLoading={isLoading}>
+          {paginatedStocks.map((stock) => (
+            <TableRow key={stock.id}>
+              {columns.map((column) => (
+                <TableCell key={column}>{renderCell(stock, column)}</TableCell>
               ))}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      <Pagination
+        className="mt-4 self-center"
+        total={Math.ceil(filteredStocks.length / rowsPerPage)}
+        page={page}
+        onChange={(newPage) => setPage(newPage)}
+      />
+    </div>
   );
 }

@@ -105,7 +105,9 @@ export default async function Layout({ children, params: { id } }: Props) {
         <div className="p-5 mb-0.5 rounded-full w-20 h-12 f-box bg-primary">
           <EyeOff className="h-6 w-6" />
         </div>
+
         <h2 className="text-xl font-medium">This Portfolio is private.</h2>
+
         <Link
           href="/"
           className="text-zinc-400 flex items-center gap-2 hover:underline">

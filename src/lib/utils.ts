@@ -6,11 +6,11 @@ import { SITE } from "@/config/site";
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 export function capitalize(text: string) {
-  text.charAt(0).toUpperCase() + text.slice(1);
+  return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 export async function Timeout(ms: number) {
-  await new Promise((resolve) => setTimeout(resolve, ms));
+  return await new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export function absoluteUrl(path: string) {

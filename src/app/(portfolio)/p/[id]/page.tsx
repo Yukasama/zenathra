@@ -3,7 +3,7 @@ import { db } from "@/db";
 import { notFound } from "next/navigation";
 import { PortfolioAssetsLoading } from "@/app/(portfolio)/p/[id]/portfolio-assets";
 import PortfolioAllocation from "@/app/(portfolio)/p/[id]/portfolio-allocation";
-import NewAssets from "./new-assets";
+import PortfolioAssets from "./portfolio-assets";
 import { getStockQuotes } from "@/lib/fmp/quote";
 import PortfolioChart from "./portfolio-chart";
 
@@ -16,7 +16,6 @@ export default async function page({ params: { id } }: Props) {
     select: {
       id: true,
       title: true,
-      isPublic: true,
       creatorId: true,
       createdAt: true,
       stocks: {
@@ -58,7 +57,7 @@ export default async function page({ params: { id } }: Props) {
       </div>
       <div className="flex">
         <Suspense fallback={<PortfolioAssetsLoading />}>
-          <NewAssets stockQuotes={stockQuotes} />
+          <PortfolioAssets stockQuotes={stockQuotes} portfolio={portfolio} />
         </Suspense>
       </div>
     </div>

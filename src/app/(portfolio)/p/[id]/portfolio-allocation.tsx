@@ -55,8 +55,11 @@ export default function PortfolioAllocation({ stocks }: Props) {
     const count: { [key: string]: number } = {};
     stocks.forEach((stock) => {
       if (stock.sector) {
-        if (count[stock.sector]) count[stock.sector] += 1;
-        else count[stock.sector] = 1;
+        if (count[stock.sector]) {
+          count[stock.sector] += 1;
+        } else {
+          count[stock.sector] = 1;
+        }
       }
     });
     return count;
@@ -96,11 +99,11 @@ export default function PortfolioAllocation({ stocks }: Props) {
                 dataKey="value"
                 fontSize={14}
                 label={renderCustomLabel}>
-                {sortedData.map((entry, index) => (
+                {sortedData.map((entry, i) => (
                   <Cell
-                    key={`cell-${index}`}
-                    fill={colors[index]}
-                    stroke={colors[index]}
+                    key={`cell-${i}`}
+                    fill={colors[i]}
+                    stroke={colors[i]}
                     strokeWidth={0.6}
                     onMouseEnter={() => {}}
                   />
