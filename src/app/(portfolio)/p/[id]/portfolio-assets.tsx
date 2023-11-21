@@ -18,7 +18,7 @@ import {
 import { Button } from "@nextui-org/button";
 import { Pagination } from "@nextui-org/pagination";
 import { Chip } from "@nextui-org/chip";
-import { Search, Plus, MoreVertical } from "lucide-react";
+import { Search, MoreVertical } from "lucide-react";
 import { Portfolio, Stock } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
@@ -27,17 +27,19 @@ import {
   SkeletonButton,
   SkeletonList,
 } from "@/components/ui/skeleton";
-import { StockQuote } from "@/types/db";
+import { StockQuote } from "@/types/stock";
 import { trpc } from "@/app/_trpc/client";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import PortfolioAddModal from "@/components/portfolio/portfolio-add-modal";
+import { PortfolioWithStocks } from "@/types/db";
 
 interface Props {
   stockQuotes: Pick<
     StockQuote,
     "id" | "symbol" | "companyName" | "sector" | "peRatioTTM"
   >[];
-  portfolio: Pick<Portfolio, "id">;
+  portfolio: Pick<PortfolioWithStocks, "id" | "title" | "stocks">;
 }
 
 export function PortfolioAssetsLoading() {
@@ -155,9 +157,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
             value={filterValue}
             onChange={(e) => setFilterValue(e.target.value)}></Input>
         </div>
-        <Button className="bg-primary">
-          Add New <Plus size={18} />
-        </Button>
+        <PortfolioAddModal portfolio={portfolio} />
       </div>
 
       <Table className="h-[320px] min-w-[700px]" aria-labelledby="Stocktable">

@@ -5,7 +5,6 @@ import { TRPCError } from "@trpc/server";
 import {
   CreatePortfolioSchema,
   EditPortfolioSchema,
-  ModifyPortfolioSchema,
 } from "@/lib/validators/portfolio";
 import { getRandomColor } from "@/lib/utils";
 import { getUser } from "@/lib/auth";
@@ -45,10 +44,14 @@ export const portfolioRouter = router({
       });
     }),
   add: privateProcedure
-    .input(ModifyPortfolioSchema)
+    .input(EditPortfolioSchema)
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
       const { portfolioId, stockIds } = input;
+
+      if (stockIds?.length === 0) {
+        throw new TRPCError({ code: "BAD_REQUEST" });
+      }
 
       let portfolio = await db.portfolio.findFirst({
         select: {
@@ -85,10 +88,14 @@ export const portfolioRouter = router({
       });
     }),
   remove: privateProcedure
-    .input(ModifyPortfolioSchema)
+    .input(EditPortfolioSchema)
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx;
       const { portfolioId, stockIds } = input;
+
+      if (stockIds?.length === 0) {
+        throw new TRPCError({ code: "BAD_REQUEST" });
+      }
 
       await db.stockInPortfolio.deleteMany({
         where: {

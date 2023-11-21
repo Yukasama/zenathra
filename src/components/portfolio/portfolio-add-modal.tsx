@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, buttonVariants } from "../ui/button";
+import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation";
 import { startTransition, useCallback, useRef, useState } from "react";
 import { toast } from "@/hooks/use-toast";
@@ -26,18 +26,17 @@ import {
 import { PortfolioWithStocks } from "@/types/db";
 import { trpc } from "@/app/_trpc/client";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { cn } from "@/lib/utils";
 
 interface Props {
   portfolio: Pick<PortfolioWithStocks, "id" | "title" | "stocks">;
 }
 
 export default function PortfolioAddModal({ portfolio }: Props) {
-  const router = useRouter();
-  const commandRef = useRef<HTMLDivElement>(null);
   const [input, setInput] = useState<string>("");
   const [selected, setSelected] = useState<string[]>([]);
 
+  const router = useRouter();
+  const commandRef = useRef<HTMLDivElement>(null);
   const request = debounce(async () => refetch(), 300);
 
   const debounceRequest = useCallback(() => {
@@ -54,16 +53,17 @@ export default function PortfolioAddModal({ portfolio }: Props) {
   } = trpc.stock.search.useQuery(input, { enabled: false });
 
   const filteredResults = results?.filter(
-    (r) => !portfolio.stocks.includes(r.id)
+    (r) => !portfolio.stocks.map((s) => s.stockId === r.id)
   );
 
   const { mutate: addToPortfolio, isLoading } = trpc.portfolio.add.useMutation({
-    onError: () =>
+    onError: () => {
       toast({
         title: "Oops! Something went wrong.",
         description: "Failed to add stocks to portfolio.",
         variant: "destructive",
-      }),
+      });
+    },
     onSuccess: () => {
       startTransition(() => router.refresh());
       toast({ description: "Added stocks to portfolio." });
@@ -71,22 +71,22 @@ export default function PortfolioAddModal({ portfolio }: Props) {
   });
 
   function onSubmit() {
-    if (selected.length < 1)
+    if (selected.length < 1) {
       return toast({ description: "Please select atleast one stock." });
-    if (selected.length >= 20)
+    } else if (selected.length > 20) {
       return toast({ description: "You can only add 20 stocks at a time." });
+    }
 
-    const payload = {
+    addToPortfolio({
       portfolioId: portfolio.id,
       stockIds: selected,
-    };
-
-    addToPortfolio(payload);
+    });
   }
 
   function modifyPortfolio(id: string) {
-    if (selected.includes(id))
+    if (selected.includes(id)) {
       return setSelected(selected.filter((s) => s !== id));
+    }
 
     setSelected([...selected, id]);
   }
@@ -94,16 +94,9 @@ export default function PortfolioAddModal({ portfolio }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div
-          className={cn(
-            buttonVariants({
-              variant: "subtle",
-            }),
-            "cursor-pointer"
-          )}>
-          <Plus className="h-4 w-4" />
-          Add Stocks
-        </div>
+        <Button className="bg-primary">
+          Add New <Plus size={18} />
+        </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[375px] rounded-md">
         <DialogHeader>
@@ -175,9 +168,8 @@ export default function PortfolioAddModal({ portfolio }: Props) {
           )}
         </Command>
         <DialogClose>
-          <Button variant="subtle" isLoading={isLoading} onClick={onSubmit}>
-            <Plus className="h-4 w-4" />
-            Add to Portfolio
+          <Button color="primary" isLoading={isLoading} onClick={onSubmit}>
+            Add New <Plus size={18} />
           </Button>
         </DialogClose>
       </DialogContent>

@@ -19,45 +19,37 @@ interface Props {
 
 export default function EditVisibility({ portfolio }: Props) {
   const router = useRouter();
+  const status = portfolio.isPublic ? "Public" : "Private";
 
   const { mutate: editVisible, isLoading } = trpc.portfolio.edit.useMutation({
-    onError: () =>
+    onError: () => {
       toast({
         title: "Oops! Something went wrong.",
         description: `Failed to change portfolio visibility.`,
         variant: "destructive",
-      }),
+      });
+    },
     onSuccess: () => {
       startTransition(() => router.refresh());
-
-      toast({
-        description: `Visibility successfully changed to ${
-          portfolio.isPublic ? "private" : "public"
-        }.`,
-      });
     },
   });
 
   return (
     <Select
-      onValueChange={(e) =>
+      onValueChange={(e) => {
         editVisible({
           portfolioId: portfolio.id,
           isPublic: e === "Public" ? true : false,
-        })
-      }
+        });
+      }}
       disabled={isLoading}
-      value={portfolio.isPublic ? "Public" : "Private"}>
+      value={status}>
       <SelectTrigger>
-        <SelectValue placeholder="Private">
-          {portfolio.isPublic ? "Public" : "Private"}
-        </SelectValue>
+        <SelectValue placeholder="Private">{status}</SelectValue>
       </SelectTrigger>
       <SelectContent>
-        <SelectItem
-          className="cursor-pointer"
-          value={portfolio.isPublic ? "Private" : "Public"}>
-          {portfolio.isPublic ? "Private" : "Public"}
+        <SelectItem className="cursor-pointer" value={status}>
+          {status}
         </SelectItem>
       </SelectContent>
     </Select>
