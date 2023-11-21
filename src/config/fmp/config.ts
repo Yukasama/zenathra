@@ -40,8 +40,6 @@ export function historyUrls(symbol: string, url: string, from?: Date) {
   return `${FMP_API_URL}v3/${url}/${symbol}?${
     url.includes("price-full")
       ? "from=1975-01-01"
-      : from
-      ? `from=${from.toDateString().split("T")[0]}`
-      : ""
+      : from && `from=${from.toDateString().split("T")[0]}`
   }&apikey=${process.env.FMP_API_KEY}`;
 }

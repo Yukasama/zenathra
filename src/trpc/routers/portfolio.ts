@@ -115,13 +115,13 @@ export const portfolioRouter = router({
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 
-      const user = await getUser();
-
-      if (!user?.id) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+      if (portfolioExists.isPublic) {
+        return await MergeHistory(portfolioId);
       }
 
-      if (user.id !== portfolioExists.creatorId && !portfolioExists.isPublic) {
+      const user = await getUser();
+
+      if (user?.id !== portfolioExists.creatorId) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }
 

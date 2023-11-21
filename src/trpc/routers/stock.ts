@@ -11,7 +11,7 @@ import { TRPCError } from "@trpc/server";
 import { getSymbols } from "@/lib/fmp/quote";
 import { Timeout } from "@/lib/utils";
 import { UploadStockSchema } from "@/lib/validators/stock";
-import logger from "pino";
+import pino from "pino";
 import { uploadStocks } from "@/lib/fmp/upload";
 
 export const stockRouter = router({
@@ -119,7 +119,7 @@ export const stockRouter = router({
 
           await uploadStocks(symbols, ctx.user);
 
-          logger().info(
+          pino().info(
             `[SUCCESS] Uploaded ${symbols.length} stocks including: '${
               symbols[0] ?? symbols[1] ?? "undefined"
             }'`
@@ -139,7 +139,7 @@ export const stockRouter = router({
           where: { errorMessage: { not: null } },
         });
 
-        logger().info(
+        pino().info(
           `[SUCCESS] Database cleared. Deleted ${deleted.count} stocks`
         );
       }

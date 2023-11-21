@@ -14,15 +14,15 @@ import {
   CommandDialog,
 } from "../ui/command";
 import { Loader, Search } from "lucide-react";
-import { RecentStocks } from "@/types/db";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/app/_trpc/client";
 import { buttonVariants } from "../ui/button";
 import { motion } from "framer-motion";
 import { ANIMATION_VARIANTS } from "@/config/motion";
+import { Stock } from "@prisma/client";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  recentStocks: RecentStocks | null;
+  recentStocks: Pick<Stock, "symbol" | "companyName" | "image">[] | null;
   responsive?: boolean;
 }
 
@@ -38,8 +38,6 @@ export default function Searchbar({
   const [input, setInput] = useState<string>("");
   const [isMac, setIsMac] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
-
-  let recentlyViewed = recentStocks?.map((stock) => stock.stock);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -65,14 +63,12 @@ export default function Searchbar({
   const request = debounce(async () => {
     refetch();
 
-    if (recentStocks)
-      recentlyViewed = recentStocks
-        .filter(
-          (stock) =>
-            stock.stock.symbol.includes(input) ||
-            stock.stock.companyName.includes(input)
-        )
-        .map((stock) => stock.stock);
+    if (recentStocks) {
+      recentStocks.filter(
+        (stock) =>
+          stock.symbol.includes(input) || stock.companyName.includes(input)
+      );
+    }
   }, 300);
 
   const debounceRequest = useCallback(() => {
@@ -136,9 +132,9 @@ export default function Searchbar({
 
         {input.length > 0 && (
           <CommandList key={results?.length} className="f-col gap-1">
-            {(recentlyViewed?.length ?? 0) > 0 && (
+            {(recentStocks?.length ?? 0) > 0 && (
               <CommandGroup heading="Recently Viewed">
-                {recentlyViewed?.map((stock) => (
+                {recentStocks?.map((stock) => (
                   <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
                     <CommandItem
                       onSelect={() => {

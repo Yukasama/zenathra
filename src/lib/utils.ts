@@ -2,6 +2,8 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Metadata } from "next";
 import { SITE } from "@/config/site";
+import { NAME_ADJECTIVES, NAME_NOUNS } from "@/config/generate-name";
+import { PORTFOLIO_COLORS } from "@/config/colors";
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
@@ -55,67 +57,15 @@ export function constructMetadata(): Metadata {
 }
 
 export function getRandomColor() {
-  const PORTFOLIO_COLORS = [
-    "#FF6347",
-    "#FFA07A",
-    "#FFD700",
-    "#FF8C00",
-    "#DB7093",
-  ];
   const randomIndex = Math.floor(Math.random() * PORTFOLIO_COLORS.length);
 
   return PORTFOLIO_COLORS[randomIndex];
 }
 
 export function generateName() {
-  const adjectives = [
-    "cool",
-    "kind",
-    "calm",
-    "bold",
-    "wise",
-    "neat",
-    "fair",
-    "glad",
-    "keen",
-    "rare",
-    "pure",
-    "warm",
-    "wild",
-    "firm",
-    "fast",
-    "deep",
-    "vast",
-    "soft",
-    "hard",
-    "rich",
-  ];
-
-  const nouns = [
-    "star",
-    "rose",
-    "wind",
-    "flame",
-    "wave",
-    "stone",
-    "leaf",
-    "snow",
-    "rain",
-    "fire",
-    "tree",
-    "bird",
-    "wolf",
-    "bear",
-    "lion",
-    "fish",
-    "frog",
-    "hawk",
-    "dear",
-    "moon",
-  ];
-
-  const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-  const noun = nouns[Math.floor(Math.random() * nouns.length)];
+  const adjective =
+    NAME_ADJECTIVES[Math.floor(Math.random() * NAME_ADJECTIVES.length)];
+  const noun = NAME_NOUNS[Math.floor(Math.random() * NAME_NOUNS.length)];
   const numbers = Math.floor(Math.random() * 90000 + 1000).toString();
 
   return `${adjective}-${noun}-${numbers}`;

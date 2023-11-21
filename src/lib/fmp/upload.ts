@@ -3,7 +3,7 @@ import "server-only";
 import { db } from "@/db";
 import { FMP_API_URL } from "@/config/fmp/config";
 import { env } from "@/env.mjs";
-import logger from "pino";
+import pino from "pino";
 import { User } from "@prisma/client";
 
 export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
@@ -47,7 +47,7 @@ export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
 
   const combinedData = responses.map((result) => {
     if (result.status === "fulfilled") {
-      return MergeArrays(result.value);
+      return MergeData(result.value);
     }
 
     return [];
@@ -131,7 +131,7 @@ export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
               },
             });
           } catch (error: any) {
-            logger().error(
+            pino().error(
               `[ERROR] Timed out while uploading: ${symbol}, ${year}" \n Error: ${error.message}`
             );
           }
@@ -140,18 +140,18 @@ export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
 
       await Promise.all(financialsPromises);
     } catch {
-      logger().error("[ERROR] Uploading stock data for", symbol, "failed");
+      pino().error("[ERROR] Uploading stock data for", symbol, "failed");
     }
   });
 
   await Promise.all(promises);
 }
 
-function MergeArrays(arrays: Record<string, any>[][]): Record<string, any>[] {
-  if (
-    !Array.isArray(arrays) ||
-    !arrays.every((array) => Array.isArray(array))
-  ) {
+function MergeData(arrays: Record<string, any>[][]): Record<string, any>[] {
+  const isArrayofArrays =
+    Array.isArray(arrays) && arrays.every((array) => Array.isArray(array));
+
+  if (!isArrayofArrays) {
     return [];
   }
 

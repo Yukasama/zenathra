@@ -3,6 +3,7 @@ import "server-only";
 import { TIMEFRAMES, historyUrls } from "@/config/fmp/config";
 import { History } from "@/types/stock";
 import { db } from "@/db";
+import pino from "pino";
 
 export async function fetchHistory(
   symbol: string,
@@ -66,6 +67,8 @@ export async function MergeHistory(portfolioId: string) {
     },
   });
 
+  pino().debug("MergeHistory: stocksInPortfolio:", stocksInPortfolio);
+
   const data = await Promise.all(
     stocksInPortfolio.map((stock) =>
       fetchHistory(stock.stock.symbol, stock.createdAt)
@@ -90,7 +93,12 @@ export async function MergeHistory(portfolioId: string) {
           };
         }
 
-        if (new Date(entry.date) >= new Date(stocksInPortfolio[i].createdAt)) {
+        // Check if entry has date after stock was added to portfolio
+        const entryAddedAfter =
+          new Date(entry.date) >=
+          new Date(stocksInPortfolio[i].createdAt.toDateString().split("T")[0]);
+
+        if (entryAddedAfter) {
           result[range][entryIndex].close += entry.close;
           result[range][entryIndex].count++;
         }
@@ -110,5 +118,6 @@ export async function MergeHistory(portfolioId: string) {
       });
   });
 
+  pino().debug("MergeHistory:", result);
   return result;
 }

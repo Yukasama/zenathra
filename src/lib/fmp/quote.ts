@@ -5,7 +5,7 @@ import { indexQuotes, quote } from "@/config/fmp/simulation";
 import { env } from "@/env.mjs";
 import { Quote } from "@/types/stock";
 import { Stock } from "@prisma/client";
-import { StockQuote } from "@/types/db";
+import { StockQuote } from "@/types/stock";
 
 export async function getDailys(
   action: "actives" | "winners" | "losers"
@@ -37,11 +37,11 @@ export async function getIndexQuotes(
   allFields?: boolean
 ): Promise<Quote[] | undefined> {
   try {
-    const requiredIndexes = ["^GSPC", "^GDAXI", "^NDX", "^DJI"];
-
     if (FMP.simulation) {
       return indexQuotes;
     }
+
+    const requiredIndexes = ["^GSPC", "^GDAXI", "^NDX", "^DJI"];
 
     const data = await fetch(FMP_URLS["indexQuotes"], {
       next: { revalidate: 30 },
@@ -149,9 +149,7 @@ export async function getQuotes(
   }
 }
 
-export async function getStockQuotes(
-  stocks: Pick<Stock, "symbol">[]
-): Promise<StockQuote[]> {
+export async function getStockQuotes(stocks: Stock[]): Promise<StockQuote[]> {
   const quotes = await getQuotes(stocks.map((stock) => stock.symbol));
 
   const results = stocks.map((stock) => ({
@@ -175,7 +173,6 @@ export async function getSymbols(
     }
 
     const url = FMP_URLS[symbolSet];
-
     const data = await fetch(url).then((res) => res.json());
 
     const results = data
@@ -186,7 +183,7 @@ export async function getSymbols(
           !stock.symbol.includes("-")
       )
       .map((stock: any) => stock.symbol)
-      .slice(0, Number(FMP.docsPerPull) * pullTimes) as [];
+      .slice(0, Number(FMP.docsPerPull) * pullTimes);
 
     // Splitting symbols into batches with length of FMP.docsPerPull
     const symbols = [];

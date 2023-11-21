@@ -12,13 +12,6 @@ export const CreatePortfolioSchema = z.object({
     .optional(),
 });
 
-export const ModifyPortfolioSchema = z.object({
-  portfolioId: z.string(),
-  stockIds: z
-    .array(z.string())
-    .max(20, "A maximum of 20 symbols can be added at a time."),
-});
-
 export const EditPortfolioSchema = z.object({
   portfolioId: z.string(),
   title: z
@@ -27,10 +20,12 @@ export const EditPortfolioSchema = z.object({
     .max(25, "Title must be less than 25 characters long.")
     .optional(),
   isPublic: z.boolean().optional(),
+  stockIds: z
+    .array(z.string())
+    .max(20, "A maximum of 20 symbols can be added at a time.")
+    .optional(),
 });
 
 export type CreatePortfolioProps = z.infer<typeof CreatePortfolioSchema>;
-
-export type ModifyPortfolioProps = z.infer<typeof ModifyPortfolioSchema>;
 
 export type EditPortfolioProps = z.infer<typeof EditPortfolioSchema>;

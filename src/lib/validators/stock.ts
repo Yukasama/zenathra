@@ -32,3 +32,5 @@ export const HistorySchema = z.object({
 export type UploadStockProps = z.infer<typeof UploadStockSchema>;
 
 export type ScreenerProps = z.infer<typeof ScreenerSchema>;
+
+export type HistoryProps = z.infer<typeof HistorySchema>;

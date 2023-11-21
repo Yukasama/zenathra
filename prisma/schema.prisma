@@ -128,11 +128,11 @@ model Stock {
   price                                     Float?
   beta                                      Float?
   volAvg                                    Float?
-  mktCap                                    Float
+  mktCap                                    Float?
   lastDiv                                   Float?
   range                                     String?
   changes                                   Float?
-  companyName                               String
+  companyName                               String?
   currency                                  String?
   cik                                       String?
   isin                                      String?

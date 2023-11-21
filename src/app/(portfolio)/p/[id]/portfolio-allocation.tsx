@@ -17,30 +17,21 @@ import {
 } from "../../../../components/ui/card";
 import { Stock } from "@prisma/client";
 import Skeleton from "../../../../components/ui/skeleton";
-
-const BASE_COLORS = [
-  "#ED261F",
-  "#FF8042",
-  "#FFBB28",
-  "#FFD700",
-  "#00C49F",
-  "#20B2AA",
-  "#0088FE",
-  "#7C4DFF",
-  "#A463F2",
-  "#FF6F91",
-];
+import { GRAPH_COLORS } from "@/config/colors";
 
 function generateColors(num: number): string[] {
   let colors: string[] = [];
+
   while (colors.length < num) {
-    colors = colors.concat(BASE_COLORS);
+    colors = colors.concat(GRAPH_COLORS);
   }
+
   return colors.slice(0, num);
 }
 
-const getPercentage = (count: number, total: number): string =>
-  `${((count / total) * 100).toFixed(2)}%`;
+function getPercentage(count: number, total: number) {
+  return `${((count / total) * 100).toFixed(2)}%`;
+}
 
 interface Props {
   stocks: Pick<Stock, "sector">[];

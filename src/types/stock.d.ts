@@ -17,24 +17,26 @@ export interface History {
 export interface Quote {
   symbol: string;
   name: string;
-  price: number;
+  price: number | null;
   changesPercentage: number;
   change?: number;
   dayLow?: number;
   dayHigh?: number;
   yearHigh?: number;
   yearLow?: number;
-  marketCap?: number | null;
+  marketCap?: number;
   priceAvg50?: number;
   priceAvg200?: number;
   exchange?: string | null;
   volume?: number;
   avgVolume?: number;
   open?: number;
-  previousClose?: number | null;
-  eps?: number | null;
-  pe?: number | null;
-  earningsAnnouncement?: string | null;
-  sharesOutstanding?: number | null;
+  previousClose?: number;
+  eps?: number;
+  pe?: number;
+  earningsAnnouncement?: string;
+  sharesOutstanding?: number;
   timestamp?: number;
 }
+
+export type StockQuote = Stock & Partial<Quote>;
