@@ -3,14 +3,13 @@
 import { Portfolio } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/button";
-import { startTransition, useState } from "react";
+import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -18,6 +17,7 @@ import {
 import { Input } from "../ui/input";
 import { CardDescription } from "../ui/card";
 import { trpc } from "@/trpc/client";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 type Props = {
   portfolio: Pick<Portfolio, "id" | "title">;
@@ -29,20 +29,14 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
 
   const { mutate: deletePortfolio, isLoading } =
     trpc.portfolio.delete.useMutation({
-      onError: () =>
+      onError: () => {
         toast({
           title: "Oops! Something went wrong.",
           description: `Portfolio '${portfolio.title}' could not be deleted.`,
           variant: "destructive",
-        }),
-      onSuccess: () => {
-        startTransition(() => router.refresh());
-
-        toast({
-          title: "Portfolio Deleted.",
-          description: `Portfolio '${portfolio.title}' won't longer show up in your portfolios.`,
         });
       },
+      onSuccess: () => router.push("/portfolio"),
     });
 
   function onSubmit() {
@@ -60,7 +54,7 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-red-500 rounded-md">
+        <Button className="bg-red-500 text-white">
           <Trash2 size={18} />
           Delete
         </Button>
@@ -84,15 +78,15 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
           </CardDescription>
         </div>
 
-        <DialogFooter>
+        <DialogClose asChild>
           <Button
-            className="bg-red-500 rounded-md"
+            className="bg-red-500 text-white"
             isLoading={isLoading}
             onClick={onSubmit}>
-            <Trash2 className="h-4 w-4" />
+            {!isLoading && <Trash2 size={18} />}
             Delete Portfolio
           </Button>
-        </DialogFooter>
+        </DialogClose>
       </DialogContent>
     </Dialog>
   );

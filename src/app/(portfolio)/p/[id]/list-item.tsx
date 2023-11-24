@@ -18,9 +18,11 @@ export default function ListItem({ title, link, icon, portfolioId }: Props) {
     <Link href={`/p/${portfolioId}/${link === portfolioId ? "" : link}`}>
       <Card
         className={`${
-          pathname.split("/").pop() === link ? "bg-primary text-white"
-        : "hover:bg-primary/20"} lg:w-60`}>
-        <div className="flex items-center gap-3 px-3 lg:px-4 p-1.5">
+          pathname.split("/").pop() === link
+            ? "bg-primary text-white"
+            : "hover:bg-primary/20"
+        } lg:w-60`}>
+        <div className="flex items-center gap-3 px-3 lg:px-4 p-[7px]">
           {icon}
           <p className="hidden lg:flex">{title}</p>
         </div>

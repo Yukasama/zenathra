@@ -19,6 +19,7 @@ interface Props {
 export default function EditVisibility({ portfolio }: Props) {
   const router = useRouter();
   const status = portfolio.isPublic ? "Public" : "Private";
+  const optionalChange = !portfolio.isPublic ? "Public" : "Private";
 
   const { mutate: editVisible, isLoading } = trpc.portfolio.edit.useMutation({
     onError: () => {
@@ -41,13 +42,13 @@ export default function EditVisibility({ portfolio }: Props) {
       }}
       disabled={isLoading}
       value={status}>
-      <SelectTrigger>
-        <SelectValue placeholder="Private">{status}</SelectValue>
+      <SelectTrigger className="w-28">
+        <SelectValue>{status}</SelectValue>
       </SelectTrigger>
 
       <SelectContent>
-        <SelectItem className="cursor-pointer" value={status}>
-          {status}
+        <SelectItem className="cursor-pointer" value={optionalChange}>
+          {optionalChange}
         </SelectItem>
       </SelectContent>
     </Select>

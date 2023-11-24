@@ -89,6 +89,9 @@
   .gradient {
     @apply bg-gradient-to-br from-[#ff8b55] to-[#fdc243] hover:from-[#dd6942] hover:to-[#e09c4e];
   }
+  .card-new {
+    @apply border-none bg-zinc-100 dark:bg-zinc-900/70;
+  }
 }
 
 @layer utilities {

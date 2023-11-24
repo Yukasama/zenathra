@@ -55,7 +55,7 @@ export default function ChangeTitle({ portfolio }: Props) {
   return (
     <form className="flex items-center gap-2" onSubmit={handleSubmit}>
       <Input
-        className="border-none h-7 text-lg hover:bg-zinc-200 dark:hover:bg-zinc-800"
+        className="border-none h-7 text-xl hover:bg-zinc-200 dark:hover:bg-zinc-800"
         value={title}
         disabled={isLoading}
         onChange={(e) => setTitle(e.target.value)}

@@ -12,9 +12,10 @@ import {
   earningsDates,
   exchanges,
 } from "@/config/screener/filters";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@nextui-org/button";
+import { Tabs, Tab } from "@nextui-org/tabs";
 import { BarChart2, FileText, Layers, RotateCcw } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -39,17 +40,6 @@ interface Props {
 }
 
 export default function Page({ searchParams }: Props) {
-  const router = useRouter();
-
-  const cursor =
-    typeof searchParams["cursor"] === "string"
-      ? Number(searchParams["cursor"])
-      : 1;
-  const take =
-    typeof searchParams["take"] === "string"
-      ? Number(searchParams["take"])
-      : 13;
-
   const [resetCounter, setResetCounter] = useState(0);
 
   const [exchange, setExchange] = useState<string>("Any");
@@ -67,6 +57,16 @@ export default function Page({ searchParams }: Props) {
 
   const [sma50, setSma50] = useState<string>("Any");
   const [sma502, setSma502] = useState<string>("Any");
+
+  const router = useRouter();
+  const cursor =
+    typeof searchParams["cursor"] === "string"
+      ? Number(searchParams["cursor"])
+      : 1;
+  const take =
+    typeof searchParams["take"] === "string"
+      ? Number(searchParams["take"])
+      : 13;
 
   // Set all filters on "Any" on reset button click
   const resetFilters = () => {
@@ -211,29 +211,15 @@ export default function Page({ searchParams }: Props) {
 
   return (
     <>
-      <Button
-        variant="subtle"
-        onClick={() => resetFilters()}
-        className="absolute bottom-4 lg:bottom-7">
-        <RotateCcw className="h-4 w-4" />
-        Reset Filters
-      </Button>
-      <Tabs defaultValue="descriptive">
-        <TabsList>
-          <TabsTrigger className="flex gap-1" value="descriptive">
-            <FileText />
-            Descriptive
-          </TabsTrigger>
-          <TabsTrigger className="flex gap-1" value="fundamental">
-            <Layers />
-            Fundamental
-          </TabsTrigger>
-          <TabsTrigger className="flex gap-1" value="technical">
-            <BarChart2 />
-            Technical
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="descriptive">
+      <Tabs aria-label="Filters" color="primary" variant="bordered">
+        <Tab
+          key="descriptive"
+          title={
+            <div className="flex items-center gap-2">
+              <FileText />
+              Descriptive
+            </div>
+          }>
           <Card>
             <CardHeader>
               <CardTitle>Descriptive</CardTitle>
@@ -265,9 +251,16 @@ export default function Page({ searchParams }: Props) {
               ))}
             </CardContent>
           </Card>
-        </TabsContent>
+        </Tab>
 
-        <TabsContent value="fundamental">
+        <Tab
+          key="fundamental"
+          title={
+            <div className="flex items-center gap-2">
+              <Layers />
+              Fundamental
+            </div>
+          }>
           <Card>
             <CardHeader>
               <CardTitle>Fundamental</CardTitle>
@@ -329,9 +322,16 @@ export default function Page({ searchParams }: Props) {
               ))}
             </CardContent>
           </Card>
-        </TabsContent>
+        </Tab>
 
-        <TabsContent value="technical">
+        <Tab
+          key="technical"
+          title={
+            <div className="flex items-center gap-2">
+              <BarChart2 />
+              Technical
+            </div>
+          }>
           <Card>
             <CardHeader>
               <CardTitle>Technical</CardTitle>
@@ -393,24 +393,19 @@ export default function Page({ searchParams }: Props) {
               ))}
             </CardContent>
           </Card>
-        </TabsContent>
+        </Tab>
+
+        <Button onClick={() => resetFilters()} className="mt-3">
+          <RotateCcw className="h-4 w-4" />
+          Reset Filters
+        </Button>
       </Tabs>
 
-      <Tabs defaultValue="descriptive" className="w-full">
-        <TabsList>
-          <TabsTrigger className="flex gap-1" value="descriptive">
-            <FileText />
-            Descriptive
-          </TabsTrigger>
-          <TabsTrigger className="flex gap-1" value="fundamental">
-            <Layers />
-            Fundamental
-          </TabsTrigger>
-          <TabsTrigger className="flex gap-1" value="technical">
-            <BarChart2 />
-            Technical
-          </TabsTrigger>
-        </TabsList>
+      <Tabs
+        aria-label="Options"
+        color="primary"
+        variant="bordered"
+        className="w-full">
         <div>
           {isFetching || !results ? (
             <div className="f-col gap-2 pt-2">
@@ -429,7 +424,14 @@ export default function Page({ searchParams }: Props) {
             </div>
           ) : (
             <div className="f-col gap-5">
-              <TabsContent value="descriptive">
+              <Tab
+                key="descriptive"
+                title={
+                  <div className="flex items-center gap-2">
+                    <FileText />
+                    Descriptive
+                  </div>
+                }>
                 <div className="f-col hidden-scrollbar max-h-[800px] gap-2 overflow-scroll">
                   {results?.map((stock) => (
                     <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
@@ -447,8 +449,15 @@ export default function Page({ searchParams }: Props) {
                     </Link>
                   ))}
                 </div>
-              </TabsContent>
-              <TabsContent value="fundamental">
+              </Tab>
+              <Tab
+                key="fundamental"
+                title={
+                  <div className="flex items-center gap-2">
+                    <Layers />
+                    Fundamental
+                  </div>
+                }>
                 <div className="f-col hidden-scrollbar h-[800px] gap-2 overflow-scroll">
                   {results?.map((stock) => (
                     <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
@@ -470,7 +479,7 @@ export default function Page({ searchParams }: Props) {
                     </Link>
                   ))}
                 </div>
-              </TabsContent>
+              </Tab>
               <div className="flex gap-3.5 justify-center">
                 <Link
                   href={`/screener?cursor=${

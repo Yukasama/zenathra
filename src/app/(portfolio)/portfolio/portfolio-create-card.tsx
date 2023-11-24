@@ -31,6 +31,7 @@ import { ANIMATION_VARIANTS } from "@/config/motion";
 import { trpc } from "@/trpc/client";
 import { CreatePortfolioSchema } from "@/lib/validators/portfolio";
 import { PLANS } from "@/config/stripe";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 interface Props {
   numberOfPortfolios?: number;
@@ -75,17 +76,17 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild disabled={isLoading}>
         <motion.div
           variants={ANIMATION_VARIANTS}
           initial="hidden"
           animate="visible"
           exit="exit"
           whileTap="tap"
-          className={numberOfPortfolios === 0 ? "h-72" : ""}>
+          className={numberOfPortfolios === 0 ? "h-[340px]" : ""}>
           <Card className="f-box cursor-pointer h-full hover:bg-zinc-100 dark:hover:bg-zinc-900">
-            <Button color="primary" isIconOnly>
-              <Plus />
+            <Button color="primary" isLoading={isLoading} isIconOnly>
+              {!isLoading && <Plus />}
             </Button>
           </Card>
         </motion.div>
@@ -144,10 +145,16 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
               )}
             />
 
-            <Button color="primary" type="submit" isLoading={isLoading}>
-              {!isLoading && <Plus size={18} />}
-              Create Portfolio
-            </Button>
+            <DialogClose asChild>
+              <Button
+                color="primary"
+                className="w-full"
+                type="submit"
+                isLoading={isLoading}>
+                {!isLoading && <Plus size={18} />}
+                Create Portfolio
+              </Button>
+            </DialogClose>
           </form>
         </Form>
       </DialogContent>

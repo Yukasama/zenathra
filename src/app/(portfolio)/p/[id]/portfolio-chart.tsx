@@ -85,7 +85,7 @@ export default function PriceChart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFetched, timeFrame]);
 
-  const CustomTooltip = ({
+  const CustomTooltip: any = ({
     active,
     payload,
     label,
@@ -179,6 +179,7 @@ export default function PriceChart({
         </div>
       </CardHeader>
 
+      {/* Chart */}
       <CardContent>
         <Skeleton isLoaded={mounted && isFetched}>
           {isFetched && !data[timeFrame].length ? (
@@ -216,7 +217,6 @@ export default function PriceChart({
                   fontSize={12}
                   tickFormatter={(value) => `${value.toFixed(2)}`}
                 />
-                {/* @ts-ignore */}
                 <Tooltip content={<CustomTooltip />} />
                 <ReferenceLine
                   y={startPrice}

@@ -8,12 +8,12 @@ import { Card } from "@/components/ui/card";
 import dynamic from "next/dynamic";
 import Skeleton from "@/components/ui/skeleton";
 
-export const metadata = { title: "Your Portfolios" };
+export const metadata = { title: "My Portfolios" };
 export const runtime = "edge";
 
 const PortfolioCreateCard = dynamic(() => import("./portfolio-create-card"), {
   ssr: false,
-  loading: () => <Skeleton className="h-72"></Skeleton>,
+  loading: () => <Skeleton className="h-[340px]"></Skeleton>,
 });
 
 export default async function page() {
@@ -35,14 +35,17 @@ export default async function page() {
 
   return (
     <PageLayout title="My Portfolios" description="Manage your portfolios here">
-      <div className="f-col gap-6 md:grid md:grid-cols-2 xl:gap-8 xl:grid-cols-3 min-h-72 grid-auto-rows:max-content">
+      <div className="f-col gap-6 md:grid md:grid-cols-2 xl:gap-8 xl:grid-cols-3 grid-auto-rows:max-content">
+        {/* Portfolio Cards */}
         {portfolios.map((portfolio) => (
           <Suspense
             key={portfolio.id}
-            fallback={<Card className="animate-pulse-right min-h-72" />}>
+            fallback={<Card className="animate-pulse-right h-[340px]" />}>
             <PortfolioCard portfolio={portfolio} />
           </Suspense>
         ))}
+
+        {/* Create Card + Modal */}
         {portfolios.length < PLANS[0].maxPortfolios && (
           <PortfolioCreateCard numberOfPortfolios={portfolios.length} />
         )}

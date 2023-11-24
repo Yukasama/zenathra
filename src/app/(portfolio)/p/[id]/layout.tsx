@@ -16,6 +16,7 @@ import { SkeletonButton, SkeletonInput } from "@/components/ui/skeleton";
 import dynamic from "next/dynamic";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import PortfolioDeleteModal from "@/components/portfolio/portfolio-delete-modal";
 
 const ChangeTitle = dynamic(
   () => import("@/app/(portfolio)/p/[id]/change-title"),
@@ -103,7 +104,7 @@ export default async function Layout({ children, params: { id } }: Props) {
     return (
       <div className="f-box f-col mt-[376px] gap-3">
         <div className="p-5 mb-0.5 rounded-full w-20 h-12 f-box bg-primary">
-          <EyeOff className="h-6 w-6" />
+          <EyeOff size={24} />
         </div>
 
         <h2 className="text-xl font-medium">This Portfolio is private.</h2>
@@ -139,7 +140,7 @@ export default async function Layout({ children, params: { id } }: Props) {
   return (
     <PageLayout className="f-col lg:flex-row gap-8">
       {/* Navigator */}
-      <Card className="border-none bg-zinc-50 dark:bg-zinc-900/70 flex justify-evenly lg:f-col lg:justify-start p-4 lg:p-8 lg:py-10 gap-3.5">
+      <Card className="border-none bg-zinc-100 dark:bg-zinc-900/70 flex justify-evenly lg:f-col lg:justify-start p-4 lg:p-8 lg:py-10 gap-3.5">
         {PORTFOLIO_LINKS.map((link) => (
           <ListItem key={link.title} portfolioId={id} {...link} />
         ))}
@@ -149,15 +150,15 @@ export default async function Layout({ children, params: { id } }: Props) {
       <div className="f-col flex-1 gap-4">
         <div className="flex items-center justify-between px-2">
           {/* Title */}
-          <div>
-            <CardTitle className="text-2xl">
+          <div className="f-col gap-1">
+            <CardTitle className="text-xl">
               {user?.id === portfolio.creatorId ? (
                 <ChangeTitle portfolio={portfolio} />
               ) : (
                 portfolio.title
               )}
             </CardTitle>
-            <CardDescription className="mr-3">
+            <CardDescription>
               Created on{" "}
               {portfolio.createdAt.toISOString().split(".")[0].split("T")[0]}
             </CardDescription>
@@ -165,8 +166,9 @@ export default async function Layout({ children, params: { id } }: Props) {
 
           {/* Visibility */}
           {user?.id === portfolio.creatorId && (
-            <div className="w-28">
+            <div className="flex gap-3">
               <EditVisibility portfolio={portfolio} />
+              <PortfolioDeleteModal portfolio={portfolio} />
             </div>
           )}
         </div>

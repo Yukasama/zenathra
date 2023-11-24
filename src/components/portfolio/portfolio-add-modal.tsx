@@ -18,7 +18,6 @@ import {
 import { PortfolioWithStocks } from "@/types/db";
 import { trpc } from "@/trpc/client";
 import { Spinner } from "@nextui-org/spinner";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   portfolio: Pick<PortfolioWithStocks, "id" | "title" | "stocks">;
@@ -57,7 +56,6 @@ export default function PortfolioAddModal({ portfolio }: Props) {
     refetch,
   } = trpc.stock.search.useQuery(input, { enabled: false });
 
-  const queryClient = useQueryClient();
   const { mutate: addToPortfolio, isLoading } = trpc.portfolio.add.useMutation({
     onError: () => {
       toast({
@@ -66,10 +64,7 @@ export default function PortfolioAddModal({ portfolio }: Props) {
         variant: "destructive",
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["portfolio.add"]);
-      router.refresh();
-    },
+    onSuccess: () => router.refresh(),
   });
 
   function onSubmit() {

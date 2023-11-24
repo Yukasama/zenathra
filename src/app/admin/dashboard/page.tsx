@@ -14,7 +14,10 @@ export default async function page() {
     select: { role: true },
     where: { id: user?.id },
   });
-  if (!dbUser?.role) redirect("/");
+
+  if (!dbUser?.role) {
+    redirect("/");
+  }
 
   return (
     <PageLayout

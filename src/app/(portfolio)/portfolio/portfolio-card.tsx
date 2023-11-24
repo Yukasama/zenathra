@@ -51,7 +51,7 @@ export default async function PortfolioCard({ portfolio }: Props) {
   });
 
   return (
-    <Card className="min-h-72 h-full f-col justify-between">
+    <Card className="h-[340px] f-col justify-between">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

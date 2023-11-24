@@ -19,7 +19,6 @@ import { Button } from "@nextui-org/button";
 import { Pagination } from "@nextui-org/pagination";
 import { Chip } from "@nextui-org/chip";
 import { Search, MoreVertical } from "lucide-react";
-import { Stock } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import {
@@ -33,12 +32,12 @@ import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import PortfolioAddModal from "@/components/portfolio/portfolio-add-modal";
 import { PortfolioWithStocks } from "@/types/db";
-import { useQueryClient } from "@tanstack/react-query";
+import { Spinner } from "@nextui-org/spinner";
 
 interface Props {
   stockQuotes: Pick<
     StockQuote,
-    "id" | "symbol" | "companyName" | "sector" | "peRatioTTM"
+    "id" | "symbol" | "companyName" | "sector" | "price" | "changesPercentage"
   >[];
   portfolio: Pick<PortfolioWithStocks, "id" | "title" | "stocks">;
 }
@@ -61,7 +60,7 @@ export function PortfolioAssetsLoading() {
 
 const columnTranslation: any = {
   companyName: "Name",
-  peRatioTTM: "P/E Ratio",
+  price: "Price (24h)",
   sector: "Sector",
   actions: "Actions",
 };
@@ -72,9 +71,8 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
   const router = useRouter();
 
   const ROWS_PER_PAGE = 5;
-  const COLUMNS = ["companyName", "peRatioTTM", "sector", "actions"];
+  const COLUMNS = ["companyName", "price", "sector", "actions"];
 
-  const queryClient = useQueryClient();
   const { mutate: remove, isLoading } = trpc.portfolio.remove.useMutation({
     onError: () => {
       toast({
@@ -83,10 +81,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
         variant: "destructive",
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["portfolio.remove"]);
-      router.refresh();
-    },
+    onSuccess: () => router.refresh(),
   });
 
   // Filtering and sorting stocks
@@ -106,22 +101,31 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
   }, [filteredStocks, page, ROWS_PER_PAGE]);
 
   // Single cell for assets table
-  const renderCell = (
-    stock: Pick<
-      Stock,
-      "id" | "symbol" | "companyName" | "sector" | "peRatioTTM"
-    >,
-    columnKey: string
-  ) => {
+  const renderCell = (stock: StockQuote, columnKey: string) => {
     switch (columnKey) {
       case "companyName":
         return <p>{stock.companyName}</p>;
-      case "peRatioTTM":
-        return <p>{stock.peRatioTTM?.toFixed(2)}</p>;
+      case "price":
+        return (
+          <div>
+            {stock.price?.toFixed(2)}
+            {stock.changesPercentage > 0 ? (
+              <span className="text-green-500 dark:text-green-400 text-[13px]">
+                {" "}
+                +{stock.changesPercentage.toFixed(2)}%
+              </span>
+            ) : (
+              <span className="text-red-500 dark:text-red-400 text-[13px]">
+                {" "}
+                {stock.changesPercentage.toFixed(2)}%
+              </span>
+            )}
+          </div>
+        );
       case "sector":
         return (
-          <Chip color="primary" size="sm" variant="flat">
-            <p className="text-white">{stock[columnKey]}</p>
+          <Chip color="primary" size="sm" variant="dot">
+            {stock[columnKey]}
           </Chip>
         );
       case "actions":
@@ -129,7 +133,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
           <div className="relative flex justify-end items-center gap-2">
             <Dropdown>
               <DropdownTrigger disabled={isLoading}>
-                <Button size="sm" isIconOnly>
+                <Button size="sm" isIconOnly variant="flat">
                   <MoreVertical size={18} />
                 </Button>
               </DropdownTrigger>
@@ -147,6 +151,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
                       stockIds: [stock.id],
                     })
                   }>
+                  {isLoading && <Spinner size="sm" />}
                   Delete
                 </DropdownItem>
               </DropdownMenu>
@@ -159,7 +164,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
   };
 
   return (
-    <div className="f-col">
+    <div className="f-col w-full max-w-[700px]">
       {/* Operations Bar */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
@@ -174,7 +179,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
       </div>
 
       {/* Assets Table */}
-      <Table className="min-w-[700px]" aria-labelledby="Assets Table">
+      <Table aria-label="Assets Table">
         <TableHeader>
           {COLUMNS.map((column) => (
             <TableColumn key={column}>{columnTranslation[column]}</TableColumn>
@@ -193,7 +198,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
 
       {/* Pagination Control for Table */}
       <Pagination
-        className="mt-4 self-center"
+        className="mt-2 self-center"
         total={Math.ceil(filteredStocks.length / ROWS_PER_PAGE)}
         page={page}
         onChange={(newPage) => setPage(newPage)}

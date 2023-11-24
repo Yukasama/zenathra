@@ -9,6 +9,7 @@ import {
 import { getRandomColor } from "@/lib/utils";
 import { getUser } from "@/lib/auth";
 import { MergeHistory } from "@/lib/fmp/history";
+import { revalidatePath } from "next/cache";
 
 export const portfolioRouter = router({
   create: privateProcedure
@@ -25,6 +26,8 @@ export const portfolioRouter = router({
           color: getRandomColor(),
         },
       });
+
+      revalidatePath("/portfolio");
     }),
   edit: privateProcedure
     .input(EditPortfolioSchema)
@@ -42,6 +45,8 @@ export const portfolioRouter = router({
           creatorId: user.id,
         },
       });
+
+      revalidatePath(`/p/${portfolioId}`);
     }),
   add: privateProcedure
     .input(EditPortfolioSchema)
@@ -86,6 +91,8 @@ export const portfolioRouter = router({
           stockId: stockId,
         })),
       });
+
+      revalidatePath(`/p/${portfolioId}`);
     }),
   remove: privateProcedure
     .input(EditPortfolioSchema)
@@ -106,6 +113,8 @@ export const portfolioRouter = router({
           stockId: { in: stockIds },
         },
       });
+
+      revalidatePath(`/p/${portfolioId}`);
     }),
   history: publicProcedure
     .input(z.string())
@@ -145,5 +154,7 @@ export const portfolioRouter = router({
           creatorId: user.id,
         },
       });
+
+      revalidatePath("/portfolio");
     }),
 });

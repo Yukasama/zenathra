@@ -42,9 +42,7 @@ export function SkeletonInput() {
 export function SkeletonButton() {
   return (
     <Skeleton>
-      <div className="f-box w-16 h-12 border">
-        <Spinner />
-      </div>
+      <div className="w-20 h-10 rounded-3xl" />
     </Skeleton>
   );
 }
@@ -53,7 +51,7 @@ export function SkeletonList({ count = 3 }: { count?: number }) {
   return (
     <div className="space-y-2">
       {[...Array(count)].map((_, i) => (
-        <Skeleton key={i} className="h-14 w-full"></Skeleton>
+        <Skeleton key={i} className="h-12 w-full"></Skeleton>
       ))}
     </div>
   );

@@ -3,13 +3,21 @@ import { db } from "@/db";
 import { notFound } from "next/navigation";
 import { PortfolioAssetsLoading } from "@/app/(portfolio)/p/[id]/portfolio-assets";
 import PortfolioAllocation from "@/app/(portfolio)/p/[id]/portfolio-allocation";
-import PortfolioAssets from "./portfolio-assets";
 import { getStockQuotes } from "@/lib/fmp/quote";
 import PortfolioChart from "./portfolio-chart";
+import dynamic from "next/dynamic";
 
 interface Props {
   params: { id: string };
 }
+
+const PortfolioAssets = dynamic(
+  () => import("@/app/(portfolio)/p/[id]/portfolio-assets"),
+  {
+    ssr: false,
+    loading: () => <PortfolioAssetsLoading />,
+  }
+);
 
 export default async function page({ params: { id } }: Props) {
   const portfolio = await db.portfolio.findFirst({
@@ -47,8 +55,7 @@ export default async function page({ params: { id } }: Props) {
 
   return (
     <div className="f-col gap-6">
-      {/* Charts */}
-      <div className="f-col lg:flex-row gap-4">
+      <div className="f-col xl:flex-row gap-4">
         <PortfolioChart
           portfolio={portfolio}
           title="Portfolio Chart"
@@ -57,12 +64,7 @@ export default async function page({ params: { id } }: Props) {
         <PortfolioAllocation stocks={stocks} />
       </div>
 
-      {/* Assets */}
-      <div className="flex">
-        <Suspense fallback={<PortfolioAssetsLoading />}>
-          <PortfolioAssets stockQuotes={stockQuotes} portfolio={portfolio} />
-        </Suspense>
-      </div>
+      <PortfolioAssets stockQuotes={stockQuotes} portfolio={portfolio} />
     </div>
   );
 }
