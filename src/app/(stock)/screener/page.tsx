@@ -29,8 +29,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { StockImage } from "@/components/stock/stock-image";
-import { trpc } from "../../_trpc/client";
+import StockImage from "@/components/stock/stock-image";
+import { trpc } from "../../../trpc/client";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 

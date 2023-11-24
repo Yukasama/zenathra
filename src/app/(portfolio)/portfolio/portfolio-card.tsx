@@ -11,11 +11,11 @@ import {
 } from "../../../components/ui/card";
 import { PortfolioWithStocks } from "@/types/db";
 import { db } from "@/db";
-import { buttonVariants } from "../../../components/ui/button";
-import { Button } from "@nextui-org/button";
 import { BarChart } from "lucide-react";
 import dynamic from "next/dynamic";
 import PortfolioImage from "../../../components/portfolio/portfolio-image";
+import { SkeletonButton, SkeletonList } from "@/components/ui/skeleton";
+import { Button } from "@nextui-org/button";
 
 interface Props {
   portfolio: Pick<
@@ -25,26 +25,18 @@ interface Props {
 }
 
 const PortfolioAddModal = dynamic(
-  () => import("../../../components/portfolio/portfolio-add-modal"),
+  () => import("@/components/portfolio/portfolio-add-modal"),
   {
     ssr: false,
-    loading: () => (
-      <Button className="bg-primary" isLoading>
-        Add Stocks
-      </Button>
-    ),
+    loading: () => <SkeletonButton />,
   }
 );
 
 const PortfolioDeleteModal = dynamic(
-  () => import("../../../components/portfolio/portfolio-delete-modal"),
+  () => import("@/components/portfolio/portfolio-delete-modal"),
   {
     ssr: false,
-    loading: () => (
-      <Button color="danger" isLoading>
-        Delete
-      </Button>
-    ),
+    loading: () => <SkeletonButton />,
   }
 );
 
@@ -74,11 +66,9 @@ export default async function PortfolioCard({ portfolio }: Props) {
           <PortfolioAddModal portfolio={portfolio} />
         </div>
       </CardHeader>
+
       <CardContent>
-        <Suspense
-          fallback={[...Array(3)].map((_, i) => (
-            <Card key={i} className="animate-pulse-right h-12 p-2 mb-2" />
-          ))}>
+        <Suspense fallback={<SkeletonList />}>
           <StockList
             symbols={symbols.map((s) => s.symbol)}
             error="No Stocks in this Portfolio"
@@ -87,16 +77,15 @@ export default async function PortfolioCard({ portfolio }: Props) {
           />
         </Suspense>
       </CardContent>
+
       <CardFooter className="flex justify-between">
-        <Link
-          href={`/p/${portfolio.id}`}
-          className={buttonVariants({ variant: "subtle" })}>
-          <BarChart className="h-4 w-4" />
-          View
+        <Link href={`/p/${portfolio.id}`}>
+          <Button>
+            <BarChart size={18} />
+            View
+          </Button>
         </Link>
-        <Suspense fallback={<p>Loading...</p>}>
-          <PortfolioDeleteModal portfolio={portfolio} />
-        </Suspense>
+        <PortfolioDeleteModal portfolio={portfolio} />
       </CardFooter>
     </Card>
   );

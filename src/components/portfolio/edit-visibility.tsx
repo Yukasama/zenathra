@@ -1,9 +1,8 @@
 "use client";
 
 import { Portfolio } from "@prisma/client";
-import { trpc } from "@/app/_trpc/client";
+import { trpc } from "@/trpc/client";
 import { toast } from "@/hooks/use-toast";
-import { startTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   Select,
@@ -29,9 +28,7 @@ export default function EditVisibility({ portfolio }: Props) {
         variant: "destructive",
       });
     },
-    onSuccess: () => {
-      startTransition(() => router.refresh());
-    },
+    onSuccess: () => router.refresh(),
   });
 
   return (
@@ -47,6 +44,7 @@ export default function EditVisibility({ portfolio }: Props) {
       <SelectTrigger>
         <SelectValue placeholder="Private">{status}</SelectValue>
       </SelectTrigger>
+
       <SelectContent>
         <SelectItem className="cursor-pointer" value={status}>
           {status}

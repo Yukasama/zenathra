@@ -9,8 +9,7 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import CompanyLogo from "./company-logo";
-import { RecentStocks } from "@/types/db";
-import { Portfolio } from "@prisma/client";
+import { Portfolio, Stock } from "@prisma/client";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Card } from "../ui/card";
 import { UserAvatar } from "./user-avatar";
@@ -27,13 +26,14 @@ import { navLinks } from "@/config/site";
 import { SITE } from "@/config/site";
 import { User } from "next-auth";
 import { buttonVariants } from "../ui/button";
+import { Button } from "@nextui-org/button";
 
 interface Props {
   user: User | undefined;
   portfolios:
     | Pick<Portfolio, "id" | "title" | "color" | "isPublic">[]
     | undefined;
-  recentStocks: RecentStocks | null;
+  recentStocks: Pick<Stock, "symbol" | "companyName" | "image">[] | null;
 }
 
 export default function Sidebar({ user, portfolios, recentStocks }: Props) {
@@ -41,10 +41,10 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
 
   return (
     <Sheet>
-      <SheetTrigger>
-        <div className={buttonVariants({ variant: "subtle", size: "xs" })}>
+      <SheetTrigger asChild>
+        <Button isIconOnly variant="flat">
           <Menu className="h-5" />
-        </div>
+        </Button>
       </SheetTrigger>
       <SheetContent side="left" className="f-col gap-4 rounded-r-xl">
         <div className="flex items-center justify-between">

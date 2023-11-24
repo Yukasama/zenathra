@@ -11,6 +11,10 @@ export function capitalize(text: string) {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
+export function getPercentage(count: number, total: number) {
+  return `${((count / total) * 100).toFixed(2)}%`;
+}
+
 export async function Timeout(ms: number) {
   return await new Promise((resolve) => setTimeout(resolve, ms));
 }

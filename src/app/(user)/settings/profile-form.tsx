@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { trpc } from "@/app/_trpc/client";
+import { trpc } from "@/trpc/client";
 import { UserUpdateSchema } from "@/lib/validators/user";
 import { User } from "@prisma/client";
 import { Textarea } from "../../../components/ui/textarea";

@@ -31,7 +31,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { trpc } from "@/app/_trpc/client";
+import { trpc } from "@/trpc/client";
 
 export default function AdminAddStocks() {
   const stocks = ["All", "US500", "AAPL", "MSFT", "TSLA"];

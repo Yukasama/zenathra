@@ -1,6 +1,6 @@
 "use client";
 
-import { trpc } from "@/app/_trpc/client";
+import { trpc } from "@/trpc/client";
 import { cn, computeDomain } from "@/lib/utils";
 import { History, Quote } from "@/types/stock";
 import { useState, useEffect } from "react";

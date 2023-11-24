@@ -16,17 +16,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn, computeDomain } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
-import { trpc } from "@/app/_trpc/client";
+import { trpc } from "@/trpc/client";
 import { Portfolio } from "@prisma/client";
+import { Button } from "@nextui-org/button";
+import { RotateCcw } from "lucide-react";
+import debounce from "lodash.debounce";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
+  portfolio: Pick<Portfolio, "id" | "createdAt">;
   title?: string;
   description?: string;
-  portfolio: Pick<Portfolio, "id" | "createdAt">;
   image?: React.ReactNode;
   height?: number;
   width?: number;
@@ -48,12 +51,21 @@ export default function PriceChart({
   const [results, setResults] = useState<any[]>([]);
   const [positive, setPositive] = useState<boolean>(true);
 
-  const { data, isFetched } = trpc.portfolio.history.useQuery(portfolio.id);
+  const request = debounce(async () => refetch(), 3000);
+  const debounceRequest = useCallback(() => {
+    request();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const { data, refetch, isFetched } = trpc.portfolio.history.useQuery(
+    portfolio.id
+  );
 
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    if (isFetched && data) {
+    if (isFetched && data && data[timeFrame].length) {
       setDomain(computeDomain(data[timeFrame]));
       setStartPrice(Number(data[timeFrame][0].close));
       setPositive(
@@ -108,6 +120,7 @@ export default function PriceChart({
     return null;
   };
 
+  // Setting history availability
   const portfolioCreated = new Date(portfolio.createdAt).getTime();
   const today = new Date().getTime();
   const diff = today - portfolioCreated;
@@ -130,7 +143,10 @@ export default function PriceChart({
       <CardHeader>
         <div className="flex justify-between gap-3">
           <div className="flex items-center gap-2">
+            {/* Image */}
             {image ? <Skeleton isLoaded={isFetched}>{image}</Skeleton> : null}
+
+            {/* Title */}
             <div className="f-col gap-1">
               <Skeleton isLoaded={isFetched}>
                 <CardTitle className="bg-card hidden md:flex">
@@ -145,6 +161,7 @@ export default function PriceChart({
             </div>
           </div>
 
+          {/* History Selector */}
           <Tabs defaultValue="1D">
             <TabsList className={`${!isFetched && "bg-transparent gap-[1px]"}`}>
               {Object.entries(timeFrames).map(([timeFrame, disabled]) => (
@@ -161,52 +178,62 @@ export default function PriceChart({
           </Tabs>
         </div>
       </CardHeader>
+
       <CardContent>
         <Skeleton isLoaded={mounted && isFetched}>
-          <ResponsiveContainer width="100%" height={height || 250}>
-            <AreaChart
-              className="bg-card"
-              width={width ?? 500}
-              height={height ?? 250}
-              data={results}
-              margin={{ top: 5, right: 40, left: 0, bottom: 5 }}>
-              <defs>
-                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="5%"
-                    stopColor={positive ? "#19E363" : "#e6221e"}
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor={positive ? "#19E363" : "#e6221e"}
-                    stopOpacity={0}
-                  />
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="name" fontSize={12} />
-              <YAxis
-                domain={domain}
-                fontSize={12}
-                tickFormatter={(value) => `${value.toFixed(2)}`}
-              />
-              {/* @ts-ignore */}
-              <Tooltip content={<CustomTooltip />} />
-              <ReferenceLine
-                y={startPrice}
-                strokeDasharray="3 3"
-                stroke="gray"
-              />
-              <Area
-                type="monotone"
-                dataKey="uv"
-                stroke={positive ? "#19E363" : "#e6221e"}
-                fillOpacity={1}
-                fill="url(#colorUv)"
-                animationDuration={500}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+          {isFetched && !data[timeFrame].length ? (
+            <div className="f-box f-col gap-1 mt-16">
+              <p className="text-zinc-500">Chart could not be loaded</p>
+              <Button isIconOnly onClick={() => debounceRequest()}>
+                <RotateCcw size={18} />
+              </Button>
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height={height || 250}>
+              <AreaChart
+                className="bg-card"
+                width={width ?? 500}
+                height={height ?? 250}
+                data={results}
+                margin={{ top: 5, right: 40, left: 0, bottom: 5 }}>
+                <defs>
+                  <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor={positive ? "#19E363" : "#e6221e"}
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor={positive ? "#19E363" : "#e6221e"}
+                      stopOpacity={0}
+                    />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="name" fontSize={12} />
+                <YAxis
+                  domain={domain}
+                  fontSize={12}
+                  tickFormatter={(value) => `${value.toFixed(2)}`}
+                />
+                {/* @ts-ignore */}
+                <Tooltip content={<CustomTooltip />} />
+                <ReferenceLine
+                  y={startPrice}
+                  strokeDasharray="3 3"
+                  stroke="gray"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="uv"
+                  stroke={positive ? "#19E363" : "#e6221e"}
+                  fillOpacity={1}
+                  fill="url(#colorUv)"
+                  animationDuration={500}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          )}
         </Skeleton>
       </CardContent>
     </Card>

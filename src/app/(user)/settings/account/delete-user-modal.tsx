@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "../../../../components/ui/input";
 import { CardDescription } from "../../../../components/ui/card";
-import { trpc } from "@/app/_trpc/client";
+import { trpc } from "@/trpc/client";
 import { cn } from "@/lib/utils";
 
 export default function DeleteUserModal() {

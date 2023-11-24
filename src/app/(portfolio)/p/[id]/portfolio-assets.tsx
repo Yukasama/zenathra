@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, startTransition } from "react";
+import { useState, useMemo } from "react";
 import {
   Table,
   TableHeader,
@@ -19,7 +19,7 @@ import { Button } from "@nextui-org/button";
 import { Pagination } from "@nextui-org/pagination";
 import { Chip } from "@nextui-org/chip";
 import { Search, MoreVertical } from "lucide-react";
-import { Portfolio, Stock } from "@prisma/client";
+import { Stock } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import {
@@ -28,11 +28,12 @@ import {
   SkeletonList,
 } from "@/components/ui/skeleton";
 import { StockQuote } from "@/types/stock";
-import { trpc } from "@/app/_trpc/client";
+import { trpc } from "@/trpc/client";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import PortfolioAddModal from "@/components/portfolio/portfolio-add-modal";
 import { PortfolioWithStocks } from "@/types/db";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   stockQuotes: Pick<
@@ -70,33 +71,41 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
   const [page, setPage] = useState(1);
   const router = useRouter();
 
-  const rowsPerPage = 5;
-  const columns = ["companyName", "peRatioTTM", "sector", "actions"];
+  const ROWS_PER_PAGE = 5;
+  const COLUMNS = ["companyName", "peRatioTTM", "sector", "actions"];
 
+  const queryClient = useQueryClient();
   const { mutate: remove, isLoading } = trpc.portfolio.remove.useMutation({
-    onError: () =>
+    onError: () => {
       toast({
         title: "Oops! Something went wrong.",
         description: `Failed to remove position.`,
         variant: "destructive",
-      }),
+      });
+    },
     onSuccess: () => {
-      startTransition(() => router.refresh());
+      queryClient.invalidateQueries(["portfolio.remove"]);
+      router.refresh();
     },
   });
 
+  // Filtering and sorting stocks
   const filteredStocks = useMemo(() => {
-    return stockQuotes.filter((stock) =>
-      stock.companyName.toLowerCase().includes(filterValue.toLowerCase())
-    );
+    return stockQuotes
+      .filter((stock) =>
+        stock.companyName.toLowerCase().includes(filterValue.toLowerCase())
+      )
+      .sort((a, b) => a.companyName.localeCompare(b.companyName));
   }, [stockQuotes, filterValue]);
 
+  // Slicing stocks for pagination
   const paginatedStocks = useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+    const start = (page - 1) * ROWS_PER_PAGE;
+    const end = start + ROWS_PER_PAGE;
     return filteredStocks.slice(start, end);
-  }, [filteredStocks, page, rowsPerPage]);
+  }, [filteredStocks, page, ROWS_PER_PAGE]);
 
+  // Single cell for assets table
   const renderCell = (
     stock: Pick<
       Stock,
@@ -119,13 +128,16 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
         return (
           <div className="relative flex justify-end items-center gap-2">
             <Dropdown>
-              <DropdownTrigger>
+              <DropdownTrigger disabled={isLoading}>
                 <Button size="sm" isIconOnly>
                   <MoreVertical size={18} />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem>View</DropdownItem>
+                <DropdownItem
+                  onClick={() => router.push(`/stocks/${stock.symbol}`)}>
+                  View
+                </DropdownItem>
                 <DropdownItem>Edit</DropdownItem>
                 <DropdownItem
                   color="danger"
@@ -148,6 +160,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
 
   return (
     <div className="f-col">
+      {/* Operations Bar */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
           <Search size={18} aria-label="Search" />
@@ -160,16 +173,17 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
         <PortfolioAddModal portfolio={portfolio} />
       </div>
 
-      <Table className="h-[320px] min-w-[700px]" aria-labelledby="Stocktable">
+      {/* Assets Table */}
+      <Table className="min-w-[700px]" aria-labelledby="Assets Table">
         <TableHeader>
-          {columns.map((column) => (
+          {COLUMNS.map((column) => (
             <TableColumn key={column}>{columnTranslation[column]}</TableColumn>
           ))}
         </TableHeader>
         <TableBody isLoading={isLoading}>
           {paginatedStocks.map((stock) => (
             <TableRow key={stock.id}>
-              {columns.map((column) => (
+              {COLUMNS.map((column) => (
                 <TableCell key={column}>{renderCell(stock, column)}</TableCell>
               ))}
             </TableRow>
@@ -177,9 +191,10 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
         </TableBody>
       </Table>
 
+      {/* Pagination Control for Table */}
       <Pagination
         className="mt-4 self-center"
-        total={Math.ceil(filteredStocks.length / rowsPerPage)}
+        total={Math.ceil(filteredStocks.length / ROWS_PER_PAGE)}
         page={page}
         onChange={(newPage) => setPage(newPage)}
       />

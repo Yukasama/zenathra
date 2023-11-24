@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import { PortfolioWithStocks } from "@/types/db";
 import { Card } from "../ui/card";
-import { trpc } from "@/app/_trpc/client";
+import { trpc } from "@/trpc/client";
 import PortfolioImage from "../portfolio/portfolio-image";
 
 interface Props {

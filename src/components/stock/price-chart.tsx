@@ -20,7 +20,7 @@ import React, { useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { cn, computeDomain } from "@/lib/utils";
 import Skeleton from "../ui/skeleton";
-import { trpc } from "@/app/_trpc/client";
+import { trpc } from "@/trpc/client";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;

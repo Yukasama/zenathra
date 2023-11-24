@@ -18,6 +18,7 @@ import {
 import { Stock } from "@prisma/client";
 import Skeleton from "../../../../components/ui/skeleton";
 import { GRAPH_COLORS } from "@/config/colors";
+import { getPercentage } from "@/lib/utils";
 
 function generateColors(num: number): string[] {
   let colors: string[] = [];
@@ -29,16 +30,16 @@ function generateColors(num: number): string[] {
   return colors.slice(0, num);
 }
 
-function getPercentage(count: number, total: number) {
-  return `${((count / total) * 100).toFixed(2)}%`;
-}
-
 interface Props {
   stocks: Pick<Stock, "sector">[];
 }
 
 export default function PortfolioAllocation({ stocks }: Props) {
-  const [mounted, setMounted] = useState<boolean>(false);
+  const [mounted, setMounted] = useState(false);
+
+  const renderCustomLabel = ({ value }: { value: number }) => {
+    return `${getPercentage(value, stocks.length)}`;
+  };
 
   useEffect(() => setMounted(true), []);
 
@@ -65,9 +66,6 @@ export default function PortfolioAllocation({ stocks }: Props) {
   }, [sectorCount]);
 
   const colors = useMemo(() => generateColors(sortedData.length), [sortedData]);
-
-  const renderCustomLabel = ({ value }: { value: number }) =>
-    `${getPercentage(value, stocks.length)}`;
 
   return (
     <Card className="w-full max-w-[500px] h-[370px] sm:h-[350px] shadow-lg">

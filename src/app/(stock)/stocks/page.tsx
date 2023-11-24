@@ -7,7 +7,7 @@ import { Suspense } from "react";
 import PageLayout from "@/components/shared/page-layout";
 import { db } from "@/db";
 import PriceChart from "@/components/stock/price-chart";
-import { StockImage } from "@/components/stock/stock-image";
+import StockImage from "@/components/stock/stock-image";
 import { getUser } from "@/lib/auth";
 
 export const metadata = { title: "Stocks on the move" };

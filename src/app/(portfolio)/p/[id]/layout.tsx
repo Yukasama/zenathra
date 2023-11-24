@@ -118,7 +118,7 @@ export default async function Layout({ children, params: { id } }: Props) {
     );
   }
 
-  const links = [
+  const PORTFOLIO_LINKS = [
     {
       title: "Overview",
       link: id,
@@ -140,7 +140,7 @@ export default async function Layout({ children, params: { id } }: Props) {
     <PageLayout className="f-col lg:flex-row gap-8">
       {/* Navigator */}
       <Card className="border-none bg-zinc-50 dark:bg-zinc-900/70 flex justify-evenly lg:f-col lg:justify-start p-4 lg:p-8 lg:py-10 gap-3.5">
-        {links.map((link) => (
+        {PORTFOLIO_LINKS.map((link) => (
           <ListItem key={link.title} portfolioId={id} {...link} />
         ))}
       </Card>

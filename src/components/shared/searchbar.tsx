@@ -4,7 +4,7 @@ import debounce from "lodash.debounce";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { StockImage } from "../stock/stock-image";
+import StockImage from "../stock/stock-image";
 import {
   CommandInput,
   CommandList,
@@ -13,13 +13,15 @@ import {
   CommandItem,
   CommandDialog,
 } from "../ui/command";
-import { Loader, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { trpc } from "@/app/_trpc/client";
-import { buttonVariants } from "../ui/button";
+import { trpc } from "@/trpc/client";
 import { motion } from "framer-motion";
 import { ANIMATION_VARIANTS } from "@/config/motion";
 import { Stock } from "@prisma/client";
+import { Button } from "@nextui-org/button";
+import { Spinner } from "@nextui-org/spinner";
+import { symbol } from "zod";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   recentStocks: Pick<Stock, "symbol" | "companyName" | "image">[] | null;
@@ -30,14 +32,20 @@ export default function Searchbar({
   recentStocks,
   responsive = true,
   className,
-  ...props
 }: Props) {
+  const [input, setInput] = useState("");
+  const [isMac, setIsMac] = useState(false);
+  const [open, setOpen] = useState(false);
+
   const pathname = usePathname();
   const router = useRouter();
 
-  const [input, setInput] = useState<string>("");
-  const [isMac, setIsMac] = useState<boolean>(false);
-  const [open, setOpen] = useState(false);
+  const request = debounce(async () => refetch(), 300);
+  const debounceRequest = useCallback(() => {
+    request();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -58,23 +66,6 @@ export default function Searchbar({
 
   useEffect(() => {
     setIsMac(navigator.userAgent.toUpperCase().includes("MAC"));
-  }, []);
-
-  const request = debounce(async () => {
-    refetch();
-
-    if (recentStocks) {
-      recentStocks.filter(
-        (stock) =>
-          stock.symbol.includes(input) || stock.companyName.includes(input)
-      );
-    }
-  }, 300);
-
-  const debounceRequest = useCallback(() => {
-    request();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const {
@@ -106,18 +97,13 @@ export default function Searchbar({
           K
         </kbd>
       </motion.div>
-      <div
+      <Button
         onClick={() => setOpen((prev) => (prev === open ? !open : open))}
-        className={cn(
-          buttonVariants({
-            variant: "link",
-            size: "sm",
-          }),
-          `${responsive ? "flex md:hidden" : "hidden"} border cursor-pointer`
-        )}
-        {...props}>
+        isIconOnly
+        size="sm"
+        className={`${responsive ? "flex md:hidden" : "hidden"}`}>
         <Search className="h-[18px]" />
-      </div>
+      </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput
           isLoading={isFetching}
@@ -141,7 +127,7 @@ export default function Searchbar({
                         router.push(`/stocks/${stock.symbol}`);
                         router.refresh();
                       }}
-                      value={stock.companyName}
+                      value={stock.symbol + stock.companyName}
                       className="flex items-center gap-3 h-14 cursor-pointer">
                       <StockImage src={stock.image} px={25} />
                       <div>
@@ -156,9 +142,9 @@ export default function Searchbar({
               </CommandGroup>
             )}
             {isFetching ? (
-              <div className="p-5 f-box">
-                <Loader className="h-5 w-5 animate-spin text-zinc-500 text-center" />
-              </div>
+              <CommandEmpty>
+                <Spinner />
+              </CommandEmpty>
             ) : !results?.length ? (
               <CommandEmpty>No results found.</CommandEmpty>
             ) : (
@@ -172,7 +158,7 @@ export default function Searchbar({
                             router.push(`/stocks/${stock.symbol}`);
                             router.refresh();
                           }}
-                          value={stock.companyName}
+                          value={stock.symbol + stock.companyName}
                           className="flex items-center gap-3 h-14 cursor-pointer">
                           <StockImage src={stock.image} px={25} />
                           <div>

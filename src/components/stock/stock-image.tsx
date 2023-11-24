@@ -8,7 +8,7 @@ interface Props extends React.HTMLAttributes<HTMLImageElement> {
   priority?: boolean;
 }
 
-export function StockImage({
+export default function StockImage({
   px = 40,
   src,
   className,

@@ -2,60 +2,62 @@
 
 import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation";
-import { startTransition, useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { ListPlus, ListX, Plus } from "lucide-react";
 import debounce from "lodash.debounce";
-import { StockImage } from "../stock/stock-image";
+import StockImage from "../stock/stock-image";
 import {
-  Command,
   CommandInput,
   CommandList,
   CommandEmpty,
   CommandGroup,
   CommandItem,
+  CommandDialog,
 } from "@/components/ui/command";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
 import { PortfolioWithStocks } from "@/types/db";
-import { trpc } from "@/app/_trpc/client";
-import { DialogClose } from "@radix-ui/react-dialog";
+import { trpc } from "@/trpc/client";
+import { Spinner } from "@nextui-org/spinner";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   portfolio: Pick<PortfolioWithStocks, "id" | "title" | "stocks">;
 }
 
 export default function PortfolioAddModal({ portfolio }: Props) {
-  const [input, setInput] = useState<string>("");
+  const [input, setInput] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
-
+  const [open, setOpen] = useState(false);
   const router = useRouter();
-  const commandRef = useRef<HTMLDivElement>(null);
-  const request = debounce(async () => refetch(), 300);
 
+  const stocksInPortfolio = new Set(portfolio.stocks.map((s) => s.stockId));
+
+  const request = debounce(async () => refetch(), 300);
   const debounceRequest = useCallback(() => {
     request();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((open) => !open);
+      }
+    };
+
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
+
   const {
     isFetching,
     data: results,
     refetch,
-    isFetched,
   } = trpc.stock.search.useQuery(input, { enabled: false });
 
-  const filteredResults = results?.filter(
-    (r) => !portfolio.stocks.map((s) => s.stockId === r.id)
-  );
-
+  const queryClient = useQueryClient();
   const { mutate: addToPortfolio, isLoading } = trpc.portfolio.add.useMutation({
     onError: () => {
       toast({
@@ -65,8 +67,8 @@ export default function PortfolioAddModal({ portfolio }: Props) {
       });
     },
     onSuccess: () => {
-      startTransition(() => router.refresh());
-      toast({ description: "Added stocks to portfolio." });
+      queryClient.invalidateQueries(["portfolio.add"]);
+      router.refresh();
     },
   });
 
@@ -81,6 +83,9 @@ export default function PortfolioAddModal({ portfolio }: Props) {
       portfolioId: portfolio.id,
       stockIds: selected,
     });
+
+    setSelected([]);
+    setOpen(false);
   }
 
   function modifyPortfolio(id: string) {
@@ -92,87 +97,71 @@ export default function PortfolioAddModal({ portfolio }: Props) {
   }
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="bg-primary">
+    <>
+      <Button
+        color="primary"
+        onClick={() => setOpen((prev) => (prev === open ? !open : open))}>
+        Add New <Plus size={18} />
+      </Button>
+
+      <CommandDialog open={open} onOpenChange={setOpen}>
+        <CommandInput
+          isLoading={isFetching}
+          onValueChange={(text) => {
+            setInput(text);
+            debounceRequest();
+          }}
+          value={input}
+          placeholder="Search stocks..."
+        />
+
+        {input.length > 0 && (
+          <CommandList key={results?.length}>
+            {isFetching ? (
+              <CommandEmpty>
+                <Spinner />
+              </CommandEmpty>
+            ) : !results?.length ? (
+              <CommandEmpty>No results found.</CommandEmpty>
+            ) : (
+              <CommandGroup heading="Stocks">
+                {results?.map((result) => (
+                  <CommandItem
+                    key={result.id}
+                    disabled={stocksInPortfolio.has(result.id)}
+                    onSelect={() => modifyPortfolio(result.id)}
+                    value={result.symbol + result.companyName}
+                    className={`flex items-center justify-between cursor-pointer ${
+                      stocksInPortfolio.has(result.id) && "opacity-50"
+                    }`}>
+                    <div className="flex items-center gap-2">
+                      <StockImage src={result.image} px={30} />
+                      <div className="f-col">
+                        <p className="text-sm font-medium">{result.symbol}</p>
+                        <p className="w-[200px] text-[12px] text-zinc-600">
+                          {result.companyName}
+                        </p>
+                      </div>
+                    </div>
+                    {selected.includes(result.id) ? (
+                      <div className="h-10 w-10 border bg-card f-box bg-red-500 rounded-md">
+                        <ListX size={18} />
+                      </div>
+                    ) : (
+                      <div className="h-10 w-10 border bg-card f-box bg-green-500 rounded-md">
+                        <ListPlus size={18} />
+                      </div>
+                    )}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+          </CommandList>
+        )}
+        <Button color="primary" isLoading={isLoading} onClick={onSubmit}>
           Add New <Plus size={18} />
         </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-[375px] rounded-md">
-        <DialogHeader>
-          <DialogTitle>Add stocks to {portfolio.title}</DialogTitle>
-          <DialogDescription>
-            Here you can add stocks to your portfolio
-          </DialogDescription>
-        </DialogHeader>
-        <Command
-          ref={commandRef}
-          key={results?.length}
-          className="rounded-md border">
-          <CommandInput
-            isLoading={isFetching}
-            onValueChange={(text) => {
-              setInput(text);
-              debounceRequest();
-            }}
-            value={input}
-            placeholder="Search stocks..."
-          />
-
-          {input.length > 0 && (
-            <CommandList autoFocus={false} key={filteredResults?.length}>
-              {isFetching && (
-                <CommandEmpty>
-                  {[...Array(4)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="animate-pulse-right h-12 rounded-md p-1 px-2"
-                    />
-                  ))}
-                </CommandEmpty>
-              )}
-              {isFetched && !filteredResults?.length && (
-                <CommandEmpty>No results found.</CommandEmpty>
-              )}
-              {isFetched && (filteredResults?.length ?? 0) > 0 && (
-                <CommandGroup autoFocus={false} heading="Stocks">
-                  {filteredResults?.map((result) => (
-                    <CommandItem
-                      key={result.id}
-                      autoFocus={false}
-                      onSelect={() => modifyPortfolio(result.id)}
-                      className="flex items-center justify-between cursor-pointer">
-                      <div className="flex items-center gap-2">
-                        <StockImage src={result.image} px={30} />
-                        <div className="f-col">
-                          <p className="text-sm font-medium">{result.symbol}</p>
-                          <p className="w-[200px] text-[12px] text-zinc-600">
-                            {result.companyName}
-                          </p>
-                        </div>
-                      </div>
-                      {selected.includes(result.id) ? (
-                        <div className="h-10 w-10 border bg-card f-box bg-red-500 rounded-md">
-                          <ListX className="h-4 w-4" />
-                        </div>
-                      ) : (
-                        <div className="h-10 w-10 border bg-card f-box bg-green-500 rounded-md">
-                          <ListPlus className="h-4 w-4" />
-                        </div>
-                      )}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              )}
-            </CommandList>
-          )}
-        </Command>
-        <DialogClose>
-          <Button color="primary" isLoading={isLoading} onClick={onSubmit}>
-            Add New <Plus size={18} />
-          </Button>
-        </DialogClose>
-      </DialogContent>
-    </Dialog>
+      </CommandDialog>
+    </>
   );
 }

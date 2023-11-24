@@ -1,8 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { startTransition } from "react";
-import { buttonVariants } from "../../../components/ui/button";
 import { Button } from "@nextui-org/button";
 import { Checkbox } from "@nextui-org/checkbox";
 import { Input } from "../../../components/ui/input";
@@ -10,7 +8,6 @@ import { Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -31,8 +28,9 @@ import {
 } from "../../../components/ui/form";
 import { motion } from "framer-motion";
 import { ANIMATION_VARIANTS } from "@/config/motion";
-import { trpc } from "@/app/_trpc/client";
+import { trpc } from "@/trpc/client";
 import { CreatePortfolioSchema } from "@/lib/validators/portfolio";
+import { PLANS } from "@/config/stripe";
 
 interface Props {
   numberOfPortfolios?: number;
@@ -50,21 +48,18 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
 
   const { mutate: createPortfolio, isLoading } =
     trpc.portfolio.create.useMutation({
-      onError: () =>
+      onError: () => {
         toast({
           title: "Oops! Something went wrong.",
           description: "Failed to create portfolio.",
           variant: "destructive",
-        }),
-      onSuccess: () => {
-        startTransition(() => router.refresh());
-
-        toast({ description: "Portfolio successfully created." });
+        });
       },
+      onSuccess: () => router.refresh(),
     });
 
   function onSubmit(data: FieldValues) {
-    if (numberOfPortfolios >= 3) {
+    if (numberOfPortfolios >= PLANS[0].maxPortfolios) {
       return toast({
         title: "Oops! Something went wrong.",
         description: "Maximum number of portfolios reached.",
@@ -89,16 +84,13 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
           whileTap="tap"
           className={numberOfPortfolios === 0 ? "h-72" : ""}>
           <Card className="f-box cursor-pointer h-full hover:bg-zinc-100 dark:hover:bg-zinc-900">
-            <div
-              className={cn(
-                buttonVariants({ size: "sm" }),
-                "bg-primary hover:bg-primary"
-              )}>
+            <Button color="primary" isIconOnly>
               <Plus />
-            </div>
+            </Button>
           </Card>
         </motion.div>
       </DialogTrigger>
+
       <DialogContent className="max-w-[375px] rounded-md">
         <DialogHeader>
           <DialogTitle>Create Portfolio</DialogTitle>
@@ -106,6 +98,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
             Create a personal portfolio to track your stocks.
           </DialogDescription>
         </DialogHeader>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
@@ -130,6 +123,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="isPublic"
@@ -149,11 +143,9 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
                 </FormItem>
               )}
             />
-            <Button
-              className="bg-primary"
-              type="submit"
-              isLoading={isLoading}
-              startContent={!isLoading && <Plus className="h-4 w-4" />}>
+
+            <Button color="primary" type="submit" isLoading={isLoading}>
+              {!isLoading && <Plus size={18} />}
               Create Portfolio
             </Button>
           </form>

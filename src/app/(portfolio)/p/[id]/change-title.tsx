@@ -1,12 +1,12 @@
 "use client";
 
-import { trpc } from "@/app/_trpc/client";
+import { trpc } from "@/trpc/client";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { Spinner } from "@nextui-org/spinner";
 import { Portfolio } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { startTransition, useState } from "react";
+import { useState } from "react";
 
 interface Props {
   portfolio: Pick<Portfolio, "id" | "title">;
@@ -24,9 +24,7 @@ export default function ChangeTitle({ portfolio }: Props) {
         variant: "destructive",
       });
     },
-    onSuccess: () => {
-      startTransition(() => router.refresh());
-    },
+    onSuccess: () => router.refresh(),
   });
 
   const handleSubmit = (event: any) => {

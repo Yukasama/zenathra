@@ -149,7 +149,9 @@ export async function getQuotes(
   }
 }
 
-export async function getStockQuotes(stocks: Stock[]): Promise<StockQuote[]> {
+export async function getStockQuotes(
+  stocks: Pick<Stock, "symbol">[]
+): Promise<StockQuote[]> {
   const quotes = await getQuotes(stocks.map((stock) => stock.symbol));
 
   const results = stocks.map((stock) => ({

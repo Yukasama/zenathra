@@ -17,15 +17,14 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "../ui/input";
 import { CardDescription } from "../ui/card";
-import { trpc } from "@/app/_trpc/client";
+import { trpc } from "@/trpc/client";
 
 type Props = {
   portfolio: Pick<Portfolio, "id" | "title">;
 };
 
 export default function PortfolioDeleteModal({ portfolio }: Props) {
-  const [title, setTitle] = useState<string>();
-
+  const [title, setTitle] = useState("");
   const router = useRouter();
 
   const { mutate: deletePortfolio, isLoading } =
@@ -47,12 +46,13 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
     });
 
   function onSubmit() {
-    if (title !== "CONFIRM")
+    if (title !== "CONFIRM") {
       return toast({
         title: "Oops! Something went wrong.",
         description: "Please enter the correct title.",
         variant: "destructive",
       });
+    }
 
     deletePortfolio(portfolio.id);
   }
@@ -61,10 +61,11 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
     <Dialog>
       <DialogTrigger asChild>
         <Button className="bg-red-500 rounded-md">
-          <Trash2 className="h-4 w-4" />
+          <Trash2 size={18} />
           Delete
         </Button>
       </DialogTrigger>
+
       <DialogContent className="max-w-[375px] rounded-md">
         <DialogHeader>
           <DialogTitle>
@@ -72,6 +73,7 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
           </DialogTitle>
           <DialogDescription>This action cannot be undone.</DialogDescription>
         </DialogHeader>
+
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Input
             placeholder="CONFIRM"
@@ -81,6 +83,7 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
             Enter &apos;CONFIRM&apos; to delete your portfolio.
           </CardDescription>
         </div>
+
         <DialogFooter>
           <Button
             className="bg-red-500 rounded-md"

@@ -16,7 +16,7 @@ import StockStatistics, {
   StockStatisticsLoading,
 } from "@/app/(stock)/stocks/[symbol]/stock-statistics";
 import PriceChart from "@/components/stock/price-chart";
-import { StockImage } from "@/components/stock/stock-image";
+import StockImage from "@/components/stock/stock-image";
 import { getUser } from "@/lib/auth";
 import { getQuote } from "@/lib/fmp/quote";
 import { SITE } from "@/config/site";

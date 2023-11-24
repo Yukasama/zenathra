@@ -47,6 +47,7 @@ export default async function page({ params: { id } }: Props) {
 
   return (
     <div className="f-col gap-6">
+      {/* Charts */}
       <div className="f-col lg:flex-row gap-4">
         <PortfolioChart
           portfolio={portfolio}
@@ -55,6 +56,8 @@ export default async function page({ params: { id } }: Props) {
         />
         <PortfolioAllocation stocks={stocks} />
       </div>
+
+      {/* Assets */}
       <div className="flex">
         <Suspense fallback={<PortfolioAssetsLoading />}>
           <PortfolioAssets stockQuotes={stockQuotes} portfolio={portfolio} />

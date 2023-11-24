@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { StockImage } from "./stock-image";
+import StockImage from "./stock-image";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
 import React from "react";
