@@ -13,8 +13,8 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export default function SmallChart({ quote, height, className }: Props) {
-  const [mounted, setMounted] = useState<boolean>(false);
-  const [data, setData] = useState<any[]>([]);
+  const [mounted, setMounted] = useState(false);
+  const [data, setData] = useState([]);
   const [domain, setDomain] = useState([0, 0]);
 
   useEffect(() => setMounted(true), []);

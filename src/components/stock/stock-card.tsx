@@ -13,17 +13,16 @@ import StockImage from "./stock-image";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
 import React from "react";
-import Skeleton from "../ui/skeleton";
-import SmallChart from "./small-chart";
+import Skeleton, { SkeletonText } from "../ui/skeleton";
 import { Stock } from "@prisma/client";
 import { PortfolioWithStocks } from "@/types/db";
 import dynamic from "next/dynamic";
 import { Loader2 } from "lucide-react";
+import { getUser } from "@/lib/auth";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  quote: Quote | null;
+  quote: Quote | undefined;
   stock: Pick<Stock, "id" | "symbol" | "image"> | undefined;
-  isAuthenticated: boolean;
   portfolios:
     | Pick<
         PortfolioWithStocks,
@@ -51,6 +50,11 @@ const StockPortfolioAddModal = dynamic(
   }
 );
 
+const SmallChart = dynamic(() => import("./small-chart"), {
+  ssr: false,
+  loading: () => <Skeleton className="h-20" />,
+});
+
 export function StockCardLoading() {
   return (
     <Card className="min-w-[300px] min-h-[210px] lg:min-h-[250px]">
@@ -60,14 +64,7 @@ export function StockCardLoading() {
             <Skeleton>
               <div className="h-10 w-10"></div>
             </Skeleton>
-            <div className="f-col gap-1">
-              <Skeleton>
-                <CardTitle className="h-4 w-[150px]"></CardTitle>
-              </Skeleton>
-              <Skeleton>
-                <CardDescription className="h-4 w-[200px]"></CardDescription>
-              </Skeleton>
-            </div>
+            <SkeletonText />
           </div>
         </div>
       </CardHeader>
@@ -102,14 +99,17 @@ export function StockCardLoading() {
   );
 }
 
-export default function StockCard({
+export default async function StockCard({
   quote,
   stock,
-  isAuthenticated,
   portfolios,
   className,
 }: Props) {
-  if (!quote) return <Card className="f-box">Stock could not be loaded</Card>;
+  if (!quote) {
+    return <Card className="f-box">Stock could not be loaded</Card>;
+  }
+
+  const user = await getUser();
 
   return (
     <Card
@@ -120,10 +120,9 @@ export default function StockCard({
       {stock && (
         <div className="absolute top-4 right-4">
           <StockPortfolioAddModal
-            isAuthenticated={isAuthenticated}
-            symbolId={stock?.id}
-            symbol={quote.symbol}
+            stock={stock}
             portfolios={portfolios}
+            isAuth={!!user}
           />
         </div>
       )}

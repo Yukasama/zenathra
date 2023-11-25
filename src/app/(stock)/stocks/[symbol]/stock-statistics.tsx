@@ -5,13 +5,7 @@ import { db } from "@/db";
 import StockKeyMetricsChart from "./stock-key-metrics-chart";
 import StockDividendChart from "./stock-dividend-chart";
 import Skeleton from "../../../../components/ui/skeleton";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../../../components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../../components/ui/card";
 
 export function StockStatisticsLoading() {
   return (
@@ -57,15 +51,15 @@ export default async function StockStatistics({ stock }: Props) {
     take: 8,
   });
 
-  if (!financials) return null;
+  if (!financials) {
+    return null;
+  }
 
   const currentYear = new Date().getFullYear();
   const startYear = currentYear - financials.length;
   const chartYearRange = Math.max(2015, startYear);
 
-  const labels = Array.from({ length: currentYear - chartYearRange }, (_, i) =>
-    (chartYearRange + i).toString()
-  );
+  const labels = Array.from({ length: currentYear - chartYearRange }, (_, i) => (chartYearRange + i).toString());
 
   const statConfig = labels.map((label, index) => ({
     name: label,
@@ -90,10 +84,7 @@ export default async function StockStatistics({ stock }: Props) {
     <div className="f-col items-start lg:items-start gap-4 lg:flex-row">
       <StockKeyMetricsChart companyName={stock.companyName} data={statConfig} />
       <StockMarginChart companyName={stock.companyName} data={marginConfig} />
-      <StockDividendChart
-        companyName={stock.companyName}
-        data={dividendConfig}
-      />
+      <StockDividendChart companyName={stock.companyName} data={dividendConfig} />
     </div>
   );
 }

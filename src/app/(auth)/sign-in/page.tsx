@@ -1,12 +1,6 @@
 import OAuth from "./oauth";
 import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import CompanyLogo from "@/components/shared/company-logo";
 import { getUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -18,7 +12,7 @@ export const runtime = "edge";
 
 export default async function page() {
   const user = await getUser();
-  
+
   if (user) {
     redirect("/");
   }

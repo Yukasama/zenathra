@@ -11,13 +11,10 @@ interface Props {
   params: { id: string };
 }
 
-const PortfolioAssets = dynamic(
-  () => import("@/app/(portfolio)/p/[id]/portfolio-assets"),
-  {
-    ssr: false,
-    loading: () => <PortfolioAssetsLoading />,
-  }
-);
+const PortfolioAssets = dynamic(() => import("@/app/(portfolio)/p/[id]/portfolio-assets"), {
+  ssr: false,
+  loading: () => <PortfolioAssetsLoading />,
+});
 
 export default async function page({ params: { id } }: Props) {
   const portfolio = await db.portfolio.findFirst({
@@ -56,11 +53,7 @@ export default async function page({ params: { id } }: Props) {
   return (
     <div className="f-col gap-6">
       <div className="f-col xl:flex-row gap-4">
-        <PortfolioChart
-          portfolio={portfolio}
-          title="Portfolio Chart"
-          description="Chart of all portfolio positions"
-        />
+        <PortfolioChart portfolio={portfolio} title="Portfolio Chart" description="Chart of all portfolio positions" />
         <PortfolioAllocation stocks={stocks} />
       </div>
 

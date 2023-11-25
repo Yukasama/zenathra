@@ -1,4 +1,4 @@
-import { getDailys, getQuote } from "@/lib/fmp/quote";
+import { getDailys } from "@/lib/fmp/quote";
 import StockCardList from "@/components/stock/stock-card-list";
 import IndexList from "@/app/(stock)/stocks/index-list";
 import { IndexListLoading } from "@/app/(stock)/stocks/index-list";
@@ -14,17 +14,15 @@ export const metadata = { title: "Stocks on the move" };
 export const runtime = "edge";
 
 export default async function page() {
-  const [actives, winners, losers] = await Promise.all([
+  const [actives, winners, losers, user] = await Promise.all([
     getDailys("actives"),
     getDailys("winners"),
     getDailys("losers"),
+    getUser(),
   ]);
 
   const highlight = actives?.[0];
-
-  const user = await getUser();
-
-  const [stock, portfolios] = await Promise.all([
+  const [highlightStock, portfolios] = await Promise.all([
     db.stock.findFirst({
       select: { image: true },
       where: { symbol: actives?.[0].symbol },
@@ -44,14 +42,15 @@ export default async function page() {
   ]);
 
   return (
-    <PageLayout className="f-col gap-4 md:gap-7">
-      <div className="f-col md:flex-row gap-4 md:gap-7">
+    <PageLayout className="f-col gap-4 lg:gap-7">
+      {/* Stock Highlight + Indexes */}
+      <div className="f-col lg:flex-row gap-4 lg:gap-7">
         {highlight?.symbol && (
           <PriceChart
             symbol={highlight.symbol}
             title={highlight.symbol}
             description={`Price Chart of ${highlight?.name}`}
-            image={<StockImage src={stock?.image} px={40} />}
+            image={<StockImage src={highlightStock?.image} px={40} />}
           />
         )}
         <Suspense fallback={<IndexListLoading />}>
@@ -59,33 +58,35 @@ export default async function page() {
         </Suspense>
       </div>
 
+      {/* Active Stocks */}
       <Suspense fallback={<StockCardListLoading />}>
         <StockCardList
-          symbols={actives}
+          quotes={actives}
           title="Most Active"
           description="Stocks that moved strongly in any direction"
-          isAuthenticated={!!user}
           portfolios={portfolios}
         />
       </Suspense>
 
+      {/* Stock Winners */}
       <Suspense fallback={<StockCardListLoading />}>
         <StockCardList
-          symbols={winners}
+          quotes={winners}
           title="Daily Winners"
           description="Stocks that have risen most today"
-          isAuthenticated={!!user}
           portfolios={portfolios}
+          onlyInDb={false}
         />
       </Suspense>
 
+      {/* Stock Losers */}
       <Suspense fallback={<StockCardListLoading />}>
         <StockCardList
-          symbols={losers}
+          quotes={losers}
           title="Daily Underperformers"
           description="Stocks that have fallen most today"
-          isAuthenticated={!!user}
           portfolios={portfolios}
+          onlyInDb={false}
         />
       </Suspense>
     </PageLayout>

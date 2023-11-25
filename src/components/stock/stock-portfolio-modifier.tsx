@@ -9,16 +9,17 @@ import { PortfolioWithStocks } from "@/types/db";
 import { Card } from "../ui/card";
 import { trpc } from "@/trpc/client";
 import PortfolioImage from "../portfolio/portfolio-image";
+import { Stock } from "@prisma/client";
 
 interface Props {
   portfolio: Pick<
     PortfolioWithStocks,
     "id" | "title" | "color" | "isPublic" | "stocks"
   >;
-  symbolId: string;
+  stock: Pick<Stock, "id">;
 }
 
-export default function StockPortfolioModifier({ portfolio, symbolId }: Props) {
+export default function StockPortfolioModifier({ portfolio, stock }: Props) {
   const router = useRouter();
 
   const { mutate: addToPortfolio, isLoading: isAddLoading } =
@@ -63,12 +64,12 @@ export default function StockPortfolioModifier({ portfolio, symbolId }: Props) {
         </div>
       </div>
 
-      {portfolio.stocks.includes(symbolId) ? (
+      {portfolio.stocks.map((s) => s.stockId).includes(stock.id) ? (
         <Button
           onClick={() =>
             removeFromPortfolio({
               portfolioId: portfolio.id,
-              stockIds: [symbolId],
+              stockIds: [stock.id],
             })
           }
           variant="destructive"
@@ -83,7 +84,7 @@ export default function StockPortfolioModifier({ portfolio, symbolId }: Props) {
           onClick={() =>
             addToPortfolio({
               portfolioId: portfolio.id,
-              stockIds: [symbolId],
+              stockIds: [stock.id],
             })
           }
           variant="success"

@@ -1,5 +1,3 @@
-import { Spinner } from "@nextui-org/spinner";
-
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   isLoaded?: boolean;
   children?: React.ReactNode;
@@ -8,9 +6,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export default function Skeleton({ isLoaded, children, ...props }: Props) {
   return (
     <div className="relative">
-      {!isLoaded && (
-        <div className="animate-pulse-right absolute inset-0 rounded-md"></div>
-      )}
+      {!isLoaded && <div className="animate-pulse-right absolute inset-0 rounded-md"></div>}
       <div className={`${!isLoaded && "invisible"}`} {...props}>
         {children}
       </div>
@@ -18,15 +14,14 @@ export default function Skeleton({ isLoaded, children, ...props }: Props) {
   );
 }
 
-export function SkeletonText() {
+export function SkeletonText({ count = 2 }: { count?: number }) {
   return (
     <div className="f-col gap-1">
-      <Skeleton>
-        <div className="h-4 w-[200px]"></div>
-      </Skeleton>
-      <Skeleton>
-        <div className="h-4 w-[150px]"></div>
-      </Skeleton>
+      {[...Array(count)].map((_, i) => (
+        <Skeleton key={i}>
+          <div className="h-4 w-[200px]"></div>
+        </Skeleton>
+      ))}
     </div>
   );
 }
@@ -51,7 +46,7 @@ export function SkeletonList({ count = 3 }: { count?: number }) {
   return (
     <div className="space-y-2">
       {[...Array(count)].map((_, i) => (
-        <Skeleton key={i} className="h-12 w-full"></Skeleton>
+        <Skeleton key={i} className="h-12 min-w-[300px] w-full"></Skeleton>
       ))}
     </div>
   );

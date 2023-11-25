@@ -2,9 +2,9 @@ import StockListItem from "./stock-list-item";
 import React from "react";
 import { db } from "@/db";
 import { getQuotes } from "@/lib/fmp/quote";
-import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { cn } from "@/lib/utils";
-import Skeleton from "../ui/skeleton";
+import Skeleton, { SkeletonList, SkeletonText } from "../ui/skeleton";
 
 interface LoadingProps extends React.HTMLAttributes<HTMLDivElement> {
   limit?: number;
@@ -21,40 +21,19 @@ export function StockListLoading({ className, limit = 5 }: LoadingProps) {
   return (
     <Card className={cn(className)}>
       <CardHeader>
-        <Skeleton>
-          <CardTitle className="w-[150px]">a</CardTitle>
-        </Skeleton>
-        <Skeleton>
-          <CardDescription className="w-[200px]">a</CardDescription>
-        </Skeleton>
+        <SkeletonText />
       </CardHeader>
-      <div className="f-col gap-2 px-4">
-        {[...Array(limit)].map((_, i) => (
-          <Skeleton key={i} className="h-12 w-[300px]"></Skeleton>
-        ))}
-      </div>
+      <CardContent>
+        <SkeletonList count={limit} />
+      </CardContent>
     </Card>
   );
 }
 
-export default async function StockList({
-  symbols,
-  title,
-  description,
-  error,
-  limit = 5,
-  className,
-}: Props) {
-  if (!symbols?.length)
-    return (
-      <div
-        className={cn(
-          className,
-          "text-xl text-center font-medium text-zinc-600"
-        )}>
-        {error}
-      </div>
-    );
+export default async function StockList({ symbols, title, description, error, limit = 5, className }: Props) {
+  if (!symbols?.length) {
+    return <div className={cn(className, "text-xl text-center font-medium text-zinc-600")}>{error}</div>;
+  }
 
   const symbolsToFetch = symbols.slice(0, Math.min(symbols.length, limit));
 
@@ -66,35 +45,25 @@ export default async function StockList({
     getQuotes(symbolsToFetch),
   ]);
 
-  if (!Array.isArray(stocks)) stocks = [stocks];
-
   return (
     <>
       {!title && !description ? (
         <div className="space-y-2">
           {quotes?.map((quote) => (
-            <StockListItem
-              key={quote.symbol}
-              stock={stocks.find((s) => s.symbol === quote.symbol)}
-              quote={quote}
-            />
+            <StockListItem key={quote.symbol} stock={stocks.find((s) => s.symbol === quote.symbol)} quote={quote} />
           ))}
         </div>
       ) : (
-        <Card className={cn(className)}>
+        <Card className={cn("bg-zinc-50 dark:bg-zinc-900/70 border-none", className)}>
           <CardHeader>
             <CardTitle>{title}</CardTitle>
             <CardDescription>{description}</CardDescription>
           </CardHeader>
-          <div className="space-y-2 px-4">
+          <CardContent>
             {quotes?.map((quote) => (
-              <StockListItem
-                key={quote.symbol}
-                stock={stocks.find((s) => s.symbol === quote.symbol)}
-                quote={quote}
-              />
+              <StockListItem key={quote.symbol} stock={stocks.find((s) => s.symbol === quote.symbol)} quote={quote} />
             ))}
-          </div>
+          </CardContent>
         </Card>
       )}
     </>

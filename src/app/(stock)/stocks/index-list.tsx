@@ -7,25 +7,16 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/card";
-import Skeleton from "../../../components/ui/skeleton";
+import { SkeletonList, SkeletonText } from "../../../components/ui/skeleton";
 
 export function IndexListLoading() {
   return (
     <Card>
-      <CardHeader className="items-start">
-        <Skeleton>
-          <CardTitle className="h-4 w-[150px]"></CardTitle>
-        </Skeleton>
-        <Skeleton>
-          <CardTitle className="h-4 w-[200px]"></CardTitle>
-        </Skeleton>
+      <CardHeader>
+        <SkeletonText />
       </CardHeader>
-      <CardContent className="f-col gap-4 w-full">
-        {[...Array(4)].map((_, i) => (
-          <Skeleton key={i}>
-            <div className="h-10 w-60"></div>
-          </Skeleton>
-        ))}
+      <CardContent>
+        <SkeletonList count={4} />
       </CardContent>
     </Card>
   );
@@ -41,18 +32,17 @@ export default async function IndexList() {
         <CardDescription>Most popular indexes</CardDescription>
       </CardHeader>
       <CardContent className="f-col gap-4 w-full">
-        {indexQuotes &&
-          indexQuotes.map((q) => (
-            <div key={q.symbol} className="flex justify-between">
-              <div>
-                <h2 className="font-medium">{q.symbol}</h2>
-                <p className="w-[100px] truncate text-sm text-zinc-500">
-                  {q.name}
-                </p>
-              </div>
-              <StockPrice quote={q} />
+        {indexQuotes?.map((q) => (
+          <div key={q.symbol} className="flex justify-between">
+            <div>
+              <h2 className="font-medium">{q.symbol}</h2>
+              <p className="w-[100px] truncate text-sm text-zinc-500">
+                {q.name}
+              </p>
             </div>
-          ))}
+            <StockPrice quote={q} />
+          </div>
+        ))}
       </CardContent>
     </Card>
   );

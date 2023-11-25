@@ -39,4 +39,9 @@ export interface Quote {
   timestamp?: number;
 }
 
+export interface AfterHoursQuote {
+  symbol: string;
+  price: number;
+}
+
 export type StockQuote = Stock & Partial<Quote>;

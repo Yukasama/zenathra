@@ -11,11 +11,11 @@ export const SITE = {
     "A stock market analysis tool that provides a visual representation of the market's performance.",
   url: "https://www.zenathra.com",
   links: {
-    twitter: "https://twitter.com/yukasama",
+    twitter: "https://twitter.com/yukasama365",
     github: "https://github.com/yukasama",
-    linkedin: "https://www.linkedin.com/in/yukasama",
-    youtube: "https://www.youtube.com/channel/zenathra",
-    instagram: "https://www.instagram.com/zenathra",
+    linkedin: "https://linkedin.com/in/christopher-claus-93806b246",
+    youtube: "https://www.youtube.com/channel/yukasama",
+    instagram: "https://www.instagram.com/yukasama365",
   },
   keywords: [
     "zenathra",

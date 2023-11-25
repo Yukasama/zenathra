@@ -1,5 +1,4 @@
 import StockCard, { StockCardLoading } from "./stock-card";
-import { getQuotes } from "@/lib/fmp/quote";
 import { db } from "@/db";
 import {
   Card,
@@ -8,12 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import Skeleton from "../ui/skeleton";
+import { SkeletonText } from "../ui/skeleton";
 import { PortfolioWithStocks } from "@/types/db";
+import { Quote } from "@/types/stock";
 
 interface Props {
-  symbols: string[] | null;
-  isAuthenticated: boolean;
+  quotes: Quote[] | undefined;
   portfolios?:
     | Pick<
         PortfolioWithStocks,
@@ -22,79 +21,84 @@ interface Props {
     | undefined;
   title?: string;
   description?: string;
+  onlyInDb?: boolean;
 }
 
 export function StockCardListLoading() {
   return (
     <div>
       <div className="p-6 py-7 f-col gap-1.5 items-start">
-        <Skeleton>
-          <div className="h-4 w-[200px]"></div>
-        </Skeleton>
-        <Skeleton>
-          <div className="h-4 w-[300px]"></div>
-        </Skeleton>
+        <SkeletonText />
       </div>
-      <CardContent>
-        <div className="f-col gap-6 lg:grid lg:grid-cols-2 xl:gap-8 xl:grid-cols-3">
-          {[...Array(8)].map((_, i) => (
-            <StockCardLoading key={i} />
-          ))}
-        </div>
+      <CardContent className="f-col gap-6 lg:grid lg:grid-cols-2 xl:gap-8 xl:grid-cols-3">
+        {[...Array(6)].map((_, i) => (
+          <StockCardLoading key={i} />
+        ))}
       </CardContent>
     </div>
   );
 }
 
 export default async function StockCardList({
-  symbols,
-  isAuthenticated,
+  quotes,
   portfolios,
   title,
   description,
+  onlyInDb = true,
 }: Props) {
-  if (!symbols)
+  if (!quotes) {
     return (
-      <Card className="border-none">
+      <Card className="border-none min-h-[210px] lg:min-h-[250px]">
         <CardContent className="f-box text-zinc-400">
           Stocks could not be loaded.
         </CardContent>
       </Card>
     );
+  }
 
-  symbols = symbols.slice(0, 10);
+  if (onlyInDb) {
+    quotes = quotes.slice(0, 100);
+  } else {
+    quotes = quotes.slice(0, 6);
+  }
 
-  let [quotes, stocks] = await Promise.all([
-    getQuotes(symbols),
-    db.stock.findMany({
-      select: { id: true, symbol: true, image: true },
-      where: { symbol: { in: symbols } },
-    }),
-  ]);
-
-  if (!quotes || !quotes.length) return <StockCardListLoading />;
-
-  if (!Array.isArray(stocks) && stocks) stocks = [stocks];
+  let stocks = await db.stock.findMany({
+    select: { id: true, symbol: true, image: true },
+    where: { symbol: { in: quotes.map((quote) => quote.symbol) } },
+  });
 
   return (
     <Card className="border-none">
-      {title && description && (
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
-        </CardHeader>
-      )}
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+
       <CardContent>
         <div className="f-col gap-6 lg:grid lg:grid-cols-2 xl:gap-8 xl:grid-cols-3">
-          {quotes.map((quote) => (
-            <StockCard
-              key={quote.symbol}
-              quote={quote}
-              stock={stocks.find((s) => s.symbol === quote.symbol)}
-              isAuthenticated={isAuthenticated}
-              portfolios={portfolios}
-            />
-          ))}
+          {onlyInDb ? (
+            <>
+              {stocks.map((stock) => (
+                <StockCard
+                  key={stock.symbol}
+                  quote={quotes?.find((quote) => quote.symbol === stock.symbol)}
+                  stock={stock}
+                  portfolios={portfolios}
+                />
+              ))}
+            </>
+          ) : (
+            <>
+              {quotes.map((quote) => (
+                <StockCard
+                  key={quote.symbol}
+                  quote={quote}
+                  stock={stocks?.find((s) => s.symbol === quote.symbol)}
+                  portfolios={portfolios}
+                />
+              ))}
+            </>
+          )}
         </div>
       </CardContent>
     </Card>

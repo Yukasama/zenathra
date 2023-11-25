@@ -36,7 +36,8 @@ export default function OAuth({ provider, className }: Props) {
         "bg-zinc-100 hover:bg-zinc-100/70 dark:bg-zinc-950/80 dark:hover:bg-zinc-950/20 border gap-3",
         className
       )}
-      onClick={() => login()}>
+      onClick={() => login()}
+    >
       {!isLoading && (
         <>
           {providerIcons[provider]}

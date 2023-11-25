@@ -1,31 +1,15 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-} from "@nextui-org/table";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-} from "@nextui-org/dropdown";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/table";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
 import { Button } from "@nextui-org/button";
 import { Pagination } from "@nextui-org/pagination";
 import { Chip } from "@nextui-org/chip";
 import { Search, MoreVertical } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import {
-  SkeletonText,
-  SkeletonButton,
-  SkeletonList,
-} from "@/components/ui/skeleton";
+import { SkeletonText, SkeletonButton, SkeletonList } from "@/components/ui/skeleton";
 import { StockQuote } from "@/types/stock";
 import { trpc } from "@/trpc/client";
 import { toast } from "@/hooks/use-toast";
@@ -35,10 +19,7 @@ import { PortfolioWithStocks } from "@/types/db";
 import { Spinner } from "@nextui-org/spinner";
 
 interface Props {
-  stockQuotes: Pick<
-    StockQuote,
-    "id" | "symbol" | "companyName" | "sector" | "price" | "changesPercentage"
-  >[];
+  stockQuotes: Pick<StockQuote, "id" | "symbol" | "companyName" | "sector" | "price" | "changesPercentage">[];
   portfolio: Pick<PortfolioWithStocks, "id" | "title" | "stocks">;
 }
 
@@ -87,9 +68,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
   // Filtering and sorting stocks
   const filteredStocks = useMemo(() => {
     return stockQuotes
-      .filter((stock) =>
-        stock.companyName.toLowerCase().includes(filterValue.toLowerCase())
-      )
+      .filter((stock) => stock.companyName.toLowerCase().includes(filterValue.toLowerCase()))
       .sort((a, b) => a.companyName.localeCompare(b.companyName));
   }, [stockQuotes, filterValue]);
 
@@ -115,10 +94,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
                 +{stock.changesPercentage.toFixed(2)}%
               </span>
             ) : (
-              <span className="text-red-500 dark:text-red-400 text-[13px]">
-                {" "}
-                {stock.changesPercentage.toFixed(2)}%
-              </span>
+              <span className="text-red-500 dark:text-red-400 text-[13px]"> {stock.changesPercentage.toFixed(2)}%</span>
             )}
           </div>
         );
@@ -138,10 +114,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem
-                  onClick={() => router.push(`/stocks/${stock.symbol}`)}>
-                  View
-                </DropdownItem>
+                <DropdownItem onClick={() => router.push(`/stocks/${stock.symbol}`)}>View</DropdownItem>
                 <DropdownItem>Edit</DropdownItem>
                 <DropdownItem
                   color="danger"
@@ -150,7 +123,8 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
                       portfolioId: portfolio.id,
                       stockIds: [stock.id],
                     })
-                  }>
+                  }
+                >
                   {isLoading && <Spinner size="sm" />}
                   Delete
                 </DropdownItem>
@@ -173,7 +147,8 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
             type="text"
             placeholder="Search by company name..."
             value={filterValue}
-            onChange={(e) => setFilterValue(e.target.value)}></Input>
+            onChange={(e) => setFilterValue(e.target.value)}
+          ></Input>
         </div>
         <PortfolioAddModal portfolio={portfolio} />
       </div>

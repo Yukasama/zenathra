@@ -12,7 +12,9 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export default function StockListItem({ stock, quote, className }: Props) {
-  if (!quote) return null;
+  if (!quote) {
+    return null;
+  }
 
   return (
     <Link href={`/stocks/${quote.symbol}`}>
@@ -36,9 +38,9 @@ export default function StockListItem({ stock, quote, className }: Props) {
           </p>
           <p
             className={`text-end text-[12px] ${
-              quote.change > 0 ? "text-green-500" : "text-red-500"
+              quote.changesPercentage > 0 ? "text-green-500" : "text-red-500"
             }`}>
-            {quote.change > 0 && "+"}
+            {quote.changesPercentage > 0 && "+"}
             {quote && quote.changesPercentage
               ? quote.changesPercentage.toFixed(2)
               : "N/A"}

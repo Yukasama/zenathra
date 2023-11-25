@@ -16,7 +16,7 @@ import { uploadStocks } from "@/lib/fmp/upload";
 
 export const stockRouter = router({
   query: publicProcedure.input(ScreenerSchema).query(async ({ input }) => {
-    const { cursor, take } = input;
+    const { cursor = 1, take = 10 } = input;
 
     const filter = buildFilter(input);
     const paginationSkip = (cursor - 1) * take;
@@ -71,7 +71,12 @@ export const stockRouter = router({
         };
       });
 
-      return returnData as History[];
+      const slicedData = returnData.slice(
+        0,
+        Math.min(returnData.length, TIMEFRAMES["1D"].limit)
+      );
+
+      return slicedData as History[];
     }
 
     if (allFields) {

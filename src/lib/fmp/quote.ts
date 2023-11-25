@@ -3,7 +3,7 @@ import "server-only";
 import { FMP_API_URL, FMP, FMP_URLS } from "@/config/fmp/config";
 import { indexQuotes, quote } from "@/config/fmp/simulation";
 import { env } from "@/env.mjs";
-import { Quote } from "@/types/stock";
+import { AfterHoursQuote, Quote } from "@/types/stock";
 import { Stock } from "@prisma/client";
 import { StockQuote } from "@/types/stock";
 
@@ -144,6 +144,33 @@ export async function getQuotes(
         eps: res.eps,
       };
     });
+  } catch {
+    return undefined;
+  }
+}
+
+export async function getAfterHoursQuote(
+  symbol: string | undefined
+): Promise<AfterHoursQuote | undefined> {
+  try {
+    if (FMP.simulation) {
+      return quote;
+    }
+
+    if (!symbol) {
+      return undefined;
+    }
+
+    const url = `${FMP_API_URL}v4/pre-post-market-trade/${symbol}?apikey=${env.FMP_API_KEY}`;
+
+    const data = await fetch(url, { next: { revalidate: 30 } }).then((res) =>
+      res.json()
+    );
+
+    return {
+      symbol: data.symbol,
+      price: data.price,
+    };
   } catch {
     return undefined;
   }

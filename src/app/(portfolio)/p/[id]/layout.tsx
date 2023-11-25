@@ -1,12 +1,6 @@
 import PageLayout from "@/components/shared/page-layout";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
-import {
-  BarChart2,
-  ExternalLink,
-  EyeOff,
-  LayoutDashboard,
-  PieChart,
-} from "lucide-react";
+import { BarChart2, ExternalLink, EyeOff, LayoutDashboard, PieChart } from "lucide-react";
 import type { PropsWithChildren } from "react";
 import ListItem from "./list-item";
 import { db } from "@/db";
@@ -18,29 +12,20 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import PortfolioDeleteModal from "@/components/portfolio/portfolio-delete-modal";
 
-const ChangeTitle = dynamic(
-  () => import("@/app/(portfolio)/p/[id]/change-title"),
-  {
-    ssr: false,
-    loading: () => <SkeletonInput />,
-  }
-);
+const ChangeTitle = dynamic(() => import("@/app/(portfolio)/p/[id]/change-title"), {
+  ssr: false,
+  loading: () => <SkeletonInput />,
+});
 
-const EditVisibility = dynamic(
-  () => import("@/components/portfolio/edit-visibility"),
-  {
-    ssr: false,
-    loading: () => <SkeletonButton />,
-  }
-);
+const EditVisibility = dynamic(() => import("@/components/portfolio/edit-visibility"), {
+  ssr: false,
+  loading: () => <SkeletonButton />,
+});
 
-const PortfolioAddModal = dynamic(
-  () => import("@/components/portfolio/portfolio-add-modal"),
-  {
-    ssr: false,
-    loading: () => <SkeletonButton />,
-  }
-);
+const PortfolioAddModal = dynamic(() => import("@/components/portfolio/portfolio-add-modal"), {
+  ssr: false,
+  loading: () => <SkeletonButton />,
+});
 
 interface Props extends PropsWithChildren {
   params: { id: string };
@@ -109,9 +94,7 @@ export default async function Layout({ children, params: { id } }: Props) {
 
         <h2 className="text-xl font-medium">This Portfolio is private.</h2>
 
-        <Link
-          href="/"
-          className="text-zinc-400 flex items-center gap-2 hover:underline">
+        <Link href="/" className="text-zinc-400 flex items-center gap-2 hover:underline">
           Back to homepage
           <ExternalLink className="w-4 h-4" />
         </Link>
@@ -152,15 +135,10 @@ export default async function Layout({ children, params: { id } }: Props) {
           {/* Title */}
           <div className="f-col gap-1">
             <CardTitle className="text-xl">
-              {user?.id === portfolio.creatorId ? (
-                <ChangeTitle portfolio={portfolio} />
-              ) : (
-                portfolio.title
-              )}
+              {user?.id === portfolio.creatorId ? <ChangeTitle portfolio={portfolio} /> : portfolio.title}
             </CardTitle>
             <CardDescription>
-              Created on{" "}
-              {portfolio.createdAt.toISOString().split(".")[0].split("T")[0]}
+              Created on {portfolio.createdAt.toISOString().split(".")[0].split("T")[0]}
             </CardDescription>
           </div>
 
@@ -180,12 +158,8 @@ export default async function Layout({ children, params: { id } }: Props) {
           children
         ) : (
           <div className="f-box f-col gap-3 mt-80">
-            <h2 className="font-medium text-lg">
-              There are no stocks in this portfolio.
-            </h2>
-            {user?.id === portfolio.creatorId && (
-              <PortfolioAddModal portfolio={portfolio} />
-            )}
+            <h2 className="font-medium text-lg">There are no stocks in this portfolio.</h2>
+            {user?.id === portfolio.creatorId && <PortfolioAddModal portfolio={portfolio} />}
           </div>
         )}
       </div>
