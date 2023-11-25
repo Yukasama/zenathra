@@ -12,7 +12,6 @@ import {
   earningsDates,
   exchanges,
 } from "@/config/screener/filters";
-import { buttonVariants } from "@/components/ui/button";
 import { Button } from "@nextui-org/button";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import { BarChart2, FileText, Layers, RotateCcw } from "lucide-react";
@@ -30,10 +29,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import StockImage from "@/components/stock/stock-image";
 import { trpc } from "../../../trpc/client";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
+import { ScreenerProps } from "@/lib/validators/stock";
+
+const ScreenerResults = dynamic(
+  () => import("@/app/(stock)/screener/screener-results"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="f-col gap-2 pt-2">
+        {[...Array(10)].map((_, i) => (
+          <Card key={i} className="animate-pulse-right h-[60px]" />
+        ))}
+      </div>
+    ),
+  }
+);
 
 interface Props {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -42,68 +55,74 @@ interface Props {
 export default function Page({ searchParams }: Props) {
   const [resetCounter, setResetCounter] = useState(0);
 
-  const [exchange, setExchange] = useState<string>("Any");
-  const [ticker, setTicker] = useState<string>("");
-  const [sector, setSector] = useState<string>("Any");
-  const [industry, setIndustry] = useState<string>("Any");
-  const [country, setCountry] = useState<string>("Any");
-  const [earningsDate, setEarningsDate] = useState<string>("Any");
-  const [marketCap, setMarketCap] = useState<string>("Any");
+  const [input, setInput] = useState<ScreenerProps>({
+    exchange: "Any",
+    ticker: "",
+    sector: "Any",
+    industry: "Any",
+    country: "Any",
+    earningsDate: "Any",
+    peRatio: ["Any", "Any"],
+    pegRatio: ["Any", "Any"],
+    marketCap: "Any",
+    sma50: ["Any", "Any"],
+  });
 
-  const [peRatio1, setPeRatio1] = useState<string>("Any");
-  const [peRatio2, setPeRatio2] = useState<string>("Any");
-  const [pegRatio1, setPegRatio1] = useState<string>("Any");
-  const [pegRatio2, setPegRatio2] = useState<string>("Any");
+  const updateFilter = (filterId: any, newValue: any) => {
+    setInput((prevState) => ({
+      ...prevState,
+      [filterId]: newValue,
+    }));
+  };
 
-  const [sma50, setSma50] = useState<string>("Any");
-  const [sma502, setSma502] = useState<string>("Any");
+  const updateRangeFilter = (filterId: any, index: any, newValue: any) => {
+    setInput((prevState: any) => ({
+      ...prevState,
+      [filterId]: [
+        index === 0 ? newValue : prevState[filterId][0],
+        index === 1 ? newValue : prevState[filterId][1],
+      ],
+    }));
+  };
 
   const router = useRouter();
+
   const cursor =
     typeof searchParams["cursor"] === "string"
       ? Number(searchParams["cursor"])
       : 1;
-  const take =
-    typeof searchParams["take"] === "string"
-      ? Number(searchParams["take"])
-      : 13;
+  const takeParam =
+    (typeof searchParams["take"] === "string" &&
+      Number(searchParams["take"])) ??
+    10;
+  const take = takeParam && takeParam >= 1 && takeParam <= 50 ? takeParam : 10;
 
   // Set all filters on "Any" on reset button click
   const resetFilters = () => {
-    setExchange("Any");
-    setTicker("");
-    setSector("Any");
-    setIndustry("Any");
-    setCountry("Any");
-    setEarningsDate("Any");
-    setMarketCap("Any");
-    setPeRatio1("Any");
-    setPeRatio2("Any");
-    setPegRatio1("Any");
-    setPegRatio2("Any");
-    setSma50("Any");
-    setSma502("Any");
+    setInput({
+      exchange: "Any",
+      ticker: "",
+      sector: "Any",
+      industry: "Any",
+      country: "Any",
+      earningsDate: "Any",
+      peRatio: ["Any", "Any"],
+      pegRatio: ["Any", "Any"],
+      marketCap: "Any",
+      sma50: ["Any", "Any"],
+    });
 
     setResetCounter((prevCounter) => prevCounter + 1);
   };
 
   const {
     data: results,
-    isFetching,
     isFetched,
     refetch,
   } = trpc.stock.query.useQuery({
-    cursor: cursor,
-    take: take,
-    exchange: exchange,
-    ticker: ticker,
-    sector: sector,
-    industry: industry,
-    country: country,
-    earningsDate: earningsDate,
-    peRatio: [peRatio1, peRatio2],
-    pegRatio: [pegRatio1, pegRatio2],
-    marketCap: marketCap,
+    ...input,
+    cursor,
+    take,
   });
 
   useEffect(() => {
@@ -117,62 +136,50 @@ export default function Page({ searchParams }: Props) {
     router.replace(`/screener?cursor=1&take=${take}`);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    exchange,
-    ticker,
-    sector,
-    industry,
-    country,
-    earningsDate,
-    peRatio1,
-    peRatio2,
-    pegRatio1,
-    pegRatio2,
-    marketCap,
-  ]);
+  }, [input]);
 
   const descriptive = [
     {
       id: "exchange",
       label: "Exchange",
-      value: exchange,
+      value: input.exchange,
       options: exchanges,
-      setOption: setExchange,
+      setOption: (value: string) => updateFilter("exchange", value),
     },
     {
       id: "sector",
       label: "Sector",
-      value: sector,
+      value: input.sector,
       options: sectors,
-      setOption: setSector,
+      setOption: (value: string) => updateFilter("sector", value),
     },
     {
       id: "industry",
       label: "Industry",
-      value: industry,
+      value: input.industry,
       options: industries,
-      setOption: setIndustry,
+      setOption: (value: string) => updateFilter("industry", value),
     },
     {
       id: "country",
       label: "Country",
-      value: country,
+      value: input.country,
       options: countries,
-      setOption: setCountry,
+      setOption: (value: string) => updateFilter("country", value),
     },
     {
       id: "earningsDate",
       label: "Earnings Date",
-      value: earningsDate,
+      value: input.earningsDate,
       options: earningsDates,
-      setOption: setEarningsDate,
+      setOption: (value: string) => updateFilter("earningsDate", value),
     },
     {
       id: "marketCap",
       label: "Market Cap",
-      value: marketCap,
+      value: input.marketCap,
       options: marketCaps,
-      setOption: setMarketCap,
+      setOption: (value: string) => updateFilter("marketCap", value),
     },
   ];
 
@@ -180,327 +187,291 @@ export default function Page({ searchParams }: Props) {
     {
       id: "peRatio",
       label: "P/E Ratio",
-      value: peRatio1,
-      value2: peRatio2,
+      value: input.peRatio[0],
+      value2: input.peRatio[1],
       options: peRatios,
-      setOption: setPeRatio1,
-      setOption2: setPeRatio2,
+      setOption: (value: string, index: number) =>
+        updateRangeFilter("peRatio", index, value),
     },
     {
       id: "pegRatio",
       label: "PEG Ratio",
-      value: pegRatio1,
-      value2: pegRatio2,
+      value: input.pegRatio[0],
+      value2: input.pegRatio[1],
       options: pegRatios,
-      setOption: setPegRatio1,
-      setOption2: setPegRatio2,
+      setOption: (value: string, index: number) =>
+        updateRangeFilter("pegRatio", index, value),
     },
   ];
 
   const technical = [
     {
-      id: "sma",
-      label: "SMA",
-      value: sma50,
-      value2: sma502,
-      options: ["50"],
-      setOption: setSma50,
-      setOption2: setSma502,
+      id: "sma50",
+      label: "SMA 50",
+      value: input.sma50[0],
+      value2: input.sma50[1],
+      options: ["-20%"],
+      setOption: (value: string, index: number) =>
+        updateRangeFilter("sma50", index, value),
     },
   ];
 
   return (
-    <>
-      <Tabs aria-label="Filters" color="primary" variant="bordered">
-        <Tab
-          key="descriptive"
-          title={
-            <div className="flex items-center gap-2">
-              <FileText />
-              Descriptive
-            </div>
-          }>
-          <Card>
-            <CardHeader>
-              <CardTitle>Descriptive</CardTitle>
-              <CardDescription>Filters that describe the stock</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {descriptive.map((filter) => (
-                <div className="f-col" key={filter.id + resetCounter}>
-                  <p className="font-medium text-sm m-1 text-zinc-400">
-                    {filter.label}
-                  </p>
-                  <Select
-                    onValueChange={(e) => filter.setOption(e)}
-                    value={filter.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Any">
-                        {filter.value}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="max-h-[216px]">
-                      {filter.options.map((option) => (
-                        <SelectItem key={option} value={option}>
-                          {option}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </Tab>
-
-        <Tab
-          key="fundamental"
-          title={
-            <div className="flex items-center gap-2">
-              <Layers />
-              Fundamental
-            </div>
-          }>
-          <Card>
-            <CardHeader>
-              <CardTitle>Fundamental</CardTitle>
-              <CardDescription>
-                Filters based on financial statements
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="f-col gap-4">
-              {fundamental.map((filter) => (
-                <div className="f-col" key={filter.id + resetCounter}>
-                  <p className="font-medium text-sm m-1 text-zinc-400">
-                    {filter.label}
-                  </p>
-                  <div className="flex gap-4">
-                    <div className="w-full">
-                      <Select
-                        onValueChange={(e) => filter.setOption2(e)}
-                        value={filter.value2}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Any">
-                            {filter.value2}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {filter.options.map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <CardDescription className="ml-1 text-[13px]">
-                        Minimum Value
-                      </CardDescription>
-                    </div>
-                    <div className="w-full">
-                      <Select
-                        onValueChange={(e) => filter.setOption(e)}
-                        value={filter.value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Any">
-                            {filter.value}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {filter.options.map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <CardDescription className="ml-1 text-[13px]">
-                        Maximum Value
-                      </CardDescription>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </Tab>
-
-        <Tab
-          key="technical"
-          title={
-            <div className="flex items-center gap-2">
-              <BarChart2 />
-              Technical
-            </div>
-          }>
-          <Card>
-            <CardHeader>
-              <CardTitle>Technical</CardTitle>
-              <CardDescription>
-                Filters based on the stock&apos;s chart
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="f-col gap-4">
-              {technical.map((filter) => (
-                <div className="f-col" key={filter.id + resetCounter}>
-                  <p className="font-medium text-sm m-1 text-zinc-400">
-                    {filter.label}
-                  </p>
-                  <div className="flex gap-4">
-                    <div className="w-full">
-                      <Select
-                        onValueChange={(e) => filter.setOption2(e)}
-                        value={filter.value2}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Any">
-                            {filter.value2}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {filter.options.map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <CardDescription className="ml-1 text-[13px]">
-                        Minimum Value
-                      </CardDescription>
-                    </div>
-                    <div className="w-full">
-                      <Select
-                        onValueChange={(e) => filter.setOption(e)}
-                        value={filter.value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Any">
-                            {filter.value}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {filter.options.map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <CardDescription className="ml-1 text-[13px]">
-                        Maximum Value
-                      </CardDescription>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </Tab>
-
-        <Button onClick={() => resetFilters()} className="mt-3">
-          <RotateCcw className="h-4 w-4" />
-          Reset Filters
-        </Button>
-      </Tabs>
-
-      <Tabs
-        aria-label="Options"
-        color="primary"
-        variant="bordered"
-        className="w-full">
-        <div>
-          {isFetching || !results ? (
-            <div className="f-col gap-2 pt-2">
-              {[...Array(13)].map((_, i) => (
-                <Card key={i} className="animate-pulse-right h-[60px]" />
-              ))}
-            </div>
-          ) : isFetched && !results?.length ? (
-            <div className="mt-16">
-              <h3 className="font-medium text-center text-lg">
-                No Stocks matching the query
-              </h3>
-              <p className="text-sm text-center text-zinc-400">
-                Please select a combination of other filters
-              </p>
-            </div>
-          ) : (
-            <div className="f-col gap-5">
-              <Tab
-                key="descriptive"
-                title={
-                  <div className="flex items-center gap-2">
-                    <FileText />
-                    Descriptive
-                  </div>
-                }>
-                <div className="f-col hidden-scrollbar max-h-[800px] gap-2 overflow-scroll">
-                  {results?.map((stock) => (
-                    <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
-                      <Card className="flex h-[60px] px-4 hover:bg-zinc-100 dark:hover:bg-zinc-900">
-                        <div className="col-span-3 flex items-center gap-4">
-                          <StockImage src={stock.image} px={30} />
-                          <div className="f-col">
-                            <p className="font-medium">{stock.symbol}</p>
-                            <p className="text-sm text-zinc-500">
-                              {stock.companyName}
-                            </p>
-                          </div>
-                        </div>
-                      </Card>
-                    </Link>
-                  ))}
-                </div>
-              </Tab>
-              <Tab
-                key="fundamental"
-                title={
-                  <div className="flex items-center gap-2">
-                    <Layers />
-                    Fundamental
-                  </div>
-                }>
-                <div className="f-col hidden-scrollbar h-[800px] gap-2 overflow-scroll">
-                  {results?.map((stock) => (
-                    <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
-                      <Card className="flex h-[60px] p-2 px-4 hover:bg-zinc-100 dark:hover:bg-zinc-900">
-                        <div className="col-span-3 flex items-center gap-4">
-                          <StockImage src={stock.image} px={30} />
-                          <div className="f-col">
-                            <p className="font-medium">{stock.symbol}</p>
-                            <p className="text-sm text-zinc-500">
-                              {stock.companyName}
-                            </p>
-                          </div>
-                          <div
-                            className={buttonVariants({ variant: "subtle" })}>
-                            {stock.sector}
-                          </div>
-                        </div>
-                      </Card>
-                    </Link>
-                  ))}
-                </div>
-              </Tab>
-              <div className="flex gap-3.5 justify-center">
-                <Link
-                  href={`/screener?cursor=${
-                    cursor >= 1 ? 1 : cursor - 1
-                  }&take=${take}`}
-                  className={cn(
-                    buttonVariants({ variant: "subtle" }),
-                    `${cursor <= 1 && "pointer-events-none opacity-80"}`
-                  )}>
-                  Previous
-                </Link>
-                <Link
-                  href={`/screener?cursor=${cursor + 1}&take=${take}`}
-                  className={buttonVariants({ variant: "subtle" })}>
-                  Next
-                </Link>
+    <div className="f-col lg:flex-row w-full gap-5">
+      <div className="f-col">
+        {/* Stock Filters */}
+        <Tabs aria-label="Filters" color="primary" variant="bordered">
+          {/* Descriptive Filters */}
+          <Tab
+            key="descriptive"
+            title={
+              <div className="flex items-center gap-2">
+                <FileText />
+                Descriptive
               </div>
-            </div>
-          )}
+            }>
+            <Card>
+              <CardHeader>
+                <CardTitle>Descriptive</CardTitle>
+                <CardDescription>
+                  Filters that describe the stock
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {descriptive.map((filter) => (
+                  <div className="f-col" key={filter.id + resetCounter}>
+                    <p className="font-medium text-sm m-1 text-zinc-400">
+                      {filter.label}
+                    </p>
+                    <Select
+                      onValueChange={(e) => filter.setOption(e)}
+                      value={filter.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Any">
+                          {filter.value}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent className="max-h-[216px]">
+                        {filter.options.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </Tab>
+
+          {/* Fundamental Filters */}
+          <Tab
+            key="fundamental"
+            title={
+              <div className="flex items-center gap-2">
+                <Layers />
+                Fundamental
+              </div>
+            }>
+            <Card>
+              <CardHeader>
+                <CardTitle>Fundamental</CardTitle>
+                <CardDescription>
+                  Filters based on financial statements
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="f-col gap-4">
+                {fundamental.map((filter) => (
+                  <div className="f-col" key={filter.id + resetCounter}>
+                    <p className="font-medium text-sm m-1 text-zinc-400">
+                      {filter.label}
+                    </p>
+                    <div className="flex gap-4">
+                      <div className="w-full">
+                        <Select
+                          onValueChange={(e) => filter.setOption(e, 1)}
+                          value={filter.value2}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Any">
+                              {filter.value2}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {filter.options.map((option) => (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <CardDescription className="ml-1 text-[13px]">
+                          Minimum Value
+                        </CardDescription>
+                      </div>
+                      <div className="w-full">
+                        <Select
+                          onValueChange={(e) => filter.setOption(e, 0)}
+                          value={filter.value}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Any">
+                              {filter.value}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {filter.options.map((option) => (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <CardDescription className="ml-1 text-[13px]">
+                          Maximum Value
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </Tab>
+
+          {/* Technical Filters */}
+          <Tab
+            key="technical"
+            title={
+              <div className="flex items-center gap-2">
+                <BarChart2 />
+                Technical
+              </div>
+            }>
+            <Card>
+              <CardHeader>
+                <CardTitle>Technical</CardTitle>
+                <CardDescription>
+                  Filters based on the stock&apos;s chart
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="f-col gap-4">
+                {technical.map((filter) => (
+                  <div className="f-col" key={filter.id + resetCounter}>
+                    <p className="font-medium text-sm m-1 text-zinc-400">
+                      {filter.label}
+                    </p>
+                    <div className="flex gap-4">
+                      <div className="w-full">
+                        <Select
+                          onValueChange={(e) => filter.setOption(e, 1)}
+                          value={filter.value2}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Any">
+                              {filter.value2}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {filter.options.map((option) => (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <CardDescription className="ml-1 text-[13px]">
+                          Minimum Value
+                        </CardDescription>
+                      </div>
+                      <div className="w-full">
+                        <Select
+                          onValueChange={(e) => filter.setOption(e, 0)}
+                          value={filter.value}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Any">
+                              {filter.value}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {filter.options.map((option) => (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <CardDescription className="ml-1 text-[13px]">
+                          Maximum Value
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </Tab>
+        </Tabs>
+      </div>
+
+      {/* Screener Results */}
+      <div className="f-col w-full flex-1">
+        <Tabs aria-label="Options" color="primary" variant="bordered">
+          <Tab
+            key="descriptive"
+            title={
+              <div className="flex items-center gap-2">
+                <FileText />
+                Descriptive
+              </div>
+            }>
+            <ScreenerResults results={results} isFetched={isFetched} />
+          </Tab>
+          <Tab
+            key="fundamental"
+            title={
+              <div className="flex items-center gap-2">
+                <Layers />
+                Fundamental
+              </div>
+            }>
+            <ScreenerResults results={results} isFetched={isFetched} />
+          </Tab>
+          <Tab
+            key="technical"
+            title={
+              <div className="flex items-center gap-2">
+                <BarChart2 />
+                Technical
+              </div>
+            }>
+            <ScreenerResults results={results} isFetched={isFetched} />
+          </Tab>
+        </Tabs>
+
+        {/* Screener Control */}
+        <div className="flex gap-3.5 justify-center">
+          <Button color="danger" onClick={() => resetFilters()}>
+            <RotateCcw size={18} />
+            Reset Filters
+          </Button>
+          {isFetched && results?.length ? (
+            <>
+              <Link
+                href={`/screener?cursor=${
+                  cursor >= 1 ? 1 : cursor - 1
+                }&take=${take}`}>
+                <Button
+                  className={`${
+                    cursor <= 1 && "pointer-events-none opacity-80"
+                  }`}>
+                  Previous
+                </Button>
+              </Link>
+              <Link href={`/screener?cursor=${cursor + 1}&take=${take}`}>
+                <Button color="primary">Next</Button>
+              </Link>
+            </>
+          ) : null}
         </div>
-      </Tabs>
-    </>
+      </div>
+    </div>
   );
 }

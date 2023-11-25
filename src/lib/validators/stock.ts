@@ -10,10 +10,10 @@ export const UploadStockSchema = z.object({
 });
 
 export const ScreenerSchema = z.object({
-  cursor: z.number().min(1).default(1),
-  take: z.number().min(1).max(50).default(13),
+  cursor: z.number().min(1).default(1).optional(),
+  take: z.number().min(1).max(50).default(10).optional(),
   exchange: z.string(),
-  ticker: z.string(),
+  ticker: z.string().optional(),
   sector: z.string(),
   industry: z.string(),
   country: z.string(),
@@ -21,6 +21,7 @@ export const ScreenerSchema = z.object({
   peRatio: z.tuple([z.string(), z.string()]),
   pegRatio: z.tuple([z.string(), z.string()]),
   marketCap: z.string(),
+  sma50: z.tuple([z.string(), z.string()]),
 });
 
 export const HistorySchema = z.object({
