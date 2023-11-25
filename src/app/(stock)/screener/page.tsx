@@ -143,42 +143,54 @@ export default function Page({ searchParams }: Props) {
       id: "exchange",
       label: "Exchange",
       value: input.exchange,
+      value2: null,
       options: exchanges,
+      type: "fixed",
       setOption: (value: string) => updateFilter("exchange", value),
     },
     {
       id: "sector",
       label: "Sector",
       value: input.sector,
+      value2: null,
       options: sectors,
+      type: "fixed",
       setOption: (value: string) => updateFilter("sector", value),
     },
     {
       id: "industry",
       label: "Industry",
       value: input.industry,
+      value2: null,
       options: industries,
+      type: "fixed",
       setOption: (value: string) => updateFilter("industry", value),
     },
     {
       id: "country",
       label: "Country",
       value: input.country,
+      value2: null,
       options: countries,
+      type: "fixed",
       setOption: (value: string) => updateFilter("country", value),
     },
     {
       id: "earningsDate",
       label: "Earnings Date",
       value: input.earningsDate,
+      value2: null,
       options: earningsDates,
+      type: "fixed",
       setOption: (value: string) => updateFilter("earningsDate", value),
     },
     {
       id: "marketCap",
       label: "Market Cap",
       value: input.marketCap,
+      value2: null,
       options: marketCaps,
+      type: "fixed",
       setOption: (value: string) => updateFilter("marketCap", value),
     },
   ];
@@ -190,7 +202,8 @@ export default function Page({ searchParams }: Props) {
       value: input.peRatio[0],
       value2: input.peRatio[1],
       options: peRatios,
-      setOption: (value: string, index: number) =>
+      type: "range",
+      setOption: (value: string, index?: number) =>
         updateRangeFilter("peRatio", index, value),
     },
     {
@@ -199,7 +212,8 @@ export default function Page({ searchParams }: Props) {
       value: input.pegRatio[0],
       value2: input.pegRatio[1],
       options: pegRatios,
-      setOption: (value: string, index: number) =>
+      type: "range",
+      setOption: (value: string, index?: number) =>
         updateRangeFilter("pegRatio", index, value),
     },
   ];
@@ -211,8 +225,33 @@ export default function Page({ searchParams }: Props) {
       value: input.sma50[0],
       value2: input.sma50[1],
       options: ["-20%"],
-      setOption: (value: string, index: number) =>
+      type: "range",
+      setOption: (value: string, index?: number) =>
         updateRangeFilter("sma50", index, value),
+    },
+  ];
+
+  const CONFIG = [
+    {
+      id: "descriptive",
+      name: "Descriptive",
+      description: "Filters that describe the stock",
+      icon: FileText,
+      filters: descriptive,
+    },
+    {
+      id: "fundamental",
+      name: "Fundamental",
+      description: "Filters based on financial statements",
+      icon: Layers,
+      filters: fundamental,
+    },
+    {
+      id: "technical",
+      name: "Technical",
+      description: "Filters based on the stock's chart",
+      icon: BarChart2,
+      filters: technical,
     },
   ];
 
@@ -221,229 +260,103 @@ export default function Page({ searchParams }: Props) {
       <div className="f-col">
         {/* Stock Filters */}
         <Tabs aria-label="Filters" color="primary" variant="bordered">
-          {/* Descriptive Filters */}
-          <Tab
-            key="descriptive"
-            title={
-              <div className="flex items-center gap-2">
-                <FileText />
-                Descriptive
-              </div>
-            }>
-            <Card>
-              <CardHeader>
-                <CardTitle>Descriptive</CardTitle>
-                <CardDescription>
-                  Filters that describe the stock
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {descriptive.map((filter) => (
-                  <div className="f-col" key={filter.id + resetCounter}>
-                    <p className="font-medium text-sm m-1 text-zinc-400">
-                      {filter.label}
-                    </p>
-                    <Select
-                      onValueChange={(e) => filter.setOption(e)}
-                      value={filter.value}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Any">
-                          {filter.value}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent className="max-h-[216px]">
-                        {filter.options.map((option) => (
-                          <SelectItem key={option} value={option}>
-                            {option}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </Tab>
-
-          {/* Fundamental Filters */}
-          <Tab
-            key="fundamental"
-            title={
-              <div className="flex items-center gap-2">
-                <Layers />
-                Fundamental
-              </div>
-            }>
-            <Card>
-              <CardHeader>
-                <CardTitle>Fundamental</CardTitle>
-                <CardDescription>
-                  Filters based on financial statements
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="f-col gap-4">
-                {fundamental.map((filter) => (
-                  <div className="f-col" key={filter.id + resetCounter}>
-                    <p className="font-medium text-sm m-1 text-zinc-400">
-                      {filter.label}
-                    </p>
-                    <div className="flex gap-4">
-                      <div className="w-full">
-                        <Select
-                          onValueChange={(e) => filter.setOption(e, 1)}
-                          value={filter.value2}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Any">
-                              {filter.value2}
-                            </SelectValue>
-                          </SelectTrigger>
-                          <SelectContent>
-                            {filter.options.map((option) => (
-                              <SelectItem key={option} value={option}>
-                                {option}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <CardDescription className="ml-1 text-[13px]">
-                          Minimum Value
-                        </CardDescription>
-                      </div>
-                      <div className="w-full">
-                        <Select
-                          onValueChange={(e) => filter.setOption(e, 0)}
-                          value={filter.value}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Any">
-                              {filter.value}
-                            </SelectValue>
-                          </SelectTrigger>
-                          <SelectContent>
-                            {filter.options.map((option) => (
-                              <SelectItem key={option} value={option}>
-                                {option}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <CardDescription className="ml-1 text-[13px]">
-                          Maximum Value
-                        </CardDescription>
+          {CONFIG.map((entry) => (
+            <Tab
+              key={entry.id}
+              title={
+                <div className="flex items-center gap-2">
+                  <entry.icon size={18} />
+                  {entry.name}
+                </div>
+              }>
+              <Card>
+                <CardHeader>
+                  <CardTitle>{entry.name}</CardTitle>
+                  <CardDescription>{entry.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {entry.filters.map((filter) => (
+                    <div className="f-col" key={filter.id + resetCounter}>
+                      <p className="font-medium text-sm m-1 text-zinc-400">
+                        {filter.label}
+                      </p>
+                      <div className="flex gap-4">
+                        {filter.type === "range" && (
+                          <div className="w-full">
+                            <Select
+                              onValueChange={(e) => filter.setOption(e, 1)}
+                              value={filter.value2!}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Any">
+                                  {filter.value2}
+                                </SelectValue>
+                              </SelectTrigger>
+                              <SelectContent>
+                                {filter.options.map((option) => (
+                                  <SelectItem key={option} value={option}>
+                                    {option}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <CardDescription className="ml-1 text-[13px]">
+                              Minimum Value
+                            </CardDescription>
+                          </div>
+                        )}
+                        <div className="w-full">
+                          <Select
+                            onValueChange={(e) => {
+                              if (filter.type === "range") {
+                                return filter.setOption(e, 0);
+                              }
+                              filter.setOption(e);
+                            }}
+                            value={filter.value}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Any">
+                                {filter.value}
+                              </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>
+                              {filter.options.map((option) => (
+                                <SelectItem key={option} value={option}>
+                                  {option}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          {filter.type === "range" && (
+                            <CardDescription className="ml-1 text-[13px]">
+                              Maximum Value
+                            </CardDescription>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </Tab>
-
-          {/* Technical Filters */}
-          <Tab
-            key="technical"
-            title={
-              <div className="flex items-center gap-2">
-                <BarChart2 />
-                Technical
-              </div>
-            }>
-            <Card>
-              <CardHeader>
-                <CardTitle>Technical</CardTitle>
-                <CardDescription>
-                  Filters based on the stock&apos;s chart
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="f-col gap-4">
-                {technical.map((filter) => (
-                  <div className="f-col" key={filter.id + resetCounter}>
-                    <p className="font-medium text-sm m-1 text-zinc-400">
-                      {filter.label}
-                    </p>
-                    <div className="flex gap-4">
-                      <div className="w-full">
-                        <Select
-                          onValueChange={(e) => filter.setOption(e, 1)}
-                          value={filter.value2}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Any">
-                              {filter.value2}
-                            </SelectValue>
-                          </SelectTrigger>
-                          <SelectContent>
-                            {filter.options.map((option) => (
-                              <SelectItem key={option} value={option}>
-                                {option}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <CardDescription className="ml-1 text-[13px]">
-                          Minimum Value
-                        </CardDescription>
-                      </div>
-                      <div className="w-full">
-                        <Select
-                          onValueChange={(e) => filter.setOption(e, 0)}
-                          value={filter.value}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Any">
-                              {filter.value}
-                            </SelectValue>
-                          </SelectTrigger>
-                          <SelectContent>
-                            {filter.options.map((option) => (
-                              <SelectItem key={option} value={option}>
-                                {option}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <CardDescription className="ml-1 text-[13px]">
-                          Maximum Value
-                        </CardDescription>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </Tab>
+                  ))}
+                </CardContent>
+              </Card>
+            </Tab>
+          ))}
         </Tabs>
       </div>
 
       {/* Screener Results */}
       <div className="f-col w-full flex-1">
         <Tabs aria-label="Options" color="primary" variant="bordered">
-          <Tab
-            key="descriptive"
-            title={
-              <div className="flex items-center gap-2">
-                <FileText />
-                Descriptive
-              </div>
-            }>
-            <ScreenerResults results={results} isFetched={isFetched} />
-          </Tab>
-          <Tab
-            key="fundamental"
-            title={
-              <div className="flex items-center gap-2">
-                <Layers />
-                Fundamental
-              </div>
-            }>
-            <ScreenerResults results={results} isFetched={isFetched} />
-          </Tab>
-          <Tab
-            key="technical"
-            title={
-              <div className="flex items-center gap-2">
-                <BarChart2 />
-                Technical
-              </div>
-            }>
-            <ScreenerResults results={results} isFetched={isFetched} />
-          </Tab>
+          {CONFIG.map((entry) => (
+            <Tab
+              key={entry.id}
+              title={
+                <div className="flex items-center gap-2">
+                  <entry.icon size={18} />
+                  {entry.name}
+                </div>
+              }>
+              <ScreenerResults results={results} isFetched={isFetched} />
+            </Tab>
+          ))}
         </Tabs>
 
         {/* Screener Control */}
