@@ -57,11 +57,10 @@ export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
     profileUrls.map(async (urls) => {
       try {
         const responses = await Promise.all(
-          urls.map(async (url) => {
-            return await fetch(url, { cache: "no-cache" }).then((res) =>
-              res.json()
-            );
-          })
+          urls.map(
+            async (url) =>
+              await fetch(url, { cache: "no-cache" }).then((res) => res.json())
+          )
         );
 
         return responses.flat().reduce((acc, data) => {
@@ -132,15 +131,15 @@ export async function uploadStocks(symbols: string[], user: Pick<User, "id">) {
             });
           } catch (error: any) {
             pino().error(
-              `[ERROR] Timed out while uploading: ${symbol}, ${year}" \n Error: ${error.message}`
+              `[ERROR] uploadStocks: ${symbol}, ${year}": ${error.message}`
             );
           }
         }
       );
 
       await Promise.all(financialsPromises);
-    } catch {
-      pino().error("[ERROR] Uploading stock data for", symbol, "failed");
+    } catch (error: any) {
+      pino().error(`[ERROR] uploadStocks: ${symbol}: ${error.message}`);
     }
   });
 

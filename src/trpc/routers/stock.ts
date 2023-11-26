@@ -145,7 +145,7 @@ export const stockRouter = router({
         });
 
         pino().info(
-          `[SUCCESS] Database cleared. Deleted ${deleted.count} stocks`
+          `[SUCCESS] Database cleared. Deleted ${deleted.count} stock/stocks`
         );
       }
     }),
