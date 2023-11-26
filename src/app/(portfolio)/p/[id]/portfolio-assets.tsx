@@ -148,17 +148,24 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
           <div className="relative flex justify-end items-center gap-2">
             <Dropdown>
               <DropdownTrigger disabled={isLoading}>
-                <Button size="sm" isIconOnly variant="flat">
-                  <MoreVertical size={18} />
+                <Button
+                  size="sm"
+                  isLoading={isLoading}
+                  isIconOnly
+                  variant="flat"
+                  aria-label="Actions">
+                  {!isLoading && <MoreVertical size={18} />}
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
                 <DropdownItem
+                  aria-label="View stock"
                   onClick={() => router.push(`/stocks/${stock.symbol}`)}>
                   View
                 </DropdownItem>
-                <DropdownItem>Edit</DropdownItem>
+                <DropdownItem aria-label="Edit position">Edit</DropdownItem>
                 <DropdownItem
+                  aria-label="Remove stock"
                   color="danger"
                   onClick={() =>
                     remove({

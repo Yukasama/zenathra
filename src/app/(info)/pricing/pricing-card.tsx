@@ -68,7 +68,10 @@ export default function PricingCard({ plan }: Props) {
 
       <CardFooter>
         <Link href="/" className="w-full">
-          <Button className="bg-zinc-50 text-black w-full" size="lg">
+          <Button
+            className="bg-zinc-50 text-black w-full"
+            size="lg"
+            aria-label="Learn more">
             Learn More
           </Button>
         </Link>

@@ -32,6 +32,7 @@ export default function OAuth({ provider, className }: Props) {
   return (
     <Button
       isLoading={isLoading}
+      aria-label={`Sign in with ${capitalize(provider)}`}
       className={cn("bg-item hover:bg-item-hover border gap-3", className)}
       onClick={() => login()}>
       {!isLoading && (

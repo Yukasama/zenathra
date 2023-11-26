@@ -84,7 +84,11 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
           whileTap="tap"
           className={numberOfPortfolios === 0 ? "h-[340px]" : ""}>
           <Card className="f-box cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-900 h-[340px]">
-            <Button color="primary" isLoading={isLoading} isIconOnly>
+            <Button
+              color="primary"
+              isLoading={isLoading}
+              aria-label="Create portfolio"
+              isIconOnly>
               {!isLoading && <Plus />}
             </Button>
           </Card>
@@ -144,6 +148,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
               color="primary"
               className="w-full"
               type="submit"
+              aria-label="Create portfolio"
               isLoading={isLoading}>
               {!isLoading && <Plus size={18} />}
               Create Portfolio

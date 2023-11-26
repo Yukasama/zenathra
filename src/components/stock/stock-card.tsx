@@ -33,7 +33,7 @@ const StockPortfolioAddModal = dynamic(
   () => import("./stock-portfolio-add-modal"),
   {
     ssr: false,
-    loading: () => <SkeletonButton />,
+    loading: () => <SkeletonButton isIconOnly />,
   }
 );
 

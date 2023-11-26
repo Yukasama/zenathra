@@ -53,7 +53,7 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-red-500 text-white">
+        <Button className="bg-red-500 text-white" aria-label="Delete portfolio">
           <Trash2 size={18} />
           Delete
         </Button>
@@ -80,7 +80,8 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
         <Button
           className="bg-red-500 text-white"
           isLoading={isLoading}
-          onClick={onSubmit}>
+          onClick={onSubmit}
+          aria-label="Delete portfolio">
           {!isLoading && <Trash2 size={18} />}
           Delete Portfolio
         </Button>

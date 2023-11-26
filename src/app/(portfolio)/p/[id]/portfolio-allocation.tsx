@@ -77,7 +77,7 @@ export default function PortfolioAllocation({ stocks }: Props) {
       <Skeleton isLoaded={mounted}>
         {mounted && (
           <ResponsiveContainer width="100%" height={220}>
-            <PieChart margin={{ top: -20, bottom: 30 }}>
+            <PieChart margin={{ top: -10, bottom: 30 }}>
               <Pie
                 data={sortedData}
                 startAngle={180}

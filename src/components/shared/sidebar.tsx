@@ -35,7 +35,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button isIconOnly variant="flat" size="sm">
+        <Button isIconOnly variant="flat" size="sm" aria-label="Open sidebar">
           <Menu size={18} />
         </Button>
       </SheetTrigger>

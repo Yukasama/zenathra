@@ -85,7 +85,7 @@ export default async function Navbar() {
           <UserAccountNav user={user} isAdmin={isAdmin} />
         ) : (
           <Link href="/sign-in">
-            <Button className="whitespace-nowrap">Sign In</Button>
+            <Button aria-label="Sign In">Sign In</Button>
           </Link>
         )}
       </div>

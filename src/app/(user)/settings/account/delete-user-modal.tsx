@@ -48,7 +48,7 @@ export default function DeleteUserModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-red-500 self-start">
+        <Button className="bg-red-500 self-start text-white" aria-label="Delete account">
           <Trash2 size={18} />
           Delete Account
         </Button>
@@ -75,7 +75,8 @@ export default function DeleteUserModal() {
             type="submit"
             className="bg-red-500"
             isLoading={isLoading}
-            onClick={onSubmit}>
+            onClick={onSubmit}
+            aria-label="Delete account">
             {!isLoading && <Trash2 size={18} />}
             Delete Account
           </Button>

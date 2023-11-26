@@ -63,7 +63,7 @@ export default async function page({ params: { id } }: Props) {
                 </div>
               </div>
               <Link href="/settings">
-                <Button className="whitespace-nowrap">Edit Profile</Button>
+                <Button aria-label="Edit profile">Edit Profile</Button>
               </Link>
             </div>
           </CardHeader>

@@ -65,6 +65,7 @@ export default function StockPortfolioModifier({ portfolio, stock }: Props) {
           }
           isLoading={isRemoveLoading}
           disabled={isRemoveLoading}
+          aria-label="Remove from portfolio"
           className={`w-full h-full absolute bg-red-500 top-0 left-0 ${
             !isRemoveLoading ? "opacity-0" : "opacity-30"
           } hover:opacity-30`}>
@@ -81,6 +82,7 @@ export default function StockPortfolioModifier({ portfolio, stock }: Props) {
           color="success"
           isLoading={isAddLoading}
           disabled={isAddLoading}
+          aria-label="Add to portfolio"
           className={`w-full h-full absolute top-0 left-0 ${
             !isAddLoading ? "opacity-0" : "opacity-20 dark:opacity-30"
           } opacity-20 dark:opacity-30`}>

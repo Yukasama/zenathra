@@ -102,9 +102,10 @@ export default function Searchbar({
         isIconOnly
         size="sm"
         variant="flat"
-        className={`${responsive ? "flex md:hidden" : "hidden"}`}>
-        <Search size={18} />
-      </Button>
+        aria-label="Search stocks"
+        startContent={<Search size={18} />}
+        className={`${responsive ? "flex md:hidden" : "hidden"}`}
+      />
 
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput
@@ -114,7 +115,7 @@ export default function Searchbar({
             debounceRequest();
           }}
           value={input}
-          className="h-9"
+          className="h-9 outline-none"
           placeholder="Search stocks..."
         />
 

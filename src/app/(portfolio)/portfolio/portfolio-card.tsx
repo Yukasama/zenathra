@@ -80,7 +80,7 @@ export default async function PortfolioCard({ portfolio }: Props) {
 
       <CardFooter className="flex justify-between">
         <Link href={`/p/${portfolio.id}`}>
-          <Button>
+          <Button aria-label="View portfolio">
             <BarChart size={18} />
             View
           </Button>

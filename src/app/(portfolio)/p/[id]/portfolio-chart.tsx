@@ -169,7 +169,7 @@ export default function PriceChart({
               )}
               onSelectionChange={setTimeFrame}>
               {Object.keys(timeFrames).map((timeFrame) => (
-                <Tab key={timeFrame} title={timeFrame} />
+                <Tab key={timeFrame} aria-label={timeFrame} title={timeFrame} />
               ))}
             </Tabs>
           </Skeleton>
@@ -182,17 +182,20 @@ export default function PriceChart({
           {isFetched && !data[timeFrame].length ? (
             <div className="f-box f-col gap-1 mt-16">
               <p className="text-zinc-500">Chart could not be loaded</p>
-              <Button isIconOnly onClick={() => debounceRequest()}>
+              <Button
+                isIconOnly
+                onClick={() => debounceRequest()}
+                aria-label="Reload chart">
                 <RotateCcw size={18} />
               </Button>
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={height || 250}>
               <AreaChart
-                width={width ?? 500}
+                width={width ?? 550}
                 height={height ?? 250}
                 data={results}
-                margin={{ top: 5, right: 40, left: 0, bottom: 5 }}>
+                margin={{ top: 5, right: 5, left: -15, bottom: 5 }}>
                 <defs>
                   <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                     <stop

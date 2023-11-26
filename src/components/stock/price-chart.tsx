@@ -139,7 +139,7 @@ export default function PriceChart({
               selectedKey={timeFrame}
               onSelectionChange={setTimeFrame}>
               {timeFrames.map((timeFrame) => (
-                <Tab key={timeFrame} title={timeFrame} />
+                <Tab key={timeFrame} className="-mx-0.5 sm:mx-0" aria-label={timeFrame} title={timeFrame} />
               ))}
             </Tabs>
           </Skeleton>
@@ -154,7 +154,7 @@ export default function PriceChart({
               width={width ?? 500}
               height={height ?? 250}
               data={results}
-              margin={{ top: 5, right: 40, left: 0, bottom: 5 }}>
+              margin={{ top: 5, right: 5, left: -15, bottom: 5 }}>
               <defs>
                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                   <stop

@@ -1,5 +1,5 @@
-import { buttonVariants } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import { Button } from "@nextui-org/button";
 import Link from "next/link";
 
 export const useCustomToasts = () => {
@@ -9,11 +9,8 @@ export const useCustomToasts = () => {
       description: "You need to be logged in to do that.",
       variant: "destructive",
       action: (
-        <Link
-          onClick={() => dismiss()}
-          href="/sign-in"
-          className={buttonVariants({ variant: "outline" })}>
-          Login
+        <Link onClick={() => dismiss()} href="/sign-in">
+          <Button aria-label="Sign In">Sign In</Button>
         </Link>
       ),
     });

@@ -19,9 +19,9 @@ export default function Error({ reset }: Props) {
         <p className="text-zinc-400 dark:text-zinc-200 text-sm">
           There was an error on our end.
         </p>
-        <Button onClick={() => reset()}>
+        <Button aria-label="Reload page" onClick={() => reset()}>
           <RotateCw size={18} />
-          Try again
+          Reload page
         </Button>
       </div>
     </div>

@@ -27,7 +27,7 @@ export default async function page() {
     <div className="f-box fixed left-0 top-0 z-20 h-screen w-screen bg-background">
       {/* Back Button */}
       <Link href="/">
-        <Button className="absolute top-5 left-5">
+        <Button className="absolute top-5 left-5" aria-label="Back">
           <ArrowLeft size={18} />
           Back
         </Button>

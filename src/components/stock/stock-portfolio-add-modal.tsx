@@ -52,6 +52,7 @@ export default function StockPortfolioAddModal({
           size="sm"
           startContent={<Plus className="h-4" />}
           onClick={handleClick}
+          aria-label="Add stock to portfolio"
         />
       ) : (
         <Dialog>
@@ -60,6 +61,7 @@ export default function StockPortfolioAddModal({
               isIconOnly
               size="sm"
               startContent={<Plus className="h-4" />}
+              aria-label="Add stock to portfolio"
             />
           </DialogTrigger>
           <DialogContent>

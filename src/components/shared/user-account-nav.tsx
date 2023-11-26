@@ -20,7 +20,11 @@ export function UserAccountNav({ user, isAdmin }: Props) {
   return (
     <Sheet>
       <SheetTrigger>
-        <UserAvatar user={user} className="h-8 w-8" />
+        <UserAvatar
+          user={user}
+          className="h-8 w-8"
+          aria-label="User Account Navigation"
+        />
       </SheetTrigger>
 
       <SheetContent className="rounded-l-xl">

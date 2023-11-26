@@ -178,7 +178,11 @@ export default function AdminAddStocks() {
                 </FormItem>
               )}
             />
-            <Button color="primary" isLoading={isLoading} type="submit">
+            <Button
+              color="primary"
+              isLoading={isLoading}
+              type="submit"
+              aria-label="Upload stocks">
               {!isLoading && <Upload size={18} />}
               Upload
             </Button>

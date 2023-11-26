@@ -21,12 +21,12 @@ export default function page() {
         <h2 className="font-light text-2xl">Export Data</h2>
         <Separator />
         <small className="text-zinc-500 text-sm">
-          Export all portfolio, stock and profile data we have stored in our
-          database (Coming soon)
+          Export all data related to your account we have stored in our database
+          (Coming soon)
         </small>
       </div>
 
-      <Button color="primary" className="self-start">
+      <Button color="primary" className="self-start" aria-label="Export data">
         <Layers size={18} />
         Export Data
       </Button>

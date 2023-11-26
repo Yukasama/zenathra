@@ -30,10 +30,10 @@ export default async function page() {
         </p>
         <div className="flex gap-3 mt-2">
           <Link href="/sign-in">
-            <Button>Sign In</Button>
+            <Button aria-label="Sign In">Sign In</Button>
           </Link>
           <Link href="/sign-in">
-            <Button className="gradient text-white">
+            <Button className="gradient text-white" aria-label="Sign In">
               Get started
               <MoveRight size={18} />
             </Button>

@@ -95,6 +95,7 @@ export default function PortfolioAddModal({ portfolio }: Props) {
     <>
       <Button
         color="primary"
+        aria-label="Add new stocks"
         onClick={() => setOpen((prev) => (prev === open ? !open : open))}>
         Add New <Plus size={18} />
       </Button>
@@ -153,8 +154,12 @@ export default function PortfolioAddModal({ portfolio }: Props) {
             )}
           </CommandList>
         )}
-        <Button color="primary" isLoading={isLoading} onClick={onSubmit}>
-          Add New <Plus size={18} />
+        <Button
+          color="primary"
+          aria-label="Add new stocks"
+          isLoading={isLoading}
+          onClick={onSubmit}>
+          Add New {!isLoading && <Plus size={18} />}
         </Button>
       </CommandDialog>
     </>

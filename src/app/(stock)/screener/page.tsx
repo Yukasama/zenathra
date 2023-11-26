@@ -333,6 +333,7 @@ export default function Page({ searchParams }: Props) {
         <Button
           color="danger"
           className="self-start"
+          aria-label="Reset filters"
           onClick={() => resetFilters()}>
           <RotateCcw size={18} />
           Reset Filters
@@ -360,6 +361,7 @@ export default function Page({ searchParams }: Props) {
         {isFetched && results?.length ? (
           <div className="flex gap-3.5 justify-center">
             <Button
+              aria-label="Previous page"
               onClick={() =>
                 router.push(
                   `/screener?cursor=${
@@ -375,7 +377,8 @@ export default function Page({ searchParams }: Props) {
               onClick={() =>
                 router.push(`/screener?cursor=${cursor + 1}&take=${take}`)
               }
-              color="primary">
+              color="primary"
+              aria-label="Next page">
               Next
               <ChevronRight size={18} />
             </Button>

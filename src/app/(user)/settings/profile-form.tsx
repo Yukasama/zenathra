@@ -108,7 +108,11 @@ export default function ProfileForm({ user }: Props) {
           )}
         />
 
-        <Button className="self-start" type="submit" isLoading={isLoading}>
+        <Button
+          className="self-start"
+          type="submit"
+          aria-label="Save changes"
+          isLoading={isLoading}>
           Save changes
         </Button>
       </form>

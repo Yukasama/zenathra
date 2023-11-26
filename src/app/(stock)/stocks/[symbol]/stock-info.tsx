@@ -16,7 +16,7 @@ const StockPortfolioAddModal = dynamic(
   () => import("@/components/stock/stock-portfolio-add-modal"),
   {
     ssr: false,
-    loading: () => <SkeletonButton />,
+    loading: () => <SkeletonButton isIconOnly />,
   }
 );
 
@@ -29,7 +29,7 @@ export function StockInfoLoading() {
       </div>
       <SkeletonText count={1} />
       <div className="absolute right-3 top-3 flex">
-        <SkeletonButton />
+        <SkeletonButton isIconOnly />
       </div>
     </Card>
   );

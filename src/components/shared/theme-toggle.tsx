@@ -22,12 +22,14 @@ export default function ThemeToggle({
         size="sm"
         variant="flat"
         isIconOnly
-        aria-label="Toggle Website Appearance"
+        aria-label="Toggle darkmode"
+        startContent={
+          theme === "light" ? <Sun size={18} /> : <Moon size={18} />
+        }
         onClick={() =>
           theme === "light" ? setTheme("dark") : setTheme("light")
-        }>
-        {theme === "light" ? <Sun size={18} /> : <Moon size={18} />}
-      </Button>
+        }
+      />
     </Skeleton>
   );
 }
