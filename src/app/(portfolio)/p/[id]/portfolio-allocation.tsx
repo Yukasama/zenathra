@@ -1,10 +1,22 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Card, CardDescription, CardHeader, CardTitle } from "../../../../components/ui/card";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Stock } from "@prisma/client";
-import Skeleton from "../../../../components/ui/skeleton";
+import Skeleton from "@/components/ui/skeleton";
 import { GRAPH_COLORS } from "@/config/colors";
 import { getPercentage } from "@/lib/utils";
 
@@ -75,8 +87,7 @@ export default function PortfolioAllocation({ stocks }: Props) {
                 paddingAngle={2}
                 dataKey="value"
                 fontSize={14}
-                label={renderCustomLabel}
-              >
+                label={renderCustomLabel}>
                 {sortedData.map((entry, i) => (
                   <Cell
                     key={`cell-${i}`}
@@ -95,7 +106,11 @@ export default function PortfolioAllocation({ stocks }: Props) {
                 }}
                 wrapperStyle={{ zIndex: 100 }}
               />
-              <Legend wrapperStyle={{ fontSize: "14px" }} verticalAlign="bottom" height={1} />
+              <Legend
+                wrapperStyle={{ fontSize: "14px" }}
+                verticalAlign="bottom"
+                height={1}
+              />
             </PieChart>
           </ResponsiveContainer>
         )}

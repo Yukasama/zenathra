@@ -1,14 +1,20 @@
 import StockList, { StockListLoading } from "@/components/stock/stock-list";
 import StockMetrics from "@/app/(stock)/stocks/[symbol]/stock-metrics";
 import StockEye from "@/app/(stock)/stocks/[symbol]/stock-eye";
-import StockAfterHours, { StockAfterHoursLoading } from "@/app/(stock)/stocks/[symbol]/stock-after-hours";
-import StockInfo, { StockInfoLoading } from "@/app/(stock)/stocks/[symbol]/stock-info";
+import StockAfterHours, {
+  StockAfterHoursLoading,
+} from "@/app/(stock)/stocks/[symbol]/stock-after-hours";
+import StockInfo, {
+  StockInfoLoading,
+} from "@/app/(stock)/stocks/[symbol]/stock-info";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { db } from "@/db";
 import { Separator } from "@/components/ui/separator";
 import PageLayout from "@/components/shared/page-layout";
-import StockStatistics, { StockStatisticsLoading } from "@/app/(stock)/stocks/[symbol]/stock-statistics";
+import StockStatistics, {
+  StockStatisticsLoading,
+} from "@/app/(stock)/stocks/[symbol]/stock-statistics";
 import PriceChart from "@/components/stock/price-chart";
 import StockImage from "@/components/stock/stock-image";
 import { getUser } from "@/lib/auth";
@@ -74,7 +80,7 @@ export default async function page({ params: { symbol } }: Props) {
     const recentEntry = await db.userRecentStocks.findFirst({
       select: { id: true },
       where: {
-        userId: user?.id ?? undefined,
+        userId: user.id,
         stockId: stock.id,
         createdAt: { gte: tenSecondsAgo },
       },

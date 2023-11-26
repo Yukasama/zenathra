@@ -11,16 +11,18 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   quote: Quote | null | undefined;
 }
 
-export default function StockListItem({ stock, quote, className }: Props) {
+export default function StockItem({ stock, quote, className }: Props) {
   if (!quote) {
     return null;
   }
+
+  const positive = quote.changesPercentage >= 0;
 
   return (
     <Link href={`/stocks/${quote.symbol}`}>
       <Card
         className={cn(
-          "flex items-center justify-between h-12 p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 mb-2",
+          "flex items-center justify-between h-12 p-2 bg-item hover:bg-item-hover mb-2",
           className
         )}>
         <div className="flex items-center gap-2">
@@ -33,18 +35,13 @@ export default function StockListItem({ stock, quote, className }: Props) {
           </div>
         </div>
         <div>
-          <p className="text-end text-[12px]">
-            ${quote && quote.price ? quote.price.toFixed(2) : "N/A"}
-          </p>
+          <p className="text-end text-[12px]">${quote.price?.toFixed(2)}</p>
           <p
             className={`text-end text-[12px] ${
-              quote.changesPercentage > 0 ? "text-green-500" : "text-red-500"
+              positive ? "text-green-500" : "text-red-500"
             }`}>
-            {quote.changesPercentage > 0 && "+"}
-            {quote && quote.changesPercentage
-              ? quote.changesPercentage.toFixed(2)
-              : "N/A"}
-            %
+            {positive && "+"}
+            {quote.changesPercentage?.toFixed(2)}%
           </p>
         </div>
       </Card>

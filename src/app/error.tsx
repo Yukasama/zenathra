@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@nextui-org/button";
 import { RotateCw } from "lucide-react";
 
 interface Props {
@@ -19,8 +19,8 @@ export default function Error({ reset }: Props) {
         <p className="text-zinc-400 dark:text-zinc-200 text-sm">
           There was an error on our end.
         </p>
-        <Button variant="subtle" onClick={() => reset()}>
-          <RotateCw className="h-4 w-4" />
+        <Button onClick={() => reset()}>
+          <RotateCw size={18} />
           Try again
         </Button>
       </div>

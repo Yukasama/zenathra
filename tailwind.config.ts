@@ -3,13 +3,13 @@ import { nextui } from "@nextui-org/theme";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ["class"],
   content: [
     "./src/app/**/*.{ts,tsx}",
     "./src/components/**/*.{ts,tsx}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   mode: "jit",
+  darkMode: "class",
   theme: {
     container: {
       center: true,
@@ -57,6 +57,10 @@ module.exports = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        item: {
+          DEFAULT: "hsl(var(--item))",
+          hover: "hsl(var(--item-hover))",
         },
       },
       borderRadius: {

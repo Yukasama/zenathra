@@ -6,7 +6,9 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export default function Skeleton({ isLoaded, children, ...props }: Props) {
   return (
     <div className="relative">
-      {!isLoaded && <div className="animate-pulse-right absolute inset-0 rounded-md"></div>}
+      {!isLoaded && (
+        <div className="animate-pulse-right absolute inset-0 rounded-md"></div>
+      )}
       <div className={`${!isLoaded && "invisible"}`} {...props}>
         {children}
       </div>
@@ -34,10 +36,14 @@ export function SkeletonInput() {
   );
 }
 
-export function SkeletonButton() {
+export function SkeletonButton({
+  isIconOnly = false,
+}: {
+  isIconOnly?: boolean;
+}) {
   return (
     <Skeleton>
-      <div className="w-20 h-10 rounded-3xl" />
+      <div className={`${isIconOnly ? "h-8 w-8" : "h-10 w-20"} rounded-3xl`} />
     </Skeleton>
   );
 }

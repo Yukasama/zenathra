@@ -3,16 +3,16 @@ import { ImageOff } from "lucide-react";
 import Image from "next/image";
 
 interface Props extends React.HTMLAttributes<HTMLImageElement> {
-  px?: number;
   src: string | null | undefined;
+  px?: number;
   priority?: boolean;
 }
 
 export default function StockImage({
-  px = 40,
   src,
-  className,
+  px = 40,
   priority = false,
+  className,
   ...props
 }: Props) {
   return (
@@ -40,7 +40,7 @@ export default function StockImage({
         <div
           style={{ height: px, width: px }}
           className="f-box p-3 rounded-full bg-zinc-300 dark:bg-zinc-700">
-          <ImageOff className="h-5 w-5" />
+          <ImageOff size={22} />
         </div>
       )}
     </div>

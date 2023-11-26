@@ -68,7 +68,7 @@ export default async function StockCardList({
   });
 
   return (
-    <Card className="border-none">
+    <Card className="border-none bg-transparent">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

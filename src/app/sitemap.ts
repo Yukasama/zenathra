@@ -3,8 +3,6 @@ import { db } from "@/db";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const url = `https://www.${SITE.name.toLowerCase()}.com/`;
-
   const [stocks, portfolios] = await Promise.all([
     db.stock.findMany({
       select: { symbol: true },
@@ -12,50 +10,53 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
     db.portfolio.findMany({
       select: { id: true },
-      where: { public: true },
+      where: { isPublic: true },
       orderBy: { title: "asc" },
     }),
   ]);
 
   return [
     {
-      url: "${url}",
+      url: `${SITE.url}/`,
     },
     {
-      url: "${url}about/",
+      url: `${SITE.url}/sign-in/`,
     },
     {
-      url: "${url}contact/",
+      url: `${SITE.url}/verify-email/`,
     },
     {
-      url: "${url}pricing/",
+      url: `${SITE.url}/about/`,
     },
     {
-      url: "${url}privacy-policy/",
+      url: `${SITE.url}/contact/`,
     },
     {
-      url: "${url}support/",
+      url: `${SITE.url}/pricing/`,
     },
     {
-      url: "${url}terms/",
+      url: `${SITE.url}/privacy-policy/`,
     },
     {
-      url: "${url}economic-calendar",
+      url: `${SITE.url}/terms/`,
     },
     {
-      url: "${url}screener",
+      url: `${SITE.url}/economic-calendar`,
     },
     {
-      url: "${url}stocks",
+      url: `${SITE.url}/screener`,
+    },
+    {
+      url: `${SITE.url}/stocks`,
     },
     ...(stocks
       ? stocks.map((stock) => ({
-          url: `${url}stocks/${stock.symbol}`,
+          url: `${SITE.url}/stocks/${stock.symbol}`,
         }))
       : []),
     ...(portfolios
       ? portfolios.map((portfolio) => ({
-          url: `${url}p/${portfolio.id}`,
+          url: `${SITE.url}/p/${portfolio.id}`,
         }))
       : []),
   ];

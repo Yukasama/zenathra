@@ -1,16 +1,25 @@
-import PortfolioWrapper from "@/app/(user)/settings/portfolio/portfolio-wrapper";
 import { StockListLoading } from "@/components/stock/stock-list";
 import { Separator } from "@/components/ui/separator";
+import { db } from "@/db";
 import { getUser } from "@/lib/auth";
 import { Suspense } from "react";
-import { SITE } from "@/config/site";
+import PortfolioItem from "./portfolio-item";
 
-export const metadata = {
-  title: `${SITE.name} | Portfolio Settings`,
-};
+export const metadata = { title: "Portfolio Settings" };
 
 export default async function page() {
   const user = await getUser();
+
+  const portfolios = await db.portfolio.findMany({
+    select: {
+      id: true,
+      title: true,
+      isPublic: true,
+      color: true,
+      createdAt: true,
+    },
+    where: { creatorId: user?.id },
+  });
 
   return (
     <div className="f-col gap-4 w-full">
@@ -18,8 +27,11 @@ export default async function page() {
         <h2 className="font-light text-2xl">Your Portfolios</h2>
         <Separator />
       </div>
+
       <Suspense fallback={<StockListLoading className="w-full" />}>
-        <PortfolioWrapper user={user} />
+        {portfolios.map((portfolio) => (
+          <PortfolioItem key={portfolio.id} portfolio={portfolio} />
+        ))}
       </Suspense>
     </div>
   );

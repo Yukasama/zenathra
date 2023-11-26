@@ -22,7 +22,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { UploadStockSchema } from "@/lib/validators/stock";
 import { Checkbox } from "@nextui-org/checkbox";
-import { Slider } from "@/components/ui/slider";
+import { Slider } from "@nextui-org/slider";
 import { Upload } from "lucide-react";
 import {
   Card,
@@ -34,8 +34,6 @@ import {
 import { trpc } from "@/trpc/client";
 
 export default function AdminAddStocks() {
-  const stocks = ["All", "US500", "AAPL", "MSFT", "TSLA"];
-
   const form = useForm({
     resolver: zodResolver(UploadStockSchema),
     defaultValues: {
@@ -46,22 +44,26 @@ export default function AdminAddStocks() {
     },
   });
 
+  const stocks = ["All", "US500", "AAPL", "MSFT", "TSLA"];
+
   const { mutate: uploadStocks, isLoading } = trpc.stock.upload.useMutation({
-    onError: () =>
+    onError: () => {
       toast({
         title: "Oops! Something went wrong.",
         description: `${form.getValues("stock")} could not be uploaded.`,
         variant: "destructive",
-      }),
-    onSuccess: () =>
+      });
+    },
+    onSuccess: () => {
       toast({
         title: `${form.getValues("stock")} uploaded.`,
         description: "Files were successfully added to the database.",
-      }),
+      });
+    },
   });
 
   return (
-    <Card className="border-none bg-zinc-100 dark:bg-zinc-900/70 w-[400px] sm:w-[500px]">
+    <Card className="w-[400px] sm:w-[500px]">
       <CardHeader>
         <CardTitle>Upload Stocks</CardTitle>
         <CardDescription>Upload stock data to the database</CardDescription>
@@ -76,9 +78,7 @@ export default function AdminAddStocks() {
               name="stock"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-black dark:text-white">
-                    Symbols
-                  </FormLabel>
+                  <FormLabel>Symbols</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}>
@@ -98,7 +98,7 @@ export default function AdminAddStocks() {
                   <FormDescription>
                     Start a uploading queue by selecting All or US500
                   </FormDescription>
-                  <FormMessage className="text-red-500" />
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -106,14 +106,12 @@ export default function AdminAddStocks() {
               control={form.control}
               name="skip"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-1 space-y-0 rounded-md border p-4 bg-card">
+                <FormItem className="flex flex-row items-start space-x-1 space-y-0 rounded-md border p-4 bg-background">
                   <FormControl>
                     <Checkbox checked={field.value} onChange={field.onChange} />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel className="text-black dark:text-white">
-                      Skip Stocks
-                    </FormLabel>
+                    <FormLabel>Skip Stocks</FormLabel>
                     <FormDescription>
                       This will skip stocks that already exist in the database
                     </FormDescription>
@@ -125,14 +123,12 @@ export default function AdminAddStocks() {
               control={form.control}
               name="clean"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-1 space-y-0 rounded-md border p-4 bg-card">
+                <FormItem className="flex flex-row items-start space-x-1 space-y-0 rounded-md border p-4 bg-background">
                   <FormControl>
                     <Checkbox checked={field.value} onChange={field.onChange} />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel className="text-black dark:text-white">
-                      Clean Database
-                    </FormLabel>
+                    <FormLabel>Clean Database</FormLabel>
                     <FormDescription>
                       Cleans the database of empty records
                     </FormDescription>
@@ -144,11 +140,9 @@ export default function AdminAddStocks() {
               control={form.control}
               name="pullTimes"
               render={({ field }) => (
-                <FormItem className="f-col items-start space-y-3 rounded-md border p-4 bg-card">
+                <FormItem className="f-col items-start space-y-3 rounded-md border p-4 pb-8 bg-background">
                   <div className="space-y-1 leading-none">
-                    <FormLabel className="text-black dark:text-white">
-                      Pull Times
-                    </FormLabel>
+                    <FormLabel>Pull Times</FormLabel>
                     <FormDescription>
                       {form.getValues("pullTimes")} batches of data to pull (~30
                       stocks/batch)
@@ -156,26 +150,36 @@ export default function AdminAddStocks() {
                   </div>
                   <FormControl>
                     <Slider
+                      aria-label="Pull Times"
                       name="pullTimes"
-                      max={100}
-                      min={1}
-                      defaultValue={[1]}
-                      value={[field.value]}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        form.setValue("pullTimes", value[0]);
-                      }}>
+                      maxValue={100}
+                      minValue={1}
+                      step={1}
+                      defaultValue={1}
+                      value={field.value}
+                      marks={[
+                        {
+                          value: 20,
+                          label: "20 Batches",
+                        },
+                        {
+                          value: 50,
+                          label: "50 Batches",
+                        },
+                        {
+                          value: 80,
+                          label: "80 Batches",
+                        },
+                      ]}
+                      onChange={field.onChange}>
                       {field.value}
                     </Slider>
                   </FormControl>
                 </FormItem>
               )}
             />
-            <Button
-              className="bg-primary rounded-md text-white"
-              isLoading={isLoading}
-              type="submit">
-              {!isLoading && <Upload className="h-4 w-4" />}
+            <Button color="primary" isLoading={isLoading} type="submit">
+              {!isLoading && <Upload size={18} />}
               Upload
             </Button>
           </form>

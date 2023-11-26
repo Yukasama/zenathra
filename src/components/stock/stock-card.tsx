@@ -11,13 +11,11 @@ import {
 } from "../ui/card";
 import StockImage from "./stock-image";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "../ui/button";
 import React from "react";
-import Skeleton, { SkeletonText } from "../ui/skeleton";
+import Skeleton, { SkeletonButton, SkeletonText } from "../ui/skeleton";
 import { Stock } from "@prisma/client";
 import { PortfolioWithStocks } from "@/types/db";
 import dynamic from "next/dynamic";
-import { Loader2 } from "lucide-react";
 import { getUser } from "@/lib/auth";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
@@ -35,18 +33,7 @@ const StockPortfolioAddModal = dynamic(
   () => import("./stock-portfolio-add-modal"),
   {
     ssr: false,
-    loading: () => (
-      <div
-        className={cn(
-          buttonVariants({
-            variant: "subtle",
-            size: "xs",
-          }),
-          "opacity-50"
-        )}>
-        <Loader2 className="animate-spin h-4" />
-      </div>
-    ),
+    loading: () => <SkeletonButton />,
   }
 );
 
@@ -70,24 +57,8 @@ export function StockCardLoading() {
       </CardHeader>
 
       <CardContent className="flex gap-3">
-        <Skeleton>
-          <div
-            className={cn(
-              buttonVariants({ size: "xs" }),
-              "text-primary bg-zinc-900"
-            )}>
-            Placeholder
-          </div>
-        </Skeleton>
-        <Skeleton>
-          <div
-            className={cn(
-              buttonVariants({ size: "xs" }),
-              "text-primary bg-zinc-900"
-            )}>
-            Placeholder
-          </div>
-        </Skeleton>
+        <SkeletonButton />
+        <SkeletonButton />
       </CardContent>
 
       <CardFooter>
@@ -117,6 +88,7 @@ export default async function StockCard({
         className,
         "relative min-w-[300px] min-h-[210px] lg:min-h-[250px] overflow-hidden hover:scale-[1.01] transition duration-300 z-[1]"
       )}>
+      {/* Modal to add stocks to portfolio */}
       {stock && (
         <div className="absolute top-4 right-4">
           <StockPortfolioAddModal
@@ -126,9 +98,13 @@ export default async function StockCard({
           />
         </div>
       )}
+
+      {/* Background chart */}
       <div className="absolute bottom-0 opacity-70 left-0 w-full -z-0 pointer-events-none">
         <SmallChart quote={quote} height={150} />
       </div>
+
+      {/* Content */}
       <Link
         href={`/stocks/${quote.symbol}`}
         className="h-full f-col justify-between">
@@ -145,6 +121,7 @@ export default async function StockCard({
             </div>
           </div>
         </CardHeader>
+
         {stock && (
           <StockImage
             className="absolute -top-5 right-[5%] pointer-events-none opacity-20 aria-hidden"
@@ -153,6 +130,7 @@ export default async function StockCard({
             priority={true}
           />
         )}
+
         <CardFooter>
           <StockPrice className="w-full" quote={quote} />
         </CardFooter>

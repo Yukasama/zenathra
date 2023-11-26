@@ -17,7 +17,6 @@ import {
 import { Input } from "../ui/input";
 import { CardDescription } from "../ui/card";
 import { trpc } from "@/trpc/client";
-import { DialogClose } from "@radix-ui/react-dialog";
 
 type Props = {
   portfolio: Pick<Portfolio, "id" | "title">;
@@ -60,7 +59,7 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-[375px] rounded-md">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>
             <p className="w-54 truncate">Delete Portfolio {portfolio.title}?</p>
@@ -78,15 +77,13 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
           </CardDescription>
         </div>
 
-        <DialogClose asChild>
-          <Button
-            className="bg-red-500 text-white"
-            isLoading={isLoading}
-            onClick={onSubmit}>
-            {!isLoading && <Trash2 size={18} />}
-            Delete Portfolio
-          </Button>
-        </DialogClose>
+        <Button
+          className="bg-red-500 text-white"
+          isLoading={isLoading}
+          onClick={onSubmit}>
+          {!isLoading && <Trash2 size={18} />}
+          Delete Portfolio
+        </Button>
       </DialogContent>
     </Dialog>
   );

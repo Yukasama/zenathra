@@ -3,7 +3,9 @@
 import Searchbar from "./searchbar";
 import {
   CandlestickChart,
+  DollarSign,
   FilePlus2,
+  LayoutDashboard,
   Menu,
   SlidersHorizontal,
   User as UserIcon,
@@ -14,18 +16,11 @@ import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Card } from "../ui/card";
 import { UserAvatar } from "./user-avatar";
 import PortfolioImage from "../portfolio/portfolio-image";
-import { useRouter } from "next/navigation";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../ui/accordion";
+import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import Link from "next/link";
 import { navLinks } from "@/config/site";
 import { SITE } from "@/config/site";
 import { User } from "next-auth";
-import { buttonVariants } from "../ui/button";
 import { Button } from "@nextui-org/button";
 
 interface Props {
@@ -33,19 +28,18 @@ interface Props {
   portfolios:
     | Pick<Portfolio, "id" | "title" | "color" | "isPublic">[]
     | undefined;
-  recentStocks: Pick<Stock, "symbol" | "companyName" | "image">[] | null;
+  recentStocks: Pick<Stock, "symbol" | "companyName" | "image">[] | undefined;
 }
 
 export default function Sidebar({ user, portfolios, recentStocks }: Props) {
-  const router = useRouter();
-
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button isIconOnly variant="flat">
-          <Menu className="h-5" />
+        <Button isIconOnly variant="flat" size="sm">
+          <Menu size={18} />
         </Button>
       </SheetTrigger>
+
       <SheetContent side="left" className="f-col gap-4 rounded-r-xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -53,22 +47,26 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
             <p className="text-lg">{SITE.name}</p>
           </div>
         </div>
+
         <Searchbar
           recentStocks={recentStocks}
           responsive={false}
           className="w-full"
         />
-        <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="getting-started">
-            <AccordionTrigger>Getting started</AccordionTrigger>
-            <AccordionContent>
+
+        <div className="f-col justify-between h-full">
+          <Accordion defaultExpandedKeys={["portfolios"]}>
+            <AccordionItem
+              key="getting-started"
+              aria-label="Getting started"
+              title="Getting started">
               <div className="grid grid-cols-2 gap-3">
                 <Card className="hover:bg-zinc-100 dark:hover:bg-zinc-900 h-32 cursor-pointer">
                   <SheetClose asChild>
                     <Link
                       href="/screener"
                       className="f-col items-center justify-center gap-1 h-full w-full font-medium">
-                      <SlidersHorizontal className="h-7 w-7" />
+                      <SlidersHorizontal size={28} />
                       Stock Screener
                     </Link>
                   </SheetClose>
@@ -79,7 +77,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                       <Link
                         href="/portfolio"
                         className="f-col items-center justify-center gap-1 h-full w-full font-medium">
-                        <FilePlus2 className="h-7 w-7" />
+                        <FilePlus2 size={28} />
                         Create Portfolio
                       </Link>
                     </SheetClose>
@@ -88,9 +86,9 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                 <Card className="hover:bg-zinc-100 dark:hover:bg-zinc-900 h-32 cursor-pointer">
                   <SheetClose asChild>
                     <Link
-                      href={user ? "/settings/profile" : "/api/auth/login"}
+                      href={user ? "/settings/profile" : "/sign-in"}
                       className="f-col items-center justify-center gap-1 h-full w-full font-medium">
-                      <UserIcon className="h-7 w-7" />
+                      <UserIcon size={28} />
                       {user ? "Edit Profile" : "Create Account"}
                     </Link>
                   </SheetClose>
@@ -100,17 +98,18 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                     <Link
                       href="/stocks"
                       className="f-col items-center justify-center gap-1 h-full w-full font-medium">
-                      <CandlestickChart className="h-7 w-7" />
+                      <CandlestickChart size={28} />
                       Explore stocks
                     </Link>
                   </SheetClose>
                 </Card>
               </div>
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="highlights">
-            <AccordionTrigger>Highlights</AccordionTrigger>
-            <AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem
+              key="highlights"
+              aria-label="Highlights"
+              title="Highlights">
               <div className="grid grid-cols-2 gap-3">
                 {navLinks.map((link) => (
                   <Card
@@ -120,65 +119,94 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                       <Link
                         href={link.href}
                         className="f-col items-center justify-center gap-1 h-full w-full font-medium">
-                        <link.icon className="h-7 w-7" />
+                        <link.icon size={28} />
                         {link.title}
                       </Link>
                     </SheetClose>
                   </Card>
                 ))}
               </div>
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="dashboard">
-            <AccordionTrigger asLink>
-              <SheetClose asChild>
-                <Link href="/" className="w-full py-4 text-start">
-                  Dashboard
-                </Link>
-              </SheetClose>
-            </AccordionTrigger>
-          </AccordionItem>
-          <AccordionItem value="pricing">
-            <AccordionTrigger asLink>
-              <SheetClose asChild>
-                <Link href="/pricing" className="w-full py-4 text-start">
-                  Pricing
-                </Link>
-              </SheetClose>
-            </AccordionTrigger>
-          </AccordionItem>
-        </Accordion>
-        <div className="f-col gap-3">
-          {user &&
-            portfolios?.map((portfolio) => (
-              <SheetClose key={portfolio.id} asChild>
-                <button
-                  key={portfolio.id}
-                  onClick={() => router.push(`/p/${portfolio.id}`)}>
-                  <Card className="flex items-center gap-2.5 p-2 px-3 hover:bg-zinc-100 dark:hover:bg-zinc-900">
-                    <PortfolioImage portfolio={portfolio} />
-                    <div>
-                      <p className="font-medium">{portfolio.title}</p>
-                      <p className="text-sm text-start text-zinc-400">
-                        {portfolio.isPublic ? "Public" : "Private"}
-                      </p>
-                    </div>
-                  </Card>
-                </button>
-              </SheetClose>
-            ))}
-          {user && (
-            <Card className="flex items-center p-2 px-3 gap-2.5">
-              <UserAvatar user={user} />
-              <div>
-                <p className="font-medium truncate max-w-[200px]">
-                  {user.name}
-                </p>
-                <p className="text-sm text-zinc-400 truncate max-w-[200px]">
-                  {user.email}
-                </p>
+            </AccordionItem>
+
+            <AccordionItem
+              key="information"
+              aria-label="Information"
+              title="Information">
+              <div className="grid grid-cols-2 gap-3">
+                <Card className="hover:bg-zinc-100 dark:hover:bg-zinc-900 h-32 cursor-pointer">
+                  <SheetClose asChild>
+                    <Link
+                      href="/"
+                      className="f-col items-center justify-center gap-1 h-full w-full font-medium">
+                      <LayoutDashboard size={28} />
+                      Dashboard
+                    </Link>
+                  </SheetClose>
+                </Card>
+                <Card className="hover:bg-zinc-100 dark:hover:bg-zinc-900 h-32 cursor-pointer">
+                  <SheetClose asChild>
+                    <Link
+                      href="/pricing"
+                      className="f-col items-center justify-center gap-1 h-full w-full font-medium">
+                      <DollarSign size={28} />
+                      Pricing
+                    </Link>
+                  </SheetClose>
+                </Card>
               </div>
-            </Card>
+            </AccordionItem>
+
+            <AccordionItem
+              key="portfolios"
+              aria-label="Portfolios"
+              title="Portfolios">
+              {user ? (
+                <div className="max-h-72 scroll-auto">
+                  {portfolios?.map((portfolio) => (
+                    <SheetClose key={portfolio.id} asChild>
+                      <Link
+                        key={portfolio.id}
+                        className="w-full"
+                        href={`/p/${portfolio.id}`}>
+                        <Card className="flex items-center gap-2.5 p-2 px-3 hover:bg-zinc-100 dark:hover:bg-zinc-900">
+                          <PortfolioImage portfolio={portfolio} />
+                          <div>
+                            <p className="font-medium">{portfolio.title}</p>
+                            <p className="text-sm text-start text-zinc-400">
+                              {portfolio.isPublic ? "Public" : "Private"}
+                            </p>
+                          </div>
+                        </Card>
+                      </Link>
+                    </SheetClose>
+                  ))}
+                </div>
+              ) : (
+                <SheetClose asChild>
+                  <Link
+                    href="/sign-in"
+                    className="text-zinc-500 hover:underline text-center">
+                    Sign in to view portfolios
+                  </Link>
+                </SheetClose>
+              )}
+            </AccordionItem>
+          </Accordion>
+
+          {user && (
+            <Link href="/settings">
+              <Card className="flex items-center p-2 px-3 gap-2.5 hover:bg-zinc-100 dark:hover:bg-zinc-900">
+                <UserAvatar user={user} />
+                <div>
+                  <p className="font-medium truncate max-w-[200px]">
+                    {user.name}
+                  </p>
+                  <p className="text-sm text-zinc-400 truncate max-w-[200px]">
+                    {user.email}
+                  </p>
+                </div>
+              </Card>
+            </Link>
           )}
         </div>
       </SheetContent>

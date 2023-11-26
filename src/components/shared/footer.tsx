@@ -8,10 +8,13 @@ export default function Footer() {
   return (
     <Card className="bg-zinc-50 dark:bg-zinc-900 rounded-none p-6 lg:p-4 px-10 lg:px-20 w-full">
       <div className="f-col lg:flex-row items-center justify-between gap-1">
+        {/* Company Info */}
         <div className="flex items-center flex-1 gap-3 mb-3 lg:mb-0">
-          <CompanyLogo px={30} />
+          <CompanyLogo />
           <CardTitle className="text-xl">{SITE.name}</CardTitle>
         </div>
+
+        {/* Footer Links */}
         <div className="flex items-center justify-center flex-1 gap-5">
           <p className="text-[13px] text-zinc-500">&copy; 2023 {SITE.name}</p>
           {footerLinks.map((link) => (
@@ -23,6 +26,8 @@ export default function Footer() {
             </Link>
           ))}
         </div>
+
+        {/* Social Media Links */}
         <div className="flex items-center gap-4 flex-1 justify-end">
           {Object.entries(SITE.links).map(([name, url]) => (
             <Link key={name} href={url} className="f-box h-10 w-10 rounded-md">

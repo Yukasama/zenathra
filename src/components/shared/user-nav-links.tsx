@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  HelpCircle,
   LayoutDashboard,
   ListOrdered,
   Settings,
@@ -10,8 +9,8 @@ import {
 } from "lucide-react";
 import { SheetClose } from "../ui/sheet";
 import { Separator } from "../ui/separator";
-import { useRouter } from "next/navigation";
 import { User } from "next-auth";
+import Link from "next/link";
 
 interface Props {
   user: User;
@@ -19,9 +18,7 @@ interface Props {
 }
 
 export default function UserNavLinks({ user, isAdmin }: Props) {
-  const router = useRouter();
-
-  const navLinks = [
+  const NAV_LINKS = [
     {
       label: "My Profile",
       href: `/u/${user.id}`,
@@ -48,31 +45,31 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
   return (
     <>
       {isAdmin && (
-        <SheetClose className="w-full" asChild>
-          <div>
-            <button
-              onClick={() => router.push("/admin/dashboard")}
+        <>
+          <SheetClose className="w-full" asChild>
+            <Link
+              href="/admin/dashboard"
               className="flex items-center w-full h-9 p-1 mb-[1px] rounded-md px-4 hover:bg-zinc-100 dark:hover:bg-zinc-900">
               <Settings2 className="w-5 h-5 mr-2 text-zinc-400" />
               <h2 className="text-[15px]">Stock Control</h2>
-            </button>
-            <Separator className="my-2" />
-          </div>
-        </SheetClose>
+            </Link>
+          </SheetClose>
+          <Separator className="my-2" />
+        </>
       )}
 
-      {navLinks.map((link) => (
-        <SheetClose key={link.label} className="f-col w-full" asChild>
-          <div>
-            <button
-              onClick={() => router.push(link.href)}
+      {NAV_LINKS.map((link) => (
+        <>
+          <SheetClose key={link.label} className="w-full" asChild>
+            <Link
+              href={link.href}
               className="flex items-center h-9 p-1 mb-[1px] rounded-md px-4 hover:bg-zinc-100 dark:hover:bg-zinc-900 w-full">
               {link.icon}
               <h2 className="text-[15px]">{link.label}</h2>
-            </button>
-            {link.separator && <Separator className="my-2" />}
-          </div>
-        </SheetClose>
+            </Link>
+          </SheetClose>
+          {link.separator && <Separator className="my-2" />}
+        </>
       ))}
     </>
   );

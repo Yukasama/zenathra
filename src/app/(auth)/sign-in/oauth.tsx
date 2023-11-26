@@ -32,12 +32,8 @@ export default function OAuth({ provider, className }: Props) {
   return (
     <Button
       isLoading={isLoading}
-      className={cn(
-        "bg-zinc-100 hover:bg-zinc-100/70 dark:bg-zinc-950/80 dark:hover:bg-zinc-950/20 border gap-3",
-        className
-      )}
-      onClick={() => login()}
-    >
+      className={cn("bg-item hover:bg-item-hover border gap-3", className)}
+      onClick={() => login()}>
       {!isLoading && (
         <>
           {providerIcons[provider]}

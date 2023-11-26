@@ -2,18 +2,21 @@ import CompanyLogo from "@/components/shared/company-logo";
 import StockCardList, {
   StockCardListLoading,
 } from "@/components/stock/stock-card-list";
+import { getQuotes } from "@/lib/fmp/quote";
 import { Button } from "@nextui-org/button";
 import { MoveRight } from "lucide-react";
 import Link from "next/link";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 
-export default function LandingPage() {
+export default async function page() {
   // Custom selected symbols to display on landing page
   const symbols = ["AAPL", "MSFT", "GOOG", "TSLA", "NVDA", "AMZN"];
+  const quotes = await getQuotes(symbols);
 
   return (
-    <div className="f-col gap-20 sm:gap-28 items-center">
-      <div className="f-col z-10 items-center justify-center gap-3 sm:gap-5 mt-20 sm:mt-32">
+    <div className="f-col gap-12 items-center">
+      {/* Landing Header */}
+      <div className="f-col z-10 items-center justify-center gap-3 sm:gap-5 mt-20 sm:mt-28">
         <h2 className="text-4xl sm:text-6xl font-bold font-['Helvetica'] tracking-tight text-center w-4/5 max-w-[800px]">
           Explore and analyze your{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fda37a] to-[#ffcc5e]">
@@ -32,16 +35,20 @@ export default function LandingPage() {
           <Link href="/sign-in">
             <Button className="gradient text-white">
               Get started
-              <MoveRight className="w-4 h-4" />
+              <MoveRight size={18} />
             </Button>
           </Link>
         </div>
       </div>
-      <div className="w-5/6 sm:w-4/5">
+
+      {/* Stock Cards */}
+      <div className="w-5/6 sm:w-4/5 mb-10">
         <Suspense fallback={<StockCardListLoading />}>
-          <StockCardList symbols={symbols} isAuthenticated={false} />
+          <StockCardList quotes={quotes} onlyInDb={false} />
         </Suspense>
       </div>
+
+      {/* Absolute background elements */}
       <div className="fixed pointer-events-none top-0 sm:-top-40">
         <div
           aria-hidden="true"
@@ -55,6 +62,8 @@ export default function LandingPage() {
           />
         </div>
       </div>
+
+      {/* Company logo in background */}
       <div className="fixed pointer-events-none top-0">
         <div
           aria-hidden="true"

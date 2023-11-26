@@ -1,20 +1,16 @@
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { SITE } from "@/config/site";
 import { Layers } from "lucide-react";
 import dynamic from "next/dynamic";
+import { SkeletonButton } from "@/components/ui/skeleton";
+import { Button } from "@nextui-org/button";
 
-export const metadata = {
-  title: `${SITE.name} | Account Settings`,
-};
+export const metadata = { title: "Account Settings" };
 
 const DeleteUserModal = dynamic(
   () => import("@/app/(user)/settings/account/delete-user-modal"),
   {
     ssr: false,
-    loading: () => (
-      <Button variant="destructive" className="self-start" isLoading />
-    ),
+    loading: () => <SkeletonButton />,
   }
 );
 
@@ -26,12 +22,12 @@ export default function page() {
         <Separator />
         <small className="text-zinc-500 text-sm">
           Export all portfolio, stock and profile data we have stored in our
-          database (Functionality coming soon)
+          database (Coming soon)
         </small>
       </div>
 
-      <Button className="bg-primary self-start hover:bg-primary/80">
-        <Layers className="h-4 w-4" />
+      <Button color="primary" className="self-start">
+        <Layers size={18} />
         Export Data
       </Button>
 

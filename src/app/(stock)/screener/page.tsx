@@ -13,24 +13,46 @@ import {
 } from "@/config/screener/filters";
 import { Button } from "@nextui-org/button";
 import { Tabs, Tab } from "@nextui-org/tabs";
-import { BarChart2, FileText, Layers, RotateCcw } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  BarChart2,
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  Layers,
+  RotateCcw,
+} from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { trpc } from "../../../trpc/client";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { ScreenerProps } from "@/lib/validators/stock";
 
-const ScreenerResults = dynamic(() => import("@/app/(stock)/screener/screener-results"), {
-  ssr: false,
-  loading: () => (
-    <div className="f-col gap-2 pt-2">
-      {[...Array(10)].map((_, i) => (
-        <Card key={i} className="animate-pulse-right h-[60px]" />
-      ))}
-    </div>
-  ),
-});
+const ScreenerResults = dynamic(
+  () => import("@/app/(stock)/screener/screener-results"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="f-col gap-2 pt-2">
+        {[...Array(10)].map((_, i) => (
+          <Card key={i} className="animate-pulse-right h-[60px]" />
+        ))}
+      </div>
+    ),
+  }
+);
 
 interface Props {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -55,11 +77,17 @@ export default function Page({ searchParams }: Props) {
   const router = useRouter();
 
   // Cursor defines the current page of the pagination
-  const cursor = typeof searchParams["cursor"] === "string" ? Number(searchParams["cursor"]) : 1;
+  const cursor =
+    typeof searchParams["cursor"] === "string"
+      ? Number(searchParams["cursor"])
+      : 1;
 
   // Take defines how much stocks are being shown per pagination,
   // must be between 1 and 50, otherwise set to 10
-  const takeParam = (typeof searchParams["take"] === "string" && Number(searchParams["take"])) ?? 10;
+  const takeParam =
+    (typeof searchParams["take"] === "string" &&
+      Number(searchParams["take"])) ??
+    10;
   const take = takeParam && takeParam >= 1 && takeParam <= 50 ? takeParam : 10;
 
   useEffect(() => {
@@ -79,7 +107,11 @@ export default function Page({ searchParams }: Props) {
     take,
   });
 
-  function updateFilter(filterId: keyof typeof DEFAULT_STATE, newValue: string, index: number | null = null) {
+  function updateFilter(
+    filterId: keyof typeof DEFAULT_STATE,
+    newValue: string,
+    index: number | null = null
+  ) {
     setInput((prev) => {
       if (index !== null && Array.isArray(prev[filterId])) {
         const updatedTuple = prev[filterId] as [string, string];
@@ -162,7 +194,8 @@ export default function Page({ searchParams }: Props) {
       value: input.peRatio[0],
       value2: input.peRatio[1],
       options: peRatios,
-      setOption: (value: string, index?: number) => updateFilter("peRatio", value, index),
+      setOption: (value: string, index?: number) =>
+        updateFilter("peRatio", value, index),
     },
     {
       id: "pegRatio",
@@ -170,7 +203,8 @@ export default function Page({ searchParams }: Props) {
       value: input.pegRatio[0],
       value2: input.pegRatio[1],
       options: pegRatios,
-      setOption: (value: string, index?: number) => updateFilter("pegRatio", value, index),
+      setOption: (value: string, index?: number) =>
+        updateFilter("pegRatio", value, index),
     },
   ];
 
@@ -181,7 +215,8 @@ export default function Page({ searchParams }: Props) {
       value: input.sma50[0],
       value2: input.sma50[1],
       options: ["-20%"],
-      setOption: (value: string, index?: number) => updateFilter("sma50", value, index),
+      setOption: (value: string, index?: number) =>
+        updateFilter("sma50", value, index),
     },
   ];
 
@@ -222,8 +257,7 @@ export default function Page({ searchParams }: Props) {
                   <entry.icon size={18} />
                   {entry.name}
                 </div>
-              }
-            >
+              }>
               <Card>
                 <CardHeader>
                   <CardTitle>{entry.name}</CardTitle>
@@ -232,13 +266,19 @@ export default function Page({ searchParams }: Props) {
                 <CardContent className="space-y-3">
                   {entry.filters.map((filter) => (
                     <div className="f-col" key={filter.id + resetCounter}>
-                      <p className="font-medium text-sm m-1 text-zinc-400">{filter.label}</p>
+                      <p className="font-medium text-sm m-1 text-zinc-400">
+                        {filter.label}
+                      </p>
                       <div className="flex gap-4">
                         {filter.value2 && (
                           <div className="w-full">
-                            <Select onValueChange={(e) => filter.setOption(e, 1)} value={filter.value2!}>
+                            <Select
+                              onValueChange={(e) => filter.setOption(e, 1)}
+                              value={filter.value2!}>
                               <SelectTrigger>
-                                <SelectValue placeholder="Any">{filter.value2}</SelectValue>
+                                <SelectValue placeholder="Any">
+                                  {filter.value2}
+                                </SelectValue>
                               </SelectTrigger>
                               <SelectContent>
                                 {filter.options.map((option) => (
@@ -248,7 +288,9 @@ export default function Page({ searchParams }: Props) {
                                 ))}
                               </SelectContent>
                             </Select>
-                            <CardDescription className="ml-1 text-[13px]">Minimum Value</CardDescription>
+                            <CardDescription className="ml-1 text-[13px]">
+                              Minimum Value
+                            </CardDescription>
                           </div>
                         )}
                         <div className="w-full">
@@ -259,10 +301,11 @@ export default function Page({ searchParams }: Props) {
                               }
                               filter.setOption(e);
                             }}
-                            value={filter.value}
-                          >
+                            value={filter.value}>
                             <SelectTrigger>
-                              <SelectValue placeholder="Any">{filter.value}</SelectValue>
+                              <SelectValue placeholder="Any">
+                                {filter.value}
+                              </SelectValue>
                             </SelectTrigger>
                             <SelectContent>
                               {filter.options.map((option) => (
@@ -273,7 +316,9 @@ export default function Page({ searchParams }: Props) {
                             </SelectContent>
                           </Select>
                           {filter.value2 && (
-                            <CardDescription className="ml-1 text-[13px]">Maximum Value</CardDescription>
+                            <CardDescription className="ml-1 text-[13px]">
+                              Maximum Value
+                            </CardDescription>
                           )}
                         </div>
                       </div>
@@ -285,7 +330,10 @@ export default function Page({ searchParams }: Props) {
           ))}
         </Tabs>
 
-        <Button color="danger" className="self-start" onClick={() => resetFilters()}>
+        <Button
+          color="danger"
+          className="self-start"
+          onClick={() => resetFilters()}>
           <RotateCcw size={18} />
           Reset Filters
         </Button>
@@ -302,8 +350,7 @@ export default function Page({ searchParams }: Props) {
                   <entry.icon size={18} />
                   {entry.name}
                 </div>
-              }
-            >
+              }>
               <ScreenerResults results={results} isFetched={isFetched} />
             </Tab>
           ))}
@@ -313,13 +360,24 @@ export default function Page({ searchParams }: Props) {
         {isFetched && results?.length ? (
           <div className="flex gap-3.5 justify-center">
             <Button
-              onClick={() => router.push(`/screener?cursor=${cursor >= 1 ? 1 : cursor - 1}&take=${take}`)}
-              className={`${cursor <= 1 && "pointer-events-none opacity-80"}`}
-            >
+              onClick={() =>
+                router.push(
+                  `/screener?cursor=${
+                    cursor >= 1 ? 1 : cursor - 1
+                  }&take=${take}`
+                )
+              }
+              className={`${cursor <= 1 && "pointer-events-none opacity-80"}`}>
+              <ChevronLeft size={18} />
               Previous
             </Button>
-            <Button onClick={() => router.push(`/screener?cursor=${cursor + 1}&take=${take}`)} color="primary">
+            <Button
+              onClick={() =>
+                router.push(`/screener?cursor=${cursor + 1}&take=${take}`)
+              }
+              color="primary">
               Next
+              <ChevronRight size={18} />
             </Button>
           </div>
         ) : null}

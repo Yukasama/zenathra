@@ -3,12 +3,12 @@ import { SITE } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 interface Props extends React.HTMLAttributes<HTMLImageElement> {
-  px: number;
+  px?: number;
   priority?: boolean;
 }
 
 export default function CompanyLogo({
-  px,
+  px = 30,
   className,
   priority = false,
   ...props

@@ -1,9 +1,6 @@
 import { Separator } from "@/components/ui/separator";
-import { SITE } from "@/config/site";
 
-export const metadata = {
-  title: `${SITE.name} | Security Settings`,
-};
+export const metadata = { title: "Security Settings" };
 
 export default async function page() {
   return (

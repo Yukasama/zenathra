@@ -6,8 +6,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../../../components/ui/card";
-import { SkeletonList, SkeletonText } from "../../../components/ui/skeleton";
+} from "@/components/ui/card";
+import { SkeletonList, SkeletonText } from "@/components/ui/skeleton";
 
 export function IndexListLoading() {
   return (

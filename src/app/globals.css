@@ -6,8 +6,10 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
-    --card: 0 0% 100%;
+    --card: 0 0% 98%;
     --card-foreground: 20 14.3% 4.1%;
+    --item: 240 5% 96%;
+    --item-hover: 240 5% 96% / 70%;
     --popover: 0 0% 100%;
     --popover-foreground: 20 14.3% 4.1%;
     --primary: 24.6 95% 53.1%;
@@ -29,8 +31,10 @@
   .dark {
     --background: 20 14.3% 4.1%;
     --foreground: 60 9.1% 97.8%;
-    --card: 20 14.3% 4.1%;
+    --card: 240 6% 10% / 70%;
     --card-foreground: 60 9.1% 97.8%;
+    --item: 240 10% 4% / 80%;
+    --item-hover: 240 10% 4% / 40%;
     --popover: 20 14.3% 4.1%;
     --popover-foreground: 60 9.1% 97.8%;
     --primary: 20.5 90.2% 48.2%;

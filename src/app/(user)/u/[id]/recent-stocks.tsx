@@ -5,8 +5,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../../../../components/ui/card";
-import StockListItem from "../../../../components/stock/stock-list-item";
+} from "@/components/ui/card";
+import StockItem from "@/components/stock/stock-item";
 import { getQuotes } from "@/lib/fmp/quote";
 import { User } from "next-auth";
 
@@ -31,18 +31,20 @@ export default async function RecentStocks({ user }: Props) {
     take: 5,
   });
 
-  if (!recentStocks.length)
+  if (!recentStocks.length) {
     return (
       <Card>
         <CardHeader>
           <CardTitle>Recent Stocks</CardTitle>
           <CardDescription>Stocks that were recently viewed</CardDescription>
         </CardHeader>
+
         <CardContent>
           <p className="text-lg text-zinc-400">No stocks explored yet.</p>
         </CardContent>
       </Card>
     );
+  }
 
   const quotes = await getQuotes(recentStocks.map(({ stock }) => stock.symbol));
 
@@ -52,9 +54,10 @@ export default async function RecentStocks({ user }: Props) {
         <CardTitle>Recent Stocks</CardTitle>
         <CardDescription>Stocks that were recently viewed</CardDescription>
       </CardHeader>
+
       <CardContent>
         {recentStocks.map(({ stock }) => (
-          <StockListItem
+          <StockItem
             key={stock.symbol}
             stock={stock}
             quote={quotes?.find((q) => q.symbol === stock.symbol)}

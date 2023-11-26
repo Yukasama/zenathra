@@ -1,15 +1,31 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/table";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@nextui-org/table";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@nextui-org/dropdown";
 import { Button } from "@nextui-org/button";
 import { Pagination } from "@nextui-org/pagination";
 import { Chip } from "@nextui-org/chip";
 import { Search, MoreVertical } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { SkeletonText, SkeletonButton, SkeletonList } from "@/components/ui/skeleton";
+import {
+  SkeletonText,
+  SkeletonButton,
+  SkeletonList,
+} from "@/components/ui/skeleton";
 import { StockQuote } from "@/types/stock";
 import { trpc } from "@/trpc/client";
 import { toast } from "@/hooks/use-toast";
@@ -17,9 +33,19 @@ import { useRouter } from "next/navigation";
 import PortfolioAddModal from "@/components/portfolio/portfolio-add-modal";
 import { PortfolioWithStocks } from "@/types/db";
 import { Spinner } from "@nextui-org/spinner";
+import StockImage from "@/components/stock/stock-image";
 
 interface Props {
-  stockQuotes: Pick<StockQuote, "id" | "symbol" | "companyName" | "sector" | "price" | "changesPercentage">[];
+  stockQuotes: Pick<
+    StockQuote,
+    | "id"
+    | "symbol"
+    | "companyName"
+    | "image"
+    | "sector"
+    | "price"
+    | "changesPercentage"
+  >[];
   portfolio: Pick<PortfolioWithStocks, "id" | "title" | "stocks">;
 }
 
@@ -40,7 +66,7 @@ export function PortfolioAssetsLoading() {
 }
 
 const columnTranslation: any = {
-  companyName: "Name",
+  symbol: "Symbol",
   price: "Price (24h)",
   sector: "Sector",
   actions: "Actions",
@@ -52,7 +78,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
   const router = useRouter();
 
   const ROWS_PER_PAGE = 5;
-  const COLUMNS = ["companyName", "price", "sector", "actions"];
+  const COLUMNS = ["symbol", "price", "sector", "actions"];
 
   const { mutate: remove, isLoading } = trpc.portfolio.remove.useMutation({
     onError: () => {
@@ -68,7 +94,9 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
   // Filtering and sorting stocks
   const filteredStocks = useMemo(() => {
     return stockQuotes
-      .filter((stock) => stock.companyName.toLowerCase().includes(filterValue.toLowerCase()))
+      .filter((stock) =>
+        stock.companyName.toLowerCase().includes(filterValue.toLowerCase())
+      )
       .sort((a, b) => a.companyName.localeCompare(b.companyName));
   }, [stockQuotes, filterValue]);
 
@@ -82,19 +110,30 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
   // Single cell for assets table
   const renderCell = (stock: StockQuote, columnKey: string) => {
     switch (columnKey) {
-      case "companyName":
-        return <p>{stock.companyName}</p>;
+      case "symbol":
+        return (
+          <div className="flex items-center gap-3">
+            <StockImage src={stock.image} px={35} />
+            <div>
+              <p>{stock.symbol}</p>
+              <p className="text-[13px] text-zinc-500">{stock.companyName}</p>
+            </div>
+          </div>
+        );
       case "price":
         return (
           <div>
-            {stock.price?.toFixed(2)}
+            <p>{stock.price?.toFixed(2)}</p>
             {stock.changesPercentage > 0 ? (
               <span className="text-green-500 dark:text-green-400 text-[13px]">
                 {" "}
-                +{stock.changesPercentage.toFixed(2)}%
+                +{stock.changesPercentage?.toFixed(2)}%
               </span>
             ) : (
-              <span className="text-red-500 dark:text-red-400 text-[13px]"> {stock.changesPercentage.toFixed(2)}%</span>
+              <span className="text-red-500 dark:text-red-400 text-[13px]">
+                {" "}
+                {stock.changesPercentage?.toFixed(2)}%
+              </span>
             )}
           </div>
         );
@@ -114,7 +153,10 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem onClick={() => router.push(`/stocks/${stock.symbol}`)}>View</DropdownItem>
+                <DropdownItem
+                  onClick={() => router.push(`/stocks/${stock.symbol}`)}>
+                  View
+                </DropdownItem>
                 <DropdownItem>Edit</DropdownItem>
                 <DropdownItem
                   color="danger"
@@ -123,8 +165,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
                       portfolioId: portfolio.id,
                       stockIds: [stock.id],
                     })
-                  }
-                >
+                  }>
                   {isLoading && <Spinner size="sm" />}
                   Delete
                 </DropdownItem>
@@ -138,7 +179,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
   };
 
   return (
-    <div className="f-col w-full max-w-[700px]">
+    <div className="f-col w-full max-w-[800px]">
       {/* Operations Bar */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
@@ -147,8 +188,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
             type="text"
             placeholder="Search by company name..."
             value={filterValue}
-            onChange={(e) => setFilterValue(e.target.value)}
-          ></Input>
+            onChange={(e) => setFilterValue(e.target.value)}></Input>
         </div>
         <PortfolioAddModal portfolio={portfolio} />
       </div>

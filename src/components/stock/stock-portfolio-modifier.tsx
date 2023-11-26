@@ -2,8 +2,7 @@
 
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { startTransition } from "react";
-import { Button } from "../ui/button";
+import { Button } from "@nextui-org/button";
 import { Plus, Trash2 } from "lucide-react";
 import { PortfolioWithStocks } from "@/types/db";
 import { Card } from "../ui/card";
@@ -30,11 +29,7 @@ export default function StockPortfolioModifier({ portfolio, stock }: Props) {
           description: `Failed to add to portfolio.`,
           variant: "destructive",
         }),
-      onSuccess: () => {
-        startTransition(() => router.refresh());
-
-        toast({ description: `Added to portfolio.` });
-      },
+      onSuccess: () => router.refresh(),
     });
 
   const { mutate: removeFromPortfolio, isLoading: isRemoveLoading } =
@@ -45,11 +40,7 @@ export default function StockPortfolioModifier({ portfolio, stock }: Props) {
           description: `Failed to remove from portfolio.`,
           variant: "destructive",
         }),
-      onSuccess: () => {
-        startTransition(() => router.refresh());
-
-        toast({ description: `Removed from portfolio.` });
-      },
+      onSuccess: () => router.refresh(),
     });
 
   return (
@@ -72,12 +63,12 @@ export default function StockPortfolioModifier({ portfolio, stock }: Props) {
               stockIds: [stock.id],
             })
           }
-          variant="destructive"
           isLoading={isRemoveLoading}
-          className={`w-full h-full absolute top-0 left-0 ${
-            !isRemoveLoading ? "opacity-0" : "opacity-50"
-          } hover:opacity-50`}>
-          <Trash2 className="h-5" color="white" />
+          disabled={isRemoveLoading}
+          className={`w-full h-full absolute bg-red-500 top-0 left-0 ${
+            !isRemoveLoading ? "opacity-0" : "opacity-30"
+          } hover:opacity-30`}>
+          {!isRemoveLoading && <Trash2 size={20} color="white" />}
         </Button>
       ) : (
         <Button
@@ -87,12 +78,13 @@ export default function StockPortfolioModifier({ portfolio, stock }: Props) {
               stockIds: [stock.id],
             })
           }
-          variant="success"
+          color="success"
           isLoading={isAddLoading}
+          disabled={isAddLoading}
           className={`w-full h-full absolute top-0 left-0 ${
             !isAddLoading ? "opacity-0" : "opacity-20 dark:opacity-30"
           } opacity-20 dark:opacity-30`}>
-          <Plus className="h-6" color="white" />
+          {!isAddLoading && <Plus color="white" />}
         </Button>
       )}
     </Card>

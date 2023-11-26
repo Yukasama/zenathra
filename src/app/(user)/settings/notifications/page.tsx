@@ -1,9 +1,6 @@
 import { Separator } from "@/components/ui/separator";
-import { SITE } from "@/config/site";
 
-export const metadata = {
-  title: `${SITE.name} | Notification Settings`,
-};
+export const metadata = { title: "Notification Settings" };
 
 export default async function page() {
   return (

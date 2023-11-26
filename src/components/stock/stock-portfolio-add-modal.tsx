@@ -5,21 +5,37 @@ import { Plus } from "lucide-react";
 import { useCustomToasts } from "@/hooks/use-custom-toasts";
 import { toast } from "@/hooks/use-toast";
 import { PortfolioWithStocks } from "@/types/db";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/dialog";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "../ui/dialog";
 import StockPortfolioModifier from "./stock-portfolio-modifier";
 import { Stock } from "@prisma/client";
 
 interface Props {
   stock: Pick<Stock, "id" | "symbol"> | undefined;
   isAuth: boolean;
-  portfolios: Pick<PortfolioWithStocks, "id" | "title" | "color" | "stocks" | "isPublic">[] | undefined;
+  portfolios:
+    | Pick<
+        PortfolioWithStocks,
+        "id" | "title" | "color" | "stocks" | "isPublic"
+      >[]
+    | undefined;
 }
 
-export default function StockPortfolioAddModal({ stock, isAuth, portfolios }: Props) {
+export default function StockPortfolioAddModal({
+  stock,
+  isAuth,
+  portfolios,
+}: Props) {
   const { loginToast } = useCustomToasts();
 
   const handleClick = () => {
-    if (!portfolios) {
+    if (!isAuth) {
       return loginToast();
     }
 
@@ -31,21 +47,36 @@ export default function StockPortfolioAddModal({ stock, isAuth, portfolios }: Pr
   return (
     <>
       {!isAuth ? (
-        <Button isIconOnly size="sm" startContent={<Plus className="h-4" />} onClick={handleClick} />
+        <Button
+          isIconOnly
+          size="sm"
+          startContent={<Plus className="h-4" />}
+          onClick={handleClick}
+        />
       ) : (
         <Dialog>
           <DialogTrigger asChild>
-            <Button isIconOnly size="sm" startContent={<Plus className="h-4" />} />
+            <Button
+              isIconOnly
+              size="sm"
+              startContent={<Plus className="h-4" />}
+            />
           </DialogTrigger>
-          <DialogContent className="rounded-md max-w-[375px]">
+          <DialogContent>
             <DialogHeader>
               <DialogTitle>Toggle {stock?.symbol}</DialogTitle>
-              <DialogDescription>Manage {stock?.symbol} stock in your portfolios</DialogDescription>
+              <DialogDescription>
+                Manage {stock?.symbol} stock in your portfolios
+              </DialogDescription>
             </DialogHeader>
             <div className="f-col gap-2.5">
               {stock &&
                 portfolios?.map((portfolio) => (
-                  <StockPortfolioModifier key={portfolio.id} portfolio={portfolio} stock={stock} />
+                  <StockPortfolioModifier
+                    key={portfolio.id}
+                    portfolio={portfolio}
+                    stock={stock}
+                  />
                 ))}
             </div>
           </DialogContent>

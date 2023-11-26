@@ -21,10 +21,9 @@ import { ANIMATION_VARIANTS } from "@/config/motion";
 import { Stock } from "@prisma/client";
 import { Button } from "@nextui-org/button";
 import { Spinner } from "@nextui-org/spinner";
-import { symbol } from "zod";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  recentStocks: Pick<Stock, "symbol" | "companyName" | "image">[] | null;
+  recentStocks: Pick<Stock, "symbol" | "companyName" | "image">[] | undefined;
   responsive?: boolean;
 }
 
@@ -87,7 +86,7 @@ export default function Searchbar({
         )}
         onClick={() => setOpen((prev) => (prev === open ? !open : open))}>
         <div className="flex items-center gap-2">
-          <Search className="h-4 w-4" />
+          <Search size={18} />
           <p className="text-[14px]">Search stocks...</p>
         </div>
         <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-[3px] rounded border bg-muted px-1.5 font-mono text-xs font-medium text-muted-foreground opacity-100">
@@ -97,13 +96,16 @@ export default function Searchbar({
           K
         </kbd>
       </motion.div>
+
       <Button
         onClick={() => setOpen((prev) => (prev === open ? !open : open))}
         isIconOnly
         size="sm"
+        variant="flat"
         className={`${responsive ? "flex md:hidden" : "hidden"}`}>
-        <Search className="h-[18px]" />
+        <Search size={18} />
       </Button>
+
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput
           isLoading={isFetching}

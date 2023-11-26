@@ -21,8 +21,12 @@ export default function ScreenerResults({ results, isFetched }: Props) {
         </div>
       ) : isFetched && !results?.length ? (
         <div className="mt-16">
-          <h3 className="font-medium text-center text-lg">No Stocks matching the query</h3>
-          <p className="text-sm text-center text-zinc-400">Please select a combination of other filters</p>
+          <h3 className="font-medium text-center text-lg">
+            No Stocks matching the query
+          </h3>
+          <p className="text-sm text-center text-zinc-400">
+            Please select a combination of other filters
+          </p>
         </div>
       ) : (
         <div className="f-col hidden-scrollbar max-h-[800px] gap-2 overflow-scroll">

@@ -7,8 +7,11 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export default function StockPrice({ quote, className, ...props }: Props) {
-  const positive: boolean =
-    quote && quote.change ? (quote.change > 0 ? true : false) : true;
+  if (!quote?.changesPercentage) {
+    return <p className="text-slate-500">Failed to load</p>;
+  }
+
+  const positive = quote?.changesPercentage >= 0;
 
   return (
     <div
@@ -20,7 +23,7 @@ export default function StockPrice({ quote, className, ...props }: Props) {
       <div className="flex items-center">
         <span className="mt-1">$</span>
         <p className="text-[22px] xl:text-[26px] font-light">
-          {quote && quote.price ? quote.price.toFixed(2) : "N/A"}
+          {quote.price?.toFixed(2)}
         </p>
       </div>
 
@@ -41,10 +44,7 @@ export default function StockPrice({ quote, className, ...props }: Props) {
           } rounded-md text-[14px]`}>
           <span>
             ({positive && "+"}
-            {quote && quote.changesPercentage
-              ? quote.changesPercentage.toFixed(2) + "%"
-              : "N/A"}
-            )
+            {quote?.changesPercentage?.toFixed(2) + "%"})
           </span>
         </div>
       </div>

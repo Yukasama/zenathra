@@ -5,7 +5,10 @@ import Link from "next/link";
 import EditVisibility from "@/components/portfolio/edit-visibility";
 
 interface Props {
-  portfolio: Pick<Portfolio, "id" | "title" | "isPublic" | "color" | "createdAt">;
+  portfolio: Pick<
+    Portfolio,
+    "id" | "title" | "isPublic" | "color" | "createdAt"
+  >;
 }
 
 export default function PortfolioItem({ portfolio }: Props) {
@@ -13,7 +16,7 @@ export default function PortfolioItem({ portfolio }: Props) {
     <Card className="flex sm:f-col lg:flex-row items-center justify-between">
       <Link
         href={`/p/${portfolio.id}`}
-        className="hover:bg-zinc-100 dark:hover:bg-zinc-900 w-full p-2 px-4">
+        className="hover:bg-item-hover w-full p-2 px-4">
         <div className="flex items-center gap-3">
           <PortfolioImage portfolio={portfolio} />
           <div>
@@ -26,6 +29,7 @@ export default function PortfolioItem({ portfolio }: Props) {
           </div>
         </div>
       </Link>
+      
       <div className="h-full border-l sm:self-end sm:border-l-0 w-40 lg:border-l p-2 px-4 f-box">
         <EditVisibility portfolio={portfolio} />
       </div>

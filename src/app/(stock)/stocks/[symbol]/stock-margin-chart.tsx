@@ -1,19 +1,49 @@
 "use client";
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useEffect, useState } from "react";
-import Skeleton from "../../../../components/ui/skeleton";
+import Skeleton from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { Stock } from "@prisma/client";
 
-const CustomTooltip = ({ active, payload, label }: { active: any; payload: any; label: any }) => {
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: {
+  active: any;
+  payload: any;
+  label: any;
+}) => {
   if (active && payload && payload.length) {
     return (
       <Card className="p-2">
         <p className="text-[15px]">{label}</p>
-        <p className="text-sm text-[#19E363]">{(payload[0].value * 100).toFixed(2)}%</p>
-        <p className="text-sm text-[#2891e0]">{(payload[1].value * 100).toFixed(2)}%</p>
-        <p className="text-sm text-[#893ade]">{(payload[2].value * 100).toFixed(2)}%</p>
+        <p className="text-sm text-red-500">
+          {(payload[0].value * 100).toFixed(2)}%
+        </p>
+        <p className="text-sm text-[#ff8b55]">
+          {(payload[1].value * 100).toFixed(2)}%
+        </p>
+        <p className="text-sm text-[#fdc243]">
+          {(payload[2].value * 100).toFixed(2)}%
+        </p>
       </Card>
     );
   }
@@ -22,25 +52,23 @@ const CustomTooltip = ({ active, payload, label }: { active: any; payload: any; 
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   data: any;
-  companyName: string;
+  stock: Pick<Stock, "companyName">;
 }
 
-export default function StockMarginChart({ data, companyName, className }: Props) {
-  const [mounted, setMounted] = useState<boolean>(false);
+export default function StockMarginChart({ data, stock, className }: Props) {
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
 
   return (
     <Card
-      className={cn(className, "w-full max-w-[600px] bg-zinc-50 dark:bg-zinc-900/70 border-none")}
-      style={{
-        height: 350,
-      }}
-    >
+      className={cn("w-full max-w-[600px]", className)}
+      style={{ height: 350 }}>
       <CardHeader>
         <CardTitle>Margins</CardTitle>
-        <CardDescription>Margin Data for {companyName}</CardDescription>
+        <CardDescription>Margin Data for {stock.companyName}</CardDescription>
       </CardHeader>
+
       <CardContent>
         <Skeleton isLoaded={mounted}>
           {mounted && (
@@ -54,17 +82,23 @@ export default function StockMarginChart({ data, companyName, className }: Props
                   right: 40,
                   left: 20,
                   bottom: 5,
-                }}
-              >
+                }}>
                 <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
                 <XAxis dataKey="name" fontSize={12} />
-                <YAxis fontSize={12} tickFormatter={(value) => `${(value * 100).toFixed(1)}%`} />
+                <YAxis
+                  fontSize={12}
+                  tickFormatter={(value) => `${(value * 100).toFixed(1)}%`}
+                />
                 {/* @ts-ignore */}
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="pv" fill="#27cc53" name="Gross M." />
-                <Bar dataKey="uv" fill="#2891e0" name="Operating M." />
-                <Bar dataKey="fv" fill="#893ade" name="Profit M." />
-                <Legend height={32} margin={{ left: 20 }} wrapperStyle={{ fontSize: "14px" }} />
+                <Bar dataKey="pv" fill="rgb(239 68 68)" name="Gross M." />
+                <Bar dataKey="uv" fill="#ff8b55" name="Operating M." />
+                <Bar dataKey="fv" fill="#fdc243" name="Profit M." />
+                <Legend
+                  height={32}
+                  margin={{ left: 20 }}
+                  wrapperStyle={{ fontSize: "14px" }}
+                />
               </BarChart>
             </ResponsiveContainer>
           )}

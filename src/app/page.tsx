@@ -15,7 +15,7 @@ export default async function page() {
   }
 
   const userExists = await db.user.count({
-    where: { id: user?.id ?? undefined },
+    where: { id: user.id },
   });
 
   if (!userExists) {

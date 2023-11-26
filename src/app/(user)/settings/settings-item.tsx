@@ -20,7 +20,7 @@ export default function SettingsItem({ id, label, icon }: Props) {
         pathname.split("/").pop() === id && "bg-zinc-100 dark:bg-zinc-800"
       }`}>
       {icon}
-      <p>{label}</p>
+      {label}
     </Link>
   );
 }

@@ -54,9 +54,7 @@ export default function NavbarMenu({ user }: Props) {
                   preferences.
                 </ListItem>
               ) : (
-                <ListItem
-                  href="/api/auth/login"
-                  title="Create your personal account">
+                <ListItem href="/sign-in" title="Create your personal account">
                   You will be able to manage portfolios and get other benefits.
                 </ListItem>
               )}
@@ -66,6 +64,7 @@ export default function NavbarMenu({ user }: Props) {
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
+
         <NavigationMenuItem>
           <NavigationMenuTrigger>Highlights</NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -78,6 +77,7 @@ export default function NavbarMenu({ user }: Props) {
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
+
         {user && (
           <NavigationMenuItem>
             <Link href="/" legacyBehavior passHref>
@@ -87,6 +87,7 @@ export default function NavbarMenu({ user }: Props) {
             </Link>
           </NavigationMenuItem>
         )}
+
         <NavigationMenuItem>
           <Link href="/pricing" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>

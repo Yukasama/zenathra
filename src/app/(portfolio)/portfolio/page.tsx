@@ -30,7 +30,7 @@ export default async function page() {
         select: { stockId: true },
       },
     },
-    where: { creatorId: user?.id ?? undefined },
+    where: { creatorId: user?.id },
   });
 
   return (

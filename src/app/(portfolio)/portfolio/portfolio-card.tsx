@@ -1,5 +1,5 @@
 import Link from "next/link";
-import StockList from "../../../components/stock/stock-list";
+import StockList from "@/components/stock/stock-list";
 import { Suspense } from "react";
 import {
   Card,
@@ -8,12 +8,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../../components/ui/card";
+} from "@/components/ui/card";
 import { PortfolioWithStocks } from "@/types/db";
 import { db } from "@/db";
 import { BarChart } from "lucide-react";
 import dynamic from "next/dynamic";
-import PortfolioImage from "../../../components/portfolio/portfolio-image";
+import PortfolioImage from "@/components/portfolio/portfolio-image";
 import { SkeletonButton, SkeletonList } from "@/components/ui/skeleton";
 import { Button } from "@nextui-org/button";
 

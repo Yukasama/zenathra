@@ -38,7 +38,7 @@ export function buildFilter(screener: ScreenerProps) {
     (screener.peRatio[0] === "Any" && screener.peRatio[1] === "Any")
   ) {
     const [left, right] = screener.peRatio;
-    let peRatioFilter: Prisma.FloatFilter | undefined;
+    let peRatioFilter: Prisma.FloatNullableFilter | undefined;
 
     if (left === ">50") {
       peRatioFilter = { lt: 50 };
@@ -65,7 +65,7 @@ export function buildFilter(screener: ScreenerProps) {
     (screener.pegRatio[0] === "Any" && screener.pegRatio[1] === "Any")
   ) {
     const [left, right] = screener.pegRatio;
-    let pegRatioFilter: Prisma.FloatFilter | undefined;
+    let pegRatioFilter: Prisma.FloatNullableFilter | undefined;
 
     if (left === ">10") {
       pegRatioFilter = { lt: 10 };

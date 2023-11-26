@@ -1,10 +1,16 @@
-import StockListItem from "./stock-list-item";
+import StockItem from "./stock-item";
 import React from "react";
 import { db } from "@/db";
 import { getQuotes } from "@/lib/fmp/quote";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { cn } from "@/lib/utils";
-import Skeleton, { SkeletonList, SkeletonText } from "../ui/skeleton";
+import { SkeletonList, SkeletonText } from "../ui/skeleton";
 
 interface LoadingProps extends React.HTMLAttributes<HTMLDivElement> {
   limit?: number;
@@ -30,9 +36,24 @@ export function StockListLoading({ className, limit = 5 }: LoadingProps) {
   );
 }
 
-export default async function StockList({ symbols, title, description, error, limit = 5, className }: Props) {
+export default async function StockList({
+  symbols,
+  title,
+  description,
+  error,
+  limit = 5,
+  className,
+}: Props) {
   if (!symbols?.length) {
-    return <div className={cn(className, "text-xl text-center font-medium text-zinc-600")}>{error}</div>;
+    return (
+      <div
+        className={cn(
+          className,
+          "text-xl text-center font-medium text-zinc-600"
+        )}>
+        {error}
+      </div>
+    );
   }
 
   const symbolsToFetch = symbols.slice(0, Math.min(symbols.length, limit));
@@ -50,18 +71,26 @@ export default async function StockList({ symbols, title, description, error, li
       {!title && !description ? (
         <div className="space-y-2">
           {quotes?.map((quote) => (
-            <StockListItem key={quote.symbol} stock={stocks.find((s) => s.symbol === quote.symbol)} quote={quote} />
+            <StockItem
+              key={quote.symbol}
+              stock={stocks.find((s) => s.symbol === quote.symbol)}
+              quote={quote}
+            />
           ))}
         </div>
       ) : (
-        <Card className={cn("bg-zinc-50 dark:bg-zinc-900/70 border-none", className)}>
+        <Card className={cn(className)}>
           <CardHeader>
             <CardTitle>{title}</CardTitle>
             <CardDescription>{description}</CardDescription>
           </CardHeader>
           <CardContent>
             {quotes?.map((quote) => (
-              <StockListItem key={quote.symbol} stock={stocks.find((s) => s.symbol === quote.symbol)} quote={quote} />
+              <StockItem
+                key={quote.symbol}
+                stock={stocks.find((s) => s.symbol === quote.symbol)}
+                quote={quote}
+              />
             ))}
           </CardContent>
         </Card>

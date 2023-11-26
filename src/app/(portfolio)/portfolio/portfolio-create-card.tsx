@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/button";
 import { Checkbox } from "@nextui-org/checkbox";
-import { Input } from "../../../components/ui/input";
+import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { FieldValues, useForm } from "react-hook-form";
@@ -15,8 +15,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../../../components/ui/dialog";
-import { Card } from "../../../components/ui/card";
+} from "@/components/ui/dialog";
+import { Card } from "@/components/ui/card";
 import {
   Form,
   FormField,
@@ -25,13 +25,12 @@ import {
   FormControl,
   FormDescription,
   FormMessage,
-} from "../../../components/ui/form";
+} from "@/components/ui/form";
 import { motion } from "framer-motion";
 import { ANIMATION_VARIANTS } from "@/config/motion";
 import { trpc } from "@/trpc/client";
 import { CreatePortfolioSchema } from "@/lib/validators/portfolio";
 import { PLANS } from "@/config/stripe";
-import { DialogClose } from "@radix-ui/react-dialog";
 
 interface Props {
   numberOfPortfolios?: number;
@@ -84,7 +83,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
           exit="exit"
           whileTap="tap"
           className={numberOfPortfolios === 0 ? "h-[340px]" : ""}>
-          <Card className="f-box cursor-pointer h-full hover:bg-zinc-100 dark:hover:bg-zinc-900">
+          <Card className="f-box cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-900 h-[340px]">
             <Button color="primary" isLoading={isLoading} isIconOnly>
               {!isLoading && <Plus />}
             </Button>
@@ -92,7 +91,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
         </motion.div>
       </DialogTrigger>
 
-      <DialogContent className="max-w-[375px] rounded-md">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Create Portfolio</DialogTitle>
           <DialogDescription>
@@ -107,9 +106,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-black dark:text-white">
-                    Title
-                  </FormLabel>
+                  <FormLabel>Title</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Choose your title..."
@@ -120,7 +117,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
                   <FormDescription>
                     This is what your portfolio will be called.
                   </FormDescription>
-                  <FormMessage className="text-red-500" />
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -134,9 +131,7 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
                     <Checkbox checked={field.value} onChange={field.onChange} />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel className="text-black dark:text-white">
-                      Make public
-                    </FormLabel>
+                    <FormLabel>Make public</FormLabel>
                     <FormDescription>
                       Display portfolio publicly?
                     </FormDescription>
@@ -145,16 +140,14 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
               )}
             />
 
-            <DialogClose asChild>
-              <Button
-                color="primary"
-                className="w-full"
-                type="submit"
-                isLoading={isLoading}>
-                {!isLoading && <Plus size={18} />}
-                Create Portfolio
-              </Button>
-            </DialogClose>
+            <Button
+              color="primary"
+              className="w-full"
+              type="submit"
+              isLoading={isLoading}>
+              {!isLoading && <Plus size={18} />}
+              Create Portfolio
+            </Button>
           </form>
         </Form>
       </DialogContent>
