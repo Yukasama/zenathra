@@ -16,7 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { cn, computeDomain } from "@/lib/utils";
 import Skeleton from "../ui/skeleton";
 import { trpc } from "@/trpc/client";

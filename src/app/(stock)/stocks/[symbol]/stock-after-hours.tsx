@@ -27,7 +27,8 @@ export default async function StockAfterHours({ stockQuote }: Props) {
     );
   }
 
-  const changesPercentage = afterHoursQuote?.price / stockQuote.price - 1 ?? 0;
+  const changesPercentage =
+    (afterHoursQuote?.price / stockQuote.price) * 100 - 1 ?? 0;
   const positive = changesPercentage >= 0;
 
   return (

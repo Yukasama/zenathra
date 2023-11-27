@@ -8,7 +8,7 @@ import { db } from "@/db";
 // import { env } from "@/env.mjs";
 
 export const authConfig = {
-  adapter: PrismaAdapter(db as any),
+  adapter: PrismaAdapter(db),
   providers: [
     Google,
     Facebook,
