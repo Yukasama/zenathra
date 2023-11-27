@@ -16,7 +16,7 @@
     "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20.10.0",
     "@types/nodemailer": "^6.4.14",
-    "@types/react": "^18.2.38",
+    "@types/react": "^18.2.39",
     "@types/react-dom": "^18.2.17",
     "eslint": "8.53.0",
     "eslint-config-next": "14.0.2",
