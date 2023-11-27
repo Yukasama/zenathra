@@ -16,7 +16,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Card } from "@/components/ui/card";
 import {
   Form,
   FormField,
@@ -26,8 +25,6 @@ import {
   FormDescription,
   FormMessage,
 } from "@/components/ui/form";
-import { motion } from "framer-motion";
-import { ANIMATION_VARIANTS } from "@/config/motion";
 import { trpc } from "@/trpc/client";
 import { CreatePortfolioSchema } from "@/lib/validators/portfolio";
 import { PLANS } from "@/config/stripe";
@@ -76,23 +73,17 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild disabled={isLoading}>
-        <motion.div
-          variants={ANIMATION_VARIANTS}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          whileTap="tap"
-          className={numberOfPortfolios === 0 ? "h-[340px]" : ""}>
-          <Card className="f-box cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-900 h-[340px]">
-            <Button
-              color="primary"
-              isLoading={isLoading}
-              aria-label="Create portfolio"
-              isIconOnly>
-              {!isLoading && <Plus />}
-            </Button>
-          </Card>
-        </motion.div>
+        <Button
+          isLoading={isLoading}
+          className="h-[340px]"
+          variant="flat"
+          aria-label="Create portfolio">
+          {!isLoading && (
+            <div className="h-9 w-9 f-box rounded-lg bg-primary text-white">
+              <Plus size={20} />
+            </div>
+          )}
+        </Button>
       </DialogTrigger>
 
       <DialogContent>

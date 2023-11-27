@@ -9,6 +9,9 @@ import { db } from "@/db";
 
 export const authConfig = {
   adapter: PrismaAdapter(db),
+  pages: {
+    signIn: "/sign-in",
+  },
   providers: [
     Google,
     Facebook,

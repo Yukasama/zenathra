@@ -16,8 +16,6 @@ import {
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
-import { motion } from "framer-motion";
-import { ANIMATION_VARIANTS } from "@/config/motion";
 import { Stock } from "@prisma/client";
 import { Button } from "@nextui-org/button";
 import { Spinner } from "@nextui-org/spinner";
@@ -75,19 +73,17 @@ export default function Searchbar({
 
   return (
     <>
-      <motion.div
-        variants={ANIMATION_VARIANTS}
-        whileTap="tap"
+      <Button
         className={cn(
-          `gradient text-white p-2 px-3 rounded-md ${
+          `p-2 px-3 items-center justify-between w-60 ${
             responsive ? "hidden md:flex" : "flex"
-          }  items-center justify-between w-60 cursor-pointer`,
+          }`,
           className
         )}
         onClick={() => setOpen((prev) => (prev === open ? !open : open))}>
         <div className="flex items-center gap-2">
           <Search size={18} />
-          <p className="text-[14px]">Search stocks...</p>
+          Search stocks...
         </div>
         <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-[3px] rounded border bg-muted px-1.5 font-mono text-xs font-medium text-muted-foreground opacity-100">
           <span className={`${!isMac && "text-[10px]"} mt-[1px]`}>
@@ -95,7 +91,7 @@ export default function Searchbar({
           </span>
           K
         </kbd>
-      </motion.div>
+      </Button>
 
       <Button
         onClick={() => setOpen((prev) => (prev === open ? !open : open))}
