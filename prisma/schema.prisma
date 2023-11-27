@@ -141,7 +141,7 @@ model Stock {
   exchange                                  String?
   exchangeShortName                         String?
   industry                                  String?
-  website                                   String
+  website                                   String?
   description                               String?  @db.Text
   ceo                                       String?
   sector                                    String?
