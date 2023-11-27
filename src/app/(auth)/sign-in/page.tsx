@@ -14,7 +14,7 @@ import { Button } from "@nextui-org/button";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata = { title: "Sign In" };
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export default async function page() {
   const user = await getUser();

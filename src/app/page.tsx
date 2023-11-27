@@ -5,7 +5,7 @@ import LandingPage from "./landing-page";
 import Dashboard from "./dashboard";
 
 export const metadata = { title: "Home" };
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export default async function page() {
   const user = await getUser();

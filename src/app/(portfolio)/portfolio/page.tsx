@@ -9,7 +9,7 @@ import dynamic from "next/dynamic";
 import Skeleton from "@/components/ui/skeleton";
 
 export const metadata = { title: "My Portfolios" };
-export const runtime = "edge";
+// export const runtime = "edge";
 
 const PortfolioCreateCard = dynamic(() => import("./portfolio-create-card"), {
   ssr: false,

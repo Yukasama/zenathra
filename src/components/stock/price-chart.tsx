@@ -139,7 +139,12 @@ export default function PriceChart({
               selectedKey={timeFrame}
               onSelectionChange={setTimeFrame}>
               {timeFrames.map((timeFrame) => (
-                <Tab key={timeFrame} className="-mx-0.5 sm:mx-0" aria-label={timeFrame} title={timeFrame} />
+                <Tab
+                  key={timeFrame}
+                  className="-mx-[3px] sm:mx-0"
+                  aria-label={timeFrame}
+                  title={timeFrame}
+                />
               ))}
             </Tabs>
           </Skeleton>

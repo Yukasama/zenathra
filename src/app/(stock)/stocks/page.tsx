@@ -11,7 +11,7 @@ import StockImage from "@/components/stock/stock-image";
 import { getUser } from "@/lib/auth";
 
 export const metadata = { title: "Stocks on the move" };
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export default async function page() {
   const [actives, winners, losers, user] = await Promise.all([

@@ -11,7 +11,7 @@ import SettingsItem from "@/app/(user)/settings/settings-item";
 import { UserAvatar } from "@/components/shared/user-avatar";
 import { getUser } from "@/lib/auth";
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export default async function Layout({ children }: PropsWithChildren) {
   const user = await getUser();

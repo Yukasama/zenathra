@@ -40,7 +40,7 @@ export default function StockMetrics({ stock }: Props) {
   ];
 
   return (
-    <Card className="f-box">
+    <Card className="justify-start sm:f-box">
       <div className="p-2 f-col gap-2">
         {data.map((d) => (
           <TooltipProvider key={d.title}>

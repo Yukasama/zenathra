@@ -116,7 +116,9 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
             <StockImage src={stock.image} px={35} />
             <div>
               <p>{stock.symbol}</p>
-              <p className="text-[13px] text-zinc-500">{stock.companyName}</p>
+              <p className="text-[13px] text-zinc-500 max-w-[150px] truncate">
+                {stock.companyName}
+              </p>
             </div>
           </div>
         );

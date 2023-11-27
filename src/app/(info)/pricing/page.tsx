@@ -3,7 +3,7 @@ import { Chip } from "@nextui-org/chip";
 import PricingCard from "./pricing-card";
 
 export const metadata = { title: "Pricing" };
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export default function page() {
   return (

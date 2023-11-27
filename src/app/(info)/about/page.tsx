@@ -2,7 +2,7 @@ import CompanyLogo from "@/components/shared/company-logo";
 import { SITE } from "@/config/site";
 
 export const metadata = { title: "About" };
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export default function page() {
   return (
