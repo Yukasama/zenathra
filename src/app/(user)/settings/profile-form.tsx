@@ -26,6 +26,7 @@ interface Props {
 
 export default function ProfileForm({ user }: Props) {
   const router = useRouter();
+
   const form = useForm({
     resolver: zodResolver(UserUpdateSchema),
     defaultValues: {
@@ -68,7 +69,6 @@ export default function ProfileForm({ user }: Props) {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="email"
@@ -87,7 +87,6 @@ export default function ProfileForm({ user }: Props) {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="biography"
@@ -107,7 +106,6 @@ export default function ProfileForm({ user }: Props) {
             </FormItem>
           )}
         />
-
         <Button
           className="self-start"
           type="submit"

@@ -10,11 +10,16 @@ import {
 import SettingsItem from "@/app/(user)/settings/settings-item";
 import { UserAvatar } from "@/components/shared/user-avatar";
 import { getUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 // export const runtime = "edge";
 
 export default async function Layout({ children }: PropsWithChildren) {
   const user = await getUser();
+
+  if (!user) {
+    redirect("/sign-in");
+  }
 
   const tabs = [
     {

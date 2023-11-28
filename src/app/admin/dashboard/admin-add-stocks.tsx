@@ -44,7 +44,7 @@ export default function AdminAddStocks() {
     },
   });
 
-  const stocks = ["All", "US500", "AAPL", "MSFT", "TSLA"];
+  const stocks = ["All", "US500", "AAPL", "MSFT", "GOOG", "TSLA", "NVDA"];
 
   const { mutate: uploadStocks, isLoading } = trpc.stock.upload.useMutation({
     onError: () => {

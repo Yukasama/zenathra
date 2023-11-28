@@ -10,6 +10,10 @@ export const metadata = { title: "Admin Dashboard" };
 export default async function page() {
   const user = await getUser();
 
+  if (!user) {
+    redirect("/");
+  }
+
   const dbUser = await db.user.findFirst({
     select: { role: true },
     where: { id: user?.id },

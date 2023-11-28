@@ -8,11 +8,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import CompanyLogo from "@/components/shared/company-logo";
-import SignIn from "./sign-in";
 import Link from "next/link";
+import SignUp from "./sign-up";
 import { Separator } from "@/components/ui/separator";
 
-export const metadata = { title: "Sign In" };
+export const metadata = { title: "Sign Up" };
 // export const runtime = "edge";
 
 export default function page() {
@@ -22,8 +22,8 @@ export default function page() {
         <div className="flex items-center gap-3.5">
           <CompanyLogo px={50} />
           <div className="f-col gap-1">
-            <CardTitle>Sign In</CardTitle>
-            <CardDescription>Log in to your account</CardDescription>
+            <CardTitle>Sign Up</CardTitle>
+            <CardDescription>Create a new account</CardDescription>
           </div>
         </div>
       </CardHeader>
@@ -34,7 +34,7 @@ export default function page() {
           providers below.
         </div>
 
-        <SignIn />
+        <SignUp />
         <Separator />
 
         <div className="f-col gap-[9px]">
@@ -46,11 +46,11 @@ export default function page() {
 
       <CardFooter>
         <div className="f-box gap-1 text-sm">
-          New to our platform?
+          Already signed up?
           <Link
-            href="/sign-up"
+            href="/sign-in"
             className="rounded-md p-1 px-1.5 font-medium text-primary hover:bg-zinc-100 dark:hover:bg-zinc-900">
-            Sign Up.
+            Sign In.
           </Link>
         </div>
       </CardFooter>

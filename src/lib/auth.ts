@@ -4,6 +4,8 @@ import Facebook from "next-auth/providers/facebook";
 import GitHub from "next-auth/providers/github";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/db";
+import bcryptjs from "bcryptjs";
+import Credentials from "next-auth/providers/credentials";
 // import Email from "next-auth/providers/email";
 // import { env } from "@/env.mjs";
 
@@ -27,15 +29,50 @@ export const authConfig = {
     //   },
     //   from: env.EMAIL_FROM,
     // }),
+    Credentials({
+      name: "Credentials",
+      credentials: {
+        email: { label: "email", type: "email" },
+        password: { label: "password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Invalid email or password.");
+        }
+
+        const user = await db.user.findFirst({
+          where: { email: credentials.email },
+        });
+
+        if (!user?.hashedPassword) {
+          throw new Error("Invalid email or password.");
+        }
+
+        const isCorrectPassword = await bcryptjs.compare(
+          credentials.password as string,
+          user.hashedPassword
+        );
+
+        if (!isCorrectPassword) {
+          throw new Error("Invalid email or password.");
+        }
+
+        return user;
+      },
+    }),
   ],
   callbacks: {
     async session({ session, user }) {
       session.user.id = user.id;
       return session;
     },
-    async redirect({ baseUrl }) {
-      return baseUrl;
-    },
+    // async redirect({ url, baseUrl }) {
+    //   if (url.startsWith("/")) {
+    //     return `${baseUrl}${url}`;
+    //   }
+
+    //   return baseUrl;
+    // },
   },
 } satisfies NextAuthConfig;
 

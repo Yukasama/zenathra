@@ -1,15 +1,19 @@
-import { privateProcedure, router } from "../trpc";
+import { privateProcedure, publicProcedure, router } from "../trpc";
 import { absoluteUrl } from "@/lib/utils";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { getUserSubscriptionPlan, stripe } from "@/lib/stripe";
 import { PLANS } from "@/config/stripe";
-import { UserUpdateSchema } from "@/lib/validators/user";
-// import { z } from "zod";
-// import { createToken } from "@/lib/resend";
-// import { tokenConfig } from "@/config/token";
-// import { sendMail } from "@/lib/resend";
-// import bcrypt from "bcryptjs";
+import {
+  CreateUserSchema,
+  ResetPasswordSchema,
+  UserUpdateSchema,
+} from "@/lib/validators/user";
+import { z } from "zod";
+import { createToken } from "@/lib/create-token";
+import { tokenConfig } from "@/config/token";
+import { sendMail } from "@/lib/resend";
+import bcryptjs from "bcryptjs";
 
 export const userRouter = router({
   createStripeSession: privateProcedure.mutation(async ({ ctx }) => {
@@ -56,6 +60,45 @@ export const userRouter = router({
 
     return { url: stripeSession.url };
   }),
+  create: publicProcedure
+    .input(CreateUserSchema)
+    .mutation(async ({ input }) => {
+      const { email, password } = input;
+
+      const existingUser = await db.user.findFirst({
+        select: { id: true },
+        where: { email },
+      });
+
+      if (existingUser) {
+        throw new TRPCError({ code: "CONFLICT" });
+      }
+
+      const [hashedPassword, hashedToken] = await Promise.all([
+        bcryptjs.hash(password, 12),
+        createToken(),
+      ]);
+
+      await Promise.all([
+        db.user.create({
+          data: {
+            email,
+            hashedPassword,
+          },
+        }),
+        db.verificationToken.create({
+          data: {
+            token: hashedToken,
+            identifier: input.email,
+            expires: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
+          },
+        }),
+        sendMail({
+          to: input.email,
+          token: hashedToken,
+        }),
+      ]);
+    }),
   update: privateProcedure
     .input(UserUpdateSchema)
     .mutation(async ({ ctx, input }) => {
@@ -77,52 +120,108 @@ export const userRouter = router({
       where: { id: user.id },
     });
   }),
-  // verify: publicProcedure
-  //   .input(z.string())
-  //   .mutation(async ({ input: verifyToken }) => {
-  //     const verificationToken = await db.verificationToken.findFirst({
-  //       select: { token: true, identifier: true },
-  //       where: {
-  //         token: verifyToken,
-  //         expires: { gte: new Date() },
-  //       },
-  //     });
+  resetPassword: privateProcedure
+    .input(ResetPasswordSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { user } = ctx;
+      const { password, token } = input;
 
-  //     if (
-  //       !verificationToken ||
-  //       !bcrypt.compareSync(verifyToken, verificationToken.token)
-  //     )
-  //       throw new TRPCError({ code: "NOT_FOUND" });
+      const verificationToken = await db.verificationToken.findFirst({
+        select: { token: true },
+        where: {
+          identifier: user.email ?? undefined,
+          expires: { gte: new Date() },
+        },
+      });
 
-  //     await Promise.all([
-  //       db.user.update({
-  //         where: { email: verificationToken.identifier },
-  //         data: { emailVerified: new Date() },
-  //       }),
-  //       db.verificationToken.delete({
-  //         where: { token: verificationToken.token },
-  //       }),
-  //     ]);
-  //   }),
-  // sendVerification: privateProcedure.mutation(async ({ ctx }) => {
-  //   const { user } = ctx;
+      const isTokenInvalid =
+        !verificationToken ||
+        !bcryptjs.compareSync(token, verificationToken.token);
 
-  //   if (!ctx.user.email) {
-  //     throw new TRPCError({ code: "BAD_REQUEST" });
-  //   }
+      if (isTokenInvalid) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
 
-  //   const hashedToken = await createToken();
-  //   await db.verificationToken.create({
-  //     data: {
-  //       token: hashedToken,
-  //       identifier: ctx.user.email,
-  //       expires: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
-  //     },
-  //   });
+      const hashedPassword = await bcryptjs.hash(password, 12);
 
-  //   await sendMail({
-  //     to: ctx.user.email ?? undefined,
-  //     token: hashedToken,
-  //   });
-  // }),
+      await Promise.all([
+        db.user.update({
+          where: { id: user.id },
+          data: { hashedPassword },
+        }),
+        db.verificationToken.delete({
+          where: { token: verificationToken.token },
+        }),
+      ]);
+    }),
+  sendResetPassword: publicProcedure
+    .input(z.string().email())
+    .mutation(async ({ input: email }) => {
+      const hashedToken = await createToken();
+
+      await db.verificationToken.create({
+        data: {
+          token: hashedToken,
+          identifier: email,
+          expires: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
+        },
+      });
+
+      await sendMail({
+        to: email,
+        type: "forgotPassword",
+        token: hashedToken,
+      });
+    }),
+  verify: publicProcedure
+    .input(z.string())
+    .mutation(async ({ input: verifyToken }) => {
+      const verificationToken = await db.verificationToken.findFirst({
+        select: { token: true, identifier: true },
+        where: {
+          token: verifyToken,
+          expires: { gte: new Date() },
+        },
+      });
+
+      const isTokenInvalid =
+        !verificationToken ||
+        !bcryptjs.compareSync(verifyToken, verificationToken.token);
+
+      if (isTokenInvalid) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      await Promise.all([
+        db.user.update({
+          where: { email: verificationToken.identifier },
+          data: { emailVerified: new Date() },
+        }),
+        db.verificationToken.delete({
+          where: { token: verificationToken.token },
+        }),
+      ]);
+    }),
+  sendVerification: privateProcedure.mutation(async ({ ctx }) => {
+    const { user } = ctx;
+
+    if (!user.email) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+
+    const hashedToken = await createToken();
+
+    db.verificationToken.create({
+      data: {
+        token: hashedToken,
+        identifier: user.email,
+        expires: new Date(Date.now() + tokenConfig.verifyTokenExpiry),
+      },
+    });
+
+    await sendMail({
+      to: user.email ?? undefined,
+      token: hashedToken,
+    });
+  }),
 });

@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import { Card } from "@/components/ui/card";
 import dynamic from "next/dynamic";
 import Skeleton from "@/components/ui/skeleton";
+import { redirect } from "next/navigation";
 
 export const metadata = { title: "My Portfolios" };
 // export const runtime = "edge";
@@ -18,6 +19,10 @@ const PortfolioCreateCard = dynamic(() => import("./portfolio-create-card"), {
 
 export default async function page() {
   const user = await getUser();
+
+  if (!user) {
+    redirect("/sign-in");
+  }
 
   const portfolios = await db.portfolio.findMany({
     select: {

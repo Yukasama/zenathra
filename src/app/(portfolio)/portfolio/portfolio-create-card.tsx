@@ -35,6 +35,7 @@ interface Props {
 
 export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
   const router = useRouter();
+
   const form = useForm({
     resolver: zodResolver(CreatePortfolioSchema),
     defaultValues: {
@@ -116,7 +117,6 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="isPublic"
@@ -134,7 +134,6 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
                 </FormItem>
               )}
             />
-
             <Button
               color="primary"
               className="w-full"
