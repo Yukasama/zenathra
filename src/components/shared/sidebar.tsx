@@ -161,7 +161,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
               aria-label="Portfolios"
               title="Portfolios">
               {user ? (
-                <div className="max-h-72 scroll-auto">
+                <div className="max-h-72 scroll-auto f-col gap-2">
                   {portfolios?.map((portfolio) => (
                     <SheetClose key={portfolio.id} asChild>
                       <Link
