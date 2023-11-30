@@ -35,7 +35,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { trpc } from "../../../trpc/client";
+import { trpc } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { ScreenerProps } from "@/lib/validators/stock";

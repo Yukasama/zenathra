@@ -7,7 +7,10 @@ export const CreateUserSchema = z.object({
 
 export const UserUpdateSchema = z.object({
   username: z.string().optional(),
-  biography: z.string().optional(),
+  biography: z
+    .string()
+    .max(500, "Biography can contain no more than 500 characters.")
+    .optional(),
 });
 
 export const ResetPasswordSchema = z.object({
