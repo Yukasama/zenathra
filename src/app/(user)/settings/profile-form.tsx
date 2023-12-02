@@ -31,7 +31,6 @@ export default function ProfileForm({ user }: Props) {
     resolver: zodResolver(UserUpdateSchema),
     defaultValues: {
       username: user?.username ?? "",
-      email: user?.email ?? "",
       biography: user?.biography ?? "",
     },
   });
@@ -61,24 +60,6 @@ export default function ProfileForm({ user }: Props) {
               <FormControl>
                 <Input
                   placeholder="Enter your username..."
-                  {...field}
-                  required
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Enter your email..."
-                  type="email"
                   {...field}
                   required
                 />
