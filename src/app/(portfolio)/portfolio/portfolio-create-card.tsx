@@ -1,8 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "@nextui-org/button";
-import { Checkbox } from "@nextui-org/checkbox";
+import { Button, Checkbox } from "@nextui-org/react";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";

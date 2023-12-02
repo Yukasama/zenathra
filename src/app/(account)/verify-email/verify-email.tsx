@@ -4,7 +4,7 @@ import { toast } from "@/hooks/use-toast";
 import { CheckCircle, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Spinner } from "@nextui-org/spinner";
+import { Spinner } from "@nextui-org/react";
 import { useCustomToasts } from "@/hooks/use-custom-toasts";
 import { trpc } from "@/trpc/client";
 import { TRPCError } from "@trpc/server";

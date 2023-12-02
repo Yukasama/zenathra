@@ -6,8 +6,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { PlanType } from "@/config/stripe";
-import { Button } from "@nextui-org/button";
-import { Chip } from "@nextui-org/chip";
+import { Button, Chip } from "@nextui-org/react";
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";
 

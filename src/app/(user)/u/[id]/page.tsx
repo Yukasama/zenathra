@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserAvatar } from "@/components/shared/user-avatar";
 import { Calendar } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
 
 interface Props {
   params: { id: string };

@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
 
 const Schema = z.object({
   email: z.string().email("Please enter a valid email."),

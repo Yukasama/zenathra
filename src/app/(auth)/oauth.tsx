@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
 import { capitalize, cn } from "@/lib/utils";
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
 import { Icons } from "@/components/shared/icons";
 import { useMutation } from "@tanstack/react-query";
 

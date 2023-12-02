@@ -2,7 +2,7 @@
 
 import { Portfolio } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { Trash2 } from "lucide-react";
@@ -67,7 +67,7 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
           <DialogDescription>This action cannot be undone.</DialogDescription>
         </DialogHeader>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
+        <div className="grid w-full items-center gap-1.5">
           <Input
             placeholder="CONFIRM"
             onChange={(e) => setTitle(e.target.value)}

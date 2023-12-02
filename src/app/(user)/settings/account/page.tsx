@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import { Layers } from "lucide-react";
 import dynamic from "next/dynamic";
 import { SkeletonButton } from "@/components/ui/skeleton";
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
 
 export const metadata = { title: "Account Settings" };
 

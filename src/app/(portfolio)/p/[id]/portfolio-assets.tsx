@@ -2,22 +2,21 @@
 
 import { useState, useMemo } from "react";
 import {
+  Button,
+  Chip,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Pagination,
+  Spinner,
   Table,
   TableHeader,
   TableColumn,
   TableBody,
   TableRow,
   TableCell,
-} from "@nextui-org/table";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-} from "@nextui-org/dropdown";
-import { Button } from "@nextui-org/button";
-import { Pagination } from "@nextui-org/pagination";
-import { Chip } from "@nextui-org/chip";
+} from "@nextui-org/react";
 import { Search, MoreVertical } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
@@ -32,7 +31,6 @@ import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import PortfolioAddModal from "@/components/portfolio/portfolio-add-modal";
 import { PortfolioWithStocks } from "@/types/db";
-import { Spinner } from "@nextui-org/spinner";
 import StockImage from "@/components/stock/stock-image";
 
 interface Props {

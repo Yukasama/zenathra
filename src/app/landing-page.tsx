@@ -3,7 +3,7 @@ import StockCardList, {
   StockCardListLoading,
 } from "@/components/stock/stock-card-list";
 import { getQuotes } from "@/lib/fmp/quote";
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
 import { MoveRight } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";

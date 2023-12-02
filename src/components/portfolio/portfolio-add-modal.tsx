@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@nextui-org/button";
+import { Button, Chip, Spinner } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "@/hooks/use-toast";
@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/command";
 import { PortfolioWithStocks } from "@/types/db";
 import { trpc } from "@/trpc/client";
-import { Spinner } from "@nextui-org/spinner";
+import { Stock } from "@prisma/client";
 
 interface Props {
   portfolio: Pick<PortfolioWithStocks, "id" | "title" | "stocks">;
@@ -26,6 +26,9 @@ interface Props {
 export default function PortfolioAddModal({ portfolio }: Props) {
   const [input, setInput] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
+  const [resultHistory, setResultHistory] = useState<
+    (Pick<Stock, "id" | "symbol"> | undefined)[]
+  >([]);
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
@@ -37,6 +40,12 @@ export default function PortfolioAddModal({ portfolio }: Props) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const {
+    isFetching,
+    data: results,
+    refetch,
+  } = trpc.stock.search.useQuery(input, { enabled: false });
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -50,11 +59,20 @@ export default function PortfolioAddModal({ portfolio }: Props) {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  const {
-    isFetching,
-    data: results,
-    refetch,
-  } = trpc.stock.search.useQuery(input, { enabled: false });
+  useEffect(() => {
+    if (results) {
+      const combinedResults = [...resultHistory, ...results];
+
+      // Create new Set to remove duplicates and convert it back to array
+      const uniqueResults = Array.from(
+        new Set(combinedResults.map((stock) => stock?.id))
+      ).map((id) => combinedResults.find((stock) => stock?.id === id));
+
+      setResultHistory(uniqueResults);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [results]);
 
   const { mutate: addToPortfolio, isLoading } = trpc.portfolio.add.useMutation({
     onError: () => {
@@ -154,13 +172,33 @@ export default function PortfolioAddModal({ portfolio }: Props) {
             )}
           </CommandList>
         )}
-        <Button
-          color="primary"
-          aria-label="Add new stocks"
-          isLoading={isLoading}
-          onClick={onSubmit}>
-          Add New {!isLoading && <Plus size={18} />}
-        </Button>
+        <div className="flex border-t p-2 px-3 justify-between">
+          <div className="flex items-center gap-1">
+            {selected.length === 0 && (
+              <p className="text-zinc-500 text-sm">
+                Stocks you select will appear here
+              </p>
+            )}
+            {selected
+              .slice(0, selected.length > 4 ? 4 : selected.length)
+              .map((id) => (
+                <Chip key={id}>
+                  {resultHistory?.map((r) => (r?.id === id ? r.symbol : null))}
+                </Chip>
+              ))}
+            {selected.length > 4 && <Chip>...{selected.length - 4}</Chip>}
+          </div>
+
+          <Button
+            color="primary"
+            size="sm"
+            isIconOnly
+            aria-label="Add new stocks"
+            isLoading={isLoading}
+            onClick={onSubmit}>
+            {!isLoading && <Plus size={18} />}
+          </Button>
+        </div>
       </CommandDialog>
     </>
   );

@@ -3,7 +3,7 @@
 import { trpc } from "@/trpc/client";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
-import { Spinner } from "@nextui-org/spinner";
+import { Spinner } from "@nextui-org/react";
 import { Portfolio } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

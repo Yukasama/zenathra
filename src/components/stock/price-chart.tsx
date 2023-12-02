@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import { cn, computeDomain } from "@/lib/utils";
 import Skeleton from "../ui/skeleton";
 import { trpc } from "@/trpc/client";
-import { Tabs, Tab } from "@nextui-org/tabs";
+import { Tabs, Tab } from "@nextui-org/react";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   symbol: string;

@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/card";
 import { useCustomToasts } from "@/hooks/use-custom-toasts";
 import { trpc } from "@/trpc/client";
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
 
 const Schema = z
   .object({

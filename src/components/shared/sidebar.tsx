@@ -16,12 +16,11 @@ import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Card } from "../ui/card";
 import { UserAvatar } from "./user-avatar";
 import PortfolioImage from "../portfolio/portfolio-image";
-import { Accordion, AccordionItem } from "@nextui-org/accordion";
+import { Accordion, AccordionItem, Button } from "@nextui-org/react";
 import Link from "next/link";
 import { navLinks } from "@/config/site";
 import { SITE } from "@/config/site";
 import { User } from "next-auth";
-import { Button } from "@nextui-org/button";
 
 interface Props {
   user: User | undefined;
@@ -67,7 +66,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                       href="/screener"
                       className="f-col items-center justify-center gap-1 h-full w-full font-medium">
                       <SlidersHorizontal size={28} />
-                      Stock Screener
+                      <p className="text-sm sm:text-base">Stock Screener</p>
                     </Link>
                   </SheetClose>
                 </Card>
@@ -78,7 +77,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                         href="/portfolio"
                         className="f-col items-center justify-center gap-1 h-full w-full font-medium">
                         <FilePlus2 size={28} />
-                        Create Portfolio
+                        <p className="text-sm sm:text-base">Create Portfolio</p>
                       </Link>
                     </SheetClose>
                   </Card>
@@ -89,7 +88,9 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                       href={user ? "/settings/profile" : "/sign-in"}
                       className="f-col items-center justify-center gap-1 h-full w-full font-medium">
                       <UserIcon size={28} />
-                      {user ? "Edit Profile" : "Create Account"}
+                      <p className="text-sm sm:text-base">
+                        {user ? "Edit Profile" : "Create Account"}
+                      </p>
                     </Link>
                   </SheetClose>
                 </Card>
@@ -99,7 +100,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                       href="/stocks"
                       className="f-col items-center justify-center gap-1 h-full w-full font-medium">
                       <CandlestickChart size={28} />
-                      Explore stocks
+                      <p className="text-sm sm:text-base">Explore Stocks</p>
                     </Link>
                   </SheetClose>
                 </Card>
@@ -120,7 +121,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                         href={link.href}
                         className="f-col items-center justify-center gap-1 h-full w-full font-medium">
                         <link.icon size={28} />
-                        {link.title}
+                        <p className="text-sm sm:text-base">{link.title}</p>
                       </Link>
                     </SheetClose>
                   </Card>
@@ -139,7 +140,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                       href="/"
                       className="f-col items-center justify-center gap-1 h-full w-full font-medium">
                       <LayoutDashboard size={28} />
-                      Dashboard
+                      <p className="text-sm sm:text-base">Dashboard</p>
                     </Link>
                   </SheetClose>
                 </Card>
@@ -149,7 +150,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                       href="/pricing"
                       className="f-col items-center justify-center gap-1 h-full w-full font-medium">
                       <DollarSign size={28} />
-                      Pricing
+                      <p className="text-sm sm:text-base">Pricing</p>
                     </Link>
                   </SheetClose>
                 </Card>

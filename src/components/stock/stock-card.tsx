@@ -11,7 +11,6 @@ import {
 } from "../ui/card";
 import StockImage from "./stock-image";
 import { cn } from "@/lib/utils";
-import React from "react";
 import Skeleton, { SkeletonButton, SkeletonText } from "../ui/skeleton";
 import { Stock } from "@prisma/client";
 import { PortfolioWithStocks } from "@/types/db";

@@ -2,7 +2,7 @@
 
 import debounce from "lodash.debounce";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import StockImage from "../stock/stock-image";
 import {
@@ -17,8 +17,7 @@ import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 import { Stock } from "@prisma/client";
-import { Button } from "@nextui-org/button";
-import { Spinner } from "@nextui-org/spinner";
+import { Button, Spinner } from "@nextui-org/react";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   recentStocks: Pick<Stock, "symbol" | "companyName" | "image">[] | undefined;
@@ -74,6 +73,7 @@ export default function Searchbar({
   return (
     <>
       <Button
+        variant="bordered"
         className={cn(
           `p-2 px-3 items-center justify-between w-60 ${
             responsive ? "hidden md:flex" : "flex"

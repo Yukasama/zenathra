@@ -1,5 +1,4 @@
 import StockItem from "./stock-item";
-import React from "react";
 import { db } from "@/db";
 import { getQuotes } from "@/lib/fmp/quote";
 import {

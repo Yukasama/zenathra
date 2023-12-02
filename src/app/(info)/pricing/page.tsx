@@ -1,5 +1,5 @@
 import { PLANS } from "@/config/stripe";
-import { Chip } from "@nextui-org/chip";
+import { Chip } from "@nextui-org/react";
 import PricingCard from "./pricing-card";
 
 export const metadata = { title: "Pricing" };

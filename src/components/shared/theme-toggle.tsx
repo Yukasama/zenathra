@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import Skeleton from "../ui/skeleton";
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
 
 export default function ThemeToggle({
   className,

@@ -15,7 +15,7 @@ import { BarChart } from "lucide-react";
 import dynamic from "next/dynamic";
 import PortfolioImage from "@/components/portfolio/portfolio-image";
 import { SkeletonButton, SkeletonList } from "@/components/ui/skeleton";
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
 
 interface Props {
   portfolio: Pick<

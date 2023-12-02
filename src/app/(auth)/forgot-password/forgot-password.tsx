@@ -25,7 +25,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { trpc } from "@/trpc/client";
 import { z } from "zod";
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
 
 const Schema = z.object({
   email: z.string().email("Please enter a valid email."),

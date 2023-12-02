@@ -1,6 +1,5 @@
 import PageLayout from "@/components/shared/page-layout";
 import { User } from "next-auth";
-import React from "react";
 
 interface Props {
   user: User;

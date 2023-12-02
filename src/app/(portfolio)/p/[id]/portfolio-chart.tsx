@@ -16,13 +16,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import React, { useCallback, useEffect, useState } from "react";
-import { Tabs, Tab } from "@nextui-org/tabs";
+import { useCallback, useEffect, useState } from "react";
+import { Button, Tabs, Tab } from "@nextui-org/react";
 import { cn, computeDomain } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
 import { trpc } from "@/trpc/client";
 import { Portfolio } from "@prisma/client";
-import { Button } from "@nextui-org/button";
 import { RotateCcw } from "lucide-react";
 import debounce from "lodash.debounce";
 

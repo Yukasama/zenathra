@@ -11,8 +11,7 @@ import {
   earningsDates,
   exchanges,
 } from "@/config/screener/filters";
-import { Button } from "@nextui-org/button";
-import { Tabs, Tab } from "@nextui-org/tabs";
+import { Button, Tabs, Tab } from "@nextui-org/react";
 import {
   BarChart2,
   ChevronLeft,
@@ -35,7 +34,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { trpc } from "../../../trpc/client";
+import { trpc } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { ScreenerProps } from "@/lib/validators/stock";

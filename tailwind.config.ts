@@ -1,11 +1,11 @@
 import { fontFamily } from "tailwindcss/defaultTheme";
 import { nextui } from "@nextui-org/theme";
+import type { Config } from "tailwindcss";
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+const config: Config = {
   content: [
-    "./src/app/**/*.{ts,tsx}",
-    "./src/components/**/*.{ts,tsx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   mode: "jit",
@@ -73,12 +73,12 @@ module.exports = {
       },
       keyframes: {
         "accordion-down": {
-          from: { height: 0 },
+          from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: 0 },
+          to: { height: "0" },
         },
       },
       animation: {
@@ -93,3 +93,5 @@ module.exports = {
     require("@tailwindcss/typography"),
   ],
 };
+
+export default config;

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import React from "react";
 import { ChevronsDown, ChevronsUp } from "lucide-react";
 import StockImage from "@/components/stock/stock-image";
 import { db } from "@/db";

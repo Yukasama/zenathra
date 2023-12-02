@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
 import { LogIn } from "lucide-react";
 import {
   Form,

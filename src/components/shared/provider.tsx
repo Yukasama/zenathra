@@ -5,7 +5,7 @@ import { absoluteUrl } from "@/lib/utils";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { type PropsWithChildren, useState } from "react";
-import { NextUIProvider } from "@nextui-org/system";
+import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider } from "next-themes";
 
 export default function Provider({ children }: PropsWithChildren) {

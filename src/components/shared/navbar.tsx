@@ -5,7 +5,7 @@ import CompanyLogo from "./company-logo";
 import dynamic from "next/dynamic";
 import { UserAccountNav } from "./user-account-nav";
 import NavbarMenu from "./navbar-menu";
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
 import { getUser } from "@/lib/auth";
 import { SkeletonButton } from "../ui/skeleton";
 

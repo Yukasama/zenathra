@@ -1,6 +1,5 @@
 import { toast } from "@/hooks/use-toast";
-import { Button } from "@nextui-org/button";
-import Link from "next/link";
+import { Button, Link } from "@nextui-org/react";
 
 export const useCustomToasts = () => {
   const loginToast = () => {
@@ -9,9 +8,13 @@ export const useCustomToasts = () => {
       description: "You need to be logged in to do that.",
       variant: "destructive",
       action: (
-        <Link onClick={() => dismiss()} href="/sign-in">
-          <Button aria-label="Sign In">Sign In</Button>
-        </Link>
+        <Button
+          href="/sign-in"
+          onClick={() => dismiss()}
+          aria-label="Sign In"
+          as={Link}>
+          Sign In
+        </Button>
       ),
     });
   };

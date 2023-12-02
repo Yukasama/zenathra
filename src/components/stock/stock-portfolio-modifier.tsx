@@ -2,7 +2,7 @@
 
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
 import { Plus, Trash2 } from "lucide-react";
 import { PortfolioWithStocks } from "@/types/db";
 import { Card } from "../ui/card";
