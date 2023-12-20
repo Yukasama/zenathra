@@ -26,7 +26,7 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
     },
     {
       label: "Dashboard",
-      href: "/",
+      href: "/dashboard",
       icon: <LayoutDashboard className="w-5 h-5 mr-2 text-zinc-400" />,
     },
     {

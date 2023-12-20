@@ -137,7 +137,7 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
                 <Card className="hover:bg-zinc-100 dark:hover:bg-zinc-900 h-32 cursor-pointer">
                   <SheetClose asChild>
                     <Link
-                      href="/"
+                      href="/dashboard"
                       className="f-col items-center justify-center gap-1 h-full w-full font-medium">
                       <LayoutDashboard size={28} />
                       <p className="text-sm sm:text-base">Dashboard</p>

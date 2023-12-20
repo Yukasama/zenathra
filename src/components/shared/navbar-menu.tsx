@@ -80,7 +80,7 @@ export default function NavbarMenu({ user }: Props) {
 
         {user && (
           <NavigationMenuItem>
-            <Link href="/" legacyBehavior passHref>
+            <Link href="/dashboard" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Dashboard
               </NavigationMenuLink>

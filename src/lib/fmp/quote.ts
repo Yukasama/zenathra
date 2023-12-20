@@ -144,7 +144,8 @@ export async function getQuotes(
         eps: res.eps,
       };
     });
-  } catch {
+  } catch (err) {
+    console.log(err);
     return undefined;
   }
 }

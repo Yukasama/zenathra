@@ -31,6 +31,17 @@ export function absoluteUrl(path: string) {
   return `http://localhost:${process.env.PORT ?? 3000}${path}`;
 }
 
+export function formatMarketCap(value: number): string {
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+
+  return formatter.format(value);
+}
+
 export function computeDomain(data: any[]) {
   const values = data.map((item) => parseFloat(item.uv));
   const dataMax = Math.max(...values);

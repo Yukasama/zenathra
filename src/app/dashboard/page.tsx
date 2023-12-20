@@ -1,11 +1,14 @@
 import PageLayout from "@/components/shared/page-layout";
-import { User } from "next-auth";
+import { getUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-interface Props {
-  user: User;
-}
+export default async function page() {
+  const user = await getUser();
 
-export default function Dashboard({ user }: Props) {
+  if (!user) {
+    redirect("/sign-in");
+  }
+
   return (
     <PageLayout
       title={`Welcome back, ${user?.name}!`}
