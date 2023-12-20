@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import { ColorTheme } from "react-ts-tradingview-widgets";
+import type { ColorTheme } from "react-ts-tradingview-widgets";
 
 const AdvancedRealTimeChart = dynamic(
   () =>

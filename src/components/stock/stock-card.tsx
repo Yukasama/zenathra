@@ -110,7 +110,7 @@ export default async function StockCard({
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex gap-3">
-              <StockImage src={stock?.image} px={40} priority />
+              <StockImage src={stock?.image} px={40} />
               <div className="f-col gap-1">
                 <CardTitle>{quote.symbol}</CardTitle>
                 <CardDescription className="w-[190px] truncate">
@@ -126,7 +126,6 @@ export default async function StockCard({
             className="absolute -top-5 right-[5%] pointer-events-none opacity-20 aria-hidden"
             src={stock.image}
             px={350}
-            priority={true}
           />
         )}
 

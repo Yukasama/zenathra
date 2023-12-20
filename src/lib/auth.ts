@@ -66,13 +66,13 @@ export const authConfig = {
       session.user.id = user.id;
       return session;
     },
-    // async redirect({ url, baseUrl }) {
-    //   if (url.startsWith("/")) {
-    //     return `${baseUrl}${url}`;
-    //   }
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) {
+        return `${baseUrl}${url}`;
+      }
 
-    //   return baseUrl;
-    // },
+      return baseUrl;
+    },
   },
 } satisfies NextAuthConfig;
 

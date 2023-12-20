@@ -40,7 +40,6 @@ export default function ProfileForm({ user }: Props) {
       toast({
         title: "Oops! Something went wrong.",
         description: "Profile could not be updated.",
-        variant: "destructive",
       });
     },
     onSuccess: () => router.refresh(),

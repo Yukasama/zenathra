@@ -49,7 +49,6 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
         toast({
           title: "Oops! Something went wrong.",
           description: "Failed to create portfolio.",
-          variant: "destructive",
         });
       },
       onSuccess: () => router.refresh(),
@@ -60,7 +59,6 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
       return toast({
         title: "Oops! Something went wrong.",
         description: "Maximum number of portfolios reached.",
-        variant: "destructive",
       });
     }
 

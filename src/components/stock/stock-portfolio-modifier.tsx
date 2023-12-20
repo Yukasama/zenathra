@@ -27,7 +27,6 @@ export default function StockPortfolioModifier({ portfolio, stock }: Props) {
         toast({
           title: "Oops! Something went wrong.",
           description: `Failed to add to portfolio.`,
-          variant: "destructive",
         }),
       onSuccess: () => router.refresh(),
     });
@@ -38,7 +37,6 @@ export default function StockPortfolioModifier({ portfolio, stock }: Props) {
         toast({
           title: "Oops! Something went wrong.",
           description: `Failed to remove from portfolio.`,
-          variant: "destructive",
         }),
       onSuccess: () => router.refresh(),
     });

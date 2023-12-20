@@ -24,7 +24,6 @@ export default function OAuth({ provider, className }: Props) {
       toast({
         title: "We have trouble signing you in.",
         description: "Please try again later.",
-        variant: "destructive",
       });
     },
   });

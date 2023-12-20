@@ -5,13 +5,11 @@ import Image from "next/image";
 interface Props extends React.HTMLAttributes<HTMLImageElement> {
   src: string | null | undefined;
   px?: number;
-  priority?: boolean;
 }
 
 export default function StockImage({
   src,
   px = 40,
-  priority = false,
   className,
   ...props
 }: Props) {
@@ -33,8 +31,6 @@ export default function StockImage({
           height={px}
           width={px}
           alt="Stock Logo"
-          loading={`${priority ? "eager" : "lazy"}`}
-          priority={priority}
         />
       ) : (
         <div

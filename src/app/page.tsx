@@ -1,6 +1,4 @@
-import { db } from "@/db";
 import { getUser } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import LandingPage from "./landing-page";
 import Dashboard from "./dashboard";
 
@@ -12,14 +10,6 @@ export default async function page() {
 
   if (!user) {
     return <LandingPage />;
-  }
-
-  const userExists = await db.user.count({
-    where: { id: user.id },
-  });
-
-  if (!userExists) {
-    redirect("/auth-callback?origin=/");
   }
 
   return <Dashboard user={user} />;

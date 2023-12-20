@@ -51,7 +51,6 @@ export default function SignUp() {
         return toast({
           title: "Oops! Something went wrong.",
           description: "E-Mail is already registered.",
-          variant: "destructive",
         });
       }
       defaultError();

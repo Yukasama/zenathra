@@ -38,7 +38,6 @@ export default function VerifyEmail() {
         return toast({
           title: "Oops! Something went wrong.",
           description: "Email verification not found or expired.",
-          variant: "destructive",
         });
       }
       defaultError();

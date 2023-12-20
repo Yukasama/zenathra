@@ -6,7 +6,6 @@ export const useCustomToasts = () => {
     const { dismiss } = toast({
       title: "Login required.",
       description: "You need to be logged in to do that.",
-      variant: "destructive",
       action: (
         <Button
           href="/sign-in"
@@ -23,7 +22,6 @@ export const useCustomToasts = () => {
     toast({
       title: "Oops! Something went wrong.",
       description: `Please try again later.`,
-      variant: "destructive",
     });
   };
 

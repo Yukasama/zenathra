@@ -83,7 +83,6 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
       toast({
         title: "Oops! Something went wrong.",
         description: `Failed to remove position.`,
-        variant: "destructive",
       });
     },
     onSuccess: () => router.refresh(),

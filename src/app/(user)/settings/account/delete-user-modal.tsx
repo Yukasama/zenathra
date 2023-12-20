@@ -27,7 +27,6 @@ export default function DeleteUserModal() {
       toast({
         title: "Oops! Something went wrong.",
         description: "Account could not be deleted.",
-        variant: "destructive",
       });
     },
     onSuccess: () => router.push("/api/auth/logout"),
@@ -38,7 +37,6 @@ export default function DeleteUserModal() {
       return toast({
         title: "Oops! Something went wrong.",
         description: "Please enter CONFIRM to complete the deletion.",
-        variant: "destructive",
       });
     }
 

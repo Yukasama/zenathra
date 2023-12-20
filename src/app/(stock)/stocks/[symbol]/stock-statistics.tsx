@@ -17,7 +17,7 @@ export function StockStatisticsLoading() {
           </CardHeader>
           <CardContent className="w-full h-full">
             <Skeleton>
-              <div className="h-[250px]"></div>
+              <div className="h-[150px]"></div>
             </Skeleton>
           </CardContent>
         </Card>

@@ -26,7 +26,6 @@ export default function EditVisibility({ portfolio }: Props) {
       toast({
         title: "Oops! Something went wrong.",
         description: `Failed to change portfolio visibility.`,
-        variant: "destructive",
       });
     },
     onSuccess: () => router.refresh(),

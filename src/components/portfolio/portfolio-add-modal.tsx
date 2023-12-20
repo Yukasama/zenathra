@@ -79,7 +79,6 @@ export default function PortfolioAddModal({ portfolio }: Props) {
       toast({
         title: "Oops! Something went wrong.",
         description: "Failed to add stocks to portfolio.",
-        variant: "destructive",
       });
     },
     onSuccess: () => router.refresh(),

@@ -21,7 +21,6 @@ export default function ChangeTitle({ portfolio }: Props) {
       toast({
         title: "Oops! Something went wrong.",
         description: `Failed to change portfolio title.`,
-        variant: "destructive",
       });
     },
     onSuccess: () => router.refresh(),
@@ -42,7 +41,6 @@ export default function ChangeTitle({ portfolio }: Props) {
       return toast({
         title: "Oops! Something went wrong.",
         description: "Title can be no longer than 25 characters.",
-        variant: "destructive",
       });
     }
 

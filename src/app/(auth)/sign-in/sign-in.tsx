@@ -50,7 +50,6 @@ export default function SignIn() {
       toast({
         title: "We have trouble signing you in.",
         description: `${err ?? "Please try again later."}`,
-        variant: "destructive",
       });
     },
     onSettled: (response) => {

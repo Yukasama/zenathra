@@ -45,7 +45,6 @@ export default function ForgotPassword() {
         toast({
           title: "Oops! Something went wrong.",
           description: "E-Mail could not be sent.",
-          variant: "destructive",
         });
       },
       onSuccess: () => setSent(true),

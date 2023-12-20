@@ -32,7 +32,6 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
         toast({
           title: "Oops! Something went wrong.",
           description: `Portfolio '${portfolio.title}' could not be deleted.`,
-          variant: "destructive",
         });
       },
       onSuccess: () => router.push("/portfolio"),
@@ -43,7 +42,6 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
       return toast({
         title: "Oops! Something went wrong.",
         description: "Please enter the correct title.",
-        variant: "destructive",
       });
     }
 

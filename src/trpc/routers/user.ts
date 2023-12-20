@@ -65,8 +65,7 @@ export const userRouter = router({
     .mutation(async ({ input }) => {
       const { email, password } = input;
 
-      const existingUser = await db.user.findFirst({
-        select: { id: true },
+      const existingUser = await db.user.count({
         where: { email },
       });
 

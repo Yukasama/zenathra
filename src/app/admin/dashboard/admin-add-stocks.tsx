@@ -49,7 +49,6 @@ export default function AdminAddStocks() {
       toast({
         title: "Oops! Something went wrong.",
         description: `${form.getValues("stock")} could not be uploaded.`,
-        variant: "destructive",
       });
     },
     onSuccess: () => {
@@ -65,7 +64,6 @@ export default function AdminAddStocks() {
       return toast({
         title: "Oops! Something went wrong.",
         description: `You can only upload one batch of data for single stocks.`,
-        variant: "destructive",
       });
     }
 
