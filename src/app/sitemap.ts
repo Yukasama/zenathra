@@ -23,6 +23,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${SITE.url}/sign-in/`,
     },
     {
+      url: `${SITE.url}/sign-up/`,
+    },
+    {
       url: `${SITE.url}/verify-email/`,
     },
     {
@@ -47,7 +50,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${SITE.url}/screener`,
     },
     {
-      url: `${SITE.url}/stocks`,
+      url: `${SITE.url}/dashboard`,
     },
     ...(stocks
       ? stocks.map((stock) => ({

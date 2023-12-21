@@ -1,11 +1,11 @@
 "use client";
 
 import { trpc } from "@/trpc/client";
-import { cn, computeDomain } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { History, Quote } from "@/types/stock";
 import { useState, useEffect } from "react";
-import { Area, AreaChart, ResponsiveContainer, YAxis } from "recharts";
-import Skeleton from "../ui/skeleton";
+import { LineChart, Line, YAxis } from "recharts";
+import { Spinner } from "@nextui-org/react";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   quote: Quote;
@@ -15,7 +15,6 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export default function SmallChart({ quote, height, className }: Props) {
   const [mounted, setMounted] = useState(false);
   const [data, setData] = useState([]);
-  const [domain, setDomain] = useState([0, 0]);
 
   useEffect(() => setMounted(true), []);
 
@@ -31,45 +30,32 @@ export default function SmallChart({ quote, height, className }: Props) {
         uv: result.close,
       }));
       setData(data.slice(0, 420).reverse());
-      const domain = computeDomain(data);
-      setDomain([domain[0] * 0.93, domain[1]]);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFetched]);
 
   return (
-    <Skeleton isLoaded={mounted && isFetched}>
-      <ResponsiveContainer width="100%" height={height ?? 70}>
-        <AreaChart data={data} className={cn(className)}>
-          <defs>
-            <linearGradient
-              id={`${quote.symbol}-uv`}
-              x1="0"
-              y1="0"
-              x2="0"
-              y2="1">
-              <stop
-                offset="5%"
-                stopColor={quote.changesPercentage > 0 ? "#19E363" : "#e6221e"}
-                stopOpacity={0.8}
-              />
-              <stop
-                offset="95%"
-                stopColor={quote.changesPercentage > 0 ? "#19E363" : "#e6221e"}
-                stopOpacity={0}
-              />
-            </linearGradient>
-          </defs>
-          <YAxis domain={domain} hide={true} />
-          <Area
+    <>
+      {mounted && isFetched ? (
+        <LineChart
+          data={data}
+          width={200}
+          height={height ?? 70}
+          className={cn(className)}>
+          <YAxis domain={["dataMin", "dataMax"]} hide={true} />
+          <Line
             type="monotone"
             dataKey="uv"
-            fill={`url(#${quote.symbol}-uv)`}
             stroke={quote.changesPercentage > 0 ? "#19E363" : "#e6221e"}
+            strokeWidth={2.1}
+            dot={false}
+            isAnimationActive={false}
           />
-        </AreaChart>
-      </ResponsiveContainer>
-    </Skeleton>
+        </LineChart>
+      ) : (
+        <Spinner size="sm" />
+      )}
+    </>
   );
 }

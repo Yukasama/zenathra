@@ -118,10 +118,6 @@ export async function getQuotes(
       return undefined;
     }
 
-    if (symbols.length > 20) {
-      symbols = symbols.slice(0, 20);
-    }
-
     const url = `${FMP_API_URL}v3/quote/${symbols.join(",")}?apikey=${
       env.FMP_API_KEY
     }`;
