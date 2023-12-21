@@ -55,6 +55,7 @@ export function LandingTableLoading() {
 }
 
 const columnTranslation: any = {
+  rank: "#",
   symbol: "Name",
   price: "Price",
   "24h %": "24h %",
@@ -67,7 +68,7 @@ export default function LandingTable({ stockQuotes }: Props) {
   const [page, setPage] = useState(1);
 
   const ROWS_PER_PAGE = 20;
-  const COLUMNS = ["symbol", "price", "24h %", "mktCap", "sector"];
+  const COLUMNS = ["rank", "symbol", "price", "24h %", "mktCap", "sector"];
 
   // Filtering and sorting stocks
   const filteredStocks = useMemo(() => {
@@ -82,12 +83,17 @@ export default function LandingTable({ stockQuotes }: Props) {
   const paginatedStocks = useMemo(() => {
     const start = (page - 1) * ROWS_PER_PAGE;
     const end = start + ROWS_PER_PAGE;
-    return filteredStocks.slice(start, end);
+    return filteredStocks.slice(start, end).map((stock, index) => ({
+      ...stock,
+      rank: start + index + 1,
+    }));
   }, [filteredStocks, page, ROWS_PER_PAGE]);
 
   // Single cell for assets table
   const renderCell = (stock: StockQuote, columnKey: string) => {
     switch (columnKey) {
+      case "rank":
+        return <p className="font-semibold text-zinc-400 w-3">{stock.rank}</p>;
       case "symbol":
         return (
           <div className="flex items-center gap-3">
