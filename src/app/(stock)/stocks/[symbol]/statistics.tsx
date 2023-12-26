@@ -1,8 +1,8 @@
-import StockMarginChart from "./stock-margin-chart";
+import MarginChart from "./margin-chart";
 import { Stock } from "@prisma/client";
 import { db } from "@/db";
-import StockKeyMetricsChart from "./stock-key-metrics-chart";
-import StockDividendChart from "./stock-dividend-chart";
+import MetricsChart from "./metrics-chart";
+import DividendChart from "./dividend-chart";
 import Skeleton from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { SkeletonText } from "@/components/ui/skeleton";
@@ -30,7 +30,7 @@ interface Props {
   stock: Pick<Stock, "symbol" | "companyName">;
 }
 
-export default async function StockStatistics({ stock }: Props) {
+export default async function Statistics({ stock }: Props) {
   const financials = await db.financials.findMany({
     select: {
       peRatio: true,
@@ -60,28 +60,41 @@ export default async function StockStatistics({ stock }: Props) {
 
   const statConfig = labels.map((label, index) => ({
     name: label,
-    uv: financials[financials.length - 1 - index].peRatio,
-    pv: financials[financials.length - 1 - index].eps,
-    fv: financials[financials.length - 1 - index].pbRatio,
+    pe: financials[financials.length - 1 - index].peRatio,
+    pb: financials[financials.length - 1 - index].pbRatio,
+    eps: financials[financials.length - 1 - index].eps,
   }));
 
   const marginConfig = labels.map((label, index) => ({
     name: label,
-    uv: financials[financials.length - 1 - index].grossProfitMargin,
-    pv: financials[financials.length - 1 - index].operatingProfitMargin,
-    fv: financials[financials.length - 1 - index].netProfitMargin,
+    gm: financials[financials.length - 1 - index].grossProfitMargin,
+    om: financials[financials.length - 1 - index].operatingProfitMargin,
+    pm: financials[financials.length - 1 - index].netProfitMargin,
   }));
 
   const dividendConfig = labels.map((label, index) => ({
     name: label,
-    uv: financials[financials.length - 1 - index].dividendYield,
+    div: financials[financials.length - 1 - index].dividendYield,
   }));
 
   return (
-    <div className="f-col items-start lg:items-start gap-4 lg:flex-row">
-      <StockKeyMetricsChart stock={stock} data={statConfig} />
-      <StockMarginChart stock={stock} data={marginConfig} />
-      <StockDividendChart stock={stock} data={dividendConfig} />
+    <div className="f-col md:grid grid-cols-2 gap-6 sm:gap-8 py-3 sm:py-6">
+      <div className="f-col items-center gap-1">
+        <MetricsChart data={statConfig} />
+        <p className="text-sm text-zinc-400">
+          Key Metrics for {stock.companyName}
+        </p>
+      </div>
+      <div className="f-col items-center gap-1">
+        <MarginChart data={marginConfig} />
+        <p className="text-sm text-zinc-400">Margins for {stock.companyName}</p>
+      </div>
+      <div className="f-col items-center gap-1">
+        <DividendChart data={dividendConfig} />
+        <p className="text-sm text-zinc-400">
+          Dividend Yield for {stock.companyName}
+        </p>
+      </div>
     </div>
   );
 }

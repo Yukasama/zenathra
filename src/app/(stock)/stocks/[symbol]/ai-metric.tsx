@@ -17,14 +17,13 @@ interface Props {
   gradient: string[];
 }
 
-export default function StockEye({ user, title, value = 78, gradient }: Props) {
+export default function AIMetric({ user, title, value = 78, gradient }: Props) {
   const { theme } = useTheme();
 
   const fullCircumference = 2 * Math.PI * 54;
   const threeQuarterCircumference = (3 / 4) * fullCircumference;
 
   const dashOffset = ((100 - value) / 100) * threeQuarterCircumference;
-
   const dashGreyArray = threeQuarterCircumference;
   const dashGreyOffset = 0;
 
@@ -47,8 +46,8 @@ export default function StockEye({ user, title, value = 78, gradient }: Props) {
                     y1="0%"
                     x2="100%"
                     y2="0%">
-                    <stop offset="0%" stopColor={gradient[0]} />
-                    <stop offset="100%" stopColor={gradient[1]} />
+                    <stop offset="0%" stopColor={gradient[1]} />
+                    <stop offset="100%" stopColor={gradient[0]} />
                   </linearGradient>
                 </defs>
                 <circle
@@ -76,7 +75,7 @@ export default function StockEye({ user, title, value = 78, gradient }: Props) {
               </svg>
               <div className="f-box relative h-[95%] w-full flex-col">
                 <p className="text-center text-xl">
-                  {user ? value : <Lock size={16} />}
+                  {user ? value : <Lock size={20} />}
                 </p>
               </div>
             </div>

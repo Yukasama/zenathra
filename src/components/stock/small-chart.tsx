@@ -1,7 +1,6 @@
 "use client";
 
 import { trpc } from "@/trpc/client";
-import { cn } from "@/lib/utils";
 import { Quote } from "@/types/stock";
 import { useState, useEffect } from "react";
 import { LineChart, Line, YAxis } from "recharts";
@@ -9,36 +8,22 @@ import { Spinner } from "@nextui-org/react";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   quote: Quote;
-  height?: number;
 }
 
-export default function SmallChart({ quote, height, className }: Props) {
+export default function SmallChart({ quote }: Props) {
   const [mounted, setMounted] = useState(false);
-  const [data, setData] = useState([]);
 
   useEffect(() => setMounted(true), []);
 
-  const { data: results, isFetched } = trpc.stock.history.useQuery({
+  const { data, isFetched } = trpc.stock.history.useQuery({
     symbol: quote.symbol,
-    timeframe: "1Y",
+    timeframe: "1D",
   });
 
-  useEffect(() => {
-    if (isFetched && results) {
-      setData(data.slice(0, 420).reverse());
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFetched]);
-
   return (
-    <>
+    <div className="w-[200px] h-[50px]">
       {mounted && isFetched ? (
-        <LineChart
-          data={data}
-          width={200}
-          height={height ?? 70}
-          className={cn(className)}>
+        <LineChart data={data}>
           <YAxis domain={["dataMin", "dataMax"]} hide={true} />
           <Line
             type="monotone"
@@ -52,6 +37,6 @@ export default function SmallChart({ quote, height, className }: Props) {
       ) : (
         <Spinner size="sm" />
       )}
-    </>
+    </div>
   );
 }

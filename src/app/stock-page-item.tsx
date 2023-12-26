@@ -2,6 +2,7 @@ import StockImage from "@/components/stock/stock-image";
 import { db } from "@/db";
 import { Quote } from "@/types/stock";
 import { ArrowBigDown, ArrowBigUp } from "lucide-react";
+import Link from "next/link";
 
 interface Props {
   quote: Quote;
@@ -14,7 +15,9 @@ export default async function StockPageItem({ quote }: Props) {
   });
 
   return (
-    <div className="flex items-center justify-between w-full">
+    <Link
+      href={`/stocks/${quote.symbol}`}
+      className="flex items-center justify-between w-full hover:bg-zinc-100/50 dark:hover:bg-zinc-800/50 p-0.5 px-3 rounded-md">
       <div className="flex items-center gap-3">
         <StockImage src={stock?.image} px={35} />
         <div className="f-col">
@@ -43,6 +46,6 @@ export default async function StockPageItem({ quote }: Props) {
           {quote.changesPercentage?.toFixed(2).replace("-", "")}%
         </span>
       </div>
-    </div>
+    </Link>
   );
 }

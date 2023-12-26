@@ -9,6 +9,7 @@ import {
   ReferenceLine,
   ComposedChart,
   CartesianGrid,
+  LabelList,
 } from "recharts";
 import { memo, useEffect, useMemo, useState } from "react";
 import { cn, computeDomain } from "@/lib/utils";
@@ -113,8 +114,23 @@ const PriceChart = memo(({ symbol, className }: Props) => {
     return null;
   };
 
+  const renderLastDot = (props: any) => {
+    const { x, y, value } = props;
+    if (value === chartData?.results[chartData.results.length - 1].close) {
+      return (
+        <circle
+          cx={x}
+          cy={y}
+          r={4}
+          fill={chartData?.positive ? "#1de095" : "#e52b34"}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
-    <div className={cn(className, "w-full h-[280px] sm:h-[450px] f-col gap-4")}>
+    <div className={cn(className, "w-full h-[290px] sm:h-[470px] f-col gap-4")}>
       <div className="flex sm:justify-end gap-3 p-1">
         <Tabs
           selectedKey={timeFrame}
@@ -166,7 +182,7 @@ const PriceChart = memo(({ symbol, className }: Props) => {
               tickLine={false}
               axisLine={{ strokeWidth: 0.5 }}
               interval={Math.floor(chartData.results.length / 10)}
-              tickFormatter={(tickItem, index) => (index === 0 ? "" : tickItem)}
+              tickFormatter={(tickItem, i) => (i === 0 ? "" : tickItem)}
             />
             <YAxis
               domain={chartData.domain}
@@ -177,8 +193,8 @@ const PriceChart = memo(({ symbol, className }: Props) => {
               axisLine={{ strokeWidth: 0.5 }}
               tickCount={8}
               fontSize={12}
-              tickFormatter={(value, index) =>
-                index === 0 ? "" : `${value.toFixed(1)}`
+              tickFormatter={(value, i) =>
+                i === 0 ? "" : `${value.toFixed(1)}`
               }
             />
             {/* @ts-ignore */}
@@ -188,20 +204,29 @@ const PriceChart = memo(({ symbol, className }: Props) => {
               yAxisId="right"
               strokeDasharray="1 4"
               stroke={theme === "dark" ? "#71717a" : "#3f3f46"}
+              label={{
+                position: "top",
+                value: `Price: ${chartData.startPrice}`,
+                fill: "#666",
+                fontSize: 12,
+                fontWeight: "bold",
+              }}
             />
             <Area
               dataKey="close"
+              type="monotone"
               stroke={chartData.positive ? "#1de095" : "#e52b34"}
               fillOpacity={1}
               yAxisId="right"
               fill="url(#colorClose)"
               isAnimationActive={false}
-              strokeWidth={2}
-            />
+              strokeWidth={2}>
+              <LabelList dataKey="close" content={renderLastDot} />
+            </Area>
           </ComposedChart>
         </ResponsiveContainer>
       ) : (
-        <p>notloae</p>
+        <p className="text-zinc-400">Chart failed to load.</p>
       )}
     </div>
   );

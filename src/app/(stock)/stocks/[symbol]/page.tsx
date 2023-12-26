@@ -1,26 +1,18 @@
-import StockList, { StockListLoading } from "@/components/stock/stock-list";
-import StockMetrics from "@/app/(stock)/stocks/[symbol]/stock-metrics";
-import StockEye from "@/app/(stock)/stocks/[symbol]/stock-eye";
-import StockInfo from "@/app/(stock)/stocks/[symbol]/price";
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { db } from "@/db";
 import { Separator } from "@/components/ui/separator";
 import PageLayout from "@/components/shared/page-layout";
-import StockStatistics, {
-  StockStatisticsLoading,
-} from "@/app/(stock)/stocks/[symbol]/stock-statistics";
-import PriceChart from "@/components/stock/price-chart";
+import Statistics from "@/app/(stock)/stocks/[symbol]/statistics";
+import PriceChart from "@/app/(stock)/stocks/[symbol]/price-chart";
 import StockImage from "@/components/stock/stock-image";
 import { getUser } from "@/lib/auth";
 import { getQuote } from "@/lib/fmp/quote";
-import { StockQuote } from "@/types/stock";
-import { formatMarketCap } from "@/lib/utils";
 import StockPortfolioAddModal from "@/components/stock/stock-portfolio-add-modal";
 import { Card, Chip } from "@nextui-org/react";
 import Link from "next/link";
 import Price from "@/app/(stock)/stocks/[symbol]/price";
-import StockKeyMetricsChart from "./stock-key-metrics-chart";
+import AIMetric from "@/app/(stock)/stocks/[symbol]/ai-metric";
+import Valuation from "./valuation";
 
 interface Props {
   params: { symbol: string };
@@ -124,110 +116,117 @@ export default async function page({ params: { symbol } }: Props) {
     }
   }
 
-  const attributes = [stock.sector, stock.industry, stock.country];
-
-  const metrics = [
-    {
-      title: "Market Cap",
-      value: formatMarketCap(stock.mktCap),
-    },
-    {
-      title: "P/E Ratio",
-      value: stock.peRatioTTM?.toFixed(2),
-    },
-    {
-      title: "P/B Ratio",
-      value: stock.priceToBookRatioTTM?.toFixed(2),
-    },
-    {
-      title: "EPS",
-      value: stock.netIncomePerShareTTM?.toFixed(2),
-    },
+  const attributes = [
+    { name: "sector", value: stock.sector },
+    { name: "industry", value: stock.industry },
+    { name: "country", value: stock.country },
   ];
 
-  const values = [
-    { title: "Fundamental", gradient: ["#fda37a", "#ffcc5e"], value: 67 },
-    { title: "Shark4", gradient: ["#47FCA7", "#00FFDE"], value: 78 },
-    { title: "Technical", gradient: ["#0088FF", "#5947FC"], value: 94 },
+  const aiMetrics = [
+    {
+      title: "Fundamental",
+      gradient: ["#fda37a", "#ffcc5e"],
+      value: 67,
+      tooltip:
+        "The Fundamental-Analysis-Score (FAS) based on financial reports, forecasting earnings and market position.",
+    },
+    {
+      title: "Shark4",
+      gradient: ["#47FCA7", "#00FFDE"],
+      value: 78,
+      tooltip:
+        "Shark4 offers an estimate of a company's overall health, combining profitability, liquidity, and solvency ratios.",
+    },
+    {
+      title: "Technical",
+      gradient: ["#0088FF", "#5947FC"],
+      value: 94,
+      tooltip:
+        "The Technical-Analysis-Score (TAS) derived from historical trading activity and stock price movements.",
+    },
   ];
 
   return (
-    <PageLayout className="f-col xl:grid grid-cols-5 gap-8 mx-3 xl:m-10">
+    <PageLayout className="f-col xl:grid grid-cols-5 gap-8 mx-3 xl:m-8">
       <div className="col-span-1"></div>
 
-      <div className="col-span-3 f-col gap-8">
-        <div className="f-col gap-6 sm:gap-8">
-          <div className="f-col gap-3">
-            <div className="f-col md:flex-row justify-between gap-3 md:gap-5">
-              <div className="flex items-center gap-4">
-                <Link href={`${stock.website}`}>
-                  <StockImage src={stock.image} px={50} />
+      <div className="col-span-3 f-col gap-7 md:gap-8">
+        <div className="f-col gap-6">
+          <div className="f-col gap-5 sm:gap-2">
+            <div className="f-col md:flex-row justify-between gap-5">
+              <div className="flex gap-3 sm:gap-5">
+                <Link className="-ml-3" href={`${stock.website}`}>
+                  <StockImage src={stock.image} px={92} />
                 </Link>
                 <div>
-                  <p className="font-semibold text-2xl">{stock.companyName}</p>
+                  <div className="flex gap-3">
+                    <p className="font-semibold text-[22px] md:text-2xl">
+                      {stock.companyName}
+                    </p>
+                    <StockPortfolioAddModal
+                      stock={stock}
+                      isAuth={!!user}
+                      portfolios={portfolios}
+                    />
+                  </div>
                   <p className="text-zinc-400">{stock.symbol}</p>
-                </div>
-                <div className="mb-5 ml-1">
-                  <StockPortfolioAddModal
-                    stock={stock}
-                    isAuth={!!user}
-                    portfolios={portfolios}
-                  />
+                  <div className="flex gap-3 mt-2">
+                    {attributes.map((attribute) => (
+                      <Chip
+                        key={attribute.name}
+                        as={Link}
+                        href={`/?${attribute.name}=${attribute.value}`}
+                        size="sm"
+                        classNames={{
+                          base: "bg-gradient-to-br from-indigo-500 to-pink-500 border-small border-white/50 shadow-pink-500/30",
+                          content: "drop-shadow shadow-black text-white",
+                        }}>
+                        {attribute.value}
+                      </Chip>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                {values.map((value, i) => (
-                  <StockEye
-                    key={i}
-                    user={user}
-                    title={value.title}
-                    value={value.value}
-                    gradient={value.gradient}
-                  />
-                ))}
-              </div>
-            </div>
+              <Price stock={stock} className="flex md:hidden" />
 
-            <div className="flex gap-3">
-              {attributes.map((attribute) => (
-                <Chip
-                  key={attribute}
-                  variant="shadow"
-                  classNames={{
-                    base: "bg-gradient-to-br from-indigo-500 to-pink-500 border-small border-white/50 shadow-pink-500/30",
-                    content: "drop-shadow shadow-black text-white",
-                  }}>
-                  {attribute}
-                </Chip>
-              ))}
+              <div className="f-col gap-1">
+                <h2 className="font-light text-xl flex md:hidden">
+                  AI Analytics
+                </h2>
+                <Separator className="flex md:hidden" />
+                <div className="flex items-center gap-5">
+                  {aiMetrics.map((value) => (
+                    <AIMetric
+                      key={value.title}
+                      user={user}
+                      title={value.title}
+                      value={value.value}
+                      gradient={value.gradient}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="flex justify-between">
-            <Price stock={stock} />
-
-            <div className="grid grid-cols-2 md:flex md:items-center gap-3 md:gap-5 lg:gap-7 px-2">
-              {metrics.map((metric) => (
-                <div key={metric.title}>
-                  <p className="font-semibold">{metric.title}</p>
-                  <p className="text-zinc-400 text-[15px]">{metric.value}</p>
-                </div>
-              ))}
-            </div>
+          <div className="f-col md:flex-row gap-6 md:items-center justify-between sm:px-0.5">
+            <Price stock={stock} className="hidden md:flex" />
+            <Valuation stock={stock} className="hidden md:flex" />
           </div>
         </div>
 
         <PriceChart symbol={symbol} />
+        <Valuation stock={stock} className="flex md:hidden" />
 
         <div className="f-col gap-1">
-          <h2 className="font-light text-2xl">Statistics</h2>
+          <h2 className="font-light text-xl md:text-2xl">Statistics</h2>
           <Separator />
-          <StockStatistics stock={stock} />
+          <Statistics stock={stock} />
         </div>
 
         <div className="f-col gap-1">
-          <h2 className="font-light text-2xl">About</h2>
+          <h2 className="font-light text-xl md:text-2xl">About</h2>
           <Separator />
         </div>
 

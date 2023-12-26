@@ -18,6 +18,8 @@ export default async function page() {
       companyName: true,
       image: true,
       sector: true,
+      industry: true,
+      country: true,
       exchange: true,
       mktCap: true,
     },
@@ -59,7 +61,7 @@ export default async function page() {
       <div className="justify-between hidden lg:flex gap-4">
         <Card className="flex-1 px-2">
           <CardHeader className="font-semibold text-lg">Most Active</CardHeader>
-          <CardBody className="f-col gap-3">
+          <CardBody className="f-col gap-2">
             {actives?.slice(0, 3).map((stock) => (
               <StockPageItem key={stock.symbol} quote={stock} />
             ))}
@@ -69,7 +71,7 @@ export default async function page() {
           <CardHeader className="font-semibold text-lg">
             Daily Winners
           </CardHeader>
-          <CardBody className="f-col gap-3">
+          <CardBody className="f-col gap-2">
             {winners?.slice(0, 3).map((stock) => (
               <StockPageItem key={stock.symbol} quote={stock} />
             ))}
@@ -79,7 +81,7 @@ export default async function page() {
           <CardHeader className="font-semibold text-lg">
             Daily Losers
           </CardHeader>
-          <CardBody className="f-col gap-3">
+          <CardBody className="f-col gap-2">
             {losers?.slice(0, 3).map((stock) => (
               <StockPageItem key={stock.symbol} quote={stock} />
             ))}

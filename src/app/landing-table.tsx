@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   Chip,
   Pagination,
@@ -26,9 +26,15 @@ import StockImage from "@/components/stock/stock-image";
 import { formatMarketCap } from "@/lib/utils";
 import { Input } from "@nextui-org/react";
 import Link from "next/link";
-import { exchanges, sectors } from "@/config/screener/filters";
+import {
+  countries,
+  exchanges,
+  industries,
+  sectors,
+} from "@/config/screener/filters";
 import { Separator } from "@/components/ui/separator";
 import SmallChart from "@/components/stock/small-chart";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
   stockQuotes: Pick<
@@ -38,6 +44,8 @@ interface Props {
     | "companyName"
     | "image"
     | "sector"
+    | "industry"
+    | "country"
     | "exchange"
     | "price"
     | "changesPercentage"
@@ -56,12 +64,24 @@ const columnTranslation: any = {
 };
 
 export default function LandingTable({ stockQuotes }: Props) {
+  const pageParam = useSearchParams().get("page");
+  const sectorParam = useSearchParams().get("sector");
+  const industryParam = useSearchParams().get("industry");
+  const countryParam = useSearchParams().get("country");
+  const exchangeParam = useSearchParams().get("exchange");
+
+  const atleastOneFilter =
+    !!sectorParam || !!industryParam || !!countryParam || !!exchangeParam;
+
   const [filterValue, setFilterValue] = useState("");
-  const [page, setPage] = useState(1);
-  const [showFilters, setShowFilters] = useState(false);
-  const [sector, setSector] = useState("");
-  const [exchange, setExchange] = useState("");
-  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [page, setPage] = useState(pageParam ? Number(pageParam) : 1);
+  const [sector, setSector] = useState(sectorParam ?? "Any");
+  const [industry, setIndustry] = useState(industryParam ?? "Any");
+  const [country, setCountry] = useState(countryParam ?? "Any");
+  const [exchange, setExchange] = useState(exchangeParam ?? "Any");
+
+  const [rowsPerPage, setRowsPerPage] = useState(atleastOneFilter ? 20 : 50);
+  const [showFilters, setShowFilters] = useState(atleastOneFilter ?? false);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "mktCap",
     direction: "descending",
@@ -84,17 +104,27 @@ export default function LandingTable({ stockQuotes }: Props) {
     return stockQuotes
       .filter((stock) => {
         const sectorMatch =
-          sector === "" || sector === "Any" || stock.sector === sector;
+          !sector || sector === "Any" || stock.sector === sector;
+        const industryMatch =
+          !industry || industry === "Any" || stock.industry === industry;
+        const countryMatch =
+          !country || country === "Any" || stock.country === country;
         const exchangeMatch =
-          exchange === "" || exchange === "Any" || stock.exchange === exchange;
+          !exchange || exchange === "Any" || stock.exchange === exchange;
         const searchMatch =
           stock.companyName.toLowerCase().includes(lowercaseFilterValue) ||
           stock.symbol.toLowerCase().includes(lowercaseFilterValue);
 
-        return sectorMatch && exchangeMatch && searchMatch;
+        return (
+          sectorMatch &&
+          industryMatch &&
+          countryMatch &&
+          exchangeMatch &&
+          searchMatch
+        );
       })
       .sort((a, b) => b.mktCap - a.mktCap);
-  }, [stockQuotes, filterValue, sector, exchange]);
+  }, [stockQuotes, filterValue, sector, industry, country, exchange]);
 
   // Slicing stocks for pagination
   const paginatedStocks = useMemo(() => {
@@ -127,7 +157,7 @@ export default function LandingTable({ stockQuotes }: Props) {
             <StockImage src={stock.image} px={30} />
             <div>
               <p className="font-semibold text-[15px]">{stock.symbol}</p>
-              <p className="text-sm text-zinc-500 max-w-[150px] truncate">
+              <p className="text-sm text-zinc-500 max-w-[100px] sm:max-w-[150px] truncate">
                 {stock.companyName}
               </p>
             </div>
@@ -143,18 +173,15 @@ export default function LandingTable({ stockQuotes }: Props) {
         return (
           <div className="font-semibold flex items-center gap-1">
             {stock.changesPercentage > 0 ? (
-              <ArrowBigUp
-                size={16}
-                className="text-emerald-500 dark:text-emerald-400"
-              />
+              <ArrowBigUp size={16} className="text-price-up" />
             ) : (
-              <ArrowBigDown size={16} className="text-red-500" />
+              <ArrowBigDown size={16} className="text-price-down" />
             )}
             <span
               className={`${
                 stock.changesPercentage > 0
-                  ? "text-emerald-500 dark:text-emerald-400"
-                  : "text-red-500"
+                  ? "text-price-up"
+                  : "text-price-down"
               }`}>
               {stock.changesPercentage?.toFixed(2).replace("-", "")}%
             </span>
@@ -171,7 +198,7 @@ export default function LandingTable({ stockQuotes }: Props) {
       case "chart":
         return (
           <div className="w-[200px] f-box">
-            <SmallChart quote={stock} height={50} />
+            <SmallChart quote={stock} />
           </div>
         );
       default:
@@ -203,7 +230,7 @@ export default function LandingTable({ stockQuotes }: Props) {
             <p className="hidden md:flex">Show entries</p>
             <Select
               className="w-20"
-              defaultSelectedKeys={["20"]}
+              defaultSelectedKeys={[rowsPerPage.toString()]}
               labelPlacement="outside"
               aria-label="Set rows per page"
               onChange={(e) => setRowsPerPage(Number(e.target.value))}>
@@ -223,11 +250,12 @@ export default function LandingTable({ stockQuotes }: Props) {
         </div>
         <div className={`${showFilters ? "f-col gap-2" : "hidden"}`}>
           <Separator />
-          <div className="flex items-center gap-3">
+          <div className="grid grid-cols-2 sm:flex items-center gap-4">
             <Select
-              className="w-52"
+              className="w-full max-w-52"
               placeholder="Filter by sector"
-              labelPlacement="outside"
+              label="Sector"
+              defaultSelectedKeys={[sector]}
               aria-label="Select sector"
               onChange={(e) => setSector(e.target.value)}>
               {sectors.map((value) => (
@@ -237,9 +265,36 @@ export default function LandingTable({ stockQuotes }: Props) {
               ))}
             </Select>
             <Select
-              className="w-52"
+              className="w-full max-w-52"
+              placeholder="Filter by industry"
+              label="Industry"
+              defaultSelectedKeys={[industry]}
+              aria-label="Select industry"
+              onChange={(e) => setIndustry(e.target.value)}>
+              {industries.map((value) => (
+                <SelectItem key={value} value={value}>
+                  {value}
+                </SelectItem>
+              ))}
+            </Select>
+            <Select
+              className="w-full max-w-52"
+              placeholder="Filter by country"
+              label="Country"
+              defaultSelectedKeys={[country]}
+              aria-label="Select country"
+              onChange={(e) => setCountry(e.target.value)}>
+              {countries.map((value) => (
+                <SelectItem key={value} value={value}>
+                  {value}
+                </SelectItem>
+              ))}
+            </Select>
+            <Select
+              className="w-full max-w-52"
               placeholder="Filter by exchange"
-              labelPlacement="outside"
+              label="Exchange"
+              defaultSelectedKeys={[exchange]}
               aria-label="Select exchange"
               onChange={(e) => setExchange(e.target.value)}>
               {exchanges.map((value) => (
@@ -253,7 +308,16 @@ export default function LandingTable({ stockQuotes }: Props) {
         </div>
       </div>
     );
-  }, [filterValue, onClear, showFilters]);
+  }, [
+    filterValue,
+    onClear,
+    showFilters,
+    sector,
+    industry,
+    country,
+    exchange,
+    rowsPerPage,
+  ]);
 
   const bottomContent = useMemo(() => {
     return (
