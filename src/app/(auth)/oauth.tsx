@@ -1,7 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { capitalize, cn } from "@/lib/utils";
 import { Button } from "@nextui-org/react";
 import { Icons } from "@/components/shared/icons";
@@ -20,12 +20,7 @@ const providerIcons = {
 export default function OAuth({ provider, className }: Props) {
   const { mutate: login, isLoading } = useMutation({
     mutationFn: async () => await signIn(provider),
-    onError: () => {
-      toast({
-        title: "We have trouble signing you in.",
-        description: "Please try again later.",
-      });
-    },
+    onError: () => toast.error("We have trouble signing you in."),
   });
 
   return (

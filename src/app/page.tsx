@@ -1,40 +1,62 @@
 import CompanyLogo from "@/components/shared/company-logo";
 import { getDailys, getStockQuotes } from "@/lib/fmp/quote";
 import { SITE } from "@/config/site";
-import LandingTable from "./landing-table";
 import { db } from "@/db";
 import PageLayout from "@/components/shared/page-layout";
 import Shimmer from "@/components/ui/shimmer";
 import { Card, CardBody, CardHeader } from "@nextui-org/react";
 import StockPageItem from "./stock-page-item";
+import { getUser } from "@/lib/auth";
+import dynamic from "next/dynamic";
+import { SkeletonList } from "@/components/ui/skeleton";
+
+const LandingTable = dynamic(() => import("./landing-table"), {
+  ssr: false,
+  loading: () => <SkeletonList count={10} />,
+});
 
 export const metadata = { title: `Stock Research & Analysis | ${SITE.name}` };
 // export const runtime = "edge";
 
 export default async function page() {
-  const stocks = await db.stock.findMany({
-    select: {
-      symbol: true,
-      companyName: true,
-      image: true,
-      sector: true,
-      industry: true,
-      country: true,
-      exchange: true,
-      mktCap: true,
-    },
-    where: {
-      symbol: {
-        not: {
-          in: ["GOOGL"],
+  const user = await getUser();
+
+  const [stocks, portfolios] = await Promise.all([
+    db.stock.findMany({
+      select: {
+        id: true,
+        symbol: true,
+        companyName: true,
+        image: true,
+        sector: true,
+        industry: true,
+        country: true,
+        exchange: true,
+        mktCap: true,
+      },
+      where: {
+        symbol: {
+          not: { in: ["GOOGL"] },
         },
       },
-    },
-    orderBy: {
-      mktCap: "desc",
-    },
-    take: 500,
-  });
+      orderBy: {
+        mktCap: "desc",
+      },
+      take: 500,
+    }),
+    db.portfolio.findMany({
+      select: {
+        id: true,
+        title: true,
+        color: true,
+        isPublic: true,
+        stocks: {
+          select: { stockId: true },
+        },
+      },
+      where: { creatorId: user?.id },
+    }),
+  ]);
 
   const [actives, winners, losers] = await Promise.all([
     getDailys("actives"),
@@ -89,7 +111,11 @@ export default async function page() {
         </Card>
       </div>
 
-      <LandingTable stockQuotes={stockQuotes} />
+      <LandingTable
+        stockQuotes={stockQuotes}
+        isAuth={!!user}
+        portfolios={portfolios}
+      />
 
       {/* Background Effects */}
       <Shimmer />

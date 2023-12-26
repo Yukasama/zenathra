@@ -22,7 +22,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { trpc } from "@/trpc/client";
 import { z } from "zod";
 import { Button } from "@nextui-org/react";
@@ -41,12 +41,7 @@ export default function ForgotPassword() {
 
   const { mutate: sendMail, isLoading } =
     trpc.user.sendResetPassword.useMutation({
-      onError: () => {
-        toast({
-          title: "Oops! Something went wrong.",
-          description: "E-Mail could not be sent.",
-        });
-      },
+      onError: () => toast.error("Email could not be sent."),
       onSuccess: () => setSent(true),
     });
 
@@ -57,7 +52,7 @@ export default function ForgotPassword() {
         <CardDescription className={`${sent && "text-green-500 text-md"}`}>
           {!sent
             ? "Request a reset link here"
-            : "Reset E-Mail successfully sent."}
+            : "Reset Email successfully sent."}
         </CardDescription>
       </CardHeader>
 
@@ -74,11 +69,11 @@ export default function ForgotPassword() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>E-Mail</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="Enter your E-Mail"
+                        placeholder="Enter your Email"
                         {...field}
                       />
                     </FormControl>

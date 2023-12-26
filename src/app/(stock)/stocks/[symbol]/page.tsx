@@ -7,12 +7,13 @@ import PriceChart from "@/app/(stock)/stocks/[symbol]/price-chart";
 import StockImage from "@/components/stock/stock-image";
 import { getUser } from "@/lib/auth";
 import { getQuote } from "@/lib/fmp/quote";
-import StockPortfolioAddModal from "@/components/stock/stock-portfolio-add-modal";
+import AddStockPortfolio from "@/components/stock/add-stock-portfolio";
 import { Card, Chip } from "@nextui-org/react";
 import Link from "next/link";
-import Price from "@/app/(stock)/stocks/[symbol]/price";
+import Price, { PriceLoading } from "@/app/(stock)/stocks/[symbol]/price";
 import AIMetric from "@/app/(stock)/stocks/[symbol]/ai-metric";
 import Valuation from "./valuation";
+import { Suspense } from "react";
 
 interface Props {
   params: { symbol: string };
@@ -155,15 +156,19 @@ export default async function page({ params: { symbol } }: Props) {
           <div className="f-col gap-5 sm:gap-2">
             <div className="f-col md:flex-row justify-between gap-5">
               <div className="flex gap-3 sm:gap-5">
-                <Link className="-ml-3" href={`${stock.website}`}>
-                  <StockImage src={stock.image} px={92} />
+                <Link
+                  className="-ml-3"
+                  href={`${stock.website}`}
+                  prefetch={false}
+                  target="_blank">
+                  <StockImage src={stock.image} priority px={92} />
                 </Link>
                 <div>
                   <div className="flex gap-3">
                     <p className="font-semibold text-[22px] md:text-2xl">
                       {stock.companyName}
                     </p>
-                    <StockPortfolioAddModal
+                    <AddStockPortfolio
                       stock={stock}
                       isAuth={!!user}
                       portfolios={portfolios}
@@ -188,7 +193,9 @@ export default async function page({ params: { symbol } }: Props) {
                 </div>
               </div>
 
-              <Price stock={stock} className="flex md:hidden" />
+              <Suspense fallback={<PriceLoading />}>
+                <Price stock={stock} className="flex md:hidden" />
+              </Suspense>
 
               <div className="f-col gap-1">
                 <h2 className="font-light text-xl flex md:hidden">
@@ -203,6 +210,7 @@ export default async function page({ params: { symbol } }: Props) {
                       title={value.title}
                       value={value.value}
                       gradient={value.gradient}
+                      tooltip={value.tooltip}
                     />
                   ))}
                 </div>
@@ -211,7 +219,9 @@ export default async function page({ params: { symbol } }: Props) {
           </div>
 
           <div className="f-col md:flex-row gap-6 md:items-center justify-between sm:px-0.5">
-            <Price stock={stock} className="hidden md:flex" />
+            <Suspense fallback={<PriceLoading />}>
+              <Price stock={stock} className="hidden md:flex" />
+            </Suspense>
             <Valuation stock={stock} className="hidden md:flex" />
           </div>
         </div>

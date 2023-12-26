@@ -13,11 +13,18 @@ import { useTheme } from "next-themes";
 interface Props {
   user: Pick<User, "id"> | undefined;
   title: string;
-  value?: number;
+  value: number;
   gradient: string[];
+  tooltip: string;
 }
 
-export default function AIMetric({ user, title, value = 78, gradient }: Props) {
+export default function AIMetric({
+  user,
+  title,
+  value,
+  gradient,
+  tooltip,
+}: Props) {
   const { theme } = useTheme();
 
   const fullCircumference = 2 * Math.PI * 54;
@@ -83,9 +90,7 @@ export default function AIMetric({ user, title, value = 78, gradient }: Props) {
           </div>
         </TooltipTrigger>
 
-        <TooltipContent side="bottom">
-          Shark4 offers a rough estimate of a company&apos;s overall health.
-        </TooltipContent>
+        <TooltipContent side="bottom">{tooltip}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );

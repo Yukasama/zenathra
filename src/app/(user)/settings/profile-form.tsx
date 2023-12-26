@@ -4,7 +4,7 @@ import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import {
   Form,
   FormControl,
@@ -36,12 +36,7 @@ export default function ProfileForm({ user }: Props) {
   });
 
   const { mutate: update, isLoading } = trpc.user.update.useMutation({
-    onError: () => {
-      toast({
-        title: "Oops! Something went wrong.",
-        description: "Profile could not be updated.",
-      });
-    },
+    onError: () => toast.error("Profile could not be updated."),
     onSuccess: () => router.refresh(),
   });
 

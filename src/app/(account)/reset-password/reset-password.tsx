@@ -5,7 +5,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightCircle } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import {
   Form,
   FormControl,
@@ -57,7 +57,7 @@ export default function ResetPassword() {
     trpc.user.resetPassword.useMutation({
       onError: () => defaultError(),
       onSuccess: () => {
-        toast({ description: "Password updated successfully." });
+        toast.success("Password updated successfully.");
         router.push("/");
       },
     });

@@ -46,7 +46,7 @@ export default function Valuation({ stock, className }: Props) {
     <div className={cn("f-col gap-1", className)}>
       <h2 className="font-light text-xl flex md:hidden">Company Valuation</h2>
       <Separator className="flex md:hidden" />
-      <div className="grid grid-cols-2 md:flex md:items-center gap-3 md:gap-5 lg:gap-7 pt-2 sm:pt-0">
+      <div className="grid grid-cols-2 md:flex md:items-center gap-3 md:gap-5 lg:gap-8 pt-2 sm:pt-0">
         {data.map((metric) => (
           <TooltipProvider key={metric.title}>
             <Tooltip>

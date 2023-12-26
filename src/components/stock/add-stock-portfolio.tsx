@@ -8,7 +8,7 @@ import {
 } from "@nextui-org/react";
 import { Plus } from "lucide-react";
 import { PortfolioWithStocks } from "@/types/db";
-import StockPortfolioModifier from "./stock-portfolio-modifier";
+import AddStockPortfolioItem from "./add-stock-portfolio-item";
 import { Stock } from "@prisma/client";
 import Link from "next/link";
 
@@ -23,7 +23,7 @@ interface Props {
     | undefined;
 }
 
-export default function StockPortfolioAddModal({
+export default function AddStockPortfolio({
   stock,
   isAuth,
   portfolios,
@@ -44,7 +44,7 @@ export default function StockPortfolioAddModal({
           <div className="f-col gap-2.5">
             {stock &&
               portfolios?.map((portfolio) => (
-                <StockPortfolioModifier
+                <AddStockPortfolioItem
                   key={portfolio.id}
                   portfolio={portfolio}
                   stock={stock}
@@ -62,7 +62,7 @@ export default function StockPortfolioAddModal({
           <div className="f-col gap-2 items-center p-2">
             Sign in to create portfolios
             <Button href="/sign-in" color="primary" as={Link}>
-              Sign in
+              Sign In
             </Button>
           </div>
         )}

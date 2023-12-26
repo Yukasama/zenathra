@@ -3,12 +3,12 @@ import { Metadata } from "next";
 import { cn, constructMetadata } from "@/lib/utils";
 import { K2D } from "next/font/google";
 import type { PropsWithChildren } from "react";
-import { Toaster } from "@/components/ui/toaster";
 import dynamic from "next/dynamic";
 import Navbar from "@/components/shared/navbar";
 import "./globals.css";
 import Script from "next/script";
 import { env } from "@/env.mjs";
+import { Toaster } from "@/components/ui/sonner";
 
 const Footer = dynamic(() => import("@/components/shared/footer"));
 

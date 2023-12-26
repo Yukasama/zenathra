@@ -4,7 +4,7 @@ import { Portfolio } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/react";
 import { useState } from "react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
 import {
   Dialog,
@@ -29,20 +29,14 @@ export default function PortfolioDeleteModal({ portfolio }: Props) {
   const { mutate: deletePortfolio, isLoading } =
     trpc.portfolio.delete.useMutation({
       onError: () => {
-        toast({
-          title: "Oops! Something went wrong.",
-          description: `Portfolio '${portfolio.title}' could not be deleted.`,
-        });
+        toast.error(`Portfolio '${portfolio.title}' could not be deleted.`);
       },
       onSuccess: () => router.push("/portfolio"),
     });
 
   function onSubmit() {
     if (title !== "CONFIRM") {
-      return toast({
-        title: "Oops! Something went wrong.",
-        description: "Please enter the correct title.",
-      });
+      return toast.warning("Please enter 'CONFIRM' to complete the deletion.");
     }
 
     deletePortfolio(portfolio.id);

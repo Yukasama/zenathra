@@ -2,7 +2,7 @@
 
 import { Portfolio } from "@prisma/client";
 import { trpc } from "@/trpc/client";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {
   Select,
@@ -22,12 +22,7 @@ export default function EditVisibility({ portfolio }: Props) {
   const optionalChange = !portfolio.isPublic ? "Public" : "Private";
 
   const { mutate: editVisible, isLoading } = trpc.portfolio.edit.useMutation({
-    onError: () => {
-      toast({
-        title: "Oops! Something went wrong.",
-        description: `Failed to change portfolio visibility.`,
-      });
-    },
+    onError: () => toast.error("Failed to change portfolio visibility."),
     onSuccess: () => router.refresh(),
   });
 

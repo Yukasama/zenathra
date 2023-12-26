@@ -5,10 +5,12 @@ import Image from "next/image";
 interface Props extends React.HTMLAttributes<HTMLImageElement> {
   src: string | null | undefined;
   px?: number;
+  priority?: boolean;
 }
 
 export default function StockImage({
   src,
+  priority = false,
   px = 40,
   className,
   ...props
@@ -30,6 +32,7 @@ export default function StockImage({
           src={src}
           height={px}
           width={px}
+          priority={priority}
           alt="Stock Logo"
         />
       ) : (

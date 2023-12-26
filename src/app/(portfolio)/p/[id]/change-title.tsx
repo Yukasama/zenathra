@@ -2,7 +2,7 @@
 
 import { trpc } from "@/trpc/client";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Spinner } from "@nextui-org/react";
 import { Portfolio } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -17,12 +17,7 @@ export default function ChangeTitle({ portfolio }: Props) {
   const router = useRouter();
 
   const { mutate: editTitle, isLoading } = trpc.portfolio.edit.useMutation({
-    onError: () => {
-      toast({
-        title: "Oops! Something went wrong.",
-        description: `Failed to change portfolio title.`,
-      });
-    },
+    onError: () => toast.error("Failed to change portfolio title."),
     onSuccess: () => router.refresh(),
   });
 
@@ -38,10 +33,7 @@ export default function ChangeTitle({ portfolio }: Props) {
     }
 
     if (title.length > 26) {
-      return toast({
-        title: "Oops! Something went wrong.",
-        description: "Title can be no longer than 25 characters.",
-      });
+      return toast.warning("Title can be no longer than 25 characters.");
     }
 
     editTitle({

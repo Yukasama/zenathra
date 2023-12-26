@@ -3,7 +3,7 @@
 import { Button, Chip, Spinner } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { ListPlus, ListX, Plus } from "lucide-react";
 import debounce from "lodash.debounce";
 import StockImage from "../stock/stock-image";
@@ -75,20 +75,15 @@ export default function PortfolioAddModal({ portfolio }: Props) {
   }, [results]);
 
   const { mutate: addToPortfolio, isLoading } = trpc.portfolio.add.useMutation({
-    onError: () => {
-      toast({
-        title: "Oops! Something went wrong.",
-        description: "Failed to add stocks to portfolio.",
-      });
-    },
+    onError: () => toast.error("Failed to add stocks to portfolio."),
     onSuccess: () => router.refresh(),
   });
 
   function onSubmit() {
     if (selected.length < 1) {
-      return toast({ description: "Please select atleast one stock." });
+      return toast.info("Please select atleast one stock.");
     } else if (selected.length > 20) {
-      return toast({ description: "You can only add 20 stocks at a time." });
+      return toast.warning("You can only add 20 stocks at a time.");
     }
 
     addToPortfolio({

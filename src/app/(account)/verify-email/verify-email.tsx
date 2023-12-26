@@ -1,6 +1,6 @@
 "use client";
 
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { CheckCircle, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -35,15 +35,12 @@ export default function VerifyEmail() {
   } = trpc.user.verify.useMutation({
     onError: (err) => {
       if (err instanceof TRPCError && err.code === "NOT_FOUND") {
-        return toast({
-          title: "Oops! Something went wrong.",
-          description: "Email verification not found or expired.",
-        });
+        return toast.error("Email verification not found or expired.");
       }
       defaultError();
     },
     onSuccess: () => {
-      toast({ description: "Email verified successfully." });
+      toast.success("Email verified successfully.");
       router.push("/");
     },
   });

@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { UploadStockSchema } from "@/lib/validators/stock";
 import { Upload } from "lucide-react";
 import {
@@ -46,14 +46,10 @@ export default function AdminAddStocks() {
 
   const { mutate: uploadStocks, isLoading } = trpc.stock.upload.useMutation({
     onError: () => {
-      toast({
-        title: "Oops! Something went wrong.",
-        description: `${form.getValues("stock")} could not be uploaded.`,
-      });
+      toast.error(`${form.getValues("stock")} could not be uploaded.`);
     },
     onSuccess: () => {
-      toast({
-        title: `${form.getValues("stock")} uploaded.`,
+      toast.success(`${form.getValues("stock")} uploaded.`, {
         description: "Files were successfully added to the database.",
       });
     },
@@ -61,10 +57,9 @@ export default function AdminAddStocks() {
 
   function onSubmit(data: FieldValues) {
     if (!["All", "US500"].includes(data.stock) && data.pullTimes > 1) {
-      return toast({
-        title: "Oops! Something went wrong.",
-        description: `You can only upload one batch of data for single stocks.`,
-      });
+      return toast.warning(
+        "You can only upload one batch of data for single stocks."
+      );
     }
 
     uploadStocks({

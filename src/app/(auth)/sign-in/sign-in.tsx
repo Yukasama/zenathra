@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { LogIn } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -46,12 +46,7 @@ export default function SignIn() {
 
       return response;
     },
-    onError: (err) => {
-      toast({
-        title: "We have trouble signing you in.",
-        description: `${err ?? "Please try again later."}`,
-      });
-    },
+    onError: () => toast.error("We have trouble signing you in."),
     onSettled: (response) => {
       if (response?.url) {
         window.location.reload();
@@ -69,13 +64,9 @@ export default function SignIn() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>E-Mail</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input
-                  type="email"
-                  placeholder="Enter your E-Mail"
-                  {...field}
-                />
+                <Input type="email" placeholder="Enter your Email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -3,9 +3,21 @@ import { Stock } from "@prisma/client";
 import { getAfterHoursQuote, getQuote } from "@/lib/fmp/quote";
 import AfterHours from "./after-hours";
 import { cn } from "@/lib/utils";
+import { SkeletonText } from "@/components/ui/skeleton";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   stock: Pick<Stock, "symbol">;
+}
+
+export function PriceLoading({
+  className,
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div className={cn("f-col gap-0.5", className)}>
+      <SkeletonText />
+      <SkeletonText />
+    </div>
+  );
 }
 
 export default async function Price({ stock, className }: Props) {

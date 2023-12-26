@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useCustomToasts } from "@/hooks/use-custom-toasts";
 import { signIn } from "next-auth/react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { trpc } from "@/trpc/client";
 import { TRPCError } from "@trpc/server";
 
@@ -48,10 +48,7 @@ export default function SignUp() {
   const { mutate: register, isLoading } = trpc.user.create.useMutation({
     onError: (err) => {
       if (err instanceof TRPCError && err.code === "CONFLICT") {
-        return toast({
-          title: "Oops! Something went wrong.",
-          description: "E-Mail is already registered.",
-        });
+        return toast.error("Email is already registered.");
       }
       defaultError();
     },
@@ -73,13 +70,9 @@ export default function SignUp() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>E-Mail</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input
-                  type="email"
-                  placeholder="Enter your E-Mail"
-                  {...field}
-                />
+                <Input type="email" placeholder="Enter your Email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

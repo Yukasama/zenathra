@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Button, Checkbox } from "@nextui-org/react";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -45,21 +45,13 @@ export default function PortfolioCreateCard({ numberOfPortfolios = 0 }: Props) {
 
   const { mutate: createPortfolio, isLoading } =
     trpc.portfolio.create.useMutation({
-      onError: () => {
-        toast({
-          title: "Oops! Something went wrong.",
-          description: "Failed to create portfolio.",
-        });
-      },
+      onError: () => toast.error("Failed to create portfolio."),
       onSuccess: () => router.refresh(),
     });
 
   function onSubmit(data: FieldValues) {
     if (numberOfPortfolios >= PLANS[0].maxPortfolios) {
-      return toast({
-        title: "Oops! Something went wrong.",
-        description: "Maximum number of portfolios reached.",
-      });
+      return toast.warning("Maximum number of portfolios reached.");
     }
 
     createPortfolio({

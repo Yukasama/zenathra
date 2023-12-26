@@ -17,7 +17,9 @@ export default function PageLayout({
   ...props
 }: Props) {
   return (
-    <div className={cn("p-4 lg:p-7 min-h-screen", className)} {...props}>
+    <div
+      className={cn("p-1 px-4 md:p-4 lg:p-7 min-h-screen", className)}
+      {...props}>
       {title && description && (
         <div className="mb-5 m-1 f-col gap-1">
           <CardTitle>{title}</CardTitle>

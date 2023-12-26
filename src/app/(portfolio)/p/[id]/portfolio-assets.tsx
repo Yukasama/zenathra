@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/skeleton";
 import { StockQuote } from "@/types/stock";
 import { trpc } from "@/trpc/client";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import PortfolioAddModal from "@/components/portfolio/portfolio-add-modal";
 import { PortfolioWithStocks } from "@/types/db";
@@ -79,12 +79,7 @@ export default function PortfolioAssets({ stockQuotes, portfolio }: Props) {
   const COLUMNS = ["symbol", "price", "sector", "actions"];
 
   const { mutate: remove, isLoading } = trpc.portfolio.remove.useMutation({
-    onError: () => {
-      toast({
-        title: "Oops! Something went wrong.",
-        description: `Failed to remove position.`,
-      });
-    },
+    onError: () => toast.error("Failed to remove position."),
     onSuccess: () => router.refresh(),
   });
 

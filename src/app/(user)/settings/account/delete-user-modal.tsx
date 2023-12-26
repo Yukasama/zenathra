@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/react";
 import { useState } from "react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
 import {
   Dialog,
@@ -23,21 +23,13 @@ export default function DeleteUserModal() {
   const router = useRouter();
 
   const { mutate: deleteUser, isLoading } = trpc.user.delete.useMutation({
-    onError: () => {
-      toast({
-        title: "Oops! Something went wrong.",
-        description: "Account could not be deleted.",
-      });
-    },
+    onError: () => toast.error("Account could not be deleted."),
     onSuccess: () => router.push("/api/auth/logout"),
   });
 
   function onSubmit() {
     if (title !== "CONFIRM") {
-      return toast({
-        title: "Oops! Something went wrong.",
-        description: "Please enter CONFIRM to complete the deletion.",
-      });
+      return toast.warning("Please enter 'CONFIRM' to complete the deletion.");
     }
 
     deleteUser();
@@ -46,7 +38,9 @@ export default function DeleteUserModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-red-500 self-start text-white" aria-label="Delete account">
+        <Button
+          className="bg-red-500 self-start text-white"
+          aria-label="Delete account">
           <Trash2 size={18} />
           Delete Account
         </Button>
