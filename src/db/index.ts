@@ -21,6 +21,7 @@ if (process.env.NODE_ENV === "production") {
 export const db = prisma;
 
 // For edge runtime
+
 // function makePrisma() {
 //   return new PrismaClient({
 //     datasources: { db: { url: env.ACCELERATE_URL } },

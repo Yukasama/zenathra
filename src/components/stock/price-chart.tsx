@@ -4,73 +4,77 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  AreaChart,
   Area,
   ResponsiveContainer,
   ReferenceLine,
+  ComposedChart,
+  CartesianGrid,
 } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { cn, computeDomain } from "@/lib/utils";
-import Skeleton from "../ui/skeleton";
 import { trpc } from "@/trpc/client";
-import { Tabs, Tab } from "@nextui-org/react";
+import { Tabs, Tab, Spinner, Card } from "@nextui-org/react";
+import { format, parseISO } from "date-fns";
+import { useTheme } from "next-themes";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   symbol: string;
-  title?: string;
-  description?: string;
-  image?: React.ReactNode;
-  height?: number;
-  width?: number;
 }
 
-export default function PriceChart({
-  title,
-  description,
-  symbol,
-  image,
-  height,
-  width,
-  className,
-}: Props) {
+function getFormattedDate(date: string, timeframe: string) {
+  switch (timeframe) {
+    case "1D":
+      return format(parseISO(date), "HH:mm");
+    case "5D":
+      return format(parseISO(date), "dd");
+    case "1M":
+      return format(parseISO(date), "MMM dd");
+    case "6M":
+    case "1Y":
+      return format(parseISO(date), "MMM");
+    case "5Y":
+    case "All":
+      return format(parseISO(date), "yyyy");
+    default:
+      return format(parseISO(date), "MM/dd/yyyy");
+  }
+}
+
+const PriceChart = memo(({ symbol, className }: Props) => {
   const [mounted, setMounted] = useState(false);
   const [timeFrame, setTimeFrame] = useState<any>("1D");
-  const [domain, setDomain] = useState([0, 0]);
-  const [startPrice, setStartPrice] = useState(0);
-  const [results, setResults] = useState([]);
-  const [positive, setPositive] = useState(true);
 
-  const { data, isFetched } = trpc.stock.history.useQuery({ symbol });
+  const timeFrames = ["1D", "5D", "1M", "6M", "1Y", "5Y", "All"];
+
+  const { theme } = useTheme();
+  const { data, isFetched } = trpc.stock.history.useQuery({
+    symbol,
+    timeframe: timeFrame,
+  });
 
   useEffect(() => setMounted(true), []);
 
-  useEffect(() => {
+  const chartData = useMemo(() => {
     if (isFetched && data) {
-      setDomain(computeDomain(data[timeFrame]));
-      setStartPrice(Number(data[timeFrame][0].close));
-      setPositive(
-        Number(data[timeFrame][data[timeFrame].length - 1].close) >=
-          Number(data[timeFrame][0].close)
-      );
-      setResults(
-        data[timeFrame].map((item: any) => {
-          return {
-            name: item.date,
-            uv: item.close,
-          };
-        })
-      );
-    }
+      const domain = computeDomain(data);
+      const startPrice = Number(data[0].close);
+      const endPrice = Number(data[data.length - 1].close);
+      const positive = endPrice >= startPrice;
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFetched, timeFrame]);
+      const formattedData = data.map((item: any) => ({
+        date: getFormattedDate(item.date, timeFrame),
+        close: item.close,
+      }));
+
+      return {
+        domain,
+        startPrice,
+        positive,
+        results: formattedData,
+      };
+    }
+    return null;
+  }, [isFetched, data, timeFrame]);
 
   const CustomTooltip = ({
     active,
@@ -83,122 +87,126 @@ export default function PriceChart({
   }) => {
     if (active && payload && payload.length && data) {
       return (
-        <Card className="p-2 bg-item">
+        <Card className="p-3 f-col gap-0.5">
           <p className="text-[15px]">{label}</p>
-          <p
-            className={`text-sm ${
-              positive ? "text-[#19E363]" : "text-[#e6221e]"
-            }`}>
-            ${payload[0].value.toFixed(2)} (
-            <span className="text-[12px]">
-              {(payload[0].value / Number(data[timeFrame][0].close)) * 100 -
-                100 >
-                0 && "+"}
-              {(
-                (payload[0].value / Number(data[timeFrame][0].close)) * 100 -
-                100
-              ).toFixed(2)}
-              %)
-            </span>
-          </p>
+          <div className="flex items-center text-sm gap-1.5">
+            <p className="text-zinc-400">Price:</p>
+            <p
+              className={`font-semibold ${
+                chartData?.positive ? "text-[#19E363]" : "text-[#e6221e]"
+              }`}>
+              ${payload[0].value.toFixed(2)} (
+              <span>
+                {(payload[0].value / Number(data[0].close)) * 100 - 100 > 0 &&
+                  "+"}
+                {(
+                  (payload[0].value / Number(data[0].close)) * 100 -
+                  100
+                ).toFixed(2)}
+                %)
+              </span>
+            </p>
+          </div>
         </Card>
       );
     }
     return null;
   };
 
-  const timeFrames = ["1D", "5D", "1M", "6M", "1Y", "5Y", "All"];
-
   return (
-    <Card
-      className={cn(className, "w-full md:max-w-[650px]")}
-      style={{ height: (height || 250) + 100 }}>
-      <CardHeader>
-        <div className="flex justify-between gap-3">
-          <div className="flex items-center gap-2">
-            {/* Image */}
-            {image ? <Skeleton isLoaded={isFetched}>{image}</Skeleton> : null}
+    <div className={cn(className, "w-full h-[280px] sm:h-[450px] f-col gap-4")}>
+      <div className="flex sm:justify-end gap-3 p-1">
+        <Tabs
+          selectedKey={timeFrame}
+          isDisabled={!mounted}
+          variant="bordered"
+          size="sm"
+          aria-label="History Selector"
+          classNames={{ tabList: "border-1" }}
+          onSelectionChange={setTimeFrame}>
+          {timeFrames.map((timeFrame) => (
+            <Tab key={timeFrame} aria-label={timeFrame} title={timeFrame} />
+          ))}
+        </Tabs>
+      </div>
 
-            {/* Title */}
-            <div className="f-col gap-1">
-              <Skeleton isLoaded={isFetched}>
-                <CardTitle className="hidden md:flex">{title}</CardTitle>
-              </Skeleton>
-              <Skeleton isLoaded={isFetched}>
-                <CardDescription className="hidden md:flex max-w-[175px] truncate">
-                  {description}
-                </CardDescription>
-              </Skeleton>
-            </div>
-          </div>
-
-          {/* History Selector */}
-          <Skeleton isLoaded={isFetched}>
-            <Tabs
-              aria-label="History Selector"
-              selectedKey={timeFrame}
-              onSelectionChange={setTimeFrame}>
-              {timeFrames.map((timeFrame) => (
-                <Tab
-                  key={timeFrame}
-                  className="-mx-[3px] sm:mx-0"
-                  aria-label={timeFrame}
-                  title={timeFrame}
-                />
-              ))}
-            </Tabs>
-          </Skeleton>
+      {!isFetched ? (
+        <div className="f-col gap-1 items-center mt-24">
+          <Spinner />
+          Loading Data...
+          <small className="text-zinc-400 text-[13px]">
+            Gathering data, almost there!
+          </small>
         </div>
-      </CardHeader>
-
-      {/* Chart */}
-      <CardContent>
-        <Skeleton isLoaded={mounted && isFetched}>
-          <ResponsiveContainer width="100%" height={height || 250}>
-            <AreaChart
-              width={width ?? 500}
-              height={height ?? 250}
-              data={results}
-              margin={{ top: 5, right: 5, left: -15, bottom: 5 }}>
-              <defs>
-                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="5%"
-                    stopColor={positive ? "#19E363" : "#e6221e"}
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor={positive ? "#19E363" : "#e6221e"}
-                    stopOpacity={0}
-                  />
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="name" fontSize={12} />
-              <YAxis
-                domain={domain}
-                fontSize={12}
-                tickFormatter={(value) => `${value.toFixed(2)}`}
-              />
-              {/* @ts-ignore */}
-              <Tooltip content={<CustomTooltip />} />
-              <ReferenceLine
-                y={startPrice}
-                strokeDasharray="3 3"
-                stroke="gray"
-              />
-              <Area
-                type="monotone"
-                dataKey="uv"
-                stroke={positive ? "#19E363" : "#e6221e"}
-                fillOpacity={1}
-                fill="url(#colorUv)"
-                animationDuration={500}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </Skeleton>
-      </CardContent>
-    </Card>
+      ) : isFetched && mounted && chartData ? (
+        <ResponsiveContainer width="100%">
+          <ComposedChart data={chartData.results} margin={{ right: -18 }}>
+            <defs>
+              <linearGradient id="colorClose" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor={chartData.positive ? "#1de095" : "#e52b34"}
+                  stopOpacity={0.35}
+                />
+                <stop
+                  offset="95%"
+                  stopColor={chartData.positive ? "#1de095" : "#e52b34"}
+                  stopOpacity={0}
+                />
+              </linearGradient>
+            </defs>
+            <CartesianGrid
+              horizontal
+              stroke={theme === "dark" ? "#18181b" : "#f4f4f5"}
+              vertical={false}
+            />
+            <XAxis
+              dataKey="date"
+              fontSize={12}
+              tickLine={false}
+              axisLine={{ strokeWidth: 0.5 }}
+              interval={Math.floor(chartData.results.length / 10)}
+              tickFormatter={(tickItem, index) => (index === 0 ? "" : tickItem)}
+            />
+            <YAxis
+              domain={chartData.domain}
+              yAxisId="right"
+              orientation="right"
+              tickLine={false}
+              interval="preserveStartEnd"
+              axisLine={{ strokeWidth: 0.5 }}
+              tickCount={8}
+              fontSize={12}
+              tickFormatter={(value, index) =>
+                index === 0 ? "" : `${value.toFixed(1)}`
+              }
+            />
+            {/* @ts-ignore */}
+            <Tooltip content={<CustomTooltip />} />
+            <ReferenceLine
+              y={chartData.startPrice}
+              yAxisId="right"
+              strokeDasharray="1 4"
+              stroke={theme === "dark" ? "#71717a" : "#3f3f46"}
+            />
+            <Area
+              dataKey="close"
+              stroke={chartData.positive ? "#1de095" : "#e52b34"}
+              fillOpacity={1}
+              yAxisId="right"
+              fill="url(#colorClose)"
+              isAnimationActive={false}
+              strokeWidth={2}
+            />
+          </ComposedChart>
+        </ResponsiveContainer>
+      ) : (
+        <p>notloae</p>
+      )}
+    </div>
   );
-}
+});
+
+PriceChart.displayName = "PriceChart";
+
+export default PriceChart;

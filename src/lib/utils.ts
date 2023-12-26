@@ -43,15 +43,19 @@ export function formatMarketCap(value: number): string {
 }
 
 export function computeDomain(data: any[]) {
-  const values = data.map((item) => parseFloat(item.uv));
+  const values = data.map((item) => parseFloat(item.close));
   const dataMax = Math.max(...values);
   const dataMin = Math.min(...values);
-  const padding = (dataMax - dataMin) * 0.05; // 5% padding
+  const padding = (dataMax - dataMin) * 0.15; // 15% padding
 
-  return [
-    Number((dataMin - padding).toFixed(2)),
-    Number((dataMax + padding).toFixed(2)),
-  ];
+  return [dataMin - padding, dataMax + padding];
+}
+
+export function computeVolumeMax(data: any[]) {
+  const values = data.map((item) => parseFloat(item.volume));
+  const dataMax = Math.max(...values);
+
+  return dataMax * 5;
 }
 
 export function constructMetadata(): Metadata {

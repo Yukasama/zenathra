@@ -26,7 +26,7 @@ export const ScreenerSchema = z.object({
 
 export const HistorySchema = z.object({
   symbol: z.string(),
-  daily: z.boolean().optional(),
+  timeframe: z.enum(["1D", "5D", "1M", "6M", "1Y", "5Y", "All"]),
   allFields: z.boolean().optional(),
 });
 

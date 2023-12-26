@@ -10,19 +10,24 @@ const AdvancedRealTimeChart = dynamic(
   { ssr: false }
 );
 
-export default function TradingViewChart() {
+interface Props {
+  symbol: string;
+}
+
+export default function TradingViewChart({ symbol }: Props) {
   const { theme } = useTheme();
 
   return (
     <div>
       <AdvancedRealTimeChart
         theme={theme as ColorTheme}
-        symbol="MSFT"
+        symbol={symbol}
         interval="D"
-        hide_side_toolbar
         withdateranges={false}
+        autosize
         hide_legend
-        allow_symbol_change
+        hide_side_toolbar
+        // backgroundColor={theme === "dark" ? "#18181b" : "#fff"}
         enable_publishing={false}
       />
     </div>

@@ -14,9 +14,8 @@ import CompanyLogo from "./company-logo";
 import { Portfolio, Stock } from "@prisma/client";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Card } from "../ui/card";
-import { UserAvatar } from "./user-avatar";
 import PortfolioImage from "../portfolio/portfolio-image";
-import { Accordion, AccordionItem, Button } from "@nextui-org/react";
+import { Accordion, AccordionItem, Avatar, Button } from "@nextui-org/react";
 import Link from "next/link";
 import { navLinks } from "@/config/site";
 import { SITE } from "@/config/site";
@@ -197,7 +196,14 @@ export default function Sidebar({ user, portfolios, recentStocks }: Props) {
           {user && (
             <Link href="/settings">
               <Card className="flex items-center p-2 px-3 gap-2.5 hover:bg-zinc-100 dark:hover:bg-zinc-900">
-                <UserAvatar user={user} />
+                <Avatar
+                  showFallback
+                  isBordered
+                  src={user?.image ?? undefined}
+                  name={user?.name?.[0].toUpperCase()}
+                  size="sm"
+                  alt="profile picture"
+                />
                 <div>
                   <p className="font-medium truncate max-w-[200px]">
                     {user.name}

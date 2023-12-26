@@ -1,30 +1,20 @@
-import { ChevronsUp, ChevronsDown } from "lucide-react";
+import { ArrowBigUp, ArrowBigDown } from "lucide-react";
 import { getAfterHoursQuote } from "@/lib/fmp/quote";
-import { Card, CardDescription } from "@/components/ui/card";
-import { SkeletonText } from "@/components/ui/skeleton";
 import { StockQuote } from "@/types/stock";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   stockQuote: Pick<StockQuote, "symbol" | "price">;
 }
 
-export function StockAfterHoursLoading() {
-  return (
-    <Card className="flex p-2 px-3 gap-3 items-center">
-      <SkeletonText count={1} />
-    </Card>
-  );
-}
-
 export default async function StockAfterHours({ stockQuote }: Props) {
-  const afterHoursQuote = await getAfterHoursQuote(stockQuote.symbol);
+  // const afterHoursQuote = await getAfterHoursQuote(stockQuote.symbol);
+
+  const afterHoursQuote = {
+    price: 194.4,
+  };
 
   if (!afterHoursQuote || !stockQuote.price) {
-    return (
-      <Card className="flex p-2 px-3 gap-3 items-center">
-        <CardDescription>After Hours: Failed to load</CardDescription>
-      </Card>
-    );
+    return <p className="text-zinc-400">After Hours: Failed to load</p>;
   }
 
   const changesPercentage =
@@ -32,23 +22,20 @@ export default async function StockAfterHours({ stockQuote }: Props) {
   const positive = changesPercentage >= 0;
 
   return (
-    <Card className="flex p-2 px-3 gap-3 items-center">
-      <CardDescription>After Hours:</CardDescription>
+    <div className="flex gap-2 items-center">
+      <p className="text-zinc-400">After Hours:</p>
       <div className="flex items-center gap-1">
-        <p className="text-[16px]">${afterHoursQuote?.price?.toFixed(2)}</p>
+        <p>{afterHoursQuote?.price?.toFixed(2)}</p>
+        <span className="text-[12px] text-zinc-400 mt-[1px]">USD</span>
         {positive ? (
-          <ChevronsUp className="h-5 w-5 text-green-500" />
+          <ArrowBigUp size={18} className="text-price-up" />
         ) : (
-          <ChevronsDown className="h-5 w-5 text-red-500" />
+          <ArrowBigDown size={18} className="text-price-down" />
         )}
-        <p
-          className={`text-[16px] ${
-            positive ? "text-green-500" : "text-red-500"
-          }`}>
-          ({positive && "+"}
-          {changesPercentage?.toFixed(2) + "%"})
+        <p className={`${positive ? "text-price-up" : "text-price-down"}`}>
+          {changesPercentage?.toFixed(2) + "%"}
         </p>
       </div>
-    </Card>
+    </div>
   );
 }

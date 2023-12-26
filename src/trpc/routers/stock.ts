@@ -2,7 +2,6 @@ import { publicProcedure, adminProcedure, router } from "../trpc";
 import { db } from "@/db";
 import { z } from "zod";
 import { buildFilter } from "@/config/screener/build-filter";
-import { TIMEFRAMES, historyUrls } from "@/config/fmp/config";
 import { HistorySchema, ScreenerSchema } from "@/lib/validators/stock";
 import { History } from "@/types/stock";
 import { fetchHistory } from "@/lib/fmp/history";
@@ -52,38 +51,9 @@ export const stockRouter = router({
     });
   }),
   history: publicProcedure.input(HistorySchema).query(async ({ input }) => {
-    const { symbol, daily, allFields } = input;
+    const { symbol, timeframe, allFields } = input;
 
-    if (daily) {
-      const { url } = TIMEFRAMES["1D"];
-      const data = await fetch(historyUrls(symbol, url)).then((res) =>
-        res.json()
-      );
-
-      if (allFields) {
-        return data as History[];
-      }
-
-      const returnData = data.map((item: History) => {
-        return {
-          date: item.date,
-          close: item.close,
-        };
-      });
-
-      const slicedData = returnData.slice(
-        0,
-        Math.min(returnData.length, TIMEFRAMES["1D"].limit)
-      );
-
-      return slicedData as History[];
-    }
-
-    if (allFields) {
-      return await fetchHistory(symbol, undefined, true);
-    }
-
-    return await fetchHistory(symbol);
+    return (await fetchHistory({ symbol, timeframe, allFields })) as History[];
   }),
   upload: adminProcedure
     .input(UploadStockSchema)

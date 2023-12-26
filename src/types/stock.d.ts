@@ -5,7 +5,7 @@ export interface History {
   low?: number;
   close: number;
   adjClose?: number;
-  volume?: number;
+  volume: number;
   unadjustedVolume?: number;
   change?: number;
   changePercent?: number;

@@ -57,7 +57,7 @@ export default async function Navbar() {
   );
 
   return (
-    <div className="sticky top-0 h-16 z-20 flex w-full items-center justify-between gap-4 p-2 px-6 border-b bg-background/60">
+    <div className="sticky top-0 h-16 z-20 flex w-full items-center justify-between gap-4 p-2 px-6 border-b bg-background/70 backdrop:blur">
       <div className="flex items-center gap-5 flex-1">
         <Sidebar
           user={user}

@@ -5,10 +5,9 @@ import { Suspense } from "react";
 import RecentStocks from "@/app/(user)/u/[id]/recent-stocks";
 import { StockListLoading } from "@/components/stock/stock-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserAvatar } from "@/components/shared/user-avatar";
 import { Calendar } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@nextui-org/react";
+import { Avatar, Button } from "@nextui-org/react";
 
 interface Props {
   params: { id: string };
@@ -43,11 +42,14 @@ export default async function page({ params: { id } }: Props) {
   return (
     <>
       <div className="relative">
-        <div className="bg-gradient-to-br from-primary to-yellow-600 h-24 lg:h-40"></div>
-        <UserAvatar
-          user={dbUser}
-          fallbackFontSize={48}
-          className="h-24 w-24 lg:w-48 lg:h-48 border absolute top-12 left-12 lg:top-16 lg:left-20"
+        <div className="bg-gradient-to-br from-primary to-yellow-600 h-24 lg:h-40" />
+        <Avatar
+          showFallback
+          isBordered
+          src={dbUser?.image ?? undefined}
+          name={dbUser?.name?.[0].toUpperCase()}
+          className="h-24 w-24 lg:w-48 lg:h-48 absolute top-12 left-12 lg:top-16 lg:left-20 text-xl lg:text-5xl"
+          alt="profile picture"
         />
 
         <Card className="border-x-0 rounded-t-none px-7 pt-8 lg:pt-0 lg:pl-80 lg:pr-40">
@@ -57,7 +59,7 @@ export default async function page({ params: { id } }: Props) {
                 <CardTitle className="text-2xl lg:text-3xl font-medium">
                   {dbUser?.name}
                 </CardTitle>
-                <div className="text-zinc-500 flex items-center gap-2">
+                <div className="text-zinc-400 flex items-center gap-2">
                   <Calendar size={20} />
                   Joined on {dbUser?.createdAt.toISOString().split("T")[0]}
                 </div>

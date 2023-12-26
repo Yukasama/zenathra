@@ -1,6 +1,11 @@
 "use client";
 
-import { Button } from "@nextui-org/react";
+import {
+  Button,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@nextui-org/react";
 import { Plus } from "lucide-react";
 import { useCustomToasts } from "@/hooks/use-custom-toasts";
 import { toast } from "@/hooks/use-toast";
@@ -15,6 +20,7 @@ import {
 } from "../ui/dialog";
 import StockPortfolioModifier from "./stock-portfolio-modifier";
 import { Stock } from "@prisma/client";
+import Link from "next/link";
 
 interface Props {
   stock: Pick<Stock, "id" | "symbol"> | undefined;
@@ -45,45 +51,44 @@ export default function StockPortfolioAddModal({
   };
 
   return (
-    <>
-      {!isAuth ? (
+    <Popover placement="bottom">
+      <PopoverTrigger>
         <Button
           isIconOnly
           size="sm"
-          startContent={<Plus className="h-4" />}
-          onClick={handleClick}
+          variant="flat"
+          startContent={<Plus size={18} />}
           aria-label="Add stock to portfolio"
         />
-      ) : (
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button
-              isIconOnly
-              size="sm"
-              startContent={<Plus className="h-4" />}
-              aria-label="Add stock to portfolio"
-            />
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Toggle {stock?.symbol}</DialogTitle>
-              <DialogDescription>
-                Manage {stock?.symbol} stock in your portfolios
-              </DialogDescription>
-            </DialogHeader>
-            <div className="f-col gap-2.5">
-              {stock &&
-                portfolios?.map((portfolio) => (
-                  <StockPortfolioModifier
-                    key={portfolio.id}
-                    portfolio={portfolio}
-                    stock={stock}
-                  />
-                ))}
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
-    </>
+      </PopoverTrigger>
+      <PopoverContent>
+        {isAuth && portfolios?.length ? (
+          <div className="f-col gap-2.5">
+            {stock &&
+              portfolios?.map((portfolio) => (
+                <StockPortfolioModifier
+                  key={portfolio.id}
+                  portfolio={portfolio}
+                  stock={stock}
+                />
+              ))}
+          </div>
+        ) : isAuth && !portfolios?.length ? (
+          <div className="f-col gap-1 items-center">
+            Create a portfolio first
+            <Button href="/portfolio" color="primary" as={Link}>
+              Create Portfolio
+            </Button>
+          </div>
+        ) : (
+          <div className="f-col gap-1 items-center">
+            Sign in to create portfolios
+            <Button href="/sign-in" color="primary" as={Link}>
+              Sign in
+            </Button>
+          </div>
+        )}
+      </PopoverContent>
+    </Popover>
   );
 }

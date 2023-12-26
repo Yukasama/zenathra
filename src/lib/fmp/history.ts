@@ -1,62 +1,48 @@
 import "server-only";
 
-import { TIMEFRAMES, historyUrls } from "@/config/fmp/config";
 import { History } from "@/types/stock";
 import { db } from "@/db";
 import pino from "pino";
+import { FMP_API_URL, TIMEFRAMES } from "@/config/fmp/config";
 
-export async function fetchHistory(
-  symbol: string,
-  from?: Date,
-  allFields?: boolean
-) {
-  const fetchedURLs: Record<string, any> = {};
-
-  for (let timeframe of Object.keys(TIMEFRAMES)) {
-    const { url } = TIMEFRAMES[timeframe];
-
-    if (!fetchedURLs[url]) {
-      const result = await fetch(historyUrls(symbol, url, from)).then((res) =>
-        res.json()
-      );
-
-      const data = (fetchedURLs[url] = url.includes("price-full")
-        ? result.historical
-        : result);
-
-      if (allFields) {
-        fetchedURLs[url] = data;
-      }
-
-      fetchedURLs[url] = data.map((item: History) => {
-        return {
-          date: item.date,
-          close: item.close,
-        };
-      });
-    }
-  }
-
-  return Object.fromEntries(
-    Object.entries(TIMEFRAMES).map(([timeframe, { url, limit }]) => {
-      const relevantData = fetchedURLs[url];
-
-      return [
-        timeframe,
-        timeframe !== "All"
-          ? relevantData
-              .slice(
-                0,
-                relevantData.length < limit ? relevantData.length : limit
-              )
-              .reverse()
-          : relevantData.reverse(),
-      ];
-    })
-  );
+interface Props {
+  symbol: string;
+  timeframe: string;
+  from?: Date;
+  allFields?: boolean;
 }
 
-export async function MergeHistory(portfolioId: string) {
+export async function fetchHistory({
+  symbol,
+  timeframe,
+  from,
+  allFields,
+}: Props) {
+  const { url, limit } = TIMEFRAMES[timeframe];
+
+  const result = await fetch(constructHistoryUrl(symbol, url, from)).then((res) =>
+    res.json()
+  );
+
+  const data = url.includes("price-full") ? result.historical : result;
+
+  const processedData = data
+    .slice(0, data.length < limit ? data.length : limit)
+    .reverse();
+
+  if (allFields) {
+    return processedData;
+  }
+
+  return processedData.map((item: History) => {
+    return {
+      date: item.date,
+      close: item.close,
+    };
+  });
+}
+
+export async function MergeHistory(portfolioId: string, timeframe: string) {
   const stocksInPortfolio = await db.stockInPortfolio.findMany({
     where: { portfolioId },
     select: {
@@ -67,11 +53,15 @@ export async function MergeHistory(portfolioId: string) {
     },
   });
 
-  pino().debug("MergeHistory: stocksInPortfolio:", stocksInPortfolio);
+  pino().trace("MergeHistory: stocksInPortfolio:", stocksInPortfolio);
 
   const data = await Promise.all(
     stocksInPortfolio.map((stock) =>
-      fetchHistory(stock.stock.symbol, stock.createdAt)
+      fetchHistory({
+        symbol: stock.stock.symbol,
+        timeframe,
+        from: stock.createdAt,
+      })
     )
   );
 
@@ -118,6 +108,14 @@ export async function MergeHistory(portfolioId: string) {
       });
   });
 
-  pino().debug("MergeHistory:", result);
+  pino().trace("MergeHistory:", result);
   return result;
+}
+
+export function constructHistoryUrl(symbol: string, url: string, from?: Date) {
+  return `${FMP_API_URL}v3/${url}/${symbol}?${
+    url.includes("price-full")
+      ? "from=1975-01-01"
+      : from && `from=${from.toDateString().split("T")[0]}`
+  }&apikey=${process.env.FMP_API_KEY}`;
 }

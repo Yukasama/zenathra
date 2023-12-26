@@ -87,7 +87,6 @@ export default async function page() {
         </Card>
       </div>
 
-      {/* Table */}
       <LandingTable stockQuotes={stockQuotes} />
 
       {/* Background Effects */}

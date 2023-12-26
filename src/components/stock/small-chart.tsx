@@ -20,15 +20,11 @@ export default function SmallChart({ quote, height, className }: Props) {
 
   const { data: results, isFetched } = trpc.stock.history.useQuery({
     symbol: quote.symbol,
-    daily: true,
+    timeframe: "1Y",
   });
 
   useEffect(() => {
     if (isFetched && results) {
-      const data = results.map((result: History) => ({
-        name: result.date,
-        uv: result.close,
-      }));
       setData(data.slice(0, 420).reverse());
     }
 
@@ -46,8 +42,8 @@ export default function SmallChart({ quote, height, className }: Props) {
           <YAxis domain={["dataMin", "dataMax"]} hide={true} />
           <Line
             type="monotone"
-            dataKey="uv"
-            stroke={quote.changesPercentage > 0 ? "#19E363" : "#e6221e"}
+            dataKey="close"
+            stroke={quote.changesPercentage >= 0 ? "#19E363" : "#e6221e"}
             strokeWidth={2.1}
             dot={false}
             isAnimationActive={false}
