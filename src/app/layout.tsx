@@ -7,6 +7,8 @@ import { Toaster } from "@/components/ui/toaster";
 import dynamic from "next/dynamic";
 import Navbar from "@/components/shared/navbar";
 import "./globals.css";
+import Script from "next/script";
+import { env } from "@/env.mjs";
 
 const Footer = dynamic(() => import("@/components/shared/footer"));
 
@@ -34,6 +36,13 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         </Provider>
         <Toaster />
       </body>
+
+      <Script
+        async
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}`}
+        strategy="lazyOnload"
+        crossOrigin="anonymous"
+      />
     </html>
   );
 }

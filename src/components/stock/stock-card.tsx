@@ -1,6 +1,5 @@
 import { Quote } from "@/types/stock";
 import Link from "next/link";
-import StockPrice from "../../app/(stock)/stocks/[symbol]/stock-price";
 import {
   Card,
   CardContent,
@@ -129,9 +128,7 @@ export default async function StockCard({
           />
         )}
 
-        <CardFooter>
-          <StockPrice className="w-full" quote={quote} />
-        </CardFooter>
+        <CardFooter></CardFooter>
       </Link>
     </Card>
   );

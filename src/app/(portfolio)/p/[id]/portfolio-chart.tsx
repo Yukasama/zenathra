@@ -57,9 +57,10 @@ export default function PriceChart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { data, refetch, isFetched } = trpc.portfolio.history.useQuery(
-    portfolio.id
-  );
+  const { data, refetch, isFetched } = trpc.portfolio.history.useQuery({
+    portfolioId: portfolio.id,
+    timeframe: timeFrame,
+  });
 
   useEffect(() => setMounted(true), []);
 

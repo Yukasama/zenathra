@@ -117,8 +117,15 @@ export const portfolioRouter = router({
       revalidatePath(`/p/${portfolioId}`);
     }),
   history: publicProcedure
-    .input(z.string())
-    .query(async ({ input: portfolioId }) => {
+    .input(
+      z.object({
+        portfolioId: z.string(),
+        timeframe: z.string(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { portfolioId, timeframe } = input;
+
       const portfolioExists = await db.portfolio.findFirst({
         select: {
           isPublic: true,
@@ -132,7 +139,7 @@ export const portfolioRouter = router({
       }
 
       if (portfolioExists.isPublic) {
-        return await MergeHistory(portfolioId);
+        return await MergeHistory(portfolioId, timeframe);
       }
 
       const user = await getUser();
@@ -141,7 +148,7 @@ export const portfolioRouter = router({
         throw new TRPCError({ code: "FORBIDDEN" });
       }
 
-      return await MergeHistory(portfolioId);
+      return await MergeHistory(portfolioId, timeframe);
     }),
   delete: privateProcedure
     .input(z.string())

@@ -20,6 +20,7 @@ import StockPortfolioAddModal from "@/components/stock/stock-portfolio-add-modal
 import { Card, Chip } from "@nextui-org/react";
 import Link from "next/link";
 import Price from "@/app/(stock)/stocks/[symbol]/price";
+import StockKeyMetricsChart from "./stock-key-metrics-chart";
 
 interface Props {
   params: { symbol: string };
@@ -218,6 +219,12 @@ export default async function page({ params: { symbol } }: Props) {
         </div>
 
         <PriceChart symbol={symbol} />
+
+        <div className="f-col gap-1">
+          <h2 className="font-light text-2xl">Statistics</h2>
+          <Separator />
+          <StockStatistics stock={stock} />
+        </div>
 
         <div className="f-col gap-1">
           <h2 className="font-light text-2xl">About</h2>

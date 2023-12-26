@@ -2,6 +2,9 @@ import { z } from "zod";
 import { createEnv } from "@t3-oss/env-nextjs";
 
 export const env = createEnv({
+  client: {
+    NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID: z.string(),
+  },
   server: {
     // ACCELERATE_URL: z.string().url(),
     DATABASE_URL: z.string().url(),
@@ -23,6 +26,8 @@ export const env = createEnv({
     FMP_API_KEY: z.string(),
   },
   runtimeEnv: {
+    NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID:
+      process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID,
     // ACCELERATE_URL: process.env.ACCELERATE_URL,
     DATABASE_URL: process.env.DATABASE_URL,
     AUTH_SECRET: process.env.AUTH_SECRET,

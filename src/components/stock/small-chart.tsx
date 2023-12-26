@@ -2,7 +2,7 @@
 
 import { trpc } from "@/trpc/client";
 import { cn } from "@/lib/utils";
-import { History, Quote } from "@/types/stock";
+import { Quote } from "@/types/stock";
 import { useState, useEffect } from "react";
 import { LineChart, Line, YAxis } from "recharts";
 import { Spinner } from "@nextui-org/react";

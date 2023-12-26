@@ -57,7 +57,7 @@ export default function StockEye({ user, title, value = 78, gradient }: Props) {
                   cy="60"
                   r="54"
                   strokeWidth={8}
-                  stroke={theme === "dark" ? "#27272a" : "#e4e4e7"}
+                  stroke={theme === "light" ? "#e4e4e7" : "#27272a"}
                   strokeDasharray={dashGreyArray}
                   strokeDashoffset={dashGreyOffset}
                   strokeLinecap="round"
