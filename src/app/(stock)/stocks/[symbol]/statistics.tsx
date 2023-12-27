@@ -32,7 +32,10 @@ export default async function Statistics({ stock }: Props) {
       netProfitMargin: true,
       dividendYield: true,
     },
-    where: { symbol: stock.symbol },
+    where: {
+      symbol: stock.symbol,
+      date: { gte: "2015-01-01" },
+    },
     orderBy: { date: "desc" },
     take: 8,
   });
