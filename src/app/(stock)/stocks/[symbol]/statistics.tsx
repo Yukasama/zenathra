@@ -4,23 +4,14 @@ import { db } from "@/db";
 import MetricsChart from "./metrics-chart";
 import DividendChart from "./dividend-chart";
 import Skeleton from "@/components/ui/skeleton";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { SkeletonText } from "@/components/ui/skeleton";
 
-export function StockStatisticsLoading() {
+export function StatisticsLoading() {
   return (
-    <div className="grid grid-cols-3 gap-5 h-[350px]">
-      {[...Array(3)].map((_, i) => (
-        <Card key={i} className="w-full">
-          <CardHeader className="items-start">
-            <SkeletonText />
-          </CardHeader>
-          <CardContent className="w-full h-full">
-            <Skeleton>
-              <div className="h-[150px]"></div>
-            </Skeleton>
-          </CardContent>
-        </Card>
+    <div className="f-col md:grid grid-cols-2 gap-5">
+      {[...Array(4)].map((_, i) => (
+        <Skeleton key={i}>
+          <div className="h-[220px]"></div>
+        </Skeleton>
       ))}
     </div>
   );

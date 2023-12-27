@@ -2,7 +2,9 @@ import { notFound } from "next/navigation";
 import { db } from "@/db";
 import { Separator } from "@/components/ui/separator";
 import PageLayout from "@/components/shared/page-layout";
-import Statistics from "@/app/(stock)/stocks/[symbol]/statistics";
+import Statistics, {
+  StatisticsLoading,
+} from "@/app/(stock)/stocks/[symbol]/statistics";
 import PriceChart from "@/app/(stock)/stocks/[symbol]/price-chart";
 import StockImage from "@/components/stock/stock-image";
 import { getUser } from "@/lib/auth";
@@ -227,13 +229,17 @@ export default async function page({ params: { symbol } }: Props) {
           </div>
         </div>
 
-        <PriceChart symbol={symbol} />
+        <div className="-mt-6">
+          <PriceChart symbol={symbol} />
+        </div>
         <Valuation stock={stock} className="flex md:hidden" />
 
         <div className="f-col gap-1">
           <h2 className="font-light text-xl md:text-2xl">Statistics</h2>
           <Separator />
-          <Statistics stock={stock} />
+          <Suspense fallback={<StatisticsLoading />}>
+            <Statistics stock={stock} />
+          </Suspense>
         </div>
 
         <div className="f-col gap-1">
