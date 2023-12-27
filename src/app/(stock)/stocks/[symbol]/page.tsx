@@ -9,13 +9,13 @@ import PriceChart from "@/app/(stock)/stocks/[symbol]/price-chart";
 import StockImage from "@/components/stock/stock-image";
 import { getUser } from "@/lib/auth";
 import { getQuote } from "@/lib/fmp/quote";
-import AddStockPortfolio from "@/components/stock/add-stock-portfolio";
-import { Card, Chip } from "@nextui-org/react";
+import { Card, Chip, Spinner } from "@nextui-org/react";
 import Link from "next/link";
 import Price, { PriceLoading } from "@/app/(stock)/stocks/[symbol]/price";
 import AIMetric from "@/app/(stock)/stocks/[symbol]/ai-metric";
 import Valuation from "./valuation";
 import { Suspense } from "react";
+import AddStockPortfolioWrapper from "@/components/stock/add-stock-portfolio-wrapper";
 
 interface Props {
   params: { symbol: string };
@@ -31,8 +31,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params: { symbol } }: Props) {
   const [stock, quote] = await Promise.all([
-    db.stock.findFirst({
-      select: { companyName: true },
+    db.stock.count({
       where: { symbol },
     }),
     getQuote(symbol),
@@ -56,9 +55,8 @@ export async function generateMetadata({ params: { symbol } }: Props) {
 }
 
 export default async function page({ params: { symbol } }: Props) {
-  const user = await getUser();
-
-  const [stock, portfolios] = await Promise.all([
+  const [user, stock] = await Promise.all([
+    getUser(),
     db.stock.findFirst({
       select: {
         id: true,
@@ -78,18 +76,6 @@ export default async function page({ params: { symbol } }: Props) {
         peersList: true,
       },
       where: { symbol },
-    }),
-    db.portfolio.findMany({
-      select: {
-        id: true,
-        title: true,
-        color: true,
-        isPublic: true,
-        stocks: {
-          select: { stockId: true },
-        },
-      },
-      where: { creatorId: user?.id },
     }),
   ]);
 
@@ -170,11 +156,9 @@ export default async function page({ params: { symbol } }: Props) {
                     <p className="font-semibold text-[22px] md:text-2xl">
                       {stock.companyName}
                     </p>
-                    <AddStockPortfolio
-                      stock={stock}
-                      isAuth={!!user}
-                      portfolios={portfolios}
-                    />
+                    <Suspense fallback={<Spinner />}>
+                      <AddStockPortfolioWrapper stock={stock} user={user} />
+                    </Suspense>
                   </div>
                   <p className="text-zinc-400">{stock.symbol}</p>
                   <div className="flex gap-3 mt-2">
