@@ -9,7 +9,7 @@ interface Props {
 
 export default function PortfolioItem({ portfolio }: Props) {
   return (
-    <Link key={portfolio.id} href={`/p/${portfolio.id}`}>
+    <Link key={portfolio.id} href={`/p/${portfolio.id}`} prefetch={false}>
       <Card className="p-2 h-12 flex items-center w-full bg-item hover:bg-item-hover">
         <div className="flex items-center gap-2">
           <PortfolioImage portfolio={portfolio} px={35} />

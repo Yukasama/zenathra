@@ -90,7 +90,10 @@ export default function SignIn() {
           )}
         />
 
-        <Link href="/forgot-password" className="text-[13px] ml-auto">
+        <Link
+          href="/forgot-password"
+          prefetch={false}
+          className="text-[13px] ml-auto">
           Forgot Password?
         </Link>
 

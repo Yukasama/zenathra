@@ -89,7 +89,7 @@ export default function NavbarMenu({ user }: Props) {
         )}
 
         <NavigationMenuItem>
-          <Link href="/pricing" legacyBehavior passHref>
+          <Link href="/pricing" prefetch={false} legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Pricing
             </NavigationMenuLink>

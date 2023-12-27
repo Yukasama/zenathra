@@ -17,6 +17,7 @@ export default async function StockPageItem({ quote }: Props) {
   return (
     <Link
       href={`/stocks/${quote.symbol}`}
+      prefetch={false}
       className="flex items-center justify-between w-full hover:bg-zinc-100/50 dark:hover:bg-zinc-800/50 p-0.5 px-3 rounded-md">
       <div className="flex items-center gap-3">
         <StockImage src={stock?.image} px={35} />

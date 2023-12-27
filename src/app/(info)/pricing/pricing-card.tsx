@@ -66,7 +66,7 @@ export default function PricingCard({ plan }: Props) {
       </CardHeader>
 
       <CardFooter>
-        <Link href="/" className="w-full">
+        <Link href="/" prefetch={false} className="w-full">
           <Button
             className="bg-zinc-50 text-black w-full"
             size="lg"

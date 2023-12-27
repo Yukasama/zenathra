@@ -21,6 +21,7 @@ export default function Footer() {
             <Link
               key={link.name}
               href={link.url}
+              prefetch={false}
               className="text-[13px] text-zinc-500 hover:underline">
               {link.name}
             </Link>
@@ -30,7 +31,12 @@ export default function Footer() {
         {/* Social Media Links */}
         <div className="flex items-center gap-4 flex-1 justify-end">
           {Object.entries(SITE.links).map(([name, url]) => (
-            <Link key={name} href={url} className="f-box h-10 w-10 rounded-md">
+            <Link
+              key={name}
+              href={url}
+              prefetch={false}
+              target="_blank"
+              className="f-box h-10 w-10 rounded-md">
               {name === "github" ? (
                 <Icons.github className="h-6 dark:invert" />
               ) : name === "instagram" ? (

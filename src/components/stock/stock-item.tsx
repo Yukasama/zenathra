@@ -18,7 +18,7 @@ export default function StockItem({ stock, quote, className }: Props) {
   const positive = quote.changesPercentage >= 0;
 
   return (
-    <Link href={`/stocks/${quote.symbol}`}>
+    <Link href={`/stocks/${quote.symbol}`} prefetch={false}>
       <Card
         className={cn(
           "flex items-center justify-between h-12 p-2 bg-item hover:bg-item-hover mb-2",

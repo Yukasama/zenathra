@@ -180,6 +180,7 @@ export default async function page({ params: { symbol } }: Props) {
                       <Chip
                         key={attribute.name}
                         as={Link}
+                        prefetch={false}
                         href={`/?${attribute.name}=${attribute.value}`}
                         size="sm"
                         classNames={{

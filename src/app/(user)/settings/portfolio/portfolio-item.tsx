@@ -16,6 +16,7 @@ export default function PortfolioItem({ portfolio }: Props) {
     <Card className="flex sm:f-col lg:flex-row items-center justify-between">
       <Link
         href={`/p/${portfolio.id}`}
+        prefetch={false}
         className="hover:bg-item-hover w-full p-2 px-4">
         <div className="flex items-center gap-3">
           <PortfolioImage portfolio={portfolio} />
@@ -29,7 +30,7 @@ export default function PortfolioItem({ portfolio }: Props) {
           </div>
         </div>
       </Link>
-      
+
       <div className="h-full border-l sm:self-end sm:border-l-0 w-40 lg:border-l p-2 px-4 f-box">
         <EditVisibility portfolio={portfolio} />
       </div>

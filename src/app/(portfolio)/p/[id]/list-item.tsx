@@ -15,7 +15,9 @@ export default function ListItem({ title, link, icon, portfolioId }: Props) {
   const pathname = usePathname();
 
   return (
-    <Link href={`/p/${portfolioId}/${link === portfolioId ? "" : link}`}>
+    <Link
+      href={`/p/${portfolioId}/${link === portfolioId ? "" : link}`}
+      prefetch={false}>
       <Card
         className={`bg-item ${
           pathname.split("/").pop() === link

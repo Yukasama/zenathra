@@ -31,7 +31,10 @@ export default function ScreenerResults({ results, isFetched }: Props) {
       ) : (
         <div className="f-col hidden-scrollbar max-h-[800px] gap-2 overflow-scroll">
           {results?.map((stock) => (
-            <Link key={stock.symbol} href={`/stocks/${stock.symbol}`}>
+            <Link
+              key={stock.symbol}
+              href={`/stocks/${stock.symbol}`}
+              prefetch={false}>
               <Card className="flex h-[60px] px-4 hover:bg-zinc-100 dark:hover:bg-zinc-900">
                 <div className="col-span-3 flex items-center gap-4">
                   <StockImage src={stock.image} px={30} />

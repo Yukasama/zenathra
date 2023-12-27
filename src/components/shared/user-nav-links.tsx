@@ -49,6 +49,7 @@ export default function UserNavLinks({ user, isAdmin }: Props) {
           <SheetClose className="w-full" asChild>
             <Link
               href="/admin/dashboard"
+              prefetch={false}
               className="flex items-center w-full h-9 p-1 mb-[1px] rounded-md px-4 hover:bg-zinc-100 dark:hover:bg-zinc-900">
               <Settings2 className="w-5 h-5 mr-2 text-zinc-400" />
               <h2 className="text-[15px]">Stock Control</h2>
