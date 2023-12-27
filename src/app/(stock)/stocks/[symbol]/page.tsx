@@ -196,7 +196,7 @@ export default async function page({ params: { symbol } }: Props) {
                 </div>
               </div>
 
-              <Suspense fallback={<PriceLoading />}>
+              <Suspense fallback={<PriceLoading className="flex md:hidden" />}>
                 <Price stock={stock} className="flex md:hidden" />
               </Suspense>
 
@@ -222,7 +222,7 @@ export default async function page({ params: { symbol } }: Props) {
           </div>
 
           <div className="f-col md:flex-row gap-6 md:items-center justify-between sm:px-0.5">
-            <Suspense fallback={<PriceLoading />}>
+            <Suspense fallback={<PriceLoading className="hidden md:flex" />}>
               <Price stock={stock} className="hidden md:flex" />
             </Suspense>
             <Valuation stock={stock} className="hidden md:flex" />
